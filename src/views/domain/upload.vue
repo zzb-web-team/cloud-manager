@@ -5,7 +5,7 @@
     </div>
     <div class="con">
 
-        <el-upload class="upload-demo" ref="upload" :limit="1" action="http://39.100.131.247/url_mgmt/excel_url" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :on-success="handleAvatarSuccess" name="excel" :auto-upload="false">
+        <el-upload class="upload-demo" ref="upload" :limit="1" :action="UploadUrl()" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :on-success="handleAvatarSuccess" name="excel" :auto-upload="false">
             <el-button slot="trigger" size="small" class="MyctiveButton" type="primary">上传Excel文件</el-button>
             <el-button type="primary" @click="down" plain id="dwonexcel">下载模板</el-button>
 
@@ -82,6 +82,7 @@
 import {
     query_url,
     add_url,
+    hostUrl
 
 } from "../../servers/api";
 export default {
@@ -97,7 +98,14 @@ export default {
             errorcount: 0
         };
     },
+    mounted:function(){
+        console.log(hostUrl)
+    },
     methods: {
+        //导出地址变量
+        UploadUrl(){
+            return hostUrl+"/url_mgmt/excel_url"
+        },
         // 
         deleteRow(index, rows) {
             rows.splice(index, 1);
@@ -299,7 +307,7 @@ export default {
         },
         errormove(err, file, fileList) {},
         down() {
-            var url = "http://39.100.131.247/static/url.xls";
+            var url = hostUrl+ "/static/url.xls";
             window.location.href = url;
         }
     }

@@ -1,6 +1,9 @@
 <template>
 <section class="myself-container">
-   
+    <div class="top_title" style="display: flex;margin-top:30px;">
+        <span @click="goback" style="font-size: 24px;color: #202020;"><i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
+        用户详情</span>
+    </div>
     <div class="user-title">
         <el-row>
             <el-col :span="5">

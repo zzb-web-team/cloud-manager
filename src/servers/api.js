@@ -5,9 +5,10 @@ var href = window.location.href
 if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     var serverUrl = 'http://xyj.grapefruitcloud.com' //PHP服务域名
 } else {
-    var serverUrl = 'http://39.100.131.247' //PHP服务域名
-    var serverUrl2 = 'http://39.100.131.247' //PHP服务域名
+    var serverUrl = 'http://zzb.onezen.net' //PHP服务域名
 }
+
+export const hostUrl = serverUrl;
 
 //账户
 /**登录 */
@@ -65,51 +66,51 @@ export const check_label = params => { return axios.post(`${serverUrl}/url_mgmt/
 
 //点播加速
 /**点播加速日志列表 */
-export const query_accelerate_log = params => { return axios.post(`${serverUrl2}/videoplay_accelerate/query_accelerate_log`, params).then(res => res.data) };
+export const query_accelerate_log = params => { return axios.post(`${serverUrl}/videoplay_accelerate/query_accelerate_log`, params).then(res => res.data) };
 /**视频点播日志 */
-export const query_videoplay_log = params => { return axios.post(`${serverUrl2}/videoplay_accelerate/query_videoplay_log`, params).then(res => res.data) };
+export const query_videoplay_log = params => { return axios.post(`${serverUrl}/videoplay_accelerate/query_videoplay_log`, params).then(res => res.data) };
 
 //点播加速日志下载
-export const export_videoaccel_file = params => { return axios.post(`${serverUrl2}/videoplay_accelerate/export_videoaccel_file`, params).then(res => res.data) };
+export const export_videoaccel_file = params => { return axios.post(`${serverUrl}/videoplay_accelerate/export_videoaccel_file`, params).then(res => res.data) };
 
 //视频点播日志下载
-export const export_videoplay_file = params => { return axios.post(`${serverUrl2}/videoplay_accelerate/export_videoplay_file`, params).then(res => res.data) };
+export const export_videoplay_file = params => { return axios.post(`${serverUrl}/videoplay_accelerate/export_videoplay_file`, params).then(res => res.data) };
 
 
 //数据中心
 /** 加速流量加载查询条件*/
-export const accelerate_flow_query_conditions = params => { return axios.post(`${serverUrl2}/resource_manage/accelerate_flow_query_conditions`, params).then(res => res.data) };
+export const accelerate_flow_query_conditions = params => { return axios.post(`${serverUrl}/resource_manage/accelerate_flow_query_conditions`, params).then(res => res.data) };
 /** 回源查询条件*/
-export const backsource_flow_query_conditions = params => { return axios.post(`${serverUrl2}/resource_manage/backsource_flow_query_conditions`, params).then(res => res.data) };
+export const backsource_flow_query_conditions = params => { return axios.post(`${serverUrl}/resource_manage/backsource_flow_query_conditions`, params).then(res => res.data) };
 /**加速流量柱状图 */
-export const accelerate_flow = params => { return axios.post(`${serverUrl2}/resource_manage/accelerate_flow`, params).then(res => res.data) };
+export const accelerate_flow = params => { return axios.post(`${serverUrl}/resource_manage/accelerate_flow`, params).then(res => res.data) };
 /*回源统计柱状图 */
-export const backsource_flow = params => { return axios.post(`${serverUrl2}/resource_manage/backsource_flow`, params).then(res => res.data) };
+export const backsource_flow = params => { return axios.post(`${serverUrl}/resource_manage/backsource_flow`, params).then(res => res.data) };
 /**加速流量表格 */
-export const accelerate_flow_table = params => { return axios.post(`${serverUrl2}/resource_manage/accelerate_flow_table`, params).then(res => res.data) };
+export const accelerate_flow_table = params => { return axios.post(`${serverUrl}/resource_manage/accelerate_flow_table`, params).then(res => res.data) };
 /**输入渠道ID 查询视频名称 */
-export const getvideo = params => { return axios.post(`${serverUrl2}/url_mgmt/getvideo`, params).then(res => res.data) };
+export const getvideo = params => { return axios.post(`${serverUrl}/url_mgmt/getvideo`, params).then(res => res.data) };
 
 
 //点播数据统计
 /** PV/UV 查询条件*/
-export const pv_uv_query_conditions = params => { return axios.post(`${serverUrl2}/videoaccess_statistic/pv_uv_query_conditions`, params).then(res => res.data) };
+export const pv_uv_query_conditions = params => { return axios.post(`${serverUrl}/videoaccess_statistic/pv_uv_query_conditions`, params).then(res => res.data) };
 /** 地区访问次数查询条件*/
-export const region_query_conditions = params => { return axios.post(`${serverUrl2}/videoaccess_statistic/region_query_conditions`, params).then(res => res.data) };
+export const region_query_conditions = params => { return axios.post(`${serverUrl}/videoaccess_statistic/region_query_conditions`, params).then(res => res.data) };
 /**运营商访问条件查询 */
-export const isp_query_conditions = params => { return axios.post(`${serverUrl2}/videoaccess_statistic/isp_query_conditions`, params).then(res => res.data) };
+export const isp_query_conditions = params => { return axios.post(`${serverUrl}/videoaccess_statistic/isp_query_conditions`, params).then(res => res.data) };
 /**播放条件查询 */
-export const query_playtimes_conditions = params => { return axios.post(`${serverUrl2}/videoplay_statistic/query_playtimes_conditions`, params).then(res => res.data) };
+export const query_playtimes_conditions = params => { return axios.post(`${serverUrl}/videoplay_statistic/query_playtimes_conditions`, params).then(res => res.data) };
 /*PV曲线图查询*/
-export const pv_uv_curve = params => { return axios.post(`${serverUrl2}/videoaccess_statistic/pv_uv_curve`, params).then(res => res.data) };
+export const pv_uv_curve = params => { return axios.post(`${serverUrl}/videoaccess_statistic/pv_uv_curve`, params).then(res => res.data) };
 /**地区访问次数曲线和表格 */
-export const query_topregion_accesscnt_curve = params => { return axios.post(`${serverUrl2}/videoaccess_statistic/query_topregion_accesscnt_curve`, params).then(res => res.data) };
+export const query_topregion_accesscnt_curve = params => { return axios.post(`${serverUrl}/videoaccess_statistic/query_topregion_accesscnt_curve`, params).then(res => res.data) };
 /**运营商访问次数曲线和表格 */
-export const query_topisp_accesscnt_curve = params => { return axios.post(`${serverUrl2}/videoaccess_statistic/query_topisp_accesscnt_curve`, params).then(res => res.data) };
+export const query_topisp_accesscnt_curve = params => { return axios.post(`${serverUrl}/videoaccess_statistic/query_topisp_accesscnt_curve`, params).then(res => res.data) };
 /** 播放次数曲线图*/
-export const query_playtimes_curve = params => { return axios.post(`${serverUrl2}/videoplay_statistic/query_playtimes_curve`, params).then(res => res.data) };
+export const query_playtimes_curve = params => { return axios.post(`${serverUrl}/videoplay_statistic/query_playtimes_curve`, params).then(res => res.data) };
 /**播放次数表格 */
-export const query_playdata_table = params => { return axios.post(`${serverUrl2}/videoplay_statistic/query_playdata_table`, params).then(res => res.data) };
+export const query_playdata_table = params => { return axios.post(`${serverUrl}/videoplay_statistic/query_playdata_table`, params).then(res => res.data) };
 
 
 //SDK管理

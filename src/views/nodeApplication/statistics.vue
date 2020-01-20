@@ -7,21 +7,31 @@
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="PV/UV" name="first">
                     <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                        <el-select v-model="value1Active" placeholder="渠道ID" style="width: 10%;margin-right: 10px;" @change="getdata()">
+                        <!-- <el-select v-model="value1Active" placeholder="渠道ID" style="width: 10%;margin-right: 10px;" @change="getdata()">
                             <el-option label="全部" value="*"></el-option>
                             <el-option v-for="(item, index) in options1Active" :key="index" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
-                        <el-select v-model="value_a1" placeholder="视频名称" style="width: 10%;margin-right: 10px;" @change="getdata()">
+                        </el-select> -->
+                        <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+                        <!-- <el-select v-model="value_a1" placeholder="视频名称" style="width: 10%;margin-right: 10px;" @change="getdata()">
                             <el-option label="全部" value="*"></el-option>
                             <el-option v-for="(item, index) in optionsa1" :key="index + '_a'" :label="item.label" :value="item.label"></el-option>
+                        </el-select> -->
+                         <el-select v-model="value_a1" placeholder="视频名称" style="width: 10%;margin-right: 10px;" @change="getdata()">
+                            <el-option label="全部" value="*"></el-option>
+                            <el-option v-for="(item, index) in options1chanid" :key="index" :label="item.label" :value="item.label"></el-option>
                         </el-select>
-                        <el-select v-model="value_a2" placeholder="区域" style="width: 10%;margin-right: 10px;" @change="getdata()">
+                        <!-- <el-select v-model="value_a2" placeholder="区域" style="width: 10%;margin-right: 10px;" @change="getdata()">
                             <el-option label="全部" value="*"></el-option>
                             <el-option v-for="(item, index) in optionsa2" :key="index + '_b'" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
-                        <el-select v-model="value_a3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata()">
+                        </el-select> -->
+                        <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="options2" ref="cascaderAddr" :show-all-levels="false" v-model="value_a2" @change="getdata"></el-cascader>
+                        <!-- <el-select v-model="value_a3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata()">
                             <el-option label="全部" value="*"></el-option>
                             <el-option v-for="(item, index) in optionsa3" :key="index + '_c'" :label="item.label" :value="item.label"></el-option>
+                        </el-select> -->
+                        <el-select v-model="value_a3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata()">
+                            <el-option label="全部" value="*"></el-option>
+                            <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
                         </el-select>
 
                         <el-button-group>
@@ -61,22 +71,33 @@
 
                 <el-tab-pane label="地区和运营商" name="second">
                     <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                        <el-select v-model="value1Active" placeholder="渠道ID" style="width: 10%;margin-right: 10px;" @change="getdata1()">
+                        <!-- <el-select v-model="value1Active" placeholder="渠道ID" style="width: 10%;margin-right: 10px;" @change="getdata1()">
                             <el-option label="全部" value="*"></el-option>
                             <el-option v-for="(item, index) in options1Active" :key="index" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
-                        <el-select v-model="value_b2" placeholder="视频名称" style="width: 10%;margin-right: 10px;" @change="getdata1()">
+                        </el-select> -->
+                        <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+
+                        <!-- <el-select v-model="value_b2" placeholder="视频名称" style="width: 10%;margin-right: 10px;" @change="getdata1()">
                             <el-option label="全部" value="*"></el-option>
                             <el-option v-for="(item, index) in optionsb2" :key="'1' + index" :label="item.label" :value="item.label"></el-option>
+                        </el-select> -->
+                        <el-select v-model="value_b2" placeholder="视频名称" style="width: 10%;margin-right: 10px;" @change="getdata1()">
+                            <el-option label="全部" value="*"></el-option>
+                            <el-option v-for="(item, index) in options1chanid" :key="index" :label="item.label" :value="item.label"></el-option>
                         </el-select>
-                        <el-select v-show="activeDq" v-model="value_b3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata1()">
+                        <!-- <el-select v-show="activeDq" v-model="value_b3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata1()">
                             <el-option label="全部" value="*"></el-option>
                             <el-option v-for="(item, index) in optionsb3" :key="'2' + index" :label="item.label" :value="item.label"></el-option>
+                        </el-select> -->
+                           <el-select v-show="activeDq"  v-model="value_b3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata1()">
+                            <el-option label="全部" value="*"></el-option>
+                            <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
                         </el-select>
-                          <el-select v-show="activeGys" v-model="value_b3" placeholder="地区" style="width: 10%;margin-right: 10px;" @change="getdata1()">
+                        <el-cascader v-show="activeGys" style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="options2" ref="cascaderAddr" :show-all-levels="false" v-model="value_b2" @change="getdata1"></el-cascader>
+                          <!-- <el-select v-show="activeGys" v-model="value_b3" placeholder="地区" style="width: 10%;margin-right: 10px;" @change="getdata1()">
                             <el-option label="全部" value="*"></el-option>
                             <el-option v-for="(item, index) in optionsb3" :key="'2' + index" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
+                        </el-select> -->
                         <el-button-group>
                             <el-button v-show="!shoudzyx" @click="today(1)">今天</el-button>
                             <el-button v-show="!shoudzyx" @click="yesterday(1)">昨天</el-button>
@@ -88,7 +109,7 @@
                         <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
                     </div>
                     <div class="device_form" style>
-                        <el-button-group>
+                        <el-button-group style="display: flex;justify-content: center;">
                             <el-button @click="goarea()">地区</el-button>
                             <el-button @click="gosupplier()">供应商</el-button>
                         </el-button-group>
@@ -124,21 +145,31 @@
                 </el-tab-pane>
                 <el-tab-pane label="播放统计" name="there">
                     <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                        <el-select v-model="value1Active" placeholder="渠道ID" style="width: 10%;margin-right: 10px;" @change="getdata()">
+                        <!-- <el-select v-model="value1Active" placeholder="渠道ID" style="width: 10%;margin-right: 10px;" @change="getdata()">
                             <el-option label="全部" value="*"></el-option>
                             <el-option v-for="(item, index) in options1Active" :key="index" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
-                        <el-select v-model="value_c1" placeholder="视频名称" style="width: 10%;margin-right: 10px;" @change="getdata2()">
+                        </el-select> -->
+                        <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+                        <!-- <el-select v-model="value_c1" placeholder="视频名称" style="width: 10%;margin-right: 10px;" @change="getdata2()">
                             <el-option label="全部" value="*"></el-option>
                             <el-option v-for="(item, index) in optionsc1" :key="index + 'a'" :label="item.label" :value="item.label"></el-option>
+                        </el-select> -->
+                        <el-select v-model="value_c1" placeholder="视频名称" style="width: 10%;margin-right: 10px;" @change="getdata2()">
+                            <el-option label="全部" value="*"></el-option>
+                            <el-option v-for="(item, index) in options1chanid" :key="index" :label="item.label" :value="item.label"></el-option>
                         </el-select>
-                        <el-select v-model="value_c2" placeholder="区域" style="width: 10%;margin-right: 10px;" @change="getdata2()">
+                        <!-- <el-select v-model="value_c2" placeholder="区域" style="width: 10%;margin-right: 10px;" @change="getdata2()">
                             <el-option label="全部" value="*"></el-option>
                             <el-option v-for="(item, index) in optionsc2" :key="index + 'label'" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
-                        <el-select v-model="value_c3" placeholder="运营商" style="width: 10%;margin-right: 10px;">
+                        </el-select> -->
+                        <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="options2" ref="cascaderAddr" :show-all-levels="false" v-model="value_c2" @change="getdata2"></el-cascader>
+                        <!-- <el-select v-model="value_c3" placeholder="运营商" style="width: 10%;margin-right: 10px;">
                             <el-option label="全部" value="*"></el-option>
                             <el-option v-for="(item, index) in optionsc3" :key="index + '_label'" :label="item.label" :value="item.label"></el-option>
+                        </el-select> -->
+                         <el-select   v-model="value_c3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata2()">
+                            <el-option label="全部" value="*"></el-option>
+                            <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
                         </el-select>
                         <el-button-group>
                             <el-button v-show="!shoudzyz" @click="today(2)">今天</el-button>
@@ -205,7 +236,8 @@ import {
     query_topisp_accesscnt_curve,
     query_playtimes_conditions,
     query_playtimes_curve,
-    query_playdata_table
+    query_playdata_table,
+    getvideo
 } from "../../servers/api";
 import echarts from "echarts";
 import common from '../../comm/js/util'
@@ -213,12 +245,215 @@ import common from '../../comm/js/util'
 export default {
     data() {
         return {
+             options3: [
+        {
+          label: "电信"
+        },
+
+        {
+          label: "移动"
+        },
+
+        {
+          label: "联通"
+        },
+        {
+          label: "其他"
+        }
+      ],
+             options2: [
+        {
+          value: "华北",
+          label: "华北",
+          children: [
+            {
+              value: "北京",
+              label: "北京"
+            },
+            {
+              value: "内蒙古",
+              label: "内蒙古"
+            },
+            {
+              value: "山西",
+              label: "山西"
+            },
+            {
+              value: "河北",
+              label: "河北"
+            },
+            {
+              value: "天津",
+              label: "天津"
+            }
+          ]
+        },
+        {
+          value: "西北",
+          label: "西北",
+          children: [
+            {
+              value: "宁夏",
+              label: "宁夏"
+            },
+            {
+              value: "陕西",
+              label: "陕西"
+            },
+            {
+              value: "甘肃",
+              label: "甘肃"
+            },
+            {
+              value: "青海",
+              label: "青海"
+            },
+            {
+              value: "新疆",
+              label: "新疆"
+            }
+          ]
+        },
+        {
+          value: "东北",
+          label: "东北",
+          children: [
+            {
+              value: "黑龙江",
+              label: "黑龙江"
+            },
+            {
+              value: "吉林",
+              label: "吉林"
+            },
+            {
+              value: "辽宁",
+              label: "辽宁"
+            }
+          ]
+        },
+        {
+          value: "华东",
+          label: "华东",
+          children: [
+            {
+              value: "福建",
+              label: "福建"
+            },
+            {
+              value: "江苏",
+              label: "江苏"
+            },
+            {
+              value: "安徽",
+              label: "安徽"
+            },
+            {
+              value: "山东",
+              label: "山东"
+            },
+            {
+              value: "上海",
+              label: "上海"
+            },
+            {
+              value: "浙江",
+              label: "浙江"
+            }
+          ]
+        },
+        {
+          value: "华中",
+          label: "华中",
+          children: [
+            {
+              value: "河南",
+              label: "河南"
+            },
+            {
+              value: "湖北",
+              label: "湖北"
+            },
+            {
+              value: "江西",
+              label: "江西"
+            },
+            {
+              value: "湖南",
+              label: "湖南"
+            }
+          ]
+        },
+        {
+          value: "西南",
+          label: "西南",
+          children: [
+            {
+              value: "贵州",
+              label: "贵州"
+            },
+            {
+              value: "云南",
+              label: "云南"
+            },
+            {
+              value: "重庆",
+              label: "重庆"
+            },
+            {
+              value: "四川",
+              label: "四川"
+            },
+            {
+              value: "西藏",
+              label: "西藏"
+            }
+          ]
+        },
+        {
+          value: "华南",
+          label: "华南",
+          children: [
+            {
+              value: "广东",
+              label: "广东"
+            },
+            {
+              value: "广西",
+              label: "广西"
+            },
+            {
+              value: "海南",
+              label: "海南"
+            }
+          ]
+        },
+        {
+          value: "其他",
+          label: "其他",
+          children: [
+            {
+              value: "香港",
+              label: "香港"
+            },
+            {
+              value: "澳门",
+              label: "澳门"
+            },
+            {
+              value: "台湾",
+              label: "台湾"
+            }
+          ]
+        }
+      ],
           activeDq:true,
           activeGys:false,
             shoudzy: false,
             shoudzyx: false,
             shoudzyz: false,
             value1Active: "",
+            value1Activechanid:"",
             options1Active: [],
             optionsa1: [],
             optionsa2: [],
@@ -309,7 +544,9 @@ export default {
             playTimesArray1: [], //图二y
             timeArray1: [], //图二x
             playTimesArray2: [], //图三y
-            timeArray2: [] //图三x
+            timeArray2: [], //图三x
+            options1chanid: [],
+            value1Activechanid: "",
         };
     },
     filters: {
@@ -344,6 +581,46 @@ export default {
         this.chart = null;
     },
     methods: {
+         //输入渠道ID查询
+    onchanidChange() {
+      this.options1chanid = [];
+      this.pageActive = 0;
+      if (this.value1Activechanid.length != 12) {
+        return false;
+      }
+      this.queryInfoVideo();
+    },
+    //查询视频名称
+    queryInfoVideo() {
+      let param = new Object();
+
+      param.chanid = this.value1Activechanid;
+
+      param.page = this.pageActive;
+      getvideo(param)
+        .then(res => {
+          if (res.status == 0) {
+            this.labelData = [];
+            res.result.cols.forEach((item, index) => {
+              let obj = {};
+              obj.value = item.url_name;
+              obj.label = item.url_name;
+              this.labelData.push(obj);
+            });
+            this.options1chanid = this.options1chanid.concat(this.labelData);
+            if (res.result.les_count == 0) {
+              return false;
+            } else {
+              this.pageActive++;
+              this.queryInfoVideo();
+            }
+          } else {
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
         //获取页码
         getpage(pages) {
             this.pageNo = pages;
@@ -496,13 +773,13 @@ export default {
             params.end_ts = this.endtime;
             params.time_unit = this.timeUnit;
             if (data == 0) {
-                if (this.value_a1) {
-                    params.fileName = this.value_a1;
+                if (this.value1Activechanid) {
+                    params.fileName = this.value1Activechanid;
                 } else {
                     params.fileName = "*";
                 }
-                if (this.value_a2) {
-                    params.region = this.value_a2;
+                if (this.value_a2[1]) {
+                    params.region = this.value_a2[1];
                 } else {
                     params.region = "*";
                 }
@@ -512,8 +789,8 @@ export default {
                     params.isp = "*";
                 }
 
-                if (this.value1Active !== "") {
-                    params.chanId = this.value1Active;
+                if (this.value1Activechanid !== "") {
+                    params.chanId = this.value1Activechanid;
                 } else {
                     params.chanId = "*";
                 }
@@ -558,8 +835,8 @@ export default {
                 } else {
                     params.isp = "*";
                 }
-                if (this.value1Active !== "") {
-                    params.chanId = this.value1Active;
+                if (this.value1Activechanid !== "") {
+                    params.chanId = this.value1Activechanid;
                 } else {
                     params.chanId = "*";
                 }
@@ -609,8 +886,8 @@ export default {
                 } else {
                     params.isp = "*";
                 }
-                if (this.value1Active !== "") {
-                    params.chanId = this.value1Active;
+                if (this.value1Activechanid !== "") {
+                    params.chanId = this.value1Activechanid;
                 } else {
                     params.chanId = "*";
                 }
@@ -656,8 +933,8 @@ export default {
             } else {
                 params.isp = "*";
             }
-            if (this.value1Active !== "") {
-                params.chanId = this.value1Active;
+            if (this.value1Activechanid !== "") {
+                params.chanId = this.value1Activechanid;
             } else {
                 params.chanId = "*";
             }
@@ -790,17 +1067,22 @@ export default {
                 this.value_a1 = "";
                 this.value_a2 = "";
                 this.value_a3 = "";
+                this.value1Activechanid=""
                 this.getseach(0);
             } else if (tab.index == 1) {
                 this.value_b1 = "";
                 this.value_b2 = "";
                 this.value_b3 = "";
                 this.twob = false;
+                this.value1Activechanid=""
+
                 this.getseach(1);
             } else if (tab.index == 2) {
                 this.value_c1 = "";
                 this.value_c2 = "";
                 this.value_c3 = "";
+                this.value1Activechanid=""
+
                 this.getseach(3);
             }
         },

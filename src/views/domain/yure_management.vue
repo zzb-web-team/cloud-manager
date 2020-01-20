@@ -2,9 +2,6 @@
 <div class="content">
     <el-breadcrumb separator="/">
         <el-breadcrumb-item>域名管理</el-breadcrumb-item>
-        <el-breadcrumb-item>
-            <a href="/">刷新预热管理</a>
-        </el-breadcrumb-item>
     </el-breadcrumb>
     <div>
         <!-- 搜索 -->
@@ -29,10 +26,9 @@
                 </el-select>
                 <span>注册时间：</span>
                 <el-date-picker v-model="value1" type="datetimerange" range-separator="至" :picker-options="pickerOptions" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
-                <div class="seach_bottom_btn">
-                    <el-button type="primary" plain size="mini" @click="seachuser()">确定</el-button>
-                    <el-button plain size="mini" @click="reset()">重置</el-button>
-                </div>
+                <el-button type="primary"  @click="seachuser()" style="margin-left:8px;">确定</el-button>
+                 <el-button  type="primary"  @click="reset()">重置</el-button>  
+           
             </div>
         </div>
         <!-- 表格 -->

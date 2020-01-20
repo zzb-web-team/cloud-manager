@@ -18,11 +18,11 @@
             > -->
                 </div>
             </div>
-            <el-tab-pane name="zero">
+            <!-- <el-tab-pane name="zero">
                 <p class="bath_title_btn" slot="label">
                     <i class="el-icon-arrow-left"></i>返回URL列表
                 </p>
-            </el-tab-pane>
+            </el-tab-pane> -->
             <el-tab-pane label="基础配置" name="one">
                 <div style="font-weight: 600;font-size: 18px;text-align: left;margin: 10px 0;">
                     基础信息

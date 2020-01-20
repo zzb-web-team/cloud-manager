@@ -25,12 +25,10 @@
             </div>
         </div>
         <div v-if="optiondisplay" class="seach_bottom">
-            <span>选择日期：</span>
+            <span>启用时间：</span>
             <el-date-picker v-model="value1" type="datetimerange" range-separator="至" :picker-options="pickerOptions" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
-            <div class="seach_bottom_btn">
-                <el-button type="primary" plain size="mini" @click="seachuser()">确定</el-button>
-                <el-button plain size="mini" @click="reset()">重置</el-button>
-            </div>
+             <el-button type="primary"  @click="seachuser()" style="margin-left:8px;">确定</el-button>
+            <el-button  type="primary"  @click="reset()">重置</el-button>    
         </div>
     </div>
 
@@ -38,18 +36,24 @@
     <div style="background: #fff;margin-top:10px;padding:20px;">
         <div style="text-align:right;padding-bottom:10px;">
             <el-button type="primary" @click="toexportExcelNew()">导出</el-button>
-
         </div>
         <el-table stripe :data="tableData" :cell-style="rowClass" :header-cell-style="headClass" style="width: 100%">
             <el-table-column prop="ipInfo" label="点播IP" width="180"></el-table-column>
             <el-table-column prop="chanId" label="渠道ID" width="180"></el-table-column>
             <el-table-column prop="fileUrl" label="URL"></el-table-column>
             <el-table-column prop="dataFlow" label="消费流量"></el-table-column>
-            <el-table-column prop="accessCnt" label="请求数"></el-table-column>
-            <el-table-column prop="failCnt" label="失败请求数"></el-table-column>
+            <el-table-column prop="dataFlowss" label="占用宽带"></el-table-column>
+            <el-table-column prop="accessCnt" label="请求结果">
+                <template slot-scope="scope">
+                   
+                </template>
+            </el-table-column>
+                        <!-- <el-table-column prop="accessCnt" label="请求数"></el-table-column> -->
+
+            <!-- <el-table-column prop="failCnt" label="失败请求数"></el-table-column> -->
             <el-table-column prop="startTS" label="启用时间"></el-table-column>
-            <el-table-column prop="endTS" label="结束时间"></el-table-column>
-            <el-table-column prop="totalTime" label="用时"></el-table-column>
+            <!-- <el-table-column prop="endTS" label="结束时间"></el-table-column>
+            <el-table-column prop="totalTime" label="用时"></el-table-column> -->
         </el-table>
     </div>
     <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
@@ -190,7 +194,9 @@ export default {
                 fileUrl: this.inputActive2 == "" ? "*" : this.inputActive2,
                 userIp: this.input == "" ? "*" : this.input,
                 pageNo: this.currentPage - 1,
-                pageSize: 10
+                pageSize: 10,
+                requestFlag:2
+
             };
             query_accelerate_log(param)
                 .then(res => {
@@ -270,7 +276,8 @@ export default {
                 fileUrl: this.inputActive2 == "" ? "*" : this.inputActive2,
                 userIp: this.input == "" ? "*" : this.input,
                 pageNo: this.pageActive,
-                pageSize: 10
+                pageSize: 10,
+                 requestFlag:2
             };
             query_accelerate_log(param)
                 .then(res => {

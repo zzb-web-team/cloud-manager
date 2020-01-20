@@ -25,10 +25,9 @@
                 </el-select>
                 <span>日期：</span>
                 <el-date-picker v-model="valueTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
-                <div class="seach_bottom_btn">
-                    <el-button type="primary" plain size="mini" @click="seachuser()" style="margin-left:37px;">确定</el-button>
-                    <el-button plain size="mini" @click="reset()">重置</el-button>
-                </div>
+                    <el-button type="primary"  @click="seachuser()" style="margin-left:8px;">确定</el-button>
+                    <el-button  type="primary"  @click="reset()">重置</el-button>     
+           
             </div>
         </div>
         <!-- 表格 -->
@@ -172,7 +171,8 @@ import {
     userlist,
     sdklist,
     savesdk,
-    editsdk
+    editsdk,
+    hostUrl
 } from "../../servers/api";
 export default {
     data() {
@@ -569,7 +569,7 @@ this.querySdkList()
                 formData.append('end', end);
                 formData.append('totalSize', totalSize);
                 formData.append('total', tota_temp);
-                var url = 'http://39.100.131.247/cloud/uploadsdk';
+                var url = hostUrl+'/cloud/uploadsdk';
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = onchange;
                 xhr.open('POST', url);
@@ -663,7 +663,7 @@ this.querySdkList()
                 formData.append('end', end);
                 formData.append('totalSize', totalSize);
                 formData.append('total', tota_temp);
-                var url = 'http://39.100.131.247/cloud/uploadsdk';
+                var url = hostUrl+'/cloud/uploadsdk';
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = onchange;
                 xhr.open('POST', url);

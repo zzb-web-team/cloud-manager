@@ -132,26 +132,17 @@ export default new Router({
                 hidden: true
             },
             {
-                path: '/application',
+                path: '/yure_management',
                 name: '刷新预热管理',  
-                component: home_five,
-                children: [
-                    {
-                    path: '/yure_management',
-                    name: '刷新预热管理',
-                    component: yure_management,
-                },
-                {
-                
-                        path: '/yure_management1',
-                        name: '预热/管理',
-                        component: yure_management1,
-                        hidden: true
-                    
-
-                }
-            ]
+                component: yure_management,
             },
+               {
+                
+                            path: '/yure_management1',
+                            name: '预热/管理',
+                            component: yure_management1,
+                            hidden: true
+                    }
             ]
         }, {
             path: '/c',

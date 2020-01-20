@@ -2,9 +2,6 @@
 <div class="content">
     <el-breadcrumb separator="/">
         <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>
-            <a href="/">用户列表</a>
-        </el-breadcrumb-item>
     </el-breadcrumb>
     <section class="myself-container">
         <div class="device_form">
