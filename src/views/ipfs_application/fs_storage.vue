@@ -112,6 +112,13 @@ export default {
     methods: {
         //导出
         toexportExcelNew() {
+              if(this.tableData.length==0){
+                this.$message({
+                        message: "无数据可导出",
+                        type: "warning"
+                    }) 
+                    return false
+            }
               let startTime = 0
             let endTime = 0
             if (this.value1) {

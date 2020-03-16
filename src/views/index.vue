@@ -249,7 +249,7 @@ export default {
     position: absolute;
     top: 60px;
     bottom: 0px;
-    overflow: hidden;
+    // overflow: hidden;
     aside {
       flex: 0 0 230px;
       width: 230px;

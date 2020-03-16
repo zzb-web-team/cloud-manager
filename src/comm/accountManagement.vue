@@ -151,6 +151,8 @@
 <script>
 import tableBarActive1 from "../../components/tableBarActive1";
 import mySearch from "../../components/mySearch";
+import VueCookies from "vue-cookies";
+
 import pageNation from "../../components/pageNation";
 import {
     userlist,
@@ -401,6 +403,8 @@ export default {
             let param = new Object()
             param.ids = this.allId.join(",")
             param.type = 0
+            param.uid = VueCookies.get("adminid");
+            param.uname = VueCookies.get("adminuser");
             userctrl(param).then(res => {
                 if(res.status==0){
                     this.$message({
@@ -426,6 +430,8 @@ export default {
             let param = new Object()
             param.ids = this.allId.join(",")
             param.type = 0
+            param.uid = VueCookies.get("adminid");
+            param.uname = VueCookies.get("adminuser");
             userctrl(param).then(res => {
                 if(res.status==0){
                     this.$message({
@@ -451,6 +457,8 @@ export default {
             let param = new Object()
             param.ids = this.allId.join(",")
             param.type = 1
+                param.uid = VueCookies.get("adminid");
+            param.uname = VueCookies.get("adminuser");
             userctrl(param).then(res => {
                 if(res.status==0){
                     this.$message({
@@ -476,6 +484,8 @@ export default {
             let param = new Object()
             param.ids = this.allId.join(",")
             param.type = 2
+                param.uid = VueCookies.get("adminid");
+            param.uname = VueCookies.get("adminuser");
             userctrl(param).then(res => {
                 if(res.status==0){
                     this.$message({
@@ -559,7 +569,9 @@ export default {
                         role_id: 0,
                         phone: this.ruleForm2.phone,
                         status: parseInt(this.ruleForm2.radio),
-                        name: this.ruleForm2.name
+                        name: this.ruleForm2.name,
+                        uid:VueCookies.get("adminid"),
+                        uname:VueCookies.get("adminuser")
                     };
                     userinsert(loginParams).then(data => {
                         this.logining = false;
@@ -796,7 +808,7 @@ export default {
 
 .myself-container {
     width: 100%;
-    min-width: 1600px;
+   // //min-width: 1600px;
 
     .devide_title {
         width: 100%;

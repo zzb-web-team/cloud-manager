@@ -79,6 +79,8 @@ import {
     setactionlog
 } from "../../servers/api";
 import common from "../../comm/js/util.js";
+import VueCookies from "vue-cookies";
+
 import {
     Stats
 } from 'fs';
@@ -161,7 +163,7 @@ export default {
 
                 },
                 {
-                    prop: "emails",
+                    prop: "dataFlow",
                     label: "累计消费流量",
 
                 },
@@ -263,7 +265,7 @@ export default {
                     "username",
                     "phone",
                     "email",
-                    "email",
+                    "dataFlow",
                     "time_create",
 
                 ];
@@ -505,7 +507,10 @@ export default {
                         role_id: 0,
                         phone: this.ruleForm2.phone,
                         status: parseInt(this.ruleForm2.radio),
-                        name: this.ruleForm2.name
+                        name: this.ruleForm2.name,
+                        uid:VueCookies.get("adminid"),
+                         uname:VueCookies.get("adminuser")
+
                     };
                     userinsert(loginParams).then(data => {
                         this.dialogVisible = false;
@@ -671,8 +676,8 @@ export default {
 }
 
 .myself-container {
-    width: 100%;
-    min-width: 1600px;
+    // width: 100%;
+    // //min-width: 1600px;
     text-align: left;
 
     .devide_title {

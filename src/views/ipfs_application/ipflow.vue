@@ -44,9 +44,9 @@
             <el-table-column prop="dataFlow" label="消费流量"></el-table-column>
             <el-table-column prop="dataFlowss" label="占用宽带"></el-table-column>
             <el-table-column prop="accessCnt" label="请求结果">
-                <template slot-scope="scope">
+                <!-- <template slot-scope="scope">
                    
-                </template>
+                </template> -->
             </el-table-column>
                         <!-- <el-table-column prop="accessCnt" label="请求数"></el-table-column> -->
 
@@ -123,6 +123,14 @@ export default {
     methods: {
         //导出
         toexportExcelNew() {
+          
+            if(this.tableData.length==0){
+                this.$message({
+                        message: "无数据可导出",
+                        type: "warning"
+                    }) 
+                    return false
+            }
             let startTime = 0;
             let endTime = 0;
             if (this.value1) {

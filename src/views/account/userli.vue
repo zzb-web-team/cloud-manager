@@ -248,6 +248,7 @@
 
 <script>
 import tableBarActive1 from "../../comm/tableBarActive1";
+import VueCookies from "vue-cookies";
 
 import pageNation from "../../comm/pageNation";
 import {
@@ -586,7 +587,9 @@ export default {
             role_id: 0,
             phone: this.ruleForm2.phone,
             status: parseInt(this.ruleForm2.radio),
-            name: this.ruleForm2.name
+            name: this.ruleForm2.name,
+            uid:VueCookies.get("adminid"),
+           uname:VueCookies.get("adminuser")
           };
           userinsert(loginParams).then(data => {
             this.dialogVisible = false;
@@ -636,6 +639,8 @@ export default {
       }
       let param = new Object();
       param = this.ruleForm3;
+     this.ruleForm3.uid = VueCookies.get("adminid");
+          this.ruleForm3.uname = VueCookies.get("adminuser");
 
       this.$confirm("确定执行该操作麽吗", "提示", {
         type: "warning"
@@ -721,6 +726,8 @@ export default {
         if (valid) {
           var loginParams = this.ruleForm3;
           this.ruleForm3.status = parseInt(this.ruleForm3.radio);
+          this.ruleForm3.uid = VueCookies.get("adminid");
+          this.ruleForm3.uname = VueCookies.get("adminuser");
           userupdate(loginParams).then(data => {
             this.dialogVisible2 = false;
             let { msg, status, user } = data;
@@ -756,6 +763,8 @@ export default {
           this.ruleForm3.password = this.ruleForm4.password;
           this.ruleForm3.password2 = this.ruleForm4.password2;
           this.ruleForm3.status = parseInt(this.ruleForm3.radio);
+            this.ruleForm3.uid = VueCookies.get("adminid");
+          this.ruleForm3.uname = VueCookies.get("adminuser");
 
           userupdate(loginParams).then(data => {
             let { msg, status, user } = data;
@@ -873,8 +882,8 @@ export default {
 }
 
 .myself-container {
-  width: 100%;
-  min-width: 1600px;
+  // width: 100%;
+  // //min-width: 1600px;
   text-align: left;
   .devide_title {
     width: 100%;

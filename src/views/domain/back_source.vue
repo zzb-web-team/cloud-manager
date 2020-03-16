@@ -255,7 +255,8 @@ import {
   config_url,
   change_state,
   getterminal,
-  check_label
+  check_label,
+  query_config
 } from "../../servers/api";
 import { dateToMs, getymdtime, setbatime } from "../../servers/sevdate";
 export default {
@@ -640,9 +641,60 @@ export default {
     this.options = [];
     this.geturlconfig();
     this.getlabrl2();
+    this.gettimeInfo()
   },
   methods: {
-    //查看url
+    //获取时间
+    gettimeInfo(){
+    //查看url{
+        let parmas = new Object();
+      parmas.url = this.urlLinks;
+      parmas.page = 0;
+     // parmas.type= 0
+      parmas.buser_id = this.buser_ids + "";
+      query_url(parmas)
+        .then(res => {
+          this.datalist.create_time = res.data.result[0].create_time;
+        //   this.datalist.url = res.data.result[0].url;
+        //   this.datalist.label = res.data.result[0].label;
+        //   this.oldlabel = res.data.result[0].label;
+        //   this.datalist.label2 = res.data.result[0].label2;
+        //   this.datalist.state = res.data.result[0].state;
+        //   //回源参数
+        //   this.datalist.host_url.url = res.data.result[0].host_url.url;
+        //   if (res.data.result[0].host_url.valid == 0) {
+        //     this.datalist.host_url.valid = false;
+        //     //回源状态
+        //     this.valuek = false;
+        //     this.urlno = false;
+        //   } else {
+        //     this.datalist.host_url.valid = true;
+        //     this.valuek = true;
+        //     this.urlno = true;
+        //   }
+        //   //缓存参数
+        //   let concash = {};
+        //   if (res.data.result[0].cache_config.valid == 0) {
+        //     //缓存状态
+        //     concash.valid = false;
+        //     this.valueh = false;
+        //   } else {
+        //     concash.valid = true;
+        //     this.valueh = true;
+        //   }
+        //   this.datalist.cache_con = res.data.result[0].cache_config.data;
+        //   this.datalist.custom_page = res.data.result[0].custom_page;
+        // }
+          // this.datalist.create_time = res.data.result[0].create_time;
+         
+        }
+        )
+        .catch(err => {
+          console.log(err);
+        });
+
+
+    },
     cleckurl() {
       this.zurl = true;
       this.sleckurl = this.datalist.url;
@@ -682,19 +734,51 @@ export default {
     geturlconfig() {
       let parmas = new Object();
       parmas.url = this.urlLinks;
-      parmas.page = 0;
-      parmas.buser_id = this.buser_ids + "";
-      query_url(parmas)
+     // parmas.page = 0;
+      parmas.type= 0
+      //parmas.buser_id = this.buser_ids + "";
+      query_config(parmas)
         .then(res => {
-          this.datalist.create_time = res.data.result[0].create_time;
-          this.datalist.url = res.data.result[0].url;
-          this.datalist.label = res.data.result[0].label;
-          this.oldlabel = res.data.result[0].label;
-          this.datalist.label2 = res.data.result[0].label2;
-          this.datalist.state = res.data.result[0].state;
+        //   this.datalist.create_time = res.data.result[0].create_time;
+        //   this.datalist.url = res.data.result[0].url;
+        //   this.datalist.label = res.data.result[0].label;
+        //   this.oldlabel = res.data.result[0].label;
+        //   this.datalist.label2 = res.data.result[0].label2;
+        //   this.datalist.state = res.data.result[0].state;
+        //   //回源参数
+        //   this.datalist.host_url.url = res.data.result[0].host_url.url;
+        //   if (res.data.result[0].host_url.valid == 0) {
+        //     this.datalist.host_url.valid = false;
+        //     //回源状态
+        //     this.valuek = false;
+        //     this.urlno = false;
+        //   } else {
+        //     this.datalist.host_url.valid = true;
+        //     this.valuek = true;
+        //     this.urlno = true;
+        //   }
+        //   //缓存参数
+        //   let concash = {};
+        //   if (res.data.result[0].cache_config.valid == 0) {
+        //     //缓存状态
+        //     concash.valid = false;
+        //     this.valueh = false;
+        //   } else {
+        //     concash.valid = true;
+        //     this.valueh = true;
+        //   }
+        //   this.datalist.cache_con = res.data.result[0].cache_config.data;
+        //   this.datalist.custom_page = res.data.result[0].custom_page;
+        // }
+          // this.datalist.create_time = res.data.result[0].create_time;
+          this.datalist.url = res.data.data.url;
+          this.datalist.label = res.data.data.label;
+          this.oldlabel = res.data.data.label;
+          this.datalist.label2 = res.data.data.label2;
+          this.datalist.state = res.data.data.state;
           //回源参数
-          this.datalist.host_url.url = res.data.result[0].host_url.url;
-          if (res.data.result[0].host_url.valid == 0) {
+          this.datalist.host_url.url = res.data.data.host_url.url;
+          if (res.data.data.host_url.valid == 0) {
             this.datalist.host_url.valid = false;
             //回源状态
             this.valuek = false;
@@ -706,7 +790,7 @@ export default {
           }
           //缓存参数
           let concash = {};
-          if (res.data.result[0].cache_config.valid == 0) {
+          if (res.data.data.cache_config.valid == 0) {
             //缓存状态
             concash.valid = false;
             this.valueh = false;
@@ -714,9 +798,10 @@ export default {
             concash.valid = true;
             this.valueh = true;
           }
-          this.datalist.cache_con = res.data.result[0].cache_config.data;
-          this.datalist.custom_page = res.data.result[0].custom_page;
-        })
+          this.datalist.cache_con = res.data.data.cache_config.data;
+          this.datalist.custom_page = res.data.data.custom_page;
+        }
+        )
         .catch(err => {
           console.log(err);
         });
@@ -880,11 +965,11 @@ export default {
     //添加回源信息--取消
     nohosturl(formName) {
       this.dialogVisible = false;
-      //if (this.huiurl.url == "") {
+      if (this.huiurl.url == "") {
       this.valuek = false;
       this.urlno = false;
-      this.datalist.host_url.valid = false;
-      //}
+     // this.datalist.host_url.valid = false;
+      }
 
       this.$refs[formName].resetFields();
     },

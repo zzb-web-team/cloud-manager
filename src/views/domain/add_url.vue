@@ -24,7 +24,7 @@
                     <el-option v-for="(item, index) in yewu" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="视频终端:" :label-width="formLabelWidth" prop="labe2" :rules="{
+            <!-- <el-form-item label="视频终端:" :label-width="formLabelWidth" prop="labe2" :rules="{
             required: true,
             message: '视频终端不能为空',
             trigger: 'blur'
@@ -32,7 +32,7 @@
                 <el-select v-model="dynamicValidateForm.labe2" placeholder="请选择" @change="onchange">
                     <el-option v-for="(item, index) in labelData" :key="index + item" :label="item.label" :value="item" style="width:250px;"></el-option>
                 </el-select>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="标签:" :label-width="formLabelWidth" prop="labe1" :rules="[{ validator: jiozhu, trigger: 'blur' }]">
                 <el-input class="other_bgc" v-model="dynamicValidateForm.labe1" placeholder="4~64个字符，英文，英文加数字组合" autocomplete="off"></el-input>
             </el-form-item>
@@ -202,7 +202,8 @@ export default {
                         parmise.url_type = this.dynamicValidateForm.radio;
                         parmise.url_name = this.dynamicValidateForm.url_name;
                         parmise.label = this.dynamicValidateForm.labe1;
-                        parmise.label2 = this.dynamicValidateForm.labe2.value;
+                        parmise.label2 = 0;
+                        // parmise.label2 = this.dynamicValidateForm.labe2.value;
                         parmise.buser_id = this.dynamicValidateForm.newbuser_id + "";
                         parmise.create_time = parseInt((new Date()).getTime() / 1000)
                         let newparam = new Object()
@@ -288,7 +289,8 @@ export default {
                                 parmise.url_type = this.dynamicValidateForm.radio;
                                 parmise.url_name = this.dynamicValidateForm.url_name;
                                 parmise.label = this.dynamicValidateForm.labe1;
-                                parmise.label2 = this.dynamicValidateForm.labe2.value;
+                                parmise.label2 =0;
+                                // parmise.label2 = this.dynamicValidateForm.labe2.value;
                                 parmise.buser_id = this.dynamicValidateForm.newbuser_id + "";
                                 parmise.create_time = parseInt((new Date()).getTime() / 1000)
                                 let newparam = new Object()

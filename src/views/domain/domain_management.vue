@@ -460,10 +460,18 @@ export default {
   },
   methods: {
     //监控
-    monitor() {
+    monitor(row) {
+      let monitorUrlname=row.url
+      let monitorChanId=row.buser_id
+       //localStorage.setItem("monitorUrlname", monitorUrlname);
+     // localStorage.setItem("monitorChanId", monitorChanId);
       this.$router.push({
-        path: "/nodeMap1"
-      });
+        path: "/nodeMap1",
+          query: {
+          monitorUrlname: monitorUrlname, monitorChanId: monitorChanId
+        }
+      },
+      );
     },
     //状态选这改变
     onchangeTab(val) {
@@ -521,7 +529,7 @@ export default {
         // 上面的index、nickName、name是tableData里对象的属性
         const list = this.tableData2; //把data里的tableData存到list
         const data = this.formatJson(filterVal, list);
-        export_json_to_excel(tHeader, data, "域名管理");
+        export_json_to_excel(tHeader, data, "url管理");
       });
     },
     formatJson(filterVal, jsonData) {
@@ -712,7 +720,7 @@ export default {
     //导出
     toexportExcel() {
       let params = new Object();
-      params.page = this.currentPage - 1;
+      params.page = this.pageActive ;
       params.buser_id = this.buser_id;
       params.url = this.nowurl;
       params.order = this.order;
@@ -751,7 +759,7 @@ export default {
               this.toexportExcel();
             }
 
-            this.tableData = res.data.result;
+           // this.tableData = res.data.result;
             this.total_cnt = res.data.total;
           } else {
             this.common.monitoringLogs("导出", "导出URL信息表", 0);

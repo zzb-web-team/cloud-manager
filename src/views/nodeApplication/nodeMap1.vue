@@ -17,7 +17,7 @@
                             <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
                         </el-select>
                         <el-button-group>
-                            <el-button v-show="!shoudzyx" @click="today()">今天</el-button>
+                            <el-button v-show="!shoudzyx" @click="today()">今天1</el-button>
                             <el-button v-show="!shoudzyx" @click="yesterday()">昨天</el-button>
                             <el-button v-show="!shoudzyx" @click="sevendat()">近7天</el-button>
                             <el-button v-show="!shoudzyx" @click="thirtyday()">近30天</el-button>
@@ -463,6 +463,18 @@ export default {
     // if (this.$route.query.urldata) {
     //   console.log(this.$route.query.urldata);
     // }
+      let monitorUrlname = this.$route.query.monitorUrlname
+    if (monitorUrlname) {
+      this.value1 = monitorUrlname;
+    } else {
+      this.value1 = "";
+    }
+    let monitorChanId = this.$route.query.monitorChanId
+    if (monitorChanId) {
+      this.value1Activechanid = monitorChanId;
+    } else {
+      this.value1Activechanid = "";
+    }
 
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.endtime = Date.parse(new Date()) / 1000;
@@ -852,21 +864,45 @@ export default {
     //选项卡
     handleClick(tab, event) {
       if (tab.index == 0) {
-        this.value1 = "";
+       // this.value1 = "";
         this.value2 = "";
         this.value3 = "";
-        this.value1Activechanid = "";
+       // this.value1Activechanid = "";
         this.options1chanid = [];
+              let monitorUrlname = this.$route.query.monitorUrlname
+    if (monitorUrlname) {
+      this.value1 = monitorUrlname;
+    } else {
+      this.value1 = "";
+    }
+    let monitorChanId =this.$route.query.monitorChanId
+    if (monitorChanId) {
+      this.value1Activechanid = monitorChanId;
+    } else {
+      this.value1Activechanid = "";
+    }
 
         this.timeUnit = 60;
         this.getseachlabel1();
       } else {
         this.valuea1 = "";
-        this.value1 = "";
+        //this.value1 = "";
         this.valuea2 = "";
         this.valuea3 = "";
         this.options1chanid = [];
-        this.value1Activechanid = "";
+        //this.value1Activechanid = "";
+              let monitorUrlname = this.$route.query.monitorUrlname
+    if (monitorUrlname) {
+      this.value1 = monitorUrlname;
+    } else {
+      this.value1 = "";
+    }
+    let monitorChanId =this.$route.query.monitorChanId
+    if (monitorChanId) {
+      this.value1Activechanid = monitorChanId;
+    } else {
+      this.value1Activechanid = "";
+    }
 
         this.timeUnit = 60;
         this.getseachlabel2();
@@ -980,7 +1016,7 @@ export default {
 <style lang="scss">
 .myself-container {
   width: 100%;
-  min-width: 1600px;
+  //min-width: 1600px;
 
   .device_form {
     width: auto;

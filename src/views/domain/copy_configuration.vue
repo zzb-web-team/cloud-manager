@@ -38,7 +38,7 @@
                 </el-table-column>
             </el-table>
             <el-button style="margin-top: 12px;" type="primary" @click="next">下一步</el-button>
-            <el-button style="margin-top: 12px;" @click="fureset">取消</el-button>
+            <el-button style="margin-top: 12px;" @click="furesetacitive">取消</el-button>
         </div>
         <div v-else-if="actives === 2">
             <div style="display: flex;justify-content: flex-start;align-items: center;margin: 10px 0">
@@ -60,7 +60,7 @@
                         </el-table-column>
                         <el-table-column label="url">
                             <template slot-scope="scope">
-                                <div style="width: 700px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin:0 auto;"> {{scope.row}}</div>
+                                <div> {{scope.row}}</div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -96,7 +96,8 @@ import fenye from "@/components/fenye";
 import {
     query_url,
     config_url,
-    query_urllabel
+    query_urllabel,
+    query_config
 } from "../../servers/api";
 import {
     dateToMs,
@@ -200,6 +201,11 @@ export default {
         this.geturllist();
     },
     methods: {
+        furesetacitive(){
+            this.$router.push({
+                 path: "/domain_management"
+            });
+        },
         getRowKey(row) {
             return row.url
         },
@@ -224,38 +230,71 @@ export default {
         },
         //获取url配置
         geturlconfig() {
-            let params = new Object();
-            params.page = 0;
-            params.buser_id = this.tempChanId + "";
+           // let params = new Object();
+            // params.page = 0;
+            // params.buser_id = this.tempChanId + "";
+            // params.url = this.urlLinks;
+            // params.state = "";
+            // params.start_time = "";
+            // params.end_time = "";
+            // params.order = 0;
+             let params = new Object();
+               // params.end_time = "";
             params.url = this.urlLinks;
-            params.state = "";
-            params.start_time = "";
-            params.end_time = "";
-            params.order = 0;
-            query_url(params)
+            params.type=0
+
+            query_config(params)
                 .then(res => {
-                    if (res.status == 0) {
-                        this.copydatalist = res.data.result[0];
+                    console.log(res.data.data)
+                    // if (res.status == 0) {
+                    //     this.copydatalist = res.data.result[0];
+                    //     //自定义配置
+                    //     if (res.data.result[0].custom_page.length <= 0) {
+                    //         this.futableData[3].nowconfiguration = "未配置";
+                    //     } else {
+                    //         this.futableData[3].nowconfiguration = "已配置";
+                    //     }
+                    //     //缓存配置
+                    //     if (res.data.result[0].cache_config.valid == 0) {
+                    //         this.futableData[1].nowconfiguration = "未配置";
+                    //     } else {
+                    //         this.futableData[1].nowconfiguration = "已配置";
+                    //     }
+                    //     //缓存配置--过期时间
+                    //     if (res.data.result[0].cache_config.data.length <= 0) {
+                    //         this.futableData[2].nowconfiguration = "未配置";
+                    //     } else {
+                    //         this.futableData[2].nowconfiguration = "已配置";
+                    //     }
+                    //     //回源配置
+                    //     if (res.data.result[0].host_url.url == "") {
+                    //         this.futableData[0].nowconfiguration = "未配置";
+                    //     } else {
+                    //         this.futableData[0].nowconfiguration = "已配置";
+                    //     }
+                    // }
+                     if (res.status == 0) {
+                        this.copydatalist = res.data.data;
                         //自定义配置
-                        if (res.data.result[0].custom_page.length <= 0) {
+                        if (res.data.data.custom_page.length <= 0) {
                             this.futableData[3].nowconfiguration = "未配置";
                         } else {
                             this.futableData[3].nowconfiguration = "已配置";
                         }
                         //缓存配置
-                        if (res.data.result[0].cache_config.valid == 0) {
+                        if (res.data.data.cache_config.valid == 0) {
                             this.futableData[1].nowconfiguration = "未配置";
                         } else {
                             this.futableData[1].nowconfiguration = "已配置";
                         }
                         //缓存配置--过期时间
-                        if (res.data.result[0].cache_config.data.length <= 0) {
+                        if (res.data.data.cache_config.data.length <= 0) {
                             this.futableData[2].nowconfiguration = "未配置";
                         } else {
                             this.futableData[2].nowconfiguration = "已配置";
                         }
                         //回源配置
-                        if (res.data.result[0].host_url.url == "") {
+                        if (res.data.data.host_url.url == "") {
                             this.futableData[0].nowconfiguration = "未配置";
                         } else {
                             this.futableData[0].nowconfiguration = "已配置";
@@ -345,6 +384,11 @@ export default {
                                 type: "success",
                                 message: "复制配置成功!"
                             });
+                                
+                            this.$router.push({
+                                 path: "/domain_management"
+                            });
+                                      
                         } else {
                             let errarr = "";
                             res.data.res_data.forEach((item, index) => {

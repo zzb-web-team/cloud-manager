@@ -9,12 +9,12 @@
             <el-button slot="trigger" size="small" class="MyctiveButton" type="primary">上传Excel文件</el-button>
             <el-button type="primary" @click="down" plain id="dwonexcel">下载模板</el-button>
 
-            <el-button style="position: absolute;left: 37px;bottom: 23px;width:85px;" size="small" type="success" @click="submitUpload">导 入</el-button>
+            <el-button style="position: absolute;left: 37px;bottom: 23px;width:85px;" size="small" type="success" :disabled="buttonActive" @click="submitUpload">导 入</el-button>
             <el-button style="position: absolute;left: 130px;bottom: 23px;width:85px;" size="small" type="success" :disabled="noClick" @click="submitUploadOK">确定</el-button>
         </el-upload>
         <div class="url_con" v-if="tableType">
             <!-- 表格 -->
-            <el-table border :data="tableList" style="width: 100%" height="420px">
+            <el-table border :data="tableList" style="width: 100%" height="405px">
                 <el-table-column label="URL">
                     <template slot-scope="scope">
                         <span v-if="scope.row.urlstatus===false" style="color:red">{{scope.row.url}}</span>
@@ -88,6 +88,7 @@ import {
 export default {
     data() {
         return {
+            buttonActive:false,
             noClick: true,
             fileList: [],
             message: [],
@@ -95,7 +96,8 @@ export default {
             title: "",
             dialogVisible: false,
             tableType: false,
-            errorcount: 0
+            errorcount: 0,
+            activeStatus:true
         };
     },
     mounted:function(){
@@ -118,7 +120,19 @@ export default {
         splitData(list) {
 
             this.uploadData(list, 1);
+             setTimeout(this.gorouter, 3000);
+             
+               
+                   
 
+        },
+        gorouter(){
+            if(this.activeStatus==true){
+                this.$router.push({
+                 path: "/domain_management"
+                });
+            }
+           
         },
         uploadData(list, page) {
 
@@ -136,6 +150,7 @@ export default {
             //  return false
 
             add_url(param).then(res => {
+            
                 if (res.status == 0) {
                     if (res.data.res_data.length > 0) {
                         let nowarr = res.data.res_data
@@ -144,19 +159,28 @@ export default {
                                 if (this.tableList[j].url == nowarr[i][0]) {
                                     if (nowarr[i][1] == 0) {
                                         this.tableList[j].status = "成功"
+                                        this.activeStatus=true
                                     } else if (nowarr[i][1] == 1) {
                                         this.tableList[j].status = "格式错误"
+                                        this.activeStatus=false
                                     } else if (nowarr[i][1] == 2) {
                                         this.tableList[j].status = "URl重复"
+                                        this.activeStatus=false
                                     } else if (nowarr[i][1] == 3) {
                                         this.tableList[j].status = "label重复"
+                                        this.activeStatus=false
                                     } else if (nowarr[i][1] == 4) {
                                         this.tableList[j].status = "渠道ID不存在"
+                                        this.activeStatus=false
                                     } else if (nowarr[i][1] == 5) {
                                         this.tableList[j].status = "数据库写人错误"
+                                        this.activeStatus=false
                                     }
+                                 
                                 }
+                              
                             }
+                        
 
                         }
                         page++;
@@ -180,6 +204,8 @@ export default {
         //确定上传
         submitUploadOK() {
             this.splitData(this.tableList)
+            this.buttonActive=false
+            
 
         },
         goback() {
@@ -188,6 +214,8 @@ export default {
         //文件列表移除文件
         submitUpload() {
             this.$refs.upload.submit();
+            this.buttonActive=true
+            console.log(this.buttonActive)
         },
         //上传
         handlePreview(file) {},
@@ -209,10 +237,10 @@ export default {
                     // }
                     var resyzm = /^http(s)?:\/\/([\w-]+(\.[\w-]+)*\/?)+(\?([\w\-\.,?^=%&:\/~\+#]*)+)?$/;
                     var resType = /^[0-2]{1}$/;
-                    var resName = /^(?!(\d+)$)[\u4e00-\u9fffa-zA-Z\d]{4,50}$/;
+                    var resName = /^(?!(\d+)$)[\u4e00-\u9fffa-zA-Z\d]{2,50}$/;
                     var resID = /^\d{12}$/;
                     var reslabel = /^[\u4e00-\u9fffa-zA-Z\d]{4,64}$/
-                    var reslabe2 = /^[0-9]*$/
+                    // var reslabe2 = /^[0-9]*$/
                     this.errorcount = 0;
                     for (var i = 0; i < res.data.length; i++) {
                         var err = 0
@@ -244,13 +272,13 @@ export default {
                         } else {
                             res.data[i].urllabel = true
                         }
-                        if (reslabe2.test(res.data[i].label2) === false) {
-                            res.data[i].urllabel2 = false
-                            err++;
+                        // if (reslabe2.test(res.data[i].label2) === false) {
+                        //     res.data[i].urllabel2 = false
+                        //     err++;
 
-                        } else {
-                            res.data[i].urllabel2 = true
-                        }
+                        // } else {
+                        //     res.data[i].urllabel2 = true
+                        // }
                         if (resID.test(res.data[i].buser_id) === false) {
                             res.data[i].idType = false
                             res.data[i].busercheck = "格式错误"

@@ -1,7 +1,7 @@
 <template>
 <div class="content">
     <el-breadcrumb separator="/">
-        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+        <el-breadcrumb-item>用户管理2</el-breadcrumb-item>
     </el-breadcrumb>
     <section class="myself-container">
         <div class="device_form">
@@ -63,7 +63,7 @@
                 </el-col>
             </el-row>
         </div>
-        <el-dialog :visible.sync="dialogVisible" width="20%" @close="handleClose1">
+        <el-dialog :visible.sync="dialogVisible" width="25%" @close="handleClose1">
             <div class="addaccout">
                 <el-form :model="ruleForm2" ref="ruleForm2" label-position="left" class="demo-ruleForm">
                     <h3 class="title">新建用户</h3>
@@ -113,7 +113,7 @@
                 </el-form>
             </div>
         </el-dialog>
-        <el-dialog :visible.sync="dialogVisible2" width="20%" @close="handleClose2">
+        <el-dialog :visible.sync="dialogVisible2" width="25%" @close="handleClose2">
             <div class="addaccout">
                 <el-form :model="ruleForm3" ref="ruleForm3" label-position="left" class="demo-ruleForm">
                     <h3 class="title">修改信息</h3>
@@ -152,7 +152,7 @@
                 </el-form>
             </div>
         </el-dialog>
-        <el-dialog :visible.sync="dialogVisible3" width="20%" @close="handleClose3">
+        <el-dialog :visible.sync="dialogVisible3" width="25%" @close="handleClose3">
             <div class="addaccout">
                 <el-form :model="ruleForm4" status-icon :rules="rules4" ref="ruleForm4" label-position="left" class="demo-ruleForm">
                     <h3 class="title">密码重置</h3>
@@ -179,7 +179,7 @@
                 </el-form>
             </div>
         </el-dialog>
-        <el-dialog :visible.sync="dialogVisible4" width="20%">
+        <el-dialog :visible.sync="dialogVisible4" width="25%">
             <div class="addaccout">
                 <el-form :model="ruleForm3" ref="ruleForm3" label-position="left" class="demo-ruleForm">
                     <h3 class="title">详细信息</h3>
@@ -225,7 +225,7 @@
 
 <script>
 import tableBarActiveAccount from "../../comm/tableBarActiveAccount";
-
+import VueCookies from "vue-cookies";
 import pageNation from "../../comm/pageNation";
 import {
   userlist,
@@ -431,6 +431,8 @@ export default {
       let param = new Object();
       param.ids = this.allId.join(",");
       param.type = 0;
+          param.uid = VueCookies.get("adminid");
+            param.uname = VueCookies.get("adminuser");
       userctrl(param)
         .then(res => {
           if (res.status == 0) {
@@ -467,6 +469,8 @@ export default {
           let param = new Object();
           param.ids = this.allId.join(",");
           param.type = 0;
+              param.uid = VueCookies.get("adminid");
+            param.uname = VueCookies.get("adminuser");
           userctrl(param)
             .then(res => {
               if (res.status == 0) {
@@ -505,6 +509,8 @@ export default {
           let param = new Object();
           param.ids = this.allId.join(",");
           param.type = 1;
+              param.uid = VueCookies.get("adminid");
+            param.uname = VueCookies.get("adminuser");
           userctrl(param)
             .then(res => {
               if (res.status == 0) {
@@ -543,6 +549,8 @@ export default {
           let param = new Object();
           param.ids = this.allId.join(",");
           param.type = 2;
+              param.uid = VueCookies.get("adminid");
+            param.uname = VueCookies.get("adminuser");
           userctrl(param)
             .then(res => {
               if (res.status == 0) {
@@ -661,7 +669,9 @@ export default {
             role_id: 0,
             phone: this.ruleForm2.phone,
             status: parseInt(this.ruleForm2.radio),
-            name: this.ruleForm2.name
+            name: this.ruleForm2.name,
+            uid:VueCookies.get("adminid"),
+           uname:VueCookies.get("adminuser")
           };
           userinsert(loginParams).then(data => {
             this.dialogVisible = false;
@@ -714,6 +724,8 @@ export default {
       }
       let param = new Object();
       param = this.ruleForm3;
+          this.ruleForm3.uid = VueCookies.get("adminid");
+           this.ruleForm3.uname = VueCookies.get("adminuser");
 
       this.$confirm("确定执行该操作麽吗", "提示", {
         type: "warning"
@@ -830,6 +842,8 @@ export default {
         if (valid) {
           var loginParams = this.ruleForm3;
           this.ruleForm3.status = parseInt(this.ruleForm3.radio);
+              this.ruleForm3.uid = VueCookies.get("adminid");
+           this.ruleForm3.uname = VueCookies.get("adminuser");
           userupdate(loginParams).then(data => {
             this.dialogVisible2 = false;
             let { msg, status, user } = data;
@@ -867,7 +881,8 @@ export default {
           this.ruleForm3.password = this.ruleForm4.password;
           this.ruleForm3.password2 = this.ruleForm4.password2;
           this.ruleForm3.status = parseInt(this.ruleForm3.radio);
-
+              this.ruleForm3.uid = VueCookies.get("adminid");
+           this.ruleForm3.uname = VueCookies.get("adminuser");
           userupdate(loginParams).then(data => {
             let { msg, status, user } = data;
             if (status !== 0) {
@@ -987,8 +1002,8 @@ export default {
 }
 
 .myself-container {
-  width: 100%;
-  min-width: 1600px;
+  // width: 100%;
+  // //min-width: 1600px;
   text-align: left;
 
   .devide_title {

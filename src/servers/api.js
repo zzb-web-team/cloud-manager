@@ -34,7 +34,9 @@ export const setactionlog = params => { return axios.post(`${serverUrl}/cloudter
 
 //URL管理
 /**获取URL列表 */
+//新增修改03-11
 export const query_url = params => { return axios.post(`${serverUrl}/url_mgmt/query_url`, params).then(res => res.data) };
+export const query_config = params => { return axios.post(`${serverUrl}/url_mgmt/query_config`, params).then(res => res.data) };
 /*新增URL */
 export const add_url = params => { return axios.post(`${serverUrl}/url_mgmt/add_url`, params).then(res => res.data) };
 /*删除URL*/
