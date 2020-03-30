@@ -81,7 +81,8 @@
                     <div class="talb_title_tio">
                         <span>回源HOST</span>
                         <div>
-                            <el-switch v-model="datalist.host_url.valid" active-color="#13ce66" inactive-color="#EEEEEE" @change="changeSwitch"></el-switch>
+                            <!-- <el-switch v-model="datalist.host_url.valid" active-color="#13ce66" inactive-color="#EEEEEE" @change="changeSwitch"></el-switch> -->
+                            <el-switch v-model="valuek" active-color="#13ce66" inactive-color="#EEEEEE" @change="changeSwitch"></el-switch>
                             <p>自定义CDN节点回源过程中所需访问的WEB服务器URL</p>
                         </div>
                     </div>
@@ -962,16 +963,37 @@ export default {
         this.setquery_url();
       });
     },
-    //添加回源信息--取消
-    nohosturl(formName) {
-      this.dialogVisible = false;
-      if (this.huiurl.url == "") {
-      this.valuek = false;
-      this.urlno = false;
-     // this.datalist.host_url.valid = false;
-      }
+    // //添加回源信息--取消
+    // nohosturl(formName) {
+    //   this.dialogVisible = false;
+    //   if (this.huiurl.url == "") {
+    //   this.valuek = false;
+    //   this.urlno = false;
+    //   this.datalist.host_url.valid = false;
+    //   }
 
-      this.$refs[formName].resetFields();
+    //   this.$refs[formName].resetFields();
+    // },
+     //添加回源信息--取消
+    nohosturl(formName) {
+      console.log(this.datalist.host_url.valid);
+      console.log(this.valuek);
+      // return false;
+      this.dialogVisible = false;
+      // this.valuek = false;
+      // this.datalist.host_url.valid = false;
+      // this.urlno = false;
+      // this.$refs[formName].resetFields();
+      if (this.datalist.host_url.valid == false) {
+        this.urlno = false;
+        this.valuek = false;
+      } else {
+        console.log("2");
+        //this.urlno = true;
+        //this.valuek = false;
+        this.$refs[formName].resetFields();
+      }
+      // this.datalist.host_url.valid = false;
     },
     //关闭按钮
     handleClose1() {
@@ -1013,7 +1035,7 @@ export default {
       this.setquery_url();
     },
     changeSwitch() {
-      this.valuek = !this.valuek;
+      //this.valuek = !this.valuek;
       if (this.valuek == true) {
         this.urlno = true;
         this.dialogVisible = true;

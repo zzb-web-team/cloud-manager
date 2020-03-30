@@ -16,7 +16,7 @@
             </el-steps>
         </div>
 
-        <div v-if="actives === 1">
+        <div v-show="actives === 1">
             <el-table ref="multipleTable" :data="futableData" tooltip-effect="dark" stripe style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="configuration" label="配置项"></el-table-column>
@@ -40,7 +40,8 @@
             <el-button style="margin-top: 12px;" type="primary" @click="next">下一步</el-button>
             <el-button style="margin-top: 12px;" @click="furesetacitive">取消</el-button>
         </div>
-        <div v-else-if="actives === 2">
+        <!-- <div v-else-if="actives === 2"> -->
+            <div v-show="actives === 2">
             <div style="display: flex;justify-content: flex-start;align-items: center;margin: 10px 0">
                 <span style="margin-right:21px;color:#333333;font-size:14px;">URL列表</span>
                 <el-input placeholder="请输入URL" v-model="fuinput" style=" width:300px" class="input-with-select" maxlength="70" @keyup.enter.native="onSubmit"></el-input>
@@ -76,7 +77,7 @@
                     <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
                     <el-table-column label="URL">
                         <template slot-scope="scope">
-                            <div style="width: 700px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin:0 auto;">{{scope.row.url}}</div>
+                            <div style="width: 700px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin:0 auto;">{{scope.row.url}}1</div>
 
                         </template>
                     </el-table-column>
@@ -85,7 +86,9 @@
             </div>
             <el-button style="margin-top: 2px;" type="primary" @click="last">上一步</el-button>
             <el-button style="margin-top: 2px;" type="primary" @click="next">下一步</el-button>
-            <el-button style="margin-top: 2px;" @click="fureset">取消</el-button>
+            <!-- <el-button style="margin-top: 2px;" @click="fureset">取消</el-button> -->
+                    <el-button style="margin-top: 2px;" @click="fureset(2)">取消</el-button>
+
         </div>
     </div>
 </div>
@@ -509,10 +512,26 @@ export default {
             this.urllistVisible = true;
         },
         //复制配置取消
-        fureset() {
-            this.actives = 1;
-            this.dialupdata = false;
-        },
+        // fureset() {
+        //     this.actives = 1;
+        //     this.dialupdata = false;
+        // },
+            fureset(num) {
+      console.log(num);
+      if (num == 1) {
+        this.$nextTick(function() {
+          this.multipleSelection.forEach(item => {
+            this.$refs.multipleTable_pei.toggleRowSelection(
+              this.futableData[item.index],
+              false
+            );
+          });
+        });
+      } else {
+        this.$refs.multipleTable.clearSelection();
+      }
+      this.dialupdata = false;
+    },
         //返回
         goback() {
             this.$router.go(-1);

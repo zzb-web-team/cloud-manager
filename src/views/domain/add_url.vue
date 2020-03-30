@@ -73,11 +73,11 @@ export default {
                 },
                 {
                     value: 1,
-                    label: "flv"
+                    label: "hls"
                 },
                 {
                     value: 2,
-                    label: "hls"
+                    label: "flv"
                 }
             ],
             fu: [{

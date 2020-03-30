@@ -77,6 +77,7 @@ export default {
       labellist: [],
       errarr: "",
       errarrs: "",
+      stateActive:false,
       pioptions: [
         {
           value: 0,
@@ -236,6 +237,7 @@ export default {
     //批量操作保存
     pidiiblea() {
           this.saveType=1
+          this.stateActive=true
         
       this.zlabeldata = [];
         // this.labellist.forEach((item, index) => {
@@ -399,6 +401,10 @@ export default {
           
             if (res.data.failed_count == 0) {
               this.$message.success("修改成功");
+              if(this.stateActive==true){
+                setTimeout(this.gorouter,1000)
+            
+              }
             } else {
               this.errarr = "";
               res.data.res_data.forEach((item, index) => {
@@ -417,6 +423,13 @@ export default {
         .catch(Error => {
           console.log(Error);
         });
+    },
+    gorouter(){
+    this.$router.push(
+                  {
+                    path: "/domain_management"
+                  }
+                )
     },
     // 表头样式设置
     headClass() {

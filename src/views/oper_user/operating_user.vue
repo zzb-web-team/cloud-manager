@@ -220,7 +220,9 @@ export default {
                 disabledDate(time) {
                     return time.getTime() > Date.now() - 8.64e6; //如果没有后面的-8.64e6就是不可以选择今天的
                 },
-            }
+            },
+            statusActive:0,
+            statusActive1:0,
         };
     },
     mounted: function () {
@@ -295,12 +297,23 @@ export default {
         },
         //批量启用
         allOn() {
+            for(var i=0;i<this.multipleSelection.length;i++){
+                if(this.multipleSelection[i].status=="正常"){
+                    this.statusActive++
+                }
+            }
             if (this.allId.length <= 0) {
                 this.$message({
                     message: "请至少勾选一项",
                     type: "error"
                 });
                 return false;
+            }
+          
+            if(this.statusActive==this.multipleSelection.length){
+                 this.queryUserList();
+                     this.statusActive=0
+                return false
             }
             this.$confirm("确定要批量启用吗?", "提示", {
                     type: "warning"
@@ -333,12 +346,26 @@ export default {
         },
         //批量禁用
         allOff() {
+      
+            for(var i=0;i<this.multipleSelection.length;i++){
+                if(this.multipleSelection[i].status=="冻结"){
+                    this.statusActive1++
+                }
+              
+            }
+            
             if (this.allId.length <= 0) {
                 this.$message({
                     message: "请至少勾选一项",
                     type: "error"
                 });
                 return false;
+            }
+            if(this.statusActive1==this.multipleSelection.length){
+                 this.queryUserList();
+                this.statusActive1=0
+                return false
+            
             }
             this.$confirm("确定要批量禁用用吗?", "提示", {
                     type: "warning"
