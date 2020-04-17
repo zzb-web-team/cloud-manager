@@ -33,12 +33,12 @@
                     <el-option v-for="(item, index) in labelData" :key="index + item" :label="item.label" :value="item" style="width:250px;"></el-option>
                 </el-select>
             </el-form-item> -->
-            <el-form-item label="标签:" :label-width="formLabelWidth" prop="labe1" :rules="[{ validator: jiozhu, trigger: 'blur' }]">
+            <!-- <el-form-item label="标签:" :label-width="formLabelWidth" prop="labe1" :rules="[{ validator: jiozhu, trigger: 'blur' }]">
                 <el-input class="other_bgc" v-model="dynamicValidateForm.labe1" placeholder="4~64个字符，英文，英文加数字组合" autocomplete="off"></el-input>
-            </el-form-item>
+            </el-form-item> -->
         </el-form>
         <p>
-            说明：用户可以自定义标签设置，标签设置为自选项，标签设置的作用是保护源站信息隐藏不被泄露，防止黑客攻击
+            <!-- 说明：用户可以自定义标签设置，标签设置为自选项，标签设置的作用是保护源站信息隐藏不被泄露，防止黑客攻击 -->
         </p>
         <div slot="footer" class="add_urlfooter">
             <el-button type="primary" @click="dialogFormVisiblea('dynamicValidateForm')" style="width:96px;height:36px;background:rgba(41,122,255,1);border-radius:2px;">确 定</el-button>

@@ -39,7 +39,7 @@
                         <span class="el-icon-circle-plus-outline"></span>
                     </el-button>
                     <el-button type="primary" plain @click="onImport">批量导入URL</el-button>
-                    <el-button type="primary" plain @click="setdomainlist">批量管理标签</el-button>
+                    <!-- <el-button type="primary" plain @click="setdomainlist">批量管理标签</el-button> -->
                 </div>
                 <div>
                     <el-button type="primary"  @click="toexportExcel">导出</el-button>
@@ -60,11 +60,11 @@
                 <el-table-column prop="buser_id" label="渠道ID"></el-table-column>
                 <el-table-column prop="state" label="状态" :formatter="formatState"></el-table-column>
                 <el-table-column prop="create_time" label="创建时间" sortable="custom"></el-table-column>
-                <el-table-column label="标签">
+                <!-- <el-table-column label="标签">
                     <template slot-scope="scope">
                         <span @click="goLink" style="cursor: pointer;"><img width="20" height="20" src='../../assets/img/urlIcon.png' /></span>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
 
                 <el-table-column label="操作" width="350">
                     <template slot-scope="scope">
