@@ -100,7 +100,7 @@ export default new Router({
             icon: 'iconfont icon-shebeijiankong',
             children: [{
                     path: '/domain_management',
-                    name: 'URL管理',
+                    name: '点播加速管理',
                     component: domain_management,
                     // hidden: true
                 },
