@@ -19,7 +19,7 @@
                 <el-input placeholder="渠道ID" v-model="inputActive1" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px">
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
             </el-input>
-                <el-input placeholder="加速内容名称" v-model="inputActive2" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px">
+                <el-input placeholder="视频名称" v-model="inputActive2" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px">
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
             </el-input>
             <div class="seach_top_right" @click="option_display()">
@@ -28,7 +28,7 @@
             </div>
         </div>
         <div v-if="optiondisplay" class="seach_bottom">
-            <span>点播时间：</span>
+            <span>启用时间：</span>
             <el-date-picker v-model="value1" type="datetimerange" :picker-options="pickerOptions"  range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
              <el-button type="primary"  @click="seachuser()" style="margin-left:8px;">确定</el-button>
             <el-button  type="primary"  @click="reset()">重置</el-button>    
@@ -44,7 +44,7 @@
         <el-table  stripe :data="tableData" border :cell-style="rowClass" :header-cell-style="headClass" style="width: 100%">
             <el-table-column prop="fileId" label="视频ID" width="180"></el-table-column>
             <el-table-column prop="chanId" label="渠道ID" width="180"></el-table-column>
-            <el-table-column prop="fileName" label="加速内容名称"></el-table-column>
+            <el-table-column prop="fileName" label="视频名称"></el-table-column>
             <el-table-column prop="fileSize" label="文件大小"></el-table-column>
             <el-table-column prop="dataFlow" label="点播流量"></el-table-column>
             <el-table-column prop="userIpInfo" label="点播IP"></el-table-column>

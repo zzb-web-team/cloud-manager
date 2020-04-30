@@ -9,28 +9,16 @@
     </el-breadcrumb>
     <!-- 搜索 -->
     <div class="seach">
-        <div class="seach_top" style="display: flex;justify-content: flex-start;">
-            <!-- <el-input placeholder="点播IP" v-model="input" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70">
+        <div class="seach_top">
+            <el-input placeholder="点播IP" v-model="input" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70">
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            </el-input> -->
+            </el-input>
             <el-input placeholder="渠道ID" v-model="inputActive1" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px;">
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
-            <el-input placeholder="加速内容名称" v-model="inputActive2" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px;">
+            <el-input placeholder="URL" v-model="inputActive2" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px;">
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
-            		<el-select
-						v-model="inputActive3"
-						placeholder="请选择"
-                        style="margin-left:20px;"
-					>
-						<el-option
-							v-for="(item, index) in yewu"
-							:key="index"
-							:label="item.label"
-							:value="item.value"
-						></el-option>
-					</el-select>
             <div class="seach_top_right" @click="option_display()">
                 筛选
                 <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
@@ -50,17 +38,12 @@
             <el-button type="primary" @click="toexportExcelNew()">导出</el-button>
         </div>
         <el-table stripe :data="tableData" :cell-style="rowClass" :header-cell-style="headClass" style="width: 100%">
-            <el-table-column prop="ipInfo" label="业务场景" width="180"></el-table-column>
+            <el-table-column prop="ipInfo" label="点播IP" width="180"></el-table-column>
             <el-table-column prop="chanId" label="渠道ID" width="180"></el-table-column>
-            <el-table-column prop="fileUrl" label="点播终端"></el-table-column>
-            <el-table-column prop="dataFlow" label="点播IP"></el-table-column>
-            <el-table-column prop="dataFlowss" label="加速内容名称"></el-table-column>
-            <el-table-column prop="dataFlowss" label="播放URL"></el-table-column>
-            <el-table-column prop="dataFlowss" label="消费流量"></el-table-column>
-            <el-table-column prop="dataFlowss" label="请求数"></el-table-column>
-            <el-table-column prop="dataFlowss" label="失败请求数"></el-table-column>
-            <el-table-column prop="dataFlowss" label="启用时间"></el-table-column>
-            <el-table-column prop="accessCnt" label="结束时间">
+            <el-table-column prop="fileUrl" label="URL"></el-table-column>
+            <el-table-column prop="dataFlow" label="消费流量"></el-table-column>
+            <el-table-column prop="dataFlowss" label="占用宽带"></el-table-column>
+            <el-table-column prop="accessCnt" label="请求结果">
                 <!-- <template slot-scope="scope">
                    
                 </template> -->
@@ -68,7 +51,7 @@
                         <!-- <el-table-column prop="accessCnt" label="请求数"></el-table-column> -->
 
             <!-- <el-table-column prop="failCnt" label="失败请求数"></el-table-column> -->
-            <el-table-column prop="startTS" label="用时"></el-table-column>
+            <el-table-column prop="startTS" label="启用时间"></el-table-column>
             <!-- <el-table-column prop="endTS" label="结束时间"></el-table-column>
             <el-table-column prop="totalTime" label="用时"></el-table-column> -->
         </el-table>
@@ -87,29 +70,6 @@ import common from "../../comm/js/util";
 export default {
     data() {
         return {
-            yewu:[
-                {
-                    value:"-1",
-                    label:"全部"
-                },
-                 {
-                    value:"0",
-                    label:"点播加速"
-                },
-                {
-                    value:"1",
-                    label:"点播预热"
-                },
-                {
-                    value:"2",
-                    label:"点播刷新"
-                },
-                {
-                    value:"3",
-                    label:"点播回源"
-                },
-            ],
-            inputActive3:"-1",
             rotate: false,
             errTableVisible: false,
             device_show: false,

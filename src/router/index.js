@@ -6,12 +6,7 @@ import log from '@/views/log';
 //二级路由目录
 import home from '@/views/menu/home';
 import home_two from '@/views/menu/home_two';
-import home_three from '@/views/menu/home_three';
-import home_four from '@/views/menu/home_four';
-import home_five from '@/views/menu/home_five';
-import home_six from '@/views/menu/home_six';
-import home_seven from '@/views/menu/home_seven';
-import home_eight from '@/views/menu/home_eight';
+
 
 //域名管理
 import domain_management from '@/views/domain/domain_management.vue';
@@ -41,12 +36,10 @@ import ipflow from '@/views/ipfs_application/ipflow';
 import operation_management from '@/views/operating/operation_management';
 
 //IPFS数据统计
-import nodeMap from '@/views/nodeApplication/nodeMap';
+
 import nodeMap1 from '@/views/nodeApplication/nodeMap1';
 import statistics from '@/views/nodeApplication/statistics';
-import statistics1 from '@/views/nodeApplication/statistics1';
-import statistics2 from '@/views/nodeApplication/statistics2';
-import nodeUse from '@/views/nodeApplication/nodeUse';
+import downloadLogs from '@/views/nodeApplication/downloadLogs';
 
 Vue.use(Router);
 
@@ -95,21 +88,22 @@ export default new Router({
         },
         {
             path: '/b',
-            name: 'URL管理',
+            name: '加速配置管理',
             component: index,
             icon: 'iconfont icon-shebeijiankong',
-            children: [{
-                    path: '/domain_management',
-                    name: '点播加速管理',
-                    component: domain_management,
-                    // hidden: true
-                },
+            children: [
                 {
                     path: '/accelerate_management',
                     name: '域名管理',
                     component: accelerate_management,
                     // hidden: true
+                },{
+                    path: '/domain_management',
+                    name: '点播加速管理',
+                    component: domain_management,
+                    // hidden: true
                 },
+               
                 {
                     path: '/batch_management',
                     name: '批量管理',
@@ -199,9 +193,14 @@ export default new Router({
                     },
                     {
                         path: '/statistics',
-                        name: '统计分析',
+                        name: '访问统计',
                         component: statistics,
                     },
+                    {
+                        path:'/downloadLogs',
+                        name:'加速日志下载',
+                        component:downloadLogs
+                    }
                 ],
             }, ],
         },

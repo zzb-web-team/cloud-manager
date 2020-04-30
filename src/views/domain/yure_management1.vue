@@ -374,7 +374,7 @@ export default {
             let param = new Object()
             param.buser_id = this.refreshBuserId
             param.area = this.area
-            param.url = this.refreshurl
+            param.url_name = this.refreshurl
             param.type = this.opType
             resource_refresh(param).then(res => {
                 if (res.status == 0) {

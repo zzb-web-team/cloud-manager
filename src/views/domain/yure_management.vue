@@ -40,7 +40,7 @@
 
             <!-- 表格 -->
             <el-table stripe border ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" :default-sort="{ prop: 'date', order: 'descending' }" @selection-change="handleSelectionChange">
-                <el-table-column label="操作内容" prop="url"> </el-table-column>
+                <el-table-column label="操作内容" prop="url_name"> </el-table-column>
                 <el-table-column prop="refresh_type" label="操作类型"></el-table-column>
                 <el-table-column prop="buser_id" label="渠道ID"></el-table-column>
                 <el-table-column prop="opt_time" sortable label="操作时间"></el-table-column>

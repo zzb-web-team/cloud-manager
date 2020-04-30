@@ -63,6 +63,20 @@ export const getterminal = params => { return axios.post(`${serverUrl}/cloudterm
 //标签验证
 export const check_label = params => { return axios.post(`${serverUrl}/url_mgmt/check_label`, params).then(res => res.data) };
 
+//云点播新版本改版V1.0.1 2020-4-18
+//查询域名
+export const query_domain = params => { return axios.post(`${serverUrl}/url_mgmt/query_domain`, params).then(res => res.data) };
+//新增域名
+export const add_domain = params => { return axios.post(`${serverUrl}/url_mgmt/add_domain`, params).then(res => res.data) };
+//修改域名
+export const modify_domain = params => { return axios.post(`${serverUrl}/url_mgmt/modify_domain`, params).then(res => res.data) };
+//删除域名
+export const del_domain = params => { return axios.post(`${serverUrl}/url_mgmt/del_domain`, params).then(res => res.data) };
+//修改状态
+export const change_domainstate = params => { return axios.post(`${serverUrl}/url_mgmt/change_domainstate`, params).then(res => res.data) };
+
+
+
 
 
 
@@ -137,6 +151,13 @@ export const actionlog = params => { return axios.post(`${serverUrl}/cloudtermin
 
 /**导出汇报 */
 export const setactionlogAll = params => { return axios.post(`${serverUrl}/cloudterminal/setactionlog`, params).then(res => res.data) };
+
+//下载日志
+export const query_logfile_table = params => { return axios.post(`${serverUrl}/cloudterminal/setactionlog`, params).then(res => res.data) };
+
+
+//查询日志
+export const download_logfile = params => { return axios.post(`${serverUrl}/cloudterminal/setactionlog`, params).then(res => res.data) };
 
 
 

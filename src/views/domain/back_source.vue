@@ -1,253 +1,216 @@
 <template>
-<div class="content bath_m">
+  <div class="content bath_m">
     <div class="top_title">
-        <span @click="goback" style="font-size: 24px;color: #202020;"><i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
-            配置</span>
+      <span @click="goback" style="font-size: 24px;color: #202020;">
+        <i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
+        {{datalist.url_name}}</span>
     </div>
     <div class="bath" style="margin: auto;background: #ffffff;margin-top: 25px;border-radius: 2px;padding: 15px;box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);">
-        <el-tabs :tab-position="tabPosition" v-model="oneName" @tab-click="handleClick" v-loading="loading">
-            <div class="tala_title">
-                <span style="max-width: 230px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ datalist.url }}</span>
-                <div>
-                    <el-button v-if="datalist.state == 1" @click="disableuser(0)" style="background:#E05050;color:#ffffff;width:76px;height:34px;line-height: 10px;">停用</el-button>
-                    <el-button v-else @click="disableuser(1)" style="background:#0ABF5B;color:#ffffff;width:76px;height:34px;line-height: 10px;">启用</el-button>
-                    <!-- <el-button
-              @click="setquery_url()"
-              style="background:#0ABF5B;color:#ffffff;width:76px;height:34px;line-height: 10px;"
-              >保存</el-button
-            > -->
-                </div>
-            </div>
-            <!-- <el-tab-pane name="zero">
-                <p class="bath_title_btn" slot="label">
-                    <i class="el-icon-arrow-left"></i>返回URL列表
-                </p>
-            </el-tab-pane> -->
-            <el-tab-pane label="基础配置" name="one">
-                <div style="font-weight: 600;font-size: 18px;text-align: left;margin: 10px 0;">
+      <el-tabs v-model="oneName" @tab-click="handleClick" v-loading="loading">
+        <div class="tala_title" style="display:flex;justify-content:flex-end;">
+          <!-- <span style="max-width: 230px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ datalist.url }}</span> -->
+          <div>
+            <el-button v-if="datalist.state == 1" @click="disableuser(0)" style="background:#E05050;color:#ffffff;width:76px;height:34px;line-height: 10px;">停用</el-button>
+            <el-button v-else @click="disableuser(1)" style="background:#0ABF5B;color:#ffffff;width:76px;height:34px;line-height: 10px;">启用</el-button>
+
+          </div>
+        </div>
+
+        <el-tab-pane label="基础配置" name="one">
+          <!-- <div style="font-weight: 600;font-size: 18px;text-align: left;margin: 10px 0;">
                     基础信息
+                </div> -->
+          <ol class="tala">
+            <li>
+              <span>创建时间</span>
+              <span class="tala_con">{{ datalist.create_time | settimes }}
+              </span>
+            </li>
+            <li style="    display: flex;justify-content: flex-start;align-items: center;">
+              <span>源站域名</span>
+              <el-select v-model="datalist.domainId" placeholder="请选择" @change="onchange">
+                <el-option v-for="(item, index) in labelData" :key="index + item" :label="item.label" :value="item.value" style="width:250px;">
+                </el-option>
+              </el-select>
+            </li>
+            <li style="    display: flex;justify-content: flex-start;align-items: center;">
+              <span>回源路径</span>
+              <div class="tala_con" style="width: 295px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ datalist.label2 }}</div>
+              <span style="color: rgb(64, 158, 255);" @click="cleckurl(1)">修改</span>
+            </li>
+            <el-dialog :title="title_content" :visible.sync="zurl" width="30%">
+              <el-input v-model="sleckurl"></el-input>
+              <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="onSave(1)">确 定</el-button>
+              </span>
+            </el-dialog>
+            <li style="    display: flex;justify-content: flex-start;align-items: center;">
+              <span>播放路径</span>
+              <div class="tala_con" style="width: 295px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ datalist.label2s }}</div>
+              <span style="color: rgb(64, 158, 255);" @click="cleckurl(2)">修改</span>
+            </li>
+              <el-dialog :title="title_content" :visible.sync="zurl1" width="30%">
+              <el-input v-model="sleckurl"></el-input>
+              <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="onSave(2)">确 定</el-button>
+              </span>
+            </el-dialog>
+            <li style="    display: flex;justify-content: flex-start;align-items: center;">
+              <span>视频格式</span>
+
+              <el-select v-model="datalist.url_type" placeholder="请选择" @change="onchangeType">
+                <el-option v-for="(item, index) in yewu" :key="index" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </li>
+
+            <!-- <el-dialog title="url" :visible.sync="zurl" width="30%">
+              <span>{{ sleckurl }}</span>
+              <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="zurl = false">确 定</el-button>
+              </span>
+            </el-dialog> -->
+
+          </ol>
+        </el-tab-pane>
+
+        <el-tab-pane label="缓存配置" name="there">
+          <el-tabs v-model="activeName">
+            <el-tab-pane label="缓存设置" name="first">
+              <div class="talb_title_tio">
+                <span>缓存自动刷新</span>
+                <div>
+                  <el-switch v-model="valueh" active-color="#13ce66" inactive-color="#EEEEEE" @change="changeSwitch2"></el-switch>
+                  <p>
+                    开启后，能够自动发现加速节点的同名缓存刷新，并自动同步最新缓存
+                  </p>
                 </div>
-                <ol class="tala">
-                    <li>
-                        <span>创建时间</span>
-                        <span class="tala_con">{{
-                datalist.create_time | settimes
-              }}</span>
-                    </li>
-                    <li>
-                        <span>URL地址</span>
-                        <span class="tala_con" style="width: 195px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ datalist.url }}</span>
-                        <span style="color: rgb(64, 158, 255);" @click="cleckurl">查看</span>
-                    </li>
-                    <!--  -->
-
-                    <el-dialog title="url" :visible.sync="zurl" width="30%">
-                        <span>{{ sleckurl }}</span>
-                        <span slot="footer" class="dialog-footer">
-                            <el-button type="primary" @click="zurl = false">确 定</el-button>
-                        </span>
-                    </el-dialog>
-                    <!--  -->
-                    <li>
-                        <span>视频终端</span>
-                        <el-select v-model="datalist.label2" placeholder="请选择" :disabled="!fas">
-                            <!-- <el-option label="未配置" value="0"></el-option> -->
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" class="tala_con"></el-option>
-                        </el-select>
-                        <span class="tala_x" @click="fsho">{{
-                fas == false
-                  ? datalist.label2 != ""
-                    ? "修改"
-                    : "设置"
-                  : "确定"
-              }}</span>
-                    </li>
-                    <li>
-                        <span>标签</span>
-                        <span class="tala_con" v-if="!xas">{{ datalist.label }}</span>
-                        <el-input v-model="datalist.label" placeholder="请输入主标签" v-else style="width:23%;"></el-input>
-                        <span class="tala_x" @click="xsho">{{
-                xas == false ? (datalist.label != "" ? "修改" : "设置") : "确定"
-              }}</span>
-                    </li>
-
-                </ol>
+              </div>
             </el-tab-pane>
-            <el-tab-pane label="回源配置" name="two">
-                <div class="talb">
-                    <div style="font-weight: 600;font-size: 18px;text-align: left;margin: 10px 0;">
-                        回源HOST
-                    </div>
-                    <div class="talb_title_tio">
-                        <span>回源HOST</span>
-                        <div>
-                            <!-- <el-switch v-model="datalist.host_url.valid" active-color="#13ce66" inactive-color="#EEEEEE" @change="changeSwitch"></el-switch> -->
-                            <el-switch v-model="valuek" active-color="#13ce66" inactive-color="#EEEEEE" @change="changeSwitch"></el-switch>
-                            <p>自定义CDN节点回源过程中所需访问的WEB服务器URL</p>
-                        </div>
-                    </div>
-                    <div v-show="urlno == true">
-                        <div class="talb_title_two">
-                            <span>回源URL地址</span>
-                            <div style="width: 400px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">URL：{{ datalist.host_url.url }}</div>
-                            <span class="tala_x" @click="xzurl">修改</span>
-                        </div>
-                    </div>
-                    <!-- 回源弹窗 -->
-                    <el-dialog title="请输入回源URL地址" :visible.sync="dialogVisible" width="630px" @close="handleClose1">
-                        <el-form :model="huiurl" ref="hosturlref" label-width="100px" class="bath_demo_dynamic">
-                            <el-form-item prop="url" label="回源地址" :rules="[{ validator: jiourl, trigger: 'blur' }]">
-                                <el-input v-model="huiurl.url" placeholder="请输入回源URL地址" maxlength="1024"></el-input>
-                            </el-form-item>
-                        </el-form>
-                        <div style="text-align: right;">
-                            <el-button @click="nohosturl('hosturlref')">取 消</el-button>
-                            <el-button type="primary" @click="hosturl('hosturlref')">确 定</el-button>
-                        </div>
-
-                        <!-- 分割 -->
-
-                    </el-dialog>
-                </div>
-            </el-tab-pane>
-
-            <el-tab-pane label="缓存配置" name="there">
-                <el-tabs v-model="activeName">
-                    <el-tab-pane label="缓存设置" name="first">
-                        <div class="talb_title_tio">
-                            <span>缓存自动刷新</span>
-                            <div>
-                                <el-switch v-model="valueh" active-color="#13ce66" inactive-color="#EEEEEE" @change="changeSwitch2"></el-switch>
-                                <p>
-                                    开启后，能够自动发现加速节点的同名缓存刷新，并自动同步最新缓存
-                                </p>
-                            </div>
-                        </div>
-                    </el-tab-pane>
-                    <el-tab-pane label="缓存过期时间" name="second">
-                        <!--  -->
-                        <div class="batch_huan">
-                            <div style="text-align:left;padding: 10px 0">
-                                <el-button type="primary" style="width:100px;" @click="
+            <el-tab-pane label="缓存过期时间" name="second">
+              <!--  -->
+              <div class="batch_huan">
+                <div style="text-align:left;padding: 10px 0">
+                  <el-button type="primary" style="width:100px;" @click="
                       huanVisible = true;
                       edit = 0;
                       editnum = '';
                       city_disabled = false;
                       huanform.type=0;
                       radio1 = '自动过期';
-                    "><span class="el-icon-plus"></span>配置</el-button>
-                            </div>
-                            <!-- 缓存添加弹窗 -->
-                            <el-dialog title="配置缓存过期时间" :visible.sync="huanVisible">
-                                <el-form :model="huanform">
-                                    <el-form-item label="过期类型:" style="text-align:left;" :label-width="formLabelWidth">
-                                        <el-radio-group v-model="radio1" @change="selecttime()" class="huandan">
-                                            <el-radio-button label="自动过期"></el-radio-button>
-                                            <el-radio-button label="自定义时间"></el-radio-button>
-                                        </el-radio-group>
+                    ">
+                    <span class="el-icon-plus"></span>配置</el-button>
+                </div>
+                <!-- 缓存添加弹窗 -->
+                <el-dialog title="配置缓存过期时间" :visible.sync="huanVisible">
+                  <el-form :model="huanform">
+                    <el-form-item label="过期类型:" style="text-align:left;" :label-width="formLabelWidth">
+                      <el-radio-group v-model="radio1" @change="selecttime()" class="huandan">
+                        <el-radio-button label="自动过期"></el-radio-button>
+                        <el-radio-button label="自定义时间"></el-radio-button>
+                      </el-radio-group>
 
-                                        <p v-if="automatic_time == true" style="font-size: 12px;color: #676767;height: 18px;">
-                                            当URL失去热度时缓存将自动过期
-                                        </p>
-                                    </el-form-item>
-                                    <el-form-item label="区域:" style="text-align:left;" :label-width="formLabelWidth" class="huancunoption">
-                                        <el-cascader :options="citylist1" ref="cascaderAddr" v-model="citylabel" :disabled="city_disabled"></el-cascader>
-                                    </el-form-item>
-                                    <el-form-item class="huancuntime" label="过期时间:" :label-width="formLabelWidth" style="text-align:left;" v-if="automatic_time == false">
-                                        <el-date-picker v-model="huanfo" type="datetime" style="width:100%;" align="right" placeholder="选择日期时间" :picker-options="pickerOptions0">
-                                        </el-date-picker>
-                                        <p style="font-size: 12px;color: #676767;height: 18px;">
-                                            最长过期时间为三年
-                                        </p>
-                                    </el-form-item>
-                                </el-form>
-                                <div slot="footer" class="dialog-footer">
-                                    <el-button @click="huanno">取 消</el-button>
-                                    <el-button type="primary" @click="huanVisib()">确 定</el-button>
-                                </div>
-                            </el-dialog>
+                      <p v-if="automatic_time == true" style="font-size: 12px;color: #676767;height: 18px;">
+                        当URL失去热度时缓存将自动过期
+                      </p>
+                    </el-form-item>
+                    <el-form-item label="区域:" style="text-align:left;" :label-width="formLabelWidth" class="huancunoption">
+                      <el-cascader :options="citylist1" ref="cascaderAddr" v-model="citylabel" :disabled="city_disabled"></el-cascader>
+                    </el-form-item>
+                    <el-form-item class="huancuntime" label="过期时间:" :label-width="formLabelWidth" style="text-align:left;" v-if="automatic_time == false">
+                      <el-date-picker v-model="huanfo" type="datetime" style="width:100%;" align="right" placeholder="选择日期时间" :picker-options="pickerOptions0">
+                      </el-date-picker>
+                      <p style="font-size: 12px;color: #676767;height: 18px;">
+                        最长过期时间为三年
+                      </p>
+                    </el-form-item>
+                  </el-form>
+                  <div slot="footer" class="dialog-footer">
+                    <el-button @click="huanno">取 消</el-button>
+                    <el-button type="primary" @click="huanVisib()">确 定</el-button>
+                  </div>
+                </el-dialog>
 
-                            <el-table :data="datalist.cache_con" border :cell-style="rowClass" :header-cell-style="headClass" height="580">
-                                <el-table-column prop="area" label="区域"> </el-table-column>
-                                <el-table-column prop="province" label="城市">
-                                </el-table-column>
-                                <el-table-column prop="expire" label="过期时间">
-                                    <template slot-scope="scope">
-                                        <span v-if="scope.row.type == 0">自动过期</span>
-                                        <span v-else>{{ scope.row.expire | settimes }}</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column prop="state" label="状态">
-                                    <template slot-scope="scope">
-                                        <span>{{
-                        scope.row.state == 0 ? "缓存中" : "已过期"
-                      }}</span>
-                                    </template>
-                                </el-table-column>
-                                <el-table-column label="操作">
-                                    <template slot-scope="scope">
-                                        <el-button @click="xhuanVisib(scope.row, scope.$index)" type="text" size="small">修改</el-button>
-                                        <!-- <el-button
+                <el-table :data="datalist.cache_con" border :cell-style="rowClass" :header-cell-style="headClass" height="580">
+                  <el-table-column prop="area" label="区域"> </el-table-column>
+                  <el-table-column prop="province" label="城市">
+                  </el-table-column>
+                  <el-table-column prop="expire" label="过期时间">
+                    <template slot-scope="scope">
+                      <span v-if="scope.row.type == 0">自动过期</span>
+                      <span v-else>{{ scope.row.expire | settimes }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="state" label="状态">
+                    <template slot-scope="scope">
+                      <span>{{ scope.row.state == 0 ? "缓存中" : "已过期" }}
+                      </span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作">
+                    <template slot-scope="scope">
+                      <el-button @click="xhuanVisib(scope.row, scope.$index)" type="text" size="small">修改</el-button>
+                      <!-- <el-button
                         type="text"
                         size="small"
                         style="color:#000000"
                         @click="delhc(scope.row, scope.$index)"
                         >删除</el-button
                       > -->
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </div>
-                    </el-tab-pane>
-                </el-tabs>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
             </el-tab-pane>
-            <el-tab-pane label="自定义页面" name="four">
-                <div style="text-align: left;margin: 15px 0;" class="customize">
-                    <el-button type="primary" style="width:100px;" @click="dialogFormVisible = true"><span class="el-icon-plus"></span>添加</el-button>
-                    <!-- 添加弹窗 -->
-                    <el-dialog title="自定义错误码" :visible.sync="dialogFormVisible" @close="handleClick4">
-                        <el-form :model="form" ref="form">
-                            <el-form-item label="错误码" prop="errCode" :label-width="formLabelWidth" :rules="[{ validator: jioerrcode, trigger: 'blur' }]">
-                                <el-input v-model.number="form.errCode" placeholder="请输入三位数字错误码，如（105，403）" autocomplete="off" maxlength="3"></el-input>
-                            </el-form-item>
-                            <el-form-item label="链接地址" :label-width="formLabelWidth" prop="url" :rules="[{ validator: jiourl, trigger: 'blur' }]">
-                                <el-input v-model="form.url" placeholder="请输入URL" autocomplete="off"></el-input>
-                            </el-form-item>
-                        </el-form>
-                        <div slot="footer" class="dialog-footer">
-                            <el-button @click="zareno('form')">取 消</el-button>
-                            <el-button type="primary" @click="zareVisible('form')">确 定</el-button>
-                        </div>
-                    </el-dialog>
-                </div>
+          </el-tabs>
+        </el-tab-pane>
+        <el-tab-pane label="自定义页面" name="four">
+          <div style="text-align: left;margin: 15px 0;" class="customize">
+            <el-button type="primary" style="width:100px;" @click="dialogFormVisible = true">
+              <span class="el-icon-plus"></span>添加</el-button>
+            <!-- 添加弹窗 -->
+            <el-dialog title="自定义错误码" :visible.sync="dialogFormVisible" @close="handleClick4">
+              <el-form :model="form" ref="form">
+                <el-form-item label="错误码" prop="errCode" :label-width="formLabelWidth" :rules="[{ validator: jioerrcode, trigger: 'blur' }]">
+                  <el-input v-model.number="form.errCode" placeholder="请输入三位数字错误码，如（105，403）" autocomplete="off" maxlength="3"></el-input>
+                </el-form-item>
+                <el-form-item label="链接地址" :label-width="formLabelWidth" prop="url" :rules="[{ validator: jiourl, trigger: 'blur' }]">
+                  <el-input v-model="form.url" placeholder="请输入URL" autocomplete="off"></el-input>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="zareno('form')">取 消</el-button>
+                <el-button type="primary" @click="zareVisible('form')">确 定</el-button>
+              </div>
+            </el-dialog>
+          </div>
 
-                <div class="pei_zhi_tabel">
-                    <el-table :data="datalist.custom_page" stripe style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
-                        <el-table-column prop="errCode" label="错误码"> </el-table-column>
-                        <el-table-column label="状态">
-                            <template slot-scope="scope">
-                                <span style="color:#E54545" v-if="scope.row.state == 1">已停止</span>
-                                <span style="color:#0ABF5B" v-else>启动中</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column class="pei_zi_url" label="链接">
-                            <template slot-scope="scope">
+          <div class="pei_zhi_tabel">
+            <el-table :data="datalist.custom_page" stripe style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
+              <el-table-column prop="errCode" label="错误码"> </el-table-column>
+              <el-table-column label="状态">
+                <template slot-scope="scope">
+                  <span style="color:#E54545" v-if="scope.row.state == 1">已停止</span>
+                  <span style="color:#0ABF5B" v-else>启动中</span>
+                </template>
+              </el-table-column>
+              <el-table-column class="pei_zi_url" label="链接">
+                <template slot-scope="scope">
 
-                                <div style="width: 240px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin:0 auto;">{{scope.row.url}}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="操作">
-                            <template slot-scope="scope">
-                                <el-button @click="zidingyi(scope.$index)" type="text" size="small">{{ scope.row.state == 1 ? "启动" : "停止" }}</el-button>
-                                <el-button type="text" size="small" style="color:#000000" @click="delzi(scope.$index)">删除</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-            </el-tab-pane>
-        </el-tabs>
+                  <div style="width: 240px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin:0 auto;">{{scope.row.url}}</div>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作">
+                <template slot-scope="scope">
+                  <el-button @click="zidingyi(scope.$index)" type="text" size="small">{{ scope.row.state == 1 ? "启动" : "停止" }}</el-button>
+                  <el-button type="text" size="small" style="color:#000000" @click="delzi(scope.$index)">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
-</div>
+  </div>
 </template>
 
 <script>
@@ -257,17 +220,36 @@ import {
   change_state,
   getterminal,
   check_label,
-  query_config
+  query_config,
+  query_domain,
 } from "../../servers/api";
 import { dateToMs, getymdtime, setbatime } from "../../servers/sevdate";
 export default {
   // inject: ["reload"],
   data() {
     return {
+      title_content: "回源路径",
+      pageActive: 0,
+      nowcharId: "",
+      pageActive: 0,
+      yewu: [
+        {
+          value: 0,
+          label: "mp4",
+        },
+        {
+          value: 1,
+          label: "hls",
+        },
+        {
+          value: 2,
+          label: "flv",
+        },
+      ],
       city_disabled: false,
       loading: false,
       huiurl: {
-        url: ""
+        url: "",
       },
       setstate: false,
       sleckurl: "",
@@ -277,6 +259,7 @@ export default {
       editnum: "",
       tabPosition: "left",
       zurl: false,
+      zurl1:false,
       xas: false,
       fas: false,
       dialogVisible: false,
@@ -300,25 +283,25 @@ export default {
           children: [
             {
               value: "北京",
-              label: "北京"
+              label: "北京",
             },
             {
               value: "内蒙古",
-              label: "内蒙古"
+              label: "内蒙古",
             },
             {
               value: "山西",
-              label: "山西"
+              label: "山西",
             },
             {
               value: "河北",
-              label: "河北"
+              label: "河北",
             },
             {
               value: "天津",
-              label: "天津"
-            }
-          ]
+              label: "天津",
+            },
+          ],
         },
         {
           value: "西北",
@@ -326,25 +309,25 @@ export default {
           children: [
             {
               value: "宁夏",
-              label: "宁夏"
+              label: "宁夏",
             },
             {
               value: "陕西",
-              label: "陕西"
+              label: "陕西",
             },
             {
               value: "甘肃",
-              label: "甘肃"
+              label: "甘肃",
             },
             {
               value: "青海",
-              label: "青海"
+              label: "青海",
             },
             {
               value: "新疆",
-              label: "新疆"
-            }
-          ]
+              label: "新疆",
+            },
+          ],
         },
         {
           value: "东北",
@@ -352,17 +335,17 @@ export default {
           children: [
             {
               value: "黑龙江",
-              label: "黑龙江"
+              label: "黑龙江",
             },
             {
               value: "吉林",
-              label: "吉林"
+              label: "吉林",
             },
             {
               value: "辽宁",
-              label: "辽宁"
-            }
-          ]
+              label: "辽宁",
+            },
+          ],
         },
         {
           value: "华东",
@@ -370,29 +353,29 @@ export default {
           children: [
             {
               value: "福建",
-              label: "福建"
+              label: "福建",
             },
             {
               value: "江苏",
-              label: "江苏"
+              label: "江苏",
             },
             {
               value: "安徽",
-              label: "安徽"
+              label: "安徽",
             },
             {
               value: "山东",
-              label: "山东"
+              label: "山东",
             },
             {
               value: "上海",
-              label: "上海"
+              label: "上海",
             },
             {
               value: "浙江",
-              label: "浙江"
-            }
-          ]
+              label: "浙江",
+            },
+          ],
         },
         {
           value: "华中",
@@ -400,21 +383,21 @@ export default {
           children: [
             {
               value: "河南",
-              label: "河南"
+              label: "河南",
             },
             {
               value: "湖北",
-              label: "湖北"
+              label: "湖北",
             },
             {
               value: "江西",
-              label: "江西"
+              label: "江西",
             },
             {
               value: "湖南",
-              label: "湖南"
-            }
-          ]
+              label: "湖南",
+            },
+          ],
         },
         {
           value: "西南",
@@ -422,25 +405,25 @@ export default {
           children: [
             {
               value: "贵州",
-              label: "贵州"
+              label: "贵州",
             },
             {
               value: "云南",
-              label: "云南"
+              label: "云南",
             },
             {
               value: "重庆",
-              label: "重庆"
+              label: "重庆",
             },
             {
               value: "四川",
-              label: "四川"
+              label: "四川",
             },
             {
               value: "西藏",
-              label: "西藏"
-            }
-          ]
+              label: "西藏",
+            },
+          ],
         },
         {
           value: "华南",
@@ -448,17 +431,17 @@ export default {
           children: [
             {
               value: "广东",
-              label: "广东"
+              label: "广东",
             },
             {
               value: "广西",
-              label: "广西"
+              label: "广西",
             },
             {
               value: "海南",
-              label: "海南"
-            }
-          ]
+              label: "海南",
+            },
+          ],
         },
         {
           value: "其他",
@@ -466,56 +449,56 @@ export default {
           children: [
             {
               value: "香港",
-              label: "香港"
+              label: "香港",
             },
             {
               value: "澳门",
-              label: "澳门"
+              label: "澳门",
             },
             {
               value: "台湾",
-              label: "台湾"
-            }
-          ]
-        }
+              label: "台湾",
+            },
+          ],
+        },
       ],
       dynamicValidateForm: {
-        email: "1212"
+        email: "1212",
       },
       mv1: "",
       mv2: "",
       form: {
         errCode: "",
         url: "",
-        state: 0
+        state: 0,
       },
       huanform: {
         type: 0,
         area: "",
         province: "",
         expire: 0,
-        state: 0
+        state: 0,
       },
       options: [
         {
           value: 0,
-          label: "0"
+          label: "0",
         },
         {
           value: 1,
-          label: "1"
-        }
+          label: "1",
+        },
       ],
       label2: [],
       hostoptions: [
         {
           value: 0,
-          label: "缓存中"
+          label: "缓存中",
         },
         {
           value: 1,
-          label: "已过期"
-        }
+          label: "已过期",
+        },
       ],
       tableData: [],
       valuek: false,
@@ -525,22 +508,28 @@ export default {
         label: "",
         create_time: "",
         label2: 0,
+        label2s: "",
+        url_name: "",
+        url_type: "0",
+        domainId: "",
         state: 0,
         host_url: {},
         cache_con: [],
-        custom_page: []
+        custom_page: [],
       },
+      labelData: [],
       page: 0,
       chanid: "",
       huanfo: "",
       automatic_time: true,
+      updatadate:false,
       pickerOptions0: {
         shortcuts: [
           {
             text: "今天",
             onClick(picker) {
               picker.$emit("pick", new Date());
-            }
+            },
           },
           {
             text: "明天",
@@ -550,7 +539,7 @@ export default {
               );
               date.setTime(date.getTime() + 3600 * 1000 * 24);
               picker.$emit("pick", date);
-            }
+            },
           },
           {
             text: "一周后",
@@ -560,7 +549,7 @@ export default {
               );
               date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
               picker.$emit("pick", date);
-            }
+            },
           },
           {
             text: "一年后",
@@ -570,7 +559,7 @@ export default {
               );
               date.setTime(date.getTime() + 3600 * 1000 * 24 * 365);
               picker.$emit("pick", date);
-            }
+            },
           },
           {
             text: "三年后",
@@ -580,17 +569,18 @@ export default {
               );
               date.setTime(date.getTime() + 3600 * 1000 * 24 * 365 * 3);
               picker.$emit("pick", date);
-            }
-          }
+            },
+          },
         ],
         disabledDate(time) {
           return time.getTime() < Date.now() - 8.64e7; //如果没有后面的-8.64e6就是不可以选择今天的
-        }
+        },
       },
       citylabel: [],
       urlLinks: "",
       buser_ids: "",
-      oneName: ""
+      oneName: "",
+      pageActive:0,
     };
   },
   filters: {
@@ -601,7 +591,7 @@ export default {
       } else {
         return data;
       }
-    }
+    },
   },
   mounted() {
     let tempUrl = localStorage.getItem("tempUrl");
@@ -642,63 +632,93 @@ export default {
     this.options = [];
     this.geturlconfig();
     this.getlabrl2();
-    this.gettimeInfo()
+    this.gettimeInfo();
+    this.queryInfoLabel();
   },
   methods: {
+    //保存
+    onSave(type) {
+      if(type==1){
+         this.updateurl(1);
+              this.zurl = false;
+      } else if(type==2){
+         this.updateurl(2);
+              this.zurl1 = false;
+      }
+ 
+     
+    },
+    //源站域名
+    queryInfoLabel() {
+      let param = new Object();
+
+      // param.chanid = this.dynamicValidateForm.newbuser_id;
+      // this.dynamicValidateForm.bind_id = this.dynamicValidateForm.newbuser_id;
+      // if (param.chanid.length != 12) {
+      //     return false;
+      // }
+      (param.buser_id = this.buser_ids),
+        (param.domain = ""),
+        (param.state = -1),
+        (param.start_time = 0),
+        (param.end_time = 0),
+        (param.order = 0),
+        (param.page = 0);
+      param.page = this.pageActive;
+      query_domain(param)
+        .then(res => {
+          console.log(res);
+          if (res.status == 0)
+            res.data.result.forEach((item, index) => {
+              let obj = {};
+              obj.value = item.domain_id;
+              // obj.label =
+              //   "渠道ID（" + item.chanid + "）--" + item.name + "--" + item.type;
+              // obj.chanid = item.chanid;
+              // this.labelData = [];
+              obj.label = item.domain;
+              this.labelData.push(obj);
+            });
+          console.log(this.labelData);
+          console.log(res.data.remaining);
+          if (res.data.remaining == 0) {
+            return false;
+          } else {
+            this.pageActive++;
+            this.queryInfoLabel();
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     //获取时间
-    gettimeInfo(){
-    //查看url{
-        let parmas = new Object();
+    gettimeInfo() {
+      //查看url{
+      let parmas = new Object();
       parmas.url = this.urlLinks;
       parmas.page = 0;
-     // parmas.type= 0
-      parmas.buser_id = this.buser_ids + "";
+      // parmas.type= 0
+      parmas.buser_id = this.buser_ids;
       query_url(parmas)
         .then(res => {
-          this.datalist.create_time = res.data.result[0].create_time;
-        //   this.datalist.url = res.data.result[0].url;
-        //   this.datalist.label = res.data.result[0].label;
-        //   this.oldlabel = res.data.result[0].label;
-        //   this.datalist.label2 = res.data.result[0].label2;
-        //   this.datalist.state = res.data.result[0].state;
-        //   //回源参数
-        //   this.datalist.host_url.url = res.data.result[0].host_url.url;
-        //   if (res.data.result[0].host_url.valid == 0) {
-        //     this.datalist.host_url.valid = false;
-        //     //回源状态
-        //     this.valuek = false;
-        //     this.urlno = false;
-        //   } else {
-        //     this.datalist.host_url.valid = true;
-        //     this.valuek = true;
-        //     this.urlno = true;
-        //   }
-        //   //缓存参数
-        //   let concash = {};
-        //   if (res.data.result[0].cache_config.valid == 0) {
-        //     //缓存状态
-        //     concash.valid = false;
-        //     this.valueh = false;
-        //   } else {
-        //     concash.valid = true;
-        //     this.valueh = true;
-        //   }
-        //   this.datalist.cache_con = res.data.result[0].cache_config.data;
-        //   this.datalist.custom_page = res.data.result[0].custom_page;
-        // }
-          // this.datalist.create_time = res.data.result[0].create_time;
-         
-        }
-        )
+          // this.datalist.create_time = res.data.base_config.create_time;
+        })
         .catch(err => {
           console.log(err);
         });
-
-
     },
-    cleckurl() {
-      this.zurl = true;
-      this.sleckurl = this.datalist.url;
+    cleckurl(type) {
+
+      if (type == 1) {
+              this.zurl = true;
+        this.sleckurl = this.datalist.label2;
+        this.title_content = "回源路径";
+      } else if (type == 2) {
+              this.zurl1 = true;
+        this.sleckurl = this.datalist.label2s;
+        this.title_content = "播放路径";
+      }
     },
     //获取副标签
     getlabrl2() {
@@ -731,65 +751,48 @@ export default {
           console.log(error);
         });
     },
+    //选这源站域名
+    onchange(val) {
+      console.log(val);
+      this.nowcharId = val.chanid;
+      this.datalist.url = val;
+      this.datalist.domainId=val
+      this.updateurl(3)
+    },
+    //视频格式
+    onchangeType(val){
+      this.datalist.url_type=val
+ this.updateurl(3)
+    },
     //请求数据--获取配置信息
     geturlconfig() {
       let parmas = new Object();
-      parmas.url = this.urlLinks;
-     // parmas.page = 0;
-      parmas.type= 0
-      //parmas.buser_id = this.buser_ids + "";
+      parmas.url_name = this.urlLinks;
+      // parmas.page = 0;
+      parmas.type = 0;
+      parmas.buser_id = this.buser_ids;
       query_config(parmas)
         .then(res => {
-        //   this.datalist.create_time = res.data.result[0].create_time;
-        //   this.datalist.url = res.data.result[0].url;
-        //   this.datalist.label = res.data.result[0].label;
-        //   this.oldlabel = res.data.result[0].label;
-        //   this.datalist.label2 = res.data.result[0].label2;
-        //   this.datalist.state = res.data.result[0].state;
-        //   //回源参数
-        //   this.datalist.host_url.url = res.data.result[0].host_url.url;
-        //   if (res.data.result[0].host_url.valid == 0) {
-        //     this.datalist.host_url.valid = false;
-        //     //回源状态
-        //     this.valuek = false;
-        //     this.urlno = false;
-        //   } else {
-        //     this.datalist.host_url.valid = true;
-        //     this.valuek = true;
-        //     this.urlno = true;
-        //   }
-        //   //缓存参数
-        //   let concash = {};
-        //   if (res.data.result[0].cache_config.valid == 0) {
-        //     //缓存状态
-        //     concash.valid = false;
-        //     this.valueh = false;
-        //   } else {
-        //     concash.valid = true;
-        //     this.valueh = true;
-        //   }
-        //   this.datalist.cache_con = res.data.result[0].cache_config.data;
-        //   this.datalist.custom_page = res.data.result[0].custom_page;
-        // }
-          // this.datalist.create_time = res.data.result[0].create_time;
-          this.datalist.url = res.data.data.url;
-          this.datalist.label = res.data.data.label;
-          this.oldlabel = res.data.data.label;
-          this.datalist.label2 = res.data.data.label2;
-          this.datalist.state = res.data.data.state;
-          //回源参数
-          this.datalist.host_url.url = res.data.data.host_url.url;
-          if (res.data.data.host_url.valid == 0) {
-            this.datalist.host_url.valid = false;
-            //回源状态
-            this.valuek = false;
-            this.urlno = false;
-          } else {
-            this.datalist.host_url.valid = true;
-            this.valuek = true;
-            this.urlno = true;
-          }
-          //缓存参数
+          this.datalist.create_time = res.data.data.base_config.create_time;
+          this.datalist.url = res.data.data.base_config.url;
+          this.datalist.url_type = res.data.data.base_config.url_type;
+          this.datalist.label2 = res.data.data.base_config.host_url;
+          this.datalist.label2s = res.data.data.base_config.url;
+          this.datalist.domainId = res.data.data.base_config.domain_id;
+          this.datalist.state=res.data.data.base_config.state;
+          // //回源参数
+          // this.datalist.host_url.url = res.data.data.host_url.url;
+          // if (res.data.data.host_url.valid == 0) {
+          //   this.datalist.host_url.valid = false;
+          //   //回源状态
+          //   this.valuek = false;
+          //   this.urlno = false;
+          // } else {
+          //   this.datalist.host_url.valid = true;
+          //   this.valuek = true;
+          //   this.urlno = true;
+          // }
+       
           let concash = {};
           if (res.data.data.cache_config.valid == 0) {
             //缓存状态
@@ -800,9 +803,9 @@ export default {
             this.valueh = true;
           }
           this.datalist.cache_con = res.data.data.cache_config.data;
+
           this.datalist.custom_page = res.data.data.custom_page;
-        }
-        )
+        })
         .catch(err => {
           console.log(err);
         });
@@ -839,36 +842,75 @@ export default {
         this.updateurl();
       }
     },
-    updateurl() {
+    updateurl(type) {
+   
       let parmas = new Object();
       let natobj = {};
-      natobj.url = this.datalist.url;
-      natobj.label = this.datalist.label;
-      natobj.label2 = this.datalist.label2;
-      natobj.host_url = new Object();
+      natobj.url_name = this.urlLinks;
+      natobj.base_config = {
+        domain_id: this.datalist.domainId,
+        // url: this.datalist.label2s, //待配置url
+        // host_url: this.datalist.label2,
+        url_type: this.datalist.url_type,
+      }
+         if(type==1){
+            natobj.base_config.url=this.datalist.label2s,
+       natobj.base_config.host_url= this.sleckurl
+      }
+      else if(type==2){
+            natobj.base_config.url=this.sleckurl
+                 natobj.base_config.host_url= this.datalist.label2
+
+      }
+      else if(type==3){
+         natobj.base_config.url=this.datalist.label2s,
+        natobj.base_config.host_url= this.datalist.label2
+      }
+      // natobj.cache_config={
+      //   valid:0,
+      //   data: [
+      //     {
+      //       "type":0,  //0 自动过期 1 自定义过期时间
+      //       "province":"湖北", //省份
+      //       "expire":324234 //超时时间 单位秒
+      //    }
+      //    ]
+      // }
+      // natobj.custom_page=
+      //    [
+      // {
+      //      "errCode":404,  //错误码
+      //     "url":"www.eee.fff404.html",  //链接
+      //     "state":1, //状态
+      //    },
+      // ]
+      //natobj.label2 = this.datalist.label2;
+      // natobj.host_url = new Object();
       natobj.cache_config = new Object();
       natobj.custom_page = [];
-      if (this.valuek == false) {
-        natobj.host_url.valid = 0;
-      } else {
-        natobj.host_url.valid = 1;
-      }
-      natobj.host_url.url = this.datalist.host_url.url;
+      // if (this.valuek == false) {
+      //   natobj.host_url.valid = 0;
+      // } else {
+      //   natobj.host_url.valid = 1;
+      // }
+      // natobj.host_url.url = this.datalist.host_url.url;
       if (this.valueh == false) {
         natobj.cache_config.valid = 0;
       } else {
         natobj.cache_config.valid = 1;
       }
-      if (this.valueh == false) {
-        natobj.cache_config.valid = 0;
-      } else {
-        natobj.cache_config.valid = 1;
-      }
+      // if (this.valueh == false) {
+      //   natobj.cache_config.valid = 0;
+      // } else {
+      //   natobj.cache_config.valid = 1;
+      // }
       natobj.cache_config.data = this.datalist.cache_con;
       natobj.custom_page = this.datalist.custom_page;
       parmas.data_array = [];
       parmas.data_array.push(natobj);
       parmas.data_count = 1;
+      parmas.buser_id = this.buser_ids;
+
       config_url(parmas)
         .then(res => {
           this.geturlconfig();
@@ -894,23 +936,26 @@ export default {
       this.$confirm(messagetext, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
+             let param = {
+            }
           let params = new Object();
           let urllist = [];
           urllist.push(this.urlLinks);
-          urllist.push(state);
           params.data_array = [];
-          params.data_array.push(urllist);
+          params.data_array=urllist
           params.data_count = 0;
+          params.state=state
+           params.buser_id=this.buser_ids
           change_state(params)
             .then(res => {
               if (res.status == 0) {
                 this.geturlconfig();
                 this.$message({
                   type: "success",
-                  message: "操作成功!"
+                  message: "操作成功!",
                 });
               }
             })
@@ -922,7 +967,7 @@ export default {
           console.log(eerr);
           this.$message({
             type: "info",
-            message: "已取消"
+            message: "已取消",
           });
         });
     },
@@ -974,7 +1019,7 @@ export default {
 
     //   this.$refs[formName].resetFields();
     // },
-     //添加回源信息--取消
+    //添加回源信息--取消
     nohosturl(formName) {
       console.log(this.datalist.host_url.valid);
       console.log(this.valuek);
@@ -1010,13 +1055,13 @@ export default {
     addDomain() {
       this.dynamicValidateForm.domains.push({
         value: "",
-        key: Date.now()
+        key: Date.now(),
       });
     },
     handleClick(tab, event) {
       if (tab.name == "zero") {
         this.$router.push({
-          path: "/domain_management"
+          path: "/domain_management",
         });
       }
     },
@@ -1113,7 +1158,7 @@ export default {
       if (this.citylabel.length == 0) {
         this.$message({
           type: "error",
-          message: "请选择地区"
+          message: "请选择地区",
         });
         return false;
       }
@@ -1125,7 +1170,7 @@ export default {
         if (!this.huanform.expire) {
           this.$message({
             type: "error",
-            message: "请选择时间"
+            message: "请选择时间",
           });
           return false;
         }
@@ -1241,13 +1286,13 @@ export default {
     // 表格样式设置
     rowClass() {
       return "text-align: center;";
-    }
+    },
   },
   beforeRouteLeave(to, form, next) {
     sessionStorage.removeItem("tabPosition");
     sessionStorage.removeItem("activeName");
     next();
-  }
+  },
 };
 </script>
 

@@ -1,13 +1,13 @@
 <template>
 <div class="content">
     <el-breadcrumb separator="/">
-        <el-breadcrumb-item>URL管理</el-breadcrumb-item>
+        <el-breadcrumb-item>点播加速管理</el-breadcrumb-item>
     </el-breadcrumb>
     <div>
         <!-- 搜索 -->
         <div class="seach">
             <div class="seach_top">
-                <el-input placeholder="URL、渠道ID" v-model="input" class="input-with-select" @keyup.enter.native="onSubmitInput" maxlength="70">
+                <el-input placeholder="请输入加速内容" v-model="input" class="input-with-select" @keyup.enter.native="onSubmitInput" maxlength="70">
                     <i slot="prefix" class="el-input__icon el-icon-search"></i>
                 </el-input>
                 <div class="seach_top_right" @click="option_display()">
@@ -21,7 +21,7 @@
                     <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
 
-                <span>日期：</span>
+                <span>创建日期：</span>
                 <el-date-picker v-model="value1" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
                      <el-button type="primary"  @click="seachuser()" style="margin-left:8px;">确定</el-button>
                     <el-button  type="primary"  @click="reset()">重置</el-button>                
@@ -35,10 +35,10 @@
             <div style="padding:10px;display: flex;justify-content: space-between;">
                 <div>
                     <el-button type="primary" @click="addUrl">
-                        添加URL
+                        创建加速内容
                         <span class="el-icon-circle-plus-outline"></span>
                     </el-button>
-                    <el-button type="primary" plain @click="onImport">批量导入URL</el-button>
+                    <el-button type="primary" plain @click="onImport">批量导入加速内容</el-button>
                     <!-- <el-button type="primary" plain @click="setdomainlist">批量管理标签</el-button> -->
                 </div>
                 <div>
@@ -50,14 +50,15 @@
             <el-table stripe ref="multipleTable" @selection-change="handleSelectionChange" @sort-change='tableSortChange' :data="tableData" tooltip-effect="dark" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
                 <el-table-column type="selection" width="55">
                 </el-table-column>
-                <el-table-column  label="URL">
+                <el-table-column  label="加速内容名称">
                     <template slot-scope="scope">
-                        <span style="width: 190px; float:left;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{scope.row.url}}</span>
+                        <span style="width: 190px; float:left;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{scope.row.url_name}}</span>
 
                     </template>
                 </el-table-column>
-                <el-table-column prop="url_name" label="视频名称"></el-table-column>
-                <el-table-column prop="buser_id" label="渠道ID"></el-table-column>
+                <el-table-column prop="domain" label="源站域名"></el-table-column>
+                <el-table-column prop="host_url" label="回源路径"></el-table-column>
+                <el-table-column prop="url" label="播放路径"></el-table-column>
                 <el-table-column prop="state" label="状态" :formatter="formatState"></el-table-column>
                 <el-table-column prop="create_time" label="创建时间" sortable="custom"></el-table-column>
                 <!-- <el-table-column label="标签">
@@ -202,13 +203,18 @@
             <el-form :model="ruleForm5" ref="ruleForm5" label-position="left" class="demo-ruleForm">
                 <h3 class="title">详细信息</h3>
                 <el-form-item>
-                    <el-form-item label="URL:">
-                        <el-input v-model="ruleForm5.url" :disabled="true"></el-input>
+                    <el-form-item label="加速内容名称:">
+                        <el-input v-model="ruleForm5.url_name" :disabled="true"></el-input>
                     </el-form-item>
                 </el-form-item>
                 <el-form-item>
-                    <el-form-item label="视频名称:">
-                        <el-input v-model="ruleForm5.url_name" :disabled="true" ></el-input>
+                    <el-form-item label="源站域名:">
+                        <el-input v-model="ruleForm5.url" :disabled="true" ></el-input>
+                    </el-form-item>
+                </el-form-item>
+                   <el-form-item>
+                    <el-form-item label="回源路径:">
+                        <el-input v-model="ruleForm5.host_url" :disabled="true" ></el-input>
                     </el-form-item>
                 </el-form-item>
                 <el-form-item prop="phone">
@@ -364,9 +370,14 @@ export default {
           label: "正常运行"
         },
         {
+          value: 2,
+          label: "回源失败"
+        },
+        {
           value: 0,
           label: "已停止"
-        }
+        },
+          
         // {
         //     value: 2,
         //     label: "配置中"
@@ -448,7 +459,8 @@ export default {
         disabledDate(time) {
           return time.getTime() > Date.now() - 8.64e6; //如果没有后面的-8.64e6就是不可以选择今天的
         }
-      }
+      },
+      buser_id_active:"158000000011"
     };
   },
   components: {
@@ -496,6 +508,7 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+     
     },
     //批量导入
     onImport() {
@@ -682,8 +695,9 @@ export default {
     //获取URL列表
     queryUrlList() {
       let params = new Object();
+      
       params.page = this.currentPage - 1;
-      params.buser_id = this.buser_id;
+      params.buser_id = "158000000011";
       params.url = this.nowurl;
       params.order = this.order;
       if (this.value === "") {
@@ -695,10 +709,9 @@ export default {
         params.end_time = this.value1[1].getTime() / 1000;
         params.start_time = this.value1[0].getTime() / 1000;
       } else {
+           params.end_time = 0
+        params.start_time =0
       }
-      //params.state=0
-      // params.end_time=123456
-      //  params.start_time=23456
       query_url(params)
         .then(res => {
           if (res.status == 0) {
@@ -784,7 +797,7 @@ export default {
     onSubmit() {},
     //配置
     Configuration(val) {
-      let tempUrl = val.url;
+      let tempUrl = val.url_name;
       let tempChanId = val.buser_id;
       localStorage.setItem("tempUrl", tempUrl);
       localStorage.setItem("tempChanId", tempChanId);
@@ -864,7 +877,7 @@ export default {
     },
     //表格修改
     updatauser(val) {
-      let tempUrl = val.url;
+      let tempUrl = val.url_name;
       let tempChanId = val.buser_id;
       localStorage.setItem("tempUrl", tempUrl);
       localStorage.setItem("tempChanId", tempChanId);
@@ -894,26 +907,29 @@ export default {
     },
     //单个禁用启用
     onDisable(row) {
+ 
       this.$confirm("确定要执行此操作", "提示", {
         type: "warning"
       })
         .then(() => {
-          if (row.state == 0) {
-            //禁用
+          if (row.state == 1) {
+            //停用
             let tempArr = [];
             let tempArr1 = [];
-            tempArr[0] = row.url;
-            tempArr[1] = 1;
+            tempArr[0] = row.url_name;
+            // tempArr[1] = 1;
             tempArr1.push(tempArr);
             let param = {
-              data_count: 1,
-              data_array: tempArr1
+              data_count: 0,
+              buser_id:row.buser_id,
+              data_array: tempArr,
+              state:0
             };
             change_state(param)
               .then(res => {
                 if (res.status == 0) {
                   this.$message({
-                    message: "启用成功",
+                    message: "停用成功",
                     type: "success"
                   });
                   this.queryUrlList();
@@ -925,22 +941,24 @@ export default {
               .catch(error => {
                 console.log(error);
               });
-          } else if (row.state == 1) {
+          } else if (row.state == 0) {
             //启用
             let tempArr = [];
             let tempArr1 = [];
-            tempArr[0] = row.url;
-            tempArr[1] = 0;
-            tempArr1.push(tempArr);
+            tempArr[0] = row.url_name;
+            // tempArr[1] = 0;
+            // tempArr1.push(tempArr);
             let param = {
-              data_count: 1,
-              data_array: tempArr1
+                  data_count: 0,
+              buser_id:row.buser_id,
+              data_array: tempArr,
+              state:1
             };
             change_state(param)
               .then(res => {
                 if (res.status == 0) {
                   this.$message({
-                    message: "停用成功",
+                    message: "启用成功",
                     type: "success"
                   });
                   this.common.monitoringLogs("修改 ", "停用URL", 1);
@@ -954,7 +972,9 @@ export default {
               });
           }
         })
-        .catch(() => {});
+        .catch(() => {
+          console.log(error);
+        });
 
       // this.ruleForm.account = row.account;
       // this.dialpwdset = true;
@@ -997,21 +1017,20 @@ export default {
     //             });
     //         });
     // },
-    //启用
+    //批量启用
     enableuser() {
       let tempArr = this.multipleSelection;
-
       let tempArr2 = [];
       for (var i = 0; i < tempArr.length; i++) {
-        let tempArr1 = [];
-        tempArr1[0] = tempArr[i].url;
-        tempArr1[1] = 1;
-        tempArr2.push(tempArr1);
+        tempArr2.push( tempArr[i].url_name);
       }
+      console.log(tempArr2)
 
       let param = new Object();
-      param.data_count = tempArr.length;
+      param.buser_id=this.buser_id_active
+      param.data_count = tempArr2.length;
       param.data_array = tempArr2;
+      param.state=1
       change_state(param)
         .then(res => {
           if (res.status == 0) {
@@ -1031,19 +1050,18 @@ export default {
     },
     //禁用
     disableuser() {
-      let tempArr = this.multipleSelection;
-      let tempArr1 = [];
+       let tempArr = this.multipleSelection;
       let tempArr2 = [];
       for (var i = 0; i < tempArr.length; i++) {
-        let tempArr1 = [];
-        tempArr1[0] = tempArr[i].url;
-        tempArr1[1] = 0;
-        tempArr2.push(tempArr1);
+        tempArr2.push( tempArr[i].url_name);
       }
+      console.log(tempArr2)
 
       let param = new Object();
-      param.data_count = tempArr.length;
+      param.buser_id=this.buser_id_active
+      param.data_count = tempArr2.length;
       param.data_array = tempArr2;
+      param.state=0
       change_state(param)
         .then(res => {
           if (res.status == 0) {
@@ -1120,10 +1138,11 @@ export default {
       }
 
       let tempArr1 = [];
-      tempArr1.push(rows.url);
+      tempArr1.push(rows.url_name);
 
       let param = new Object();
       param.data_count = 1;
+      param.buser_id=rows.buser_id
       param.data_array = tempArr1;
       this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
         confirmButtonText: "确定",
