@@ -1,246 +1,258 @@
 <template>
-<div class="content">
+  <div class="content">
     <el-breadcrumb separator="/">
-        <el-breadcrumb-item>点播加速管理</el-breadcrumb-item>
+      <el-breadcrumb-item>点播加速管理</el-breadcrumb-item>
     </el-breadcrumb>
     <div>
-        <!-- 搜索 -->
-        <div class="seach">
-            <div class="seach_top">
-                <el-input placeholder="请输入加速内容" v-model="input" class="input-with-select" @keyup.enter.native="onSubmitInput" maxlength="70">
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <div class="seach_top_right" @click="option_display()">
-                    筛选
-                    <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
-                </div>
-            </div>
-            <div v-if="optiondisplay" class="seach_bottom">
-                <span>状态：</span>
-                <el-select v-model="value" placeholder="请选择" @change="onchangeTab">
-                    <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-
-                <span>创建日期：</span>
-                <el-date-picker v-model="value1" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
-                     <el-button type="primary"  @click="seachuser()" style="margin-left:8px;">确定</el-button>
-                    <el-button  type="primary"  @click="reset()">重置</el-button>                
-                    
-               
-               
-            </div>
+      <!-- 搜索 -->
+      <div class="seach">
+        <div class="seach_top">
+          <el-input placeholder="请输入渠道ID丶加速内容" v-model="input_text" class="input-with-select" @keyup.enter.native="onSubmitInput" maxlength="70">
+            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+          </el-input>
+          <div class="seach_top_right" @click="option_display()">
+            筛选
+            <i class="el-icon-caret-bottom" :class="[rotate ? 'fa fa-arrow-down go' : 'fa fa-arrow-down aa']"></i>
+          </div>
         </div>
+        <div v-if="optiondisplay" class="seach_bottom">
+          <span>状态：</span>
+          <el-select v-model="value" placeholder="请选择" @change="onchangeTab">
+            <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+
+          <span>创建日期：</span>
+          <el-date-picker v-model="value1" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+          <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button>
+          <el-button type="primary" @click="reset()">重置</el-button>
+        </div>
+      </div>
+      <!-- 表格 -->
+      <div class="con_lable">
+        <div style="padding:10px;display: flex;justify-content: space-between;">
+          <div>
+            <el-button type="primary" @click="addUrl">
+              创建加速内容
+              <span class="el-icon-circle-plus-outline"></span>
+            </el-button>
+            <el-button type="primary" plain @click="onImport">批量导入加速内容</el-button>
+            <!-- <el-button type="primary" plain @click="setdomainlist">批量管理标签</el-button> -->
+          </div>
+          <div>
+            <el-button type="primary" @click="toexportExcel">导出</el-button>
+          </div>
+        </div>
+
         <!-- 表格 -->
-        <div class="con_lable">
-            <div style="padding:10px;display: flex;justify-content: space-between;">
-                <div>
-                    <el-button type="primary" @click="addUrl">
-                        创建加速内容
-                        <span class="el-icon-circle-plus-outline"></span>
-                    </el-button>
-                    <el-button type="primary" plain @click="onImport">批量导入加速内容</el-button>
-                    <!-- <el-button type="primary" plain @click="setdomainlist">批量管理标签</el-button> -->
-                </div>
-                <div>
-                    <el-button type="primary"  @click="toexportExcel">导出</el-button>
-                </div>
-            </div>
+        <el-table stripe ref="multipleTable" border @selection-change="handleSelectionChange" @sort-change="tableSortChange" :data="tableData" tooltip-effect="dark" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
+          <el-table-column type="selection" width="55"> </el-table-column>
+          <el-table-column prop="buser_id" label="渠道ID"> </el-table-column>
+          <el-table-column prop="url_name" label="加速内容名称">
+          </el-table-column>
+          <el-table-column prop="domain" label="源站域名">
+            <template slot-scope="scope">
+              <div style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-break:keep-all;margin:0 auto;">{{scope.row.domain}}</div>
 
-            <!-- 表格 -->
-            <el-table stripe ref="multipleTable" @selection-change="handleSelectionChange" @sort-change='tableSortChange' :data="tableData" tooltip-effect="dark" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
-                <el-table-column type="selection" width="55">
-                </el-table-column>
-                <el-table-column  label="加速内容名称">
-                    <template slot-scope="scope">
-                        <span style="width: 190px; float:left;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{scope.row.url_name}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="host_url" label="回源路径">
+            <template slot-scope="scope">
+              <div style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-break:keep-all;margin:0 auto;">{{scope.row.host_url}}</div>
 
-                    </template>
-                </el-table-column>
-                <el-table-column prop="domain" label="源站域名"></el-table-column>
-                <el-table-column prop="host_url" label="回源路径"></el-table-column>
-                <el-table-column prop="url" label="播放路径"></el-table-column>
-                <el-table-column prop="state" label="状态" :formatter="formatState"></el-table-column>
-                <el-table-column prop="create_time" label="创建时间" sortable="custom"></el-table-column>
-                <!-- <el-table-column label="标签">
-                    <template slot-scope="scope">
-                        <span @click="goLink" style="cursor: pointer;"><img width="20" height="20" src='../../assets/img/urlIcon.png' /></span>
-                    </template>
-                </el-table-column> -->
+            </template>
+          </el-table-column>
+          <el-table-column prop="url" label="播放路径">
+            <template slot-scope="scope">
+              <div style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-break:keep-all;margin:0 auto;">{{scope.row.url}}</div>
 
-                <el-table-column label="操作" width="350">
-                    <template slot-scope="scope">
-                        <el-button @click="Configuration(scope.row)" type="text" size="small">配置</el-button>
-                        <el-button type="text" size="small" @click="updatauser(scope.row)">复制配置</el-button>
-                        <el-button type="text" size="small" @click="monitor(scope.row)">监控</el-button>
-                        <el-button type="text" size="small" @click="onDisable(scope.row)">{{scope.row.state==1?"停用":"启用"}}</el-button>
-                        <el-button type="text" size="small" @click="handleClick(scope.row)">详情</el-button>
-                        <el-button type="text" size="small" @click="deleateuser1(scope.row)" style="color:red;">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+            </template>
+          </el-table-column>
+          <el-table-column prop="state" label="状态" :formatter="formatState"></el-table-column>
+          <el-table-column prop="create_time" label="创建时间" sortable="custom"></el-table-column>
+          <el-table-column label="操作" width="350">
+            <template slot-scope="scope">
+              <el-button @click="Configuration(scope.row)" type="text" size="small">配置</el-button>
+              <el-button type="text" size="small" @click="updatauser(scope.row)">复制配置</el-button>
+              <el-button type="text" size="small" @click="monitor(scope.row)">监控</el-button>
+              <el-button type="text" size="small" @click="onDisable(scope.row)">{{ scope.row.state == 1 ? "停用" : "启用" }}</el-button>
+              <el-button type="text" size="small" @click="handleClick(scope.row)">详情</el-button>
+              <el-button type="text" size="small" @click="deleateuser1(scope.row)" style="color:red;">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
 
-            <!-- 按钮 -->
-            <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center;">
-                <div>
-                    <el-button @click="enableuser()" type="text">启用</el-button>
-                    <el-button @click="disableuser()" type="text" style="margin-left:30px;color:red;">停用</el-button>
-                    <el-button @click="deleateuser()" type="text" style="margin-left:30px;">删除</el-button>
-                </div>
-                <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
-            </div>
+        <!-- 按钮 -->
+        <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center;">
+          <div>
+            <el-button @click="enableuser()" type="text">启用</el-button>
+            <el-button @click="disableuser()" type="text" style="margin-left:30px;color:red;">停用</el-button>
+            <el-button @click="deleateuser()" type="text" style="margin-left:30px;">删除</el-button>
+          </div>
+          <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
         </div>
-
+      </div>
     </div>
     <!-- 弹窗 -->
     <el-dialog title="添加域名" :visible.sync="dialogFormVisible" custom-class="customWidth" class="domain_dialog">
-        <el-form :model="dynamicValidateForm" ref="dynamicValidateForm">
+      <el-form :model="dynamicValidateForm" ref="dynamicValidateForm">
+        <el-form-item label="渠道ID:" :label-width="formLabelWidth" prop="account" :rules="{
+            required: true,
+            message: '渠道ID不能为空',
+            trigger: 'blur',
+          }">
+          <el-input v-model="dynamicValidateForm.buser_id" placeholder="请输入渠道ID" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="URL:" :label-width="formLabelWidth" prop="pwd" placeholder="请输入单个URL" :rules="{
+            required: true,
+            message: '域名不能为空',
+            trigger: 'blur',
+          }">
+          <el-input v-model="dynamicValidateForm.url" placeholder="请输入渠道域名" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="视频名称:" :label-width="formLabelWidth" prop="conpwd" :rules="{
+            required: true,
+            message: '视频名称不能为空',
+            trigger: 'blur',
+          }">
+          <el-input v-model="dynamicValidateForm.url_name" placeholder="请输入主标签" autocomplete="off"></el-input>
+        </el-form-item>
 
-            <el-form-item label="渠道ID:" :label-width="formLabelWidth" prop="account" :rules="{
-      required: true, message: '渠道ID不能为空', trigger: 'blur'
-    }">
-                <el-input v-model="dynamicValidateForm.buser_id" placeholder="请输入渠道ID" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="URL:" :label-width="formLabelWidth" prop="pwd" placeholder="请输入单个URL" :rules="{
-      required: true, message: '域名不能为空', trigger: 'blur'
-    }">
-                <el-input v-model="dynamicValidateForm.url" placeholder="请输入渠道域名" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="视频名称:" :label-width="formLabelWidth" prop="conpwd" :rules="{
-      required: true, message: '视频名称不能为空', trigger: 'blur'
-    }">
-                <el-input v-model="dynamicValidateForm.url_name" placeholder="请输入主标签" autocomplete="off"></el-input>
-            </el-form-item>
+        <el-form-item label="视频格式" :label-width="formLabelWidth" prop="radio" :rules="{
+            required: true,
+            message: '业务类型不能为空',
+            trigger: 'blur',
+          }">
+          <el-select v-model="dynamicValidateForm.url_type" placeholder="请选择" style="width:100%;">
+            <el-option v-for="(item, index) in videoArr" :key="index" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="主标签:" :label-width="formLabelWidth" prop="conpwd" :rules="{
+            required: true,
+            message: '主标签不能为空',
+            trigger: 'blur',
+          }">
+          <el-input v-model="dynamicValidateForm.label" placeholder="请输入主标签" autocomplete="off"></el-input>
+        </el-form-item>
 
-            <el-form-item label="视频格式" :label-width="formLabelWidth" prop="radio" :rules="{
-      required: true, message: '业务类型不能为空', trigger: 'blur'
-    }">
-                <el-select v-model="dynamicValidateForm.url_type" placeholder="请选择" style="width:100%;">
-                    <el-option v-for="(item, index) in videoArr" :key="index" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="主标签:" :label-width="formLabelWidth" prop="conpwd" :rules="{
-      required: true, message: '主标签不能为空', trigger: 'blur'
-    }">
-                <el-input v-model="dynamicValidateForm.label" placeholder="请输入主标签" autocomplete="off"></el-input>
-            </el-form-item>
+        <el-form-item label="副标签" :label-width="formLabelWidth" prop="radio" :rules="{
+            required: true,
+            message: '业务类型不能为空',
+            trigger: 'blur',
+          }">
+          <el-select v-model="dynamicValidateForm.label2" placeholder="请选择" style="width:100%;">
+            <el-option v-for="(item, index) in yewu" :key="index" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
 
-            <el-form-item label="副标签" :label-width="formLabelWidth" prop="radio" :rules="{
-      required: true, message: '业务类型不能为空', trigger: 'blur'
-    }">
-                <el-select v-model="dynamicValidateForm.label2" placeholder="请选择" style="width:100%;">
-                    <el-option v-for="(item, index) in yewu" :key="index" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-            </el-form-item>
-
-        </el-form>
-
-        <div slot="footer" class="dialog-footer" style="text-align:center;">
-            <el-button @click="dialogFormVisibles">取 消</el-button>
-            <el-button type="primary" @click="onSubmitAdd">确 定</el-button>
-        </div>
+      <div slot="footer" class="dialog-footer" style="text-align:center;">
+        <el-button @click="dialogFormVisibles">取 消</el-button>
+        <el-button type="primary" @click="onSubmitAdd">确 定</el-button>
+      </div>
     </el-dialog>
     <!-- 详情弹窗 -->
     <el-dialog title="域名详情" :visible.sync="dialog" custom-class="customWidth" width="50%" style="width:100%:background:red;">
-        <el-table ref="multipleTable" :data="tableData">
-            <el-table-column prop="dominds" label="配置项"></el-table-column>
-            <el-table-column prop="camesd" label="当前配置"></el-table-column>
-            <el-table-column label="操作">
-                <template slot-scope="scope">
-                    <el-button @click="handleClicks(scope.row)" type="text" size="small">操作</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+      <el-table ref="multipleTable" :data="tableData">
+        <el-table-column prop="dominds" label="配置项"></el-table-column>
+        <el-table-column prop="camesd" label="当前配置"></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button @click="handleClicks(scope.row)" type="text" size="small">操作</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-        <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="dialog=false">确 定</el-button>
-        </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialog = false">确 定</el-button>
+      </div>
     </el-dialog>
     <!-- 复制配置弹窗 -->
     <el-dialog title="添加用户" :visible.sync="dialupdata" custom-class="customWidth" width="900px">
-        <p style="text-align: left;margin: 10px 0;">复制配置允许将一个域名的配置项复制到多个域名，帮助您对域名进行批量配置</p>
-        <el-steps :active="actives" finish-status="success" align-center>
-            <el-step title="选择配置项"></el-step>
-            <el-step title="选择域名"></el-step>
-            <el-step title="完成"></el-step>
-        </el-steps>
+      <p style="text-align: left;margin: 10px 0;">
+        复制配置允许将一个域名的配置项复制到多个域名，帮助您对域名进行批量配置
+      </p>
+      <el-steps :active="actives" finish-status="success" align-center>
+        <el-step title="选择配置项"></el-step>
+        <el-step title="选择域名"></el-step>
+        <el-step title="完成"></el-step>
+      </el-steps>
 
-        <div v-if="actives===1">
-            <el-table ref="multipleTable" :data="futableData" tooltip-effect="dark" border style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="configuration" label="配置项"></el-table-column>
-                <el-table-column prop="nowconfiguration" label="当前配置" show-overflow-tooltip></el-table-column>
-            </el-table>
-            <el-button style="margin-top: 12px;" type="primary" @click="next">下一步</el-button>
-            <el-button style="margin-top: 12px;" @click="fureset">取消</el-button>
+      <div v-if="actives === 1">
+        <el-table ref="multipleTable" :data="futableData" tooltip-effect="dark" border style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column prop="configuration" label="配置项"></el-table-column>
+          <el-table-column prop="nowconfiguration" label="当前配置" show-overflow-tooltip></el-table-column>
+        </el-table>
+        <el-button style="margin-top: 12px;" type="primary" @click="next">下一步</el-button>
+        <el-button style="margin-top: 12px;" @click="fureset">取消</el-button>
+      </div>
+      <div v-else-if="actives === 2">
+        <div style="display: flex;justify-content: space-between;align-items: center;margin: 10px 0">
+          <span style="font-weight: 600;">域名列表</span>
+          <div>
+            已选择
+            <span>{{ nums }}</span>个域名，最多允许50个
+          </div>
+          <el-input placeholder="请输入域名" v-model="fuinput" style=" width:300px" class="input-with-select" @keyup.enter.native="onSubmit"></el-input>
         </div>
-        <div v-else-if="actives===2">
-            <div style="display: flex;justify-content: space-between;align-items: center;margin: 10px 0">
-                <span style="font-weight: 600;">域名列表</span>
-                <div>
-                    已选择
-                    <span>{{nums}}</span>个域名，最多允许50个
-                </div>
-                <el-input placeholder="请输入域名" v-model="fuinput" style=" width:300px" class="input-with-select" @keyup.enter.native="onSubmit"></el-input>
-            </div>
-            <div>
-                <el-table ref="multipleTable" :data="urllist" tooltip-effect="dark" border style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="55"></el-table-column>
-                    <el-table-column prop="url" label="URL"></el-table-column>
-                </el-table>
-            </div>
-            <el-button style="margin-top: 12px;" type="primary" @click="last">上一步</el-button>
-            <el-button style="margin-top: 12px;" type="primary" @click="next">下一步</el-button>
-            <el-button style="margin-top: 12px;" @click="fureset">取消</el-button>
+        <div>
+          <el-table ref="multipleTable" :data="urllist" tooltip-effect="dark" border style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column prop="url" label="URL"></el-table-column>
+          </el-table>
         </div>
-        <!-- <div v-else>
+        <el-button style="margin-top: 12px;" type="primary" @click="last">上一步</el-button>
+        <el-button style="margin-top: 12px;" type="primary" @click="next">下一步</el-button>
+        <el-button style="margin-top: 12px;" @click="fureset">取消</el-button>
+      </div>
+      <!-- <div v-else>
             <el-button style="margin-top: 12px;" type="primary" @click="last">上一步</el-button>
             <el-button style="margin-top: 12px;"  @click="fureset">取消</el-button>
           </div>-->
     </el-dialog>
     <!--详情弹窗-->
     <el-dialog :visible.sync="dialogVisible4" width="25%">
-        <div class="addaccout">
-            <el-form :model="ruleForm5" ref="ruleForm5" label-position="left" class="demo-ruleForm">
-                <h3 class="title">详细信息</h3>
-                <el-form-item>
-                    <el-form-item label="加速内容名称:">
-                        <el-input v-model="ruleForm5.url_name" :disabled="true"></el-input>
-                    </el-form-item>
-                </el-form-item>
-                <el-form-item>
-                    <el-form-item label="源站域名:">
-                        <el-input v-model="ruleForm5.url" :disabled="true" ></el-input>
-                    </el-form-item>
-                </el-form-item>
-                   <el-form-item>
-                    <el-form-item label="回源路径:">
-                        <el-input v-model="ruleForm5.host_url" :disabled="true" ></el-input>
-                    </el-form-item>
-                </el-form-item>
-                <el-form-item prop="phone">
-                    <el-form-item label="渠道ID:">
-                        <el-input v-model="ruleForm5.buser_id" :disabled="true" ></el-input>
-                    </el-form-item>
-                </el-form-item>
-                <el-form-item prop="phone">
-                    <el-form-item label="状态:">
-                        <el-input v-model="ruleForm5.state" :disabled="true" ></el-input>
-                    </el-form-item>
-                </el-form-item>
-                <el-form-item prop="phone">
-                    <el-form-item label="创建时间:">
-                        <el-input v-model="ruleForm5.create_time" :disabled="true" ></el-input>
-                    </el-form-item>
-                </el-form-item>
-                <el-form-item style="width:100%;display: flex;justify-content:center;">
-                    <el-button type="primary" @click="dialogVisible4 = false">确定</el-button>
-                    <el-button @click="dialogVisible4 = false">取消</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
+      <div class="addaccout">
+        <el-form :model="ruleForm5" ref="ruleForm5" label-position="left" class="demo-ruleForm">
+          <h3 class="title">详细信息</h3>
+          <el-form-item>
+            <el-form-item label="加速内容名称:">
+              <el-input v-model="ruleForm5.url_name" :disabled="true"></el-input>
+            </el-form-item>
+          </el-form-item>
+          <el-form-item>
+            <el-form-item label="源站域名:">
+              <el-input v-model="ruleForm5.url" :disabled="true"></el-input>
+            </el-form-item>
+          </el-form-item>
+          <el-form-item>
+            <el-form-item label="回源路径:">
+              <el-input v-model="ruleForm5.host_url" :disabled="true"></el-input>
+            </el-form-item>
+          </el-form-item>
+          <el-form-item prop="phone">
+            <el-form-item label="渠道ID:">
+              <el-input v-model="ruleForm5.buser_id" :disabled="true"></el-input>
+            </el-form-item>
+          </el-form-item>
+          <el-form-item prop="phone">
+            <el-form-item label="状态:">
+              <el-input v-model="ruleForm5.state" :disabled="true"></el-input>
+            </el-form-item>
+          </el-form-item>
+          <el-form-item prop="phone">
+            <el-form-item label="创建时间:">
+              <el-input v-model="ruleForm5.create_time" :disabled="true"></el-input>
+            </el-form-item>
+          </el-form-item>
+          <el-form-item style="width:100%;display: flex;justify-content:center;">
+            <el-button type="primary" @click="dialogVisible4 = false">确定</el-button>
+            <el-button @click="dialogVisible4 = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
     </el-dialog>
-
-</div>
+  </div>
 </template>
 
 <script>
@@ -250,7 +262,8 @@ import {
   query_url,
   add_url,
   delete_url,
-  change_state
+  change_state,
+  query_url_for_admin,
 } from "../../servers/api";
 export default {
   data() {
@@ -278,58 +291,59 @@ export default {
     };
     return {
       actives: 1,
+      input_text: "",
       nums: 12,
       fuinput: "",
       ruleForm: {
         pass: "",
         checkPass: "",
-        account: ""
+        account: "",
       },
 
       futableData: [
         {
           configuration: "回源HOST",
-          nowconfiguration: "已配置"
+          nowconfiguration: "已配置",
         },
         {
           configuration: "缓存设置",
-          nowconfiguration: "已配置"
+          nowconfiguration: "已配置",
         },
         {
           configuration: "缓存过期时间",
-          nowconfiguration: "已配置"
+          nowconfiguration: "已配置",
         },
         {
           configuration: "自定义页面",
-          nowconfiguration: "未配置"
+          nowconfiguration: "未配置",
         },
         {
           configuration: "Refer防盗链",
-          nowconfiguration: "已配置"
+          nowconfiguration: "已配置",
         },
         {
           configuration: "URL鉴权",
-          nowconfiguration: "已配置"
+          nowconfiguration: "已配置",
         },
         {
           configuration: "IP黑/白名单",
-          nowconfiguration: "未配置"
-        }
+          nowconfiguration: "未配置",
+        },
       ],
       //重置密码校验
       rules: {
         pass: [
           {
             validator: validatePass,
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         checkPass: [
           {
             validator: validatePass2,
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
       },
       input: "", //搜索输入框
       value1: "",
@@ -351,7 +365,7 @@ export default {
         url_name: "",
         url_type: "",
         label: "",
-        label2: ""
+        label2: "",
       },
       details: {},
       uetails: {},
@@ -363,94 +377,77 @@ export default {
       options: [
         {
           value: -1,
-          label: "全部"
+          label: "全部",
         },
         {
           value: 1,
-          label: "正常运行"
+          label: "正常运行",
         },
         {
           value: 2,
-          label: "回源失败"
+          label: "回源失败",
         },
         {
           value: 0,
-          label: "已停止"
+          label: "已停止",
         },
-          
-        // {
-        //     value: 2,
-        //     label: "配置中"
-        // },
-        // {
-        //     value: 3,
-        //     label: "配置失败"
-        // },
-        // {
-        //     value: 4,
-        //     label: "审核中"
-        // },
-        // {
-        //     value: 5,
-        //     label: "审核失败"
-        // }
       ],
       yewu: [
         {
           value: 0,
-          label: "视频点播"
+          label: "视频点播",
         },
         {
           value: 1,
-          label: "直播流媒体"
+          label: "直播流媒体",
         },
         {
           value: 2,
-          label: "文件下载"
-        }
+          label: "文件下载",
+        },
       ],
       videoArr: [
         {
           value: 0,
-          label: "MP4"
+          label: "MP4",
         },
         {
           value: 1,
-          label: "hls"
+          label: "hls",
         },
         {
           value: 2,
-          label: "flv"
-        }
+          label: "flv",
+        },
       ],
       value: "",
 
       tableData: [],
       urllist: [
         {
-          url: "http://www.xxx.cn.abc"
+          url: "http://www.xxx.cn.abc",
         },
         {
-          url: "http://www.xxx.cn.abc"
+          url: "http://www.xxx.cn.abc",
         },
         {
-          url: "http://www.xxx.cn.abc"
+          url: "http://www.xxx.cn.abc",
         },
         {
-          url: "http://www.xxx.cn.abc"
+          url: "http://www.xxx.cn.abc",
         },
         {
-          url: "http://www.xxx.cn.abc"
+          url: "http://www.xxx.cn.abc",
         },
         {
-          url: "http://www.xxx.cn.abc"
-        }
+          url: "http://www.xxx.cn.abc",
+        },
       ],
       multipleSelection: [],
       buser_id: "",
       nowurl: "",
       ruleForm4: {},
-      ruleForm5:{},
+      ruleForm5: {},
       order: 0,
       pageActive: 0,
       tableData: [],
@@ -458,13 +455,14 @@ export default {
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now() - 8.64e6; //如果没有后面的-8.64e6就是不可以选择今天的
-        }
+        },
       },
-      buser_id_active:"158000000011"
+      buser_id_active: "158000000011",
+      tempArray: {},
     };
   },
   components: {
-    fenye
+    fenye,
   },
   created() {},
   mounted() {
@@ -473,17 +471,17 @@ export default {
   methods: {
     //监控
     monitor(row) {
-      let monitorUrlname=row.url
-      let monitorChanId=row.buser_id
-       //localStorage.setItem("monitorUrlname", monitorUrlname);
-     // localStorage.setItem("monitorChanId", monitorChanId);
+      let monitorUrlname = row.url;
+      let monitorChanId = row.buser_id;
+      //localStorage.setItem("monitorUrlname", monitorUrlname);
+      // localStorage.setItem("monitorChanId", monitorChanId);
       this.$router.push({
         path: "/nodeMap1",
-          query: {
-          monitorUrlname: monitorUrlname, monitorChanId: monitorChanId
-        }
-      },
-      );
+        query: {
+          monitorUrlname: monitorUrlname,
+          monitorChanId: monitorChanId,
+        },
+      });
     },
     //状态选这改变
     onchangeTab(val) {
@@ -503,17 +501,16 @@ export default {
     //标签页跳转
     goLink() {
       this.$router.push({
-        path: "/back_source"
+        path: "/back_source",
       });
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
-     
     },
     //批量导入
     onImport() {
       this.$router.push({
-        path: "/upload"
+        path: "/upload",
       });
     },
 
@@ -528,7 +525,7 @@ export default {
           "渠道ID",
           "状态",
           "创建时间",
-          "标签"
+          "标签",
         ];
         // 上面设置Excel的表格第一行的标题
         const filterVal = [
@@ -537,7 +534,7 @@ export default {
           "buser_id",
           "state",
           "create_time",
-          "label"
+          "label",
         ];
         // 上面的index、nickName、name是tableData里对象的属性
         const list = this.tableData2; //把data里的tableData存到list
@@ -550,12 +547,13 @@ export default {
     },
     // 回车键搜索
     onSubmitInput() {
-      var rx = /^http?:\/\//i;
-      if (rx.test(this.input)) {
-        this.nowurl = this.input;
-      } else {
-        this.buser_id = this.input;
-      }
+      // var rx = /^http?:\/\//i;
+      // if (rx.test(this.input)) {
+      //   this.nowurl = this.input;
+      // } else {
+      //   this.buser_id = this.input;
+      // }
+      this.currentPage = 1;
       this.queryUrlList();
     },
     //过滤状态
@@ -576,7 +574,7 @@ export default {
       if (this.actives == 2) {
         const confirmText = [
           "您确定要批量复制配置吗？",
-          "域名配置复制后，操作不可逆，请务必确认您的域名复制选择无误零流量宽带较大的域名，请谨慎复制；若您之前有通过工单进行过后端特殊配置（非控制台功能配置），该特殊配置将无法复制。"
+          "域名配置复制后，操作不可逆，请务必确认您的域名复制选择无误零流量宽带较大的域名，请谨慎复制；若您之前有通过工单进行过后端特殊配置（非控制台功能配置），该特殊配置将无法复制。",
         ];
         const newDatas = [];
         const h = this.$createElement;
@@ -590,7 +588,7 @@ export default {
           showCancelButton: true,
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         })
           .then(() => {
             this.dialupdata = false;
@@ -598,7 +596,7 @@ export default {
             // 请求成功之后，调用接口
             this.$message({
               type: "success",
-              message: "配置成功!"
+              message: "配置成功!",
             });
           })
           .catch(() => {
@@ -606,7 +604,7 @@ export default {
             this.actives = 1;
             this.$message({
               type: "info",
-              message: "已取消操作"
+              message: "已取消操作",
             });
           });
       }
@@ -653,13 +651,13 @@ export default {
           if (res.status == 0) {
             this.$message({
               type: "success",
-              message: "添加成功"
+              message: "添加成功",
             });
-            this.common.monitoringLogs("新增", "新增URL", 1);
+            this.common.monitoringLogs("新增", "新增加速内容", 1);
 
             this.queryUrlList();
           } else {
-            this.common.monitoringLogs("新增 ", "批量启用用户", 0);
+            this.common.monitoringLogs("新增 ", "新增加速内容", 0);
           }
         })
         .catch(error => {});
@@ -675,7 +673,7 @@ export default {
     addDomain() {
       this.dynamicValidateForm.domains.push({
         value: "",
-        key: Date.now()
+        key: Date.now(),
       });
     },
     //新建用户-重置
@@ -689,16 +687,30 @@ export default {
       localStorage.setItem("tempUrlArr", JSON.stringify(tempUrlArr));
 
       this.$router.push({
-        path: "/batch_management"
+        path: "/batch_management",
       });
     },
     //获取URL列表
     queryUrlList() {
+      var resyzm = /^\d{12}$/;
+      if (this.input_text == "") {
+        this.buser_id = "";
+        this.nowurl = "";
+      } else {
+        if (resyzm.test(this.input_text)) {
+          this.buser_id = this.input_text;
+          this.nowurl = "";
+        } else {
+          this.buser_id = "";
+          this.nowurl = this.input_text;
+        }
+      }
+
       let params = new Object();
-      
+
       params.page = this.currentPage - 1;
-      params.buser_id = "158000000011";
-      params.url = this.nowurl;
+      params.buser_id = this.buser_id;
+      params.url_name = this.nowurl;
       params.order = this.order;
       if (this.value === "") {
         params.state = -1;
@@ -709,10 +721,10 @@ export default {
         params.end_time = this.value1[1].getTime() / 1000;
         params.start_time = this.value1[0].getTime() / 1000;
       } else {
-           params.end_time = 0
-        params.start_time =0
+        params.end_time = 0;
+        params.start_time = 0;
       }
-      query_url(params)
+      query_url_for_admin(params)
         .then(res => {
           if (res.status == 0) {
             let tempArr = [];
@@ -720,10 +732,12 @@ export default {
             tempArr.forEach((item, index) => {
               item.create_time = this.common.getTimes(item.create_time * 1000);
             });
+            this.tableData = [];
             this.tableData = tempArr;
 
             this.total_cnt = res.data.total;
           } else {
+            this.tableData = [];
           }
         })
         .catch(err => {
@@ -733,7 +747,7 @@ export default {
     //导出
     toexportExcel() {
       let params = new Object();
-      params.page = this.pageActive ;
+      params.page = this.pageActive;
       params.buser_id = this.buser_id;
       params.url = this.nowurl;
       params.order = this.order;
@@ -746,6 +760,8 @@ export default {
         params.end_time = this.value1[1].getTime() / 1000;
         params.start_time = this.value1[0].getTime() / 1000;
       } else {
+        params.end_time = 0;
+        params.start_time = 0;
       }
       query_url(params)
         .then(res => {
@@ -764,7 +780,7 @@ export default {
             }
             if (this.pageActive >= Math.ceil(res.data.total / 10)) {
               this.exportExcel();
-              this.common.monitoringLogs("导出", "导出URL信息表", 1);
+              this.common.monitoringLogs("导出", "导出增加速内容信息表", 1);
             } else {
               this.tableData2 = this.tableData2.concat(tempArr);
 
@@ -772,10 +788,10 @@ export default {
               this.toexportExcel();
             }
 
-           // this.tableData = res.data.result;
+            // this.tableData = res.data.result;
             this.total_cnt = res.data.total;
           } else {
-            this.common.monitoringLogs("导出", "导出URL信息表", 0);
+            this.common.monitoringLogs("导出", "导出增加速内容信息表", 0);
           }
         })
         .catch(err => {
@@ -802,7 +818,7 @@ export default {
       localStorage.setItem("tempUrl", tempUrl);
       localStorage.setItem("tempChanId", tempChanId);
       this.$router.push({
-        path: "/back_source"
+        path: "/back_source",
       });
     },
     //筛选按钮
@@ -812,12 +828,6 @@ export default {
     },
     //确定搜索
     seachuser() {
-      var rx = /^http?:\/\//i;
-      if (rx.test(this.input)) {
-        this.nowurl = this.input;
-      } else {
-        this.buser_id = this.input;
-      }
       this.queryUrlList();
       //this.value1 = "";
     },
@@ -828,12 +838,13 @@ export default {
       this.input = "";
       this.buser_id = "";
       this.nowurl = "";
+      this.input_text = "";
       this.queryUrlList();
     },
     //新建
     addUrl() {
       this.$router.push({
-        path: "/add_url"
+        path: "/add_url",
       });
       this.dialogFormVisible = true;
     },
@@ -860,20 +871,17 @@ export default {
     },
     //表格查看
     handleClick(row) {
-        
-        //this.ruleForm5.state=""
-        console.log(row)
+      //this.ruleForm5.state=""
+      console.log(row);
       this.ruleForm5 = Object.assign({}, row);
-      console.log(row)
-      console.log(this.ruleForm5.state)
-       if (this.ruleForm5.state == 0) {
-           
+      console.log(row);
+      console.log(this.ruleForm5.state);
+      if (this.ruleForm5.state == 0) {
         this.ruleForm5.state = "已停止";
       } else {
         this.ruleForm5.state = "正常运行";
       }
       this.dialogVisible4 = true;
-     
     },
     //表格修改
     updatauser(val) {
@@ -890,8 +898,8 @@ export default {
       this.$router.push({
         path: "/copy",
         query: {
-          linKUrl: val.url
-        }
+          linKUrl: val.url,
+        },
       });
       // this.dialupdata = true;
     },
@@ -907,9 +915,8 @@ export default {
     },
     //单个禁用启用
     onDisable(row) {
- 
       this.$confirm("确定要执行此操作", "提示", {
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           if (row.state == 1) {
@@ -919,23 +926,30 @@ export default {
             tempArr[0] = row.url_name;
             // tempArr[1] = 1;
             tempArr1.push(tempArr);
-            let param = {
+
+            let tempparam = {};
+            tempparam.data_count = 0;
+            tempparam.data = [];
+
+            let obj = {
+              buser_id: row.buser_id,
               data_count: 0,
-              buser_id:row.buser_id,
+              state: 0,
               data_array: tempArr,
-              state:0
             };
-            change_state(param)
+            tempparam.data.push(obj);
+
+            change_state(tempparam)
               .then(res => {
                 if (res.status == 0) {
                   this.$message({
                     message: "停用成功",
-                    type: "success"
+                    type: "success",
                   });
                   this.queryUrlList();
-                  this.common.monitoringLogs("修改 ", "启用URL", 1);
+                  this.common.monitoringLogs("修改 ", "停用加速内容", 1);
                 } else {
-                  this.common.monitoringLogs("修改 ", "启用URL", 0);
+                  this.common.monitoringLogs("修改 ", "停用加速内容", 0);
                 }
               })
               .catch(error => {
@@ -946,25 +960,29 @@ export default {
             let tempArr = [];
             let tempArr1 = [];
             tempArr[0] = row.url_name;
-            // tempArr[1] = 0;
-            // tempArr1.push(tempArr);
-            let param = {
-                  data_count: 0,
-              buser_id:row.buser_id,
+
+            let tempparam = {};
+            tempparam.data_count = 0;
+            tempparam.data = [];
+            let obj = {
+              buser_id: row.buser_id,
+              data_count: 0,
+              state: 1,
               data_array: tempArr,
-              state:1
             };
-            change_state(param)
+            tempparam.data.push(obj);
+
+            change_state(tempparam)
               .then(res => {
                 if (res.status == 0) {
                   this.$message({
                     message: "启用成功",
-                    type: "success"
+                    type: "success",
                   });
-                  this.common.monitoringLogs("修改 ", "停用URL", 1);
+                  this.common.monitoringLogs("修改 ", "启用加速内容", 1);
                   this.queryUrlList();
                 } else {
-                  this.common.monitoringLogs("修改 ", "停用URL", 0);
+                  this.common.monitoringLogs("修改 ", "启用加速内容", 0);
                 }
               })
               .catch(error => {
@@ -972,7 +990,7 @@ export default {
               });
           }
         })
-        .catch(() => {
+        .catch(error => {
           console.log(error);
         });
 
@@ -984,7 +1002,7 @@ export default {
         if (valid) {
           this.$message({
             message: "密码重置成功",
-            type: "success"
+            type: "success",
           });
           this.dialpwdset = false;
         } else {
@@ -997,51 +1015,53 @@ export default {
       this.$refs[formName].resetFields();
       this.dialpwdset = false;
     },
-    // 禁用
-    // disableuser() {
-    //     this.$confirm("禁用后该用户不能登陆, 是否继续?", "提示", {
-    //             confirmButtonText: "确定",
-    //             cancelButtonText: "取消",
-    //             type: "warning"
-    //         })
-    //         .then(() => {
-    //             this.$message({
-    //                 type: "success",
-    //                 message: "操作成功!"
-    //             });
-    //         })
-    //         .catch(() => {
-    //             this.$message({
-    //                 type: "info",
-    //                 message: "已取消"
-    //             });
-    //         });
-    // },
+
     //批量启用
     enableuser() {
       let tempArr = this.multipleSelection;
+      this.tempArray = {};
+
       let tempArr2 = [];
       for (var i = 0; i < tempArr.length; i++) {
-        tempArr2.push( tempArr[i].url_name);
+        tempArr2.push(tempArr[i].url_name);
+        if (!this.tempArray[tempArr[i].buser_id]) {
+          this.tempArray[tempArr[i].buser_id] = [];
+        }
+        this.tempArray[tempArr[i].buser_id].push(tempArr[i].url_name);
       }
-      console.log(tempArr2)
+      console.log(tempArr2);
+
+      let _this = this;
+      let tempparam = {};
+      tempparam.data_count = 0;
+      tempparam.data = [];
+
+      Object.keys(this.tempArray).forEach(function(key) {
+        let obj = {
+          buser_id: key,
+          data_count: 0,
+          state: 1,
+          data_array: _this.tempArray[key],
+        };
+        tempparam.data.push(obj);
+      });
 
       let param = new Object();
-      param.buser_id=this.buser_id_active
+      param.buser_id = this.buser_id_active;
       param.data_count = tempArr2.length;
       param.data_array = tempArr2;
-      param.state=1
-      change_state(param)
+      param.state = 1;
+      change_state(tempparam)
         .then(res => {
           if (res.status == 0) {
             this.$message({
               type: "success",
-              message: "批量启用成功!"
+              message: "批量启用成功!",
             });
             this.queryUrlList();
-            this.common.monitoringLogs("修改 ", "批量启用URL", 1);
+            this.common.monitoringLogs("修改 ", "批量启用加速内容", 1);
           } else {
-            this.common.monitoringLogs("修改 ", "批量启用URL", 0);
+            this.common.monitoringLogs("修改 ", "批量启用加速内容", 0);
           }
         })
         .catch(error => {
@@ -1050,72 +1070,121 @@ export default {
     },
     //禁用
     disableuser() {
-       let tempArr = this.multipleSelection;
+      this.tempArray = {};
+
+      let tempArr = this.multipleSelection;
       let tempArr2 = [];
       for (var i = 0; i < tempArr.length; i++) {
-        tempArr2.push( tempArr[i].url_name);
+        tempArr2.push(tempArr[i].url_name);
+        if (!this.tempArray[tempArr[i].buser_id]) {
+          this.tempArray[tempArr[i].buser_id] = [];
+        }
+        this.tempArray[tempArr[i].buser_id].push(tempArr[i].url_name);
       }
-      console.log(tempArr2)
+      // console.log(tempArr2);
+      let _this = this;
+      let tempparam = {};
+      tempparam.data_count = 0;
+      tempparam.data = [];
+
+      Object.keys(this.tempArray).forEach(function(key) {
+        let obj = {
+          buser_id: key,
+          data_count: 0,
+          state: 0,
+          data_array: _this.tempArray[key],
+        };
+        tempparam.data.push(obj);
+      });
 
       let param = new Object();
-      param.buser_id=this.buser_id_active
+      param.buser_id = this.buser_id_active;
       param.data_count = tempArr2.length;
       param.data_array = tempArr2;
-      param.state=0
-      change_state(param)
+      param.state = 0;
+      change_state(tempparam)
         .then(res => {
           if (res.status == 0) {
             this.$message({
               type: "success",
-              message: "批量禁用成功!"
+              message: "批量禁用成功!",
             });
             this.queryUrlList();
-            this.common.monitoringLogs("修改 ", "批量禁用URL", 1);
+            this.common.monitoringLogs("修改 ", "批量禁用加速内容", 1);
           } else {
-            this.common.monitoringLogs("修改 ", "批量禁用URL", 0);
+            this.common.monitoringLogs("修改 ", "批量禁用加速内容", 0);
           }
         })
         .catch(error => {
-          console.logA(error);
+          console.log(error);
         });
     },
 
     // 删除
     deleateuser(rows) {
+      this.tempArray = {};
       let tempArr = this.multipleSelection;
       let tempArr1 = [];
       let tempArr2 = [];
+      if (tempArr.length == 0) {
+        this.$message({
+          type: "warning",
+          message: "请至少勾选一项！",
+        });
+        return false;
+      }
 
       for (var i = 0; i < tempArr.length; i++) {
+        if (!this.tempArray[tempArr[i].buser_id]) {
+          this.tempArray[tempArr[i].buser_id] = [];
+        }
+        this.tempArray[tempArr[i].buser_id].push(tempArr[i].url_name);
         if (tempArr[i].state == 1) {
           this.$message({
             type: "warning",
-            message: "只有禁用的URL才能被删除!"
+            message:
+              "只有禁用的加速内容才能被删除,请检查勾选的加速内容中是否有未被禁用的！",
           });
           return false;
         }
-        tempArr1.push(tempArr[i].url);
+        tempArr1.push(tempArr[i].url_name);
       }
-      let param = new Object();
-      param.data_count = tempArr.length;
-      param.data_array = tempArr1;
+
+      let _this = this;
+      let tempparam = {};
+      tempparam.data_count = 0;
+      tempparam.data = [];
+
+      Object.keys(this.tempArray).forEach(function(key) {
+        let obj = {
+          buser_id: key,
+          data_count: 0,
+          data_array: _this.tempArray[key],
+        };
+        tempparam.data.push(obj);
+      });
+
+      // let param = new Object();
+      // param.data_count = tempArr.length;
+      // param.data_array = tempArr1;
+      // param.buser_id = this.buser_id_active;
       this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
-          delete_url(param)
+          delete_url(tempparam)
             .then(res => {
               if (res.status == 0) {
                 this.$message({
                   type: "success",
-                  message: "删除成功!"
+                  message: "删除成功!",
                 });
                 this.queryUrlList();
-                this.common.monitoringLogs("删除 ", "删除URL", 1);
+                this.common.monitoringLogs("删除 ", "删除加速内容", 1);
               } else {
-                this.common.monitoringLogs("删除 ", "删除URL", 0);
+                this.common.monitoringLogs("删除 ", "删除加速内容", 0);
               }
             })
             .catch(error => {});
@@ -1123,7 +1192,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     }, // 表头样式设置
@@ -1132,7 +1201,7 @@ export default {
       if (rows.state == 1) {
         this.$message({
           type: "warning",
-          message: "只有禁用的URL才能被删除!"
+          message: "只有禁用的URL才能被删除!",
         });
         return false;
       }
@@ -1140,27 +1209,33 @@ export default {
       let tempArr1 = [];
       tempArr1.push(rows.url_name);
 
-      let param = new Object();
-      param.data_count = 1;
-      param.buser_id=rows.buser_id
-      param.data_array = tempArr1;
+      let parmas = new Object();
+      parmas.data_count = 0;
+      parmas.data = [];
+      let obj = {};
+      obj.buser_id = rows.buser_id;
+      obj.data_array = [];
+      obj.data_count = 0;
+      obj.data_array = tempArr1;
+      parmas.data[0] = obj;
+
       this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
-          delete_url(param)
+          delete_url(parmas)
             .then(res => {
               if (res.status == 0) {
                 this.$message({
                   type: "success",
-                  message: "删除成功!"
+                  message: "删除成功!",
                 });
                 this.queryUrlList();
-                this.common.monitoringLogs("删除 ", "删除URL", 1);
+                this.common.monitoringLogs("删除 ", "删除加速内容", 1);
               } else {
-                this.common.monitoringLogs("删除 ", "删除URL", 0);
+                this.common.monitoringLogs("删除 ", "删除加速内容", 0);
               }
             })
             .catch(error => {});
@@ -1168,7 +1243,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     }, // 表头样式设置
@@ -1178,10 +1253,9 @@ export default {
     // 表格样式设置
     rowClass() {
       return "text-align: center;";
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

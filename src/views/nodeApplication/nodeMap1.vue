@@ -17,7 +17,7 @@
                             <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
                         </el-select>
                         <el-button-group>
-                            <el-button v-show="!shoudzyx" @click="today()">今天1</el-button>
+                            <el-button v-show="!shoudzyx" @click="today()">今天</el-button>
                             <el-button v-show="!shoudzyx" @click="yesterday()">昨天</el-button>
                             <el-button v-show="!shoudzyx" @click="sevendat()">近7天</el-button>
                             <el-button v-show="!shoudzyx" @click="thirtyday()">近30天</el-button>

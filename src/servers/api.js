@@ -36,6 +36,10 @@ export const setactionlog = params => { return axios.post(`${serverUrl}/cloudter
 /**获取URL列表 */
 //新增修改03-11
 export const query_url = params => { return axios.post(`${serverUrl}/url_mgmt/query_url`, params).then(res => res.data) };
+//查询域名管理员端
+
+export const query_url_for_admin = params => { return axios.post(`${serverUrl}/url_mgmt/query_url_for_admin`, params).then(res => res.data) };
+
 export const query_config = params => { return axios.post(`${serverUrl}/url_mgmt/query_config`, params).then(res => res.data) };
 /*新增URL */
 export const add_url = params => { return axios.post(`${serverUrl}/url_mgmt/add_url`, params).then(res => res.data) };
@@ -66,6 +70,10 @@ export const check_label = params => { return axios.post(`${serverUrl}/url_mgmt/
 //云点播新版本改版V1.0.1 2020-4-18
 //查询域名
 export const query_domain = params => { return axios.post(`${serverUrl}/url_mgmt/query_domain`, params).then(res => res.data) };
+//查询域名管理员
+export const query_domain_for_admin = params => { return axios.post(`${serverUrl}/url_mgmt/query_domain_for_admin`, params).then(res => res.data) };
+
+
 //新增域名
 export const add_domain = params => { return axios.post(`${serverUrl}/url_mgmt/add_domain`, params).then(res => res.data) };
 //修改域名
@@ -75,7 +83,7 @@ export const del_domain = params => { return axios.post(`${serverUrl}/url_mgmt/d
 //修改状态
 export const change_domainstate = params => { return axios.post(`${serverUrl}/url_mgmt/change_domainstate`, params).then(res => res.data) };
 
-
+//
 
 
 
@@ -166,46 +174,3 @@ export const download_logfile = params => { return axios.post(`${serverUrl}/clou
 
 
 
-//设备监控
-/**获取所有设备列表 */
-export const query_devinfo_by_conditions = params => { return axios.post(`${serverUrl}/miner_ctrl/query_devinfo_by_conditions`, params).then(res => res.data) }
-    /**按条件筛选 */
-    /**报警信息 */
-    /**报警信息列表 */
-
-//ipfs节点信息
-/**节点信息列表 */
-/**获取下拉框选项 */
-/**禁用启用 */
-
-//ipfs节点控制台
-/**获取节点网络分布 */
-/**节点区位的信息总览 */
-/** 所有节点信息*/
-/**节点ip流量 */
-/**节点FS存储 */
-
-//ipfs节点应用
-/**ip流量信息列表 */
-/**FS存储信息列表 */
-
-//ipfs数据统计
-/**全国节点分布 */
-/** ip流量信息总览*/
-/**fs存储信息总览 */
-/**节点平均使用ip流量信息总览 */
-/**节点平均使用fs存储信息总览 */
-
-//操作管理
-/**操作日志信息列表*/
-
-
-
-// //西柚机设备监控
-// //所有设备数据查询
-// export const query_general_info_list = params => { return axios.post(`${ownbase}/dev_status/query_general_info_list `, params).then(res => res.data); };
-// //获取设备最新状态
-// export const query_node_info = params => { return axios.post(`${ownbase}/dev_status/query_node_info `, params).then(res => res.data); };
-
-// //单个设备详情
-// export const query_detail_info_list = params => { return axios.post(`${ownbase}/dev_status/query_detail_info_list `, params).then(res => res.data); };

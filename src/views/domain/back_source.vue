@@ -3,7 +3,7 @@
     <div class="top_title">
       <span @click="goback" style="font-size: 24px;color: #202020;">
         <i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
-        {{datalist.url_name}}</span>
+        {{urlLinks}}</span>
     </div>
     <div class="bath" style="margin: auto;background: #ffffff;margin-top: 25px;border-radius: 2px;padding: 15px;box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);">
       <el-tabs v-model="oneName" @tab-click="handleClick" v-loading="loading">
@@ -24,6 +24,11 @@
             <li>
               <span>创建时间</span>
               <span class="tala_con">{{ datalist.create_time | settimes }}
+              </span>
+            </li>
+             <li>
+              <span>渠道ID&nbsp;&nbsp;&nbsp;</span>
+              <span class="tala_con">{{ datalist.buser_id}}
               </span>
             </li>
             <li style="    display: flex;justify-content: flex-start;align-items: center;">
@@ -516,6 +521,7 @@ export default {
         host_url: {},
         cache_con: [],
         custom_page: [],
+        buser_id:""
       },
       labelData: [],
       page: 0,
@@ -774,6 +780,7 @@ export default {
       query_config(parmas)
         .then(res => {
           this.datalist.create_time = res.data.data.base_config.create_time;
+          this.datalist.buser_id=res.data.data.base_config.buser_id;
           this.datalist.url = res.data.data.base_config.url;
           this.datalist.url_type = res.data.data.base_config.url_type;
           this.datalist.label2 = res.data.data.base_config.host_url;

@@ -1052,9 +1052,9 @@ export default {
               message: "批量禁用成功!"
             });
             this.queryUrlList();
-            this.common.monitoringLogs("修改 ", "批量禁用URL", 1);
+            this.common.monitoringLogs("修改 ", "批量禁用加速内容", 1);
           } else {
-            this.common.monitoringLogs("修改 ", "批量禁用URL", 0);
+            this.common.monitoringLogs("修改 ", "批量禁用加速内容", 0);
           }
         })
         .catch(error => {

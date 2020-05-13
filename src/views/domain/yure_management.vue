@@ -7,7 +7,7 @@
         <!-- 搜索 -->
         <div class="seach">
             <div class="seach_top">
-                <el-input placeholder="操作内容、渠道ID" v-model="input" maxlength="70" class="input-with-select" @keyup.enter.native="onSubmit">
+                <el-input placeholder="操作内容、渠道ID" v-model="input"  class="input-with-select" @keyup.enter.native="onSubmit">
                     <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
                 </el-input>
                 <div class="seach_top_right" @click="option_display()">
@@ -44,7 +44,6 @@
                 <el-table-column prop="refresh_type" label="操作类型"></el-table-column>
                 <el-table-column prop="buser_id" label="渠道ID"></el-table-column>
                 <el-table-column prop="opt_time" sortable label="操作时间"></el-table-column>
-
                 <el-table-column prop="state" label="状态"></el-table-column>
                 <el-table-column label="进度">
                     <template slot-scope="scope">

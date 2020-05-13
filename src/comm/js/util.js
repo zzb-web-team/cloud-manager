@@ -241,7 +241,6 @@ export default {
       param.aftervalue = "-";
     }
     param.utype = "cloud_admin";
-    console.log(VueCookies);
     param.id = VueCookies.get("adminid");
     param.name = VueCookies.get("adminuser");
 

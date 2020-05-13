@@ -1,18 +1,18 @@
 <template>
     <div class="copy_configuration">
-        <div class="top_title" style="display: flex;">
+        <div class="top_title" style="display: flex;margin-top:20px;">
             <span @click="goback" style="font-size: 24px;color: #202020;">
                 <i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
                 复制配置</span>
         </div>
         <p class="copy_title">
-            复制配置允许将一个URL的配置项复制到多个URL，帮助您对URL进行批量配置
+            复制配置允许将一个加速内容的配置项复制到多个加速内容，帮助您对加速内容进行批量配置
         </p>
         <div class="copy_con">
             <div>
                 <el-steps :active="actives" finish-status="success" simple style="margin-top: 20px;width:600px;">
                     <el-step title="选择配置项" description="这是一段很长很长很长的描述性文字"></el-step>
-                    <el-step title="选择URL" description="这是一段很长很长很长的描述性文字"></el-step>
+                    <el-step title="选择加速内容" description="这是一段很长很长很长的描述性文字"></el-step>
                     <el-step title="完成" description="这是一段很长很长很长的描述性文字"></el-step>
                 </el-steps>
             </div>
@@ -46,19 +46,19 @@
             <!-- <div v-else-if="actives === 2"> -->
             <div v-show="actives === 2">
                 <div style="display: flex;justify-content: flex-start;align-items: center;margin: 10px 0">
-                    <span style="margin-right:21px;color:#333333;font-size:14px;">URL列表</span>
-                    <el-input placeholder="请输入URL" v-model="fuinput" style=" width:300px" class="input-with-select" maxlength="70" @keyup.enter.native="onSubmit"></el-input>
+                    <span style="margin-right:21px;color:#333333;font-size:14px;">加速内容列表</span>
+                    <el-input placeholder="请输入加速内容" v-model="fuinput" style=" width:300px" class="input-with-select" maxlength="70" @keyup.enter.native="onSubmit"></el-input>
                 </div>
                 <div class="copy_prompt">
                     <div class="banyuan"></div>
                     <i class="el-icon-info" style="color:#6666FF;font-size:18px;margin-left:15px;"></i>
                     已选择
-                    <span>{{ urlnum }}</span>个URL，最多允许50个
+                    <span>{{ urlnum }}</span>个加速内容，最多允许50个
                     <span @click="seturllist()" v-if="urlnum !== 0">点击查看</span>
                 </div>
                 <!-- 弹窗 -->
                 <div class="copy_active2">
-                    <el-dialog title="url地址" :visible.sync="urllistVisible">
+                    <el-dialog title="加速内容地址" :visible.sync="urllistVisible">
                         <el-table :data="urldisable" :cell-style="rowClass" :header-cell-style="headClass">
                             <el-table-column type="index" label="序号" width="150">
                             </el-table-column>
@@ -78,7 +78,7 @@
                 <div>
                     <el-table ref="multipleTable" :row-key="getRowKey" :data="urllist" tooltip-effect="dark" stripe style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handlistChange">
                         <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
-                        <el-table-column label="URL">
+                        <el-table-column label="加速内容">
                             <template slot-scope="scope">
                                 <div style="width: 700px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin:0 auto;">{{scope.row.url}}1</div>
 
@@ -372,9 +372,9 @@ export default {
         let jsonobj = new Object();
         jsonobj = Object.assign({}, this.configuration);
         jsonobj.url_name = item;
-        jsonobj.base_config = new Object();
+        // jsonobj.base_config = new Object();
 
-        jsonobj.base_config = Object.assign({}, this.copydatalist.base_config);
+        // jsonobj.base_config = Object.assign({}, this.copydatalist.base_config);
         params.data_array.push(jsonobj);
       });
       params.buser_id = this.buser_ids;

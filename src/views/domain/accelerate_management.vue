@@ -1,12 +1,12 @@
 <template>
   <div class="content accelerate">
     <!-- title -->
-    <div class="top_title">加速管理</div>
+    <div class="top_title">域名管理</div>
     <div style="margin: auto;margin-left: 45px;margin-right: 45px;" class="acceleerate_con">
       <!-- 搜索栏 -->
       <div class="seach">
         <div class="seach_top">
-          <el-input placeholder="请输入域名" v-model="input_domain" class="input-with-select" maxlength="70" @keyup.enter.native="onSubmit">
+          <el-input placeholder="请输入渠道ID丶域名" v-model="input_text" class="input-with-select" maxlength="70" @keyup.enter.native="onSubmit">
             <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
           </el-input>
 
@@ -22,8 +22,8 @@
           </el-select>
           <span style="margin-left: 10px;">日期：</span>
           <el-date-picker v-model="value1" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="gettimes" :picker-options="pickerOptions0"></el-date-picker>
-          <el-button type="primary" size="mini" @click="seachuser()" style="margin-left: 10px;">确定</el-button>
-          <el-button plain size="mini" @click="reset()" style="margin-left: 10px;">重置</el-button>
+          <el-button type="primary" @click="seachuser()" style="margin-left: 10px;">确定</el-button>
+          <el-button type="primary" @click="reset()" style="margin-left: 10px;">重置</el-button>
         </div>
       </div>
       <!-- 表格头部按钮 -->
@@ -41,10 +41,14 @@
         <el-table ref="multipleTable" :data="tableData" stripe border tooltip-effect="dark" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" :default-sort="{ prop: 'date', order: 'descending' }" @selection-change="handleSelectionChange" @sort-change="tableSortChange">
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column prop="buser_id" label="渠道ID"></el-table-column>
-          <el-table-column prop="domain" label="源站域名"></el-table-column>
+          <el-table-column prop="domain" label="源站域名">
+            <template slot-scope="scope">
+              <div style="width: 300px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-break:keep-all;margin:0 auto;">{{scope.row.domain}}</div>
+            </template>
+          </el-table-column>
           <el-table-column label="状态">
             <template slot-scope="scope">
-              <span v-if="scope.row.state == 1">正常运行</span>
+              <span v-if="scope.row.state == 1" style="color: green;">正常运行</span>
               <span v-else-if="scope.row.state == 0" style="color: red;">已停止</span>
               <span v-else-if="scope.row.state == 2" style="color: red;">回源失败</span>
             </template>
@@ -65,11 +69,11 @@
           </el-table-column>
         </el-table>
         <!-- 底部分页和按钮 -->
-        <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center;">
+        <div style="margin-top: 20px;padding-bottom: 25px;display: flex;justify-content: space-between;align-items: center;">
           <div>
             <el-button type="text" size="small" @click="batchenableuser()">启用</el-button>
             <el-button type="text" size="small" @click="batchdisableuser()">停用</el-button>
-            <el-button type="text" size="small" @click="batchdeleateuser()">删除</el-button>
+            <el-button type="text" size="small" :disabled="activeTab" @click="batchdeleateuser()">删除</el-button>
           </div>
           <pageNation :pager="pager" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange"></pageNation>
         </div>
@@ -77,11 +81,10 @@
         <!-- 添加域名弹窗 -->
         <el-dialog :title="dialog_title" :visible.sync="dialogFormVisible" class="add_dialog" @close="handleClose">
           <el-form :model="form" ref="accelerate_dialog">
-            <el-form-item label="渠道ID" :label-width="formLabelWidth" prop="id" :rules="{
-								required: true,
-								message: '渠道ID不能为空',
+            <el-form-item label="渠道ID" :label-width="formLabelWidth" prop="id" :rules="[{
+								validator: checkuserId,
 								trigger: 'blur',
-							}">
+							}]">
               <el-input v-model="form.id" autocomplete="off" :disabled="dialog_title == '修改域名'" placeholder="请输入渠道ID"></el-input>
             </el-form-item>
             <el-form-item label="源站域名" :label-width="formLabelWidth" prop="name" :rules="[{ validator: jiourl, trigger: 'blur' }]">
@@ -112,7 +115,11 @@ import {
   modify_domain,
   del_domain,
   change_domainstate,
+  query_domain_for_admin,
 } from "../../servers/api";
+import common from "../../comm/js/util";
+import VueCookies from "vue-cookies";
+
 export default {
   data() {
     return {
@@ -121,8 +128,11 @@ export default {
         page: 1,
         rows: 100,
       },
+      input_text: "",
       input_domain: "",
-      buser_id: "158000000011",
+      activeTab: false,
+      activeTabs: false,
+      buser_id: "",
       rotate: false,
       optiondisplay: false,
       currentPage: 1,
@@ -224,8 +234,8 @@ export default {
       currentSelection: [],
       multipleSelection: [],
       domainId: [],
-      batchbuser_id: "158000000011",
-      
+      batchbuser_id: "",
+      tempArray: {},
     };
   },
   filters: {
@@ -256,11 +266,24 @@ export default {
       this.value1 = "";
       this.input = "";
       this.pager.page = 1;
-      this.input_domain = "";
+      this.input_text = "";
       this.queryinfo();
     },
     //获取域名数据
     queryinfo() {
+      var resyzm = /^\d{12}$/;
+      if (this.input_text == "") {
+        this.buser_id = "";
+        this.input_domain = "";
+      } else {
+        if (resyzm.test(this.input_text)) {
+          this.buser_id = this.input_text;
+          this.input_domain = "";
+        } else {
+          this.buser_id = "";
+          this.input_domain = this.input_text;
+        }
+      }
       let params = new Object();
       params.page = this.pager.page - 1;
       params.buser_id = this.buser_id;
@@ -274,7 +297,8 @@ export default {
         params.end_time = 0;
         params.start_time = 0;
       }
-      query_domain(params)
+
+      query_domain_for_admin(params)
         .then(res => {
           if (res.status == 0) {
             let tempArr = [];
@@ -287,6 +311,7 @@ export default {
             this.pager.count = res.data.total;
             this.total_cnt = res.data.total;
           } else {
+            this.tableData = [];
           }
         })
         .catch(err => {});
@@ -295,43 +320,110 @@ export default {
     //获取数据
     getuserlist() {},
     //修改DOMAIN状态
-    changedomain(param) {
+    changedomain(param, type) {
       change_domainstate(param)
         .then(res => {
-          if (res.status == 0) {
-            this.$message({
-              type: "success",
-              message: "操作成功",
-            });
+          if (type == 1) {
+            if (res.status == 0) {
+              this.$message({
+                type: "success",
+                message: "停用成功",
+              });
+              this.common.monitoringLogs("停用", "停用域名", 1);
+            } else {
+              this.$message({
+                type: "error",
+                message: "停用失败",
+              });
+              this.common.monitoringLogs("停用", "停用域名信息", 0);
+            }
+            this.queryinfo();
+          } else if (type == 2) {
+            if (res.status == 0) {
+              this.$message({
+                type: "success",
+                message: "启用成功",
+              });
+              this.common.monitoringLogs("启用", "启用域名", 1);
+            } else {
+              this.$message({
+                type: "error",
+                message: "启用失败",
+              });
+              this.common.monitoringLogs("启用", "启用域名", 0);
+            }
+            this.queryinfo();
+          } else if (type == 4) {
+            if (res.status == 0) {
+              this.$message({
+                type: "success",
+                message: "批量启用成功",
+              });
+              this.common.monitoringLogs("批量启用", "批量启用域名", 1);
+            } else {
+              this.$message({
+                type: "error",
+                message: "批量启用失败",
+              });
+              this.common.monitoringLogs("批量启用", "批量启用域名", 0);
+            }
+            this.queryinfo();
+          } else if (type == 5) {
+            if (res.status == 0) {
+              this.$message({
+                type: "success",
+                message: "批量停用成功",
+              });
+              this.common.monitoringLogs("批量停用", "批量停用域名", 1);
+            } else {
+              this.$message({
+                type: "error",
+                message: "批量停用失败",
+              });
+              this.common.monitoringLogs("批量停用成功", "批量停用域名", 0);
+            }
+            this.queryinfo();
           } else {
-            this.$message({
-              type: "error",
-              message: "操作失败",
-            });
+            if (res.status == 0) {
+              this.$message({
+                type: "success",
+                message: "删除成功",
+              });
+              this.common.monitoringLogs("删除", "删除域名", 1);
+            } else {
+              this.$message({
+                type: "error",
+                message: "删除失败，请查看要删除的域名下是否存在加速内容",
+              });
+              this.common.monitoringLogs("删除成功", "删除域名", 0);
+            }
+            this.queryinfo();
           }
-          this.queryinfo();
         })
         .catch(error => {
           this.$message({
             type: "error",
             message: "后台服务出错",
           });
+          this.common.monitoringLogs("修改 ", "修改域名信息", 0);
         });
     },
     //删除
     deletedomain(param) {
       del_domain(param)
         .then(res => {
-          if (res.status == 0 && res.data.success_count >0) {
+          if (res.status == 0 && res.data.success_count > 0) {
             this.$message({
               type: "success",
               message: "删除成功",
             });
+            this.common.monitoringLogs("删除 ", "删除域名", 1);
           } else {
             this.$message({
               type: "error",
-              message: "删除失败",
+              message: "删除失败,请查看要删除的域名下是否存在加速内容",
             });
+            this.common.monitoringLogs("删除 ", "删除域名", 0);
           }
           this.queryinfo();
         })
@@ -340,51 +432,81 @@ export default {
             type: "error",
             message: "后台服务出错",
           });
+          this.common.monitoringLogs("删除 ", "删除域名", 0);
         });
     },
     //根据状态操作
     operating(tenum) {
       let parmas = new Object();
-      parmas.data_count = 1;
-      parmas.data_array = [];
-      parmas.data_array[0] = this.operatingFrom.domain_id;
-      parmas.buser_id = this.operatingFrom.buser_id;
-      //parmas.type = tenum;
+      parmas.data_count = 0;
+      parmas.data = [];
+      let obj = {};
+      obj.buser_id = this.operatingFrom.buser_id;
+      obj.data_array = [];
+      obj.data_count = 0;
+      obj.data_array[0] = this.operatingFrom.domain_id;
+      parmas.data[0] = obj;
+
       if (tenum == 1) {
-        parmas.state = 0;
-        this.changedomain(parmas);
+        //parmas.state = 0;
+        parmas.data[0].state = 0;
+
+        this.changedomain(parmas, tenum);
       } else if (tenum == 2) {
-        parmas.state = 1;
-        this.changedomain(parmas);
+        parmas.data[0].state = 1;
+
+        this.changedomain(parmas, tenum);
       } else if (tenum == 3) {
         this.deletedomain(parmas);
       } else if (tenum == 4) {
-        console.log(this.batchbuser_id);
-        parmas.state = 1;
-        parmas.buser_id = this.batchbuser_id;
-        parmas.data_array = this.domain_id;
-        parmas.data_count=this.domain_id.length
-        this.changedomain(parmas);
+        let _this = this;
+        let tempparam = {};
+        tempparam.data_count = 0;
+        tempparam.data = [];
+
+        Object.keys(this.tempArray).forEach(function(key) {
+          let obj = {
+            buser_id: key,
+            data_count: 0,
+            state: 1,
+            data_array: _this.tempArray[key],
+          };
+          tempparam.data.push(obj);
+        });
+        this.changedomain(tempparam, tenum);
       } else if (tenum == 5) {
-        parmas.state = 0;
-        parmas.buser_id = this.batchbuser_id;
-        parmas.data_array = this.domain_id;
-            parmas.data_count=this.domain_id.length
-        this.changedomain(parmas);
-      } else if (tenum==6){
-        parmas.buser_id = this.batchbuser_id;
-        parmas.data_array = this.domain_id;
-        parmas.data_count=this.domain_id.length
-        this.deletedomain(parmas);
+        let _this = this;
+        let tempparam = {};
+        tempparam.data_count = 0;
+        tempparam.data = [];
+
+        Object.keys(this.tempArray).forEach(function(key) {
+          let obj = {
+            buser_id: key,
+            data_count: 0,
+            state: 0,
+            data_array: _this.tempArray[key],
+          };
+          tempparam.data.push(obj);
+        });
+        this.changedomain(tempparam, tenum);
+      } else if (tenum == 6) {
+        let _this = this;
+        let tempparam = {};
+        tempparam.data_count = 0;
+        tempparam.data = [];
+
+        Object.keys(this.tempArray).forEach(function(key) {
+          let obj = {
+            buser_id: key,
+            data_count: 0,
+            data_array: _this.tempArray[key],
+          };
+          tempparam.data.push(obj);
+        });
+
+        this.deletedomain(tempparam);
       }
-      // getterminal(parmas)
-      //   .then(res => {
-      //     if (res.status == 0) {
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.log(error);
-      //   });
     },
     //修改
     revise(num, row) {
@@ -434,7 +556,7 @@ export default {
     },
     //批量删除
     batchdeleateuser() {
-      if (!this.domain_id) {
+      if (!this.domain_id || this.domain_id.length == 0) {
         this.$message({
           type: "error",
           message: "请至少选择一项",
@@ -465,6 +587,7 @@ export default {
 
     //回车事件
     onSubmit() {
+      this.pager.page = 1;
       this.queryinfo();
     },
     getdata(val) {
@@ -483,41 +606,35 @@ export default {
     },
     //多选
     handleSelectionChange(val) {
-      console.log(val);
-
-      // this.batchbuser_id=""
-      // this.batchbuser_id=val.buser_id
-      // console.log(this.batchbuser_id)
-      if (val.length) {
+      this.tempArray = {};
+      this.activeTab = false;
+      if (val.length > 0) {
         this.domain_id = [];
         for (var i = 0; i < val.length; i++) {
+          // console.log(val)
+          if (!this.tempArray[val[i].buser_id]) {
+            this.tempArray[val[i].buser_id] = [];
+          }
+          this.tempArray[val[i].buser_id].push(val[i].domain_id);
+          //  console.log(this.tempArray)
+          // _this.first[item.type] = {}
+          if (val[i].state == 1) {
+            this.activeTab = true;
+          }
           this.batchbuser_id = "";
           this.batchbuser_id = val[i].buser_id;
           this.domain_id[i] = val[i].domain_id;
         }
-        //         let person =val
-        // //         let person = [
-        // //      {id: 0, name: "小明"},
-        // //      {id: 1, name: "小张"},
-        // //      {id: 2, name: "小李"},
-        // //      {id: 3, name: "小孙"},
-        // //      {id: 1, name: "小周"},
-        // //      {id: 2, name: "小陈"},
-        // // ];
-
-        // let obj = {};
-
-        // let peon = person.reduce((cur,next) => {
-        //     obj[next.id] ? "" : obj[next.id] = true && cur.push(next);
-        //     return cur;
-        // },[]) //设置cur默认类型为数组，并且初始值为空的数组
-        // console.log(peon);
-        //console.log(val.map(item))
-        // console.log(val.map(item=>item.domain_id))
-        //this.domainId=val.map(item=>item.domain_id)
-        //this.currentSelection = val.map(item => item.domain_id);
+      } else {
+        this.activeTab = false;
+        this.domain_id = [];
       }
-      console.log(this.domain_id);
+      //console.log(this.domain_id);
+      // if(this.activeTab==false){
+      //   this.activeTabs==false
+      // }else{
+      //   this.activeTabs=true
+      // }
     },
     // 刷新已选择数组
     updateSelection() {
@@ -559,9 +676,24 @@ export default {
         var resyzm = /^http(s)?:\/\/[^\u4e00-\u9fa5]{1,1020}$/;
         // objExp = new RegExp(resyzm);
         if (this.getBLen(value) > 72) {
-          callback(new Error("源站域名长度不能超出1024个字符"));
+          callback(new Error("源站域名长度不能超出72个字符"));
         } else if (resyzm.test(value) === false) {
           callback(new Error("源站域名格式错误"));
+        } else {
+          callback();
+        }
+      }
+    },
+
+    //检查渠道ID
+    checkuserId(rule, value, callback) {
+      if (value === "") {
+        callback(new Error("请输入渠道ID"));
+      } else {
+        var resyzm = /^\d{12}$/;
+
+        if (resyzm.test(value) === false) {
+          callback(new Error("渠道ID格式错误"));
         } else {
           callback();
         }
@@ -616,11 +748,13 @@ export default {
                         type: "success",
                         message: "修改成功",
                       });
+                      this.common.monitoringLogs("修改 ", "修改域名信息", 1);
                     } else {
                       this.$message({
                         type: "error",
                         message: "修改失败",
                       });
+                      this.common.monitoringLogs("修改 ", "修改域名信息", 0);
                     }
                     this.queryinfo();
                   })
@@ -629,16 +763,10 @@ export default {
                       type: "error",
                       message: "后台服务出错",
                     });
+                    this.common.monitoringLogs("修改 ", "修改域名信息", 0);
                   });
 
                 this.dialogFormVisible = false;
-                // _this.tableData[num].dominds = _this.form.name;
-                // _this.tableData[num].id = _this.form.id;
-                // this.dialogFormVisible = false;
-                // this.$message({
-                //   type: "info",
-                //   message: "修改成功",
-                // });
               })
               .catch(action => {
                 this.$message({
@@ -664,11 +792,13 @@ export default {
                     type: "success",
                     message: "添加成功",
                   });
+                  this.common.monitoringLogs("新增", "新增域名", 1);
                 } else {
                   this.$message({
                     type: "error",
                     message: "添加失败",
                   });
+                  this.common.monitoringLogs("新增", "新增域名", 0);
                 }
                 this.queryinfo();
               })
@@ -677,6 +807,7 @@ export default {
                   type: "error",
                   message: "后台服务出错",
                 });
+                this.common.monitoringLogs("新增", "新增域名", 0);
               });
 
             this.dialogFormVisible = false;

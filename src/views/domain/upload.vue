@@ -1,8 +1,8 @@
 <template>
 	<div class="simple">
-		<div class="top_title" style=" display: flex;">
+		<div class="top_title" style=" display: flex;margin-top:20px;">
 			<span @click="goback" style="font-size: 24px;color: #202020;">
-				<i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;font-weight: 600;margin-right:23px;"></i>批量导入URL
+				<i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;font-weight: 600;margin-right:23px;"></i>批量导入加速内容
 			</span>
 		</div>
 		<div class="con">

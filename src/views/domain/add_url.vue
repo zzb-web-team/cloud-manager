@@ -46,7 +46,6 @@
 						class="other_bgc"
 						v-model="dynamicValidateForm.url_content"
 						placeholder="4-50个字符，汉字、英文、数字任意组合"
-						maxlength="1024"
 					></el-input>
 					<span class="add_url_point">创建成功后将无法修改</span>
 				</el-form-item>
@@ -92,9 +91,9 @@
 					<el-input
 						class="other_bgc"
 						v-model="dynamicValidateForm.hui_path"
-						placeholder="4~50个字符，汉字、英文字母、数字组合，或纯汉字或英文，不能为纯数字"
+						placeholder="2~1024个字符，首位字符固定为“/”"
 						autocomplete="off"
-						maxlength="50"
+
 					></el-input>
 				</el-form-item>
 				<el-form-item
@@ -108,9 +107,9 @@
 					<el-input
 						class="other_bgc"
 						v-model="dynamicValidateForm.play_path"
-						placeholder="4~50个字符，汉字、英文字母、数字组合，或纯汉字或英文，不能为纯数字"
+						placeholder="2~1024个字符，首位字符固定为“/”"
 						autocomplete="off"
-						maxlength="50"
+			
 					></el-input>
 				</el-form-item>
 				<el-form-item
@@ -376,12 +375,12 @@ export default {
                     });
                   } else if (res.data.res_data[0][1] == 2) {
                     this.$message({
-                      message: "URl重复",
+                      message: "加速内容名称不可以重复",
                       type: "error",
                     });
                   } else if (res.data.res_data[0][1] == 3) {
                     this.$message({
-                      message: "label重复",
+                      message: "回源路径，播放路径不可以重复",
                       type: "error",
                     });
                   } else if (res.data.res_data[0][1] == 4) {
@@ -391,15 +390,10 @@ export default {
                     });
                   } else if (res.data.res_data[0][1] == 5) {
                     this.$message({
-                      message: "数据库写人错误",
+                      message: "数据库写入错误",
                       type: "error",
                     });
                   }
-                } else if (res.status == -900) {
-                  this.$message({
-                    message: `${res.msg}`,
-                    type: "error",
-                  });
                 } else if (res.status == -900) {
                   this.$message({
                     message: "IPFS服务器错误",
@@ -457,12 +451,12 @@ export default {
                           });
                         } else if (res.data.res_data[1] == 2) {
                           this.$message({
-                            message: "URl重复",
+                            message: "回源路径，播放路径不可以重复",
                             type: "error",
                           });
                         } else if (res.data.res_data[1] == 3) {
                           this.$message({
-                            message: "label重复",
+                            message: "回源路径，播放路径不可以重复",
                             type: "error",
                           });
                         } else if (res.data.res_data[1] == 4) {
@@ -573,14 +567,17 @@ export default {
       if (value === "") {
         callback(new Error("请输入加速内容名称"));
       } else {
-        var resyzm = /^[\u4e00-\u9fa5a-zA-Z0-9]{1,1024}$/;
-        if (this.getBLen(value) > 1024) {
-          callback(new Error("加速内容名称不能超出1024个字符"));
-        } else if (this.getBLen(value) < 2) {
-          callback(new Error("加速内容名称不能少于2个字符"));
-        } else if (resyzm.test(value) === false) {
-          callback(new Error("加速内容名称格式错误"));
-        } else {
+        
+        var resyzm = /^[\u4e00-\u9fa5a-zA-Z0-9]{4,50}$/;
+        if (this.getBLen(value) > 50) {
+          callback(new Error("加速内容名称不能超出50个字符"));
+        } else if (this.getBLen(value) < 4) {
+          callback(new Error("加速内容名称不能少于4个字符"));
+        } 
+        // else if (resyzm.test(value) === false) {
+        // //   callback(new Error("加速内容名称格式错误"));
+        // // }
+         else {
           callback();
         }
       }
@@ -590,10 +587,16 @@ export default {
       if (value === "") {
         callback(new Error("路径不能为空"));
       } else {
-        var resyzm = /^\/{1}[0-9a-zA-Z/]{1,1024}$/;
-        if (resyzm.test(value) === false) {
-          callback(new Error("路径格式错误"));
-        } else {
+        var resyzm = /^\/{1}[0-9a-zA-Z/]{2,1024}$/;
+          if (this.getBLen(value) > 1024) {
+          callback(new Error("内容不能超出1024个字符"));
+        } else if (this.getBLen(value) < 2) {
+          callback(new Error("内容不能少于2个字符"));
+        } 
+      //    else if (resyzm.test(value) === false) {
+      //     callback(new Error("加速内容名称格式错误"));
+      //  }
+       else {
           callback();
         }
       }
