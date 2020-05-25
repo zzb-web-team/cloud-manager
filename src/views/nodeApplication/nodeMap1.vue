@@ -1,87 +1,94 @@
 <template>
-<section class="myself-container content">
+  <section class="myself-container content">
     <div class="top_title">资源监控</div>
     <div class="user-title" style="display: flex;flex-flow: column;">
-        <div class="resources_con">
-            <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="加速流量" name="first">
-                    <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                        <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-                        <el-select v-model="value1" placeholder="视频名称" style="width: 10%;margin-right: 10px;" @change="getdata()">
-                            <el-option label="全部" value="*"></el-option>
-                            <el-option v-for="(item, index) in options1chanid" :key="index" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
-                        <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="options2" ref="cascaderAddr" :show-all-levels="false" v-model="value2" @change="getdata"></el-cascader>
-                        <el-select v-model="value3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata()">
-                            <el-option label="全部" value="*"></el-option>
-                            <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
-                        <el-button-group>
-                            <el-button v-show="!shoudzyx" @click="today()">今天</el-button>
-                            <el-button v-show="!shoudzyx" @click="yesterday()">昨天</el-button>
-                            <el-button v-show="!shoudzyx" @click="sevendat()">近7天</el-button>
-                            <el-button v-show="!shoudzyx" @click="thirtyday()">近30天</el-button>
-                            <el-button @click="showzdyx">自定义<i class="el-icon-date"></i></el-button>
-                        </el-button-group>
-                        <el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-                        <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
-                    </div>
-                    <div class="device_form">
-                        <div id="myChart" :style="{ height: '607px' }"></div>
-                    </div>
-                    <div class="devide_table">
-                        <el-row type="flex" class="row_active">
-                            <el-col :span="24" style="text-align:left;font-weight: bold;padding-left: 10px;">加速流量</el-col>
-                        </el-row>
-                        <el-row type="flex" class="row_active">
-                            <el-col :span="24">
-                                <el-table :data="tablecdn" border style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                                    <el-table-column label="时间">
-                                        <template slot-scope="scope">
-                                            <div>{{ scope.row.timeValue | settimes }}</div>
-                                        </template></el-table-column>
-                                    <el-table-column label="总流量">
-                                        <template slot-scope="scope">
-                                            <div>{{ scope.row.streamAalue |setbytes }}</div>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                                <!-- <fenye2 style="float:right;margin:10px 0 20px 0;" @fatherMethod="getpage" @fathernum="gettol" :pagesa="total_cnt"></fenye2> -->
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-tab-pane>
+      <div class="resources_con">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="加速流量" name="first">
+            <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="value1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata()">
+                <el-option label="全部" value="*"></el-option>
+                <el-option v-for="(item, index) in hashidSet" :key="index" :label="item.label" :value="item.label"></el-option>
+              </el-select>
+              <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="options2" ref="cascaderAddr" :show-all-levels="false" v-model="value2" @change="getdata"></el-cascader>
+              <el-select v-model="value3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata()">
+                <el-option label="全部" value="*"></el-option>
+                <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
+              </el-select>
+              <el-button-group>
+                <el-button v-show="!shoudzyx" @click="today()">今天</el-button>
+                <el-button v-show="!shoudzyx" @click="yesterday()">昨天</el-button>
+                <el-button v-show="!shoudzyx" @click="sevendat()">近7天</el-button>
+                <el-button v-show="!shoudzyx" @click="thirtyday()">近30天</el-button>
+                <el-button @click="showzdyx">自定义
+                  <i class="el-icon-date"></i>
+                </el-button>
+              </el-button-group>
+              <el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
+            </div>
+            <div class="device_form">
+              <div id="myChart" :style="{ height: '607px' }"></div>
+            </div>
+            <div class="devide_table">
+              <el-row type="flex" class="row_active">
+                <el-col :span="24" style="text-align:left;font-weight: bold;padding-left: 10px;">加速流量</el-col>
+              </el-row>
+              <el-row type="flex" class="row_active">
+                <el-col :span="24">
+                  <el-table :data="tablecdn" border style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table-column label="时间">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.timeValue | settimes }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="总流量">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.streamAalue |setbytes }}</div>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                  <!-- <fenye2 style="float:right;margin:10px 0 20px 0;" @fatherMethod="getpage" @fathernum="gettol" :pagesa="total_cnt"></fenye2> -->
+                </el-col>
+              </el-row>
+            </div>
+          </el-tab-pane>
 
-                <el-tab-pane label="回源统计" name="second">
-                    <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                        <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-                        <el-select v-model="value1" placeholder="视频名称" style="width: 10%;margin-right: 10px;" @change="getdata1()">
-                            <el-option label="全部" value="*"></el-option>
-                            <el-option v-for="(item, index) in options1chanid" :key="index" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
-                        <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="options2" ref="cascaderAddr" :show-all-levels="false" v-model="valuea2" @change="getdata1"></el-cascader>
-                           <el-select v-model="valuea3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata1()">
-                            <el-option label="全部" value="*"></el-option>
-                            <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
-                        <el-button-group>
-                            <el-button v-show="!showzdyz" @click="today(2)">今天</el-button>
-                            <el-button v-show="!showzdyz" @click="yesterday(2)">昨天</el-button>
-                            <el-button v-show="!showzdyz" @click="sevendat(2)">近7天</el-button>
-                            <el-button v-show="!showzdyz" @click="thirtyday(2)">近30天</el-button>
-                            <el-button @click="showzdyzs">自定义<i class="el-icon-date"></i></el-button>
-                        </el-button-group>
-                        <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-                        <el-button style="margin-left:10px;" type="primary" @click="seachtu(2)">确定</el-button>
-                    </div>
-                    <div class="device_form" style>
-                        <div id="myChart1" :style="{ height: '607px' }"></div>
-                    </div>
-                </el-tab-pane>
-            </el-tabs>
-        </div>
+          <el-tab-pane label="回源统计" name="second">
+            <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-select v-model="value1acce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata1()">
+                <el-option label="全部" value="*"></el-option>
+                <el-option v-for="(item, index) in hashidSet" :key="index" :label="item.label" :value="item.label"></el-option>
+              </el-select>
+              <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="options2" ref="cascaderAddr" :show-all-levels="false" v-model="valuea2" @change="getdata1"></el-cascader>
+              <el-select v-model="valuea3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata1()">
+                <el-option label="全部" value="*"></el-option>
+                <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
+              </el-select>
+              <el-button-group>
+                <el-button v-show="!showzdyz" @click="today(2)">今天</el-button>
+                <el-button v-show="!showzdyz" @click="yesterday(2)">昨天</el-button>
+                <el-button v-show="!showzdyz" @click="sevendat(2)">近7天</el-button>
+                <el-button v-show="!showzdyz" @click="thirtyday(2)">近30天</el-button>
+                <el-button @click="showzdyzs">自定义
+                  <i class="el-icon-date"></i>
+                </el-button>
+              </el-button-group>
+              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-button style="margin-left:10px;" type="primary" @click="seachtu(2)">确定</el-button>
+            </div>
+            <div class="device_form" style>
+              <div id="myChart1" :style="{ height: '607px' }"></div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
     </div>
-</section>
+  </section>
 </template>
 
 <script>
@@ -93,7 +100,10 @@ import {
   accelerate_flow_table,
   backsource_flow_query_conditions,
   backsource_flow,
-  getvideo
+  getvideo,
+  export_pv_uv_curve_file,
+  export_backsource_flow_file,
+  export_accelerate_flow_file
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -101,6 +111,9 @@ import common from "../../comm/js/util";
 export default {
   data() {
     return {
+      value1acce: "",
+      valueacce: "",
+      hashidSet: [],
       options2: [
         {
           value: "华北",
@@ -108,25 +121,25 @@ export default {
           children: [
             {
               value: "北京",
-              label: "北京"
+              label: "北京",
             },
             {
               value: "内蒙古",
-              label: "内蒙古"
+              label: "内蒙古",
             },
             {
               value: "山西",
-              label: "山西"
+              label: "山西",
             },
             {
               value: "河北",
-              label: "河北"
+              label: "河北",
             },
             {
               value: "天津",
-              label: "天津"
-            }
-          ]
+              label: "天津",
+            },
+          ],
         },
         {
           value: "西北",
@@ -134,25 +147,25 @@ export default {
           children: [
             {
               value: "宁夏",
-              label: "宁夏"
+              label: "宁夏",
             },
             {
               value: "陕西",
-              label: "陕西"
+              label: "陕西",
             },
             {
               value: "甘肃",
-              label: "甘肃"
+              label: "甘肃",
             },
             {
               value: "青海",
-              label: "青海"
+              label: "青海",
             },
             {
               value: "新疆",
-              label: "新疆"
-            }
-          ]
+              label: "新疆",
+            },
+          ],
         },
         {
           value: "东北",
@@ -160,17 +173,17 @@ export default {
           children: [
             {
               value: "黑龙江",
-              label: "黑龙江"
+              label: "黑龙江",
             },
             {
               value: "吉林",
-              label: "吉林"
+              label: "吉林",
             },
             {
               value: "辽宁",
-              label: "辽宁"
-            }
-          ]
+              label: "辽宁",
+            },
+          ],
         },
         {
           value: "华东",
@@ -178,29 +191,29 @@ export default {
           children: [
             {
               value: "福建",
-              label: "福建"
+              label: "福建",
             },
             {
               value: "江苏",
-              label: "江苏"
+              label: "江苏",
             },
             {
               value: "安徽",
-              label: "安徽"
+              label: "安徽",
             },
             {
               value: "山东",
-              label: "山东"
+              label: "山东",
             },
             {
               value: "上海",
-              label: "上海"
+              label: "上海",
             },
             {
               value: "浙江",
-              label: "浙江"
-            }
-          ]
+              label: "浙江",
+            },
+          ],
         },
         {
           value: "华中",
@@ -208,21 +221,21 @@ export default {
           children: [
             {
               value: "河南",
-              label: "河南"
+              label: "河南",
             },
             {
               value: "湖北",
-              label: "湖北"
+              label: "湖北",
             },
             {
               value: "江西",
-              label: "江西"
+              label: "江西",
             },
             {
               value: "湖南",
-              label: "湖南"
-            }
-          ]
+              label: "湖南",
+            },
+          ],
         },
         {
           value: "西南",
@@ -230,25 +243,25 @@ export default {
           children: [
             {
               value: "贵州",
-              label: "贵州"
+              label: "贵州",
             },
             {
               value: "云南",
-              label: "云南"
+              label: "云南",
             },
             {
               value: "重庆",
-              label: "重庆"
+              label: "重庆",
             },
             {
               value: "四川",
-              label: "四川"
+              label: "四川",
             },
             {
               value: "西藏",
-              label: "西藏"
-            }
-          ]
+              label: "西藏",
+            },
+          ],
         },
         {
           value: "华南",
@@ -256,17 +269,17 @@ export default {
           children: [
             {
               value: "广东",
-              label: "广东"
+              label: "广东",
             },
             {
               value: "广西",
-              label: "广西"
+              label: "广西",
             },
             {
               value: "海南",
-              label: "海南"
-            }
-          ]
+              label: "海南",
+            },
+          ],
         },
         {
           value: "其他",
@@ -274,20 +287,21 @@ export default {
           children: [
             {
               value: "香港",
-              label: "香港"
+              label: "香港",
             },
             {
               value: "澳门",
-              label: "澳门"
+              label: "澳门",
             },
             {
               value: "台湾",
-              label: "台湾"
-            }
-          ]
-        }
+              label: "台湾",
+            },
+          ],
+        },
       ],
       value1Activechanid: "",
+      value1Activechanid1: "",
       value1Active: "",
       options1Active: [],
       shoudzyx: false,
@@ -297,19 +311,19 @@ export default {
 
       options3: [
         {
-          label: "电信"
+          label: "电信",
         },
 
         {
-          label: "移动"
+          label: "移动",
         },
 
         {
-          label: "联通"
+          label: "联通",
         },
         {
-          label: "其他"
-        }
+          label: "其他",
+        },
       ],
       options4: [],
       optionsa1: [],
@@ -340,7 +354,7 @@ export default {
                 new Date(new Date(new Date().toLocaleDateString()).getTime()) -
                 3600 * 1000 * 24 * 1;
               picker.$emit("pick", [start, end]);
-            }
+            },
           },
           {
             text: "今天",
@@ -350,7 +364,7 @@ export default {
                 new Date(new Date().toLocaleDateString()).getTime()
               );
               picker.$emit("pick", [start, end]);
-            }
+            },
           },
           {
             text: "最近一周",
@@ -361,7 +375,7 @@ export default {
               );
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
               picker.$emit("pick", [start, end]);
-            }
+            },
           },
           {
             text: "最近一个月",
@@ -372,50 +386,50 @@ export default {
               );
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 29);
               picker.$emit("pick", [start, end]);
-            }
-          }
+            },
+          },
         ],
         disabledDate(time) {
           return time.getTime() > Date.now();
-        }
+        },
       },
       // value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
       val2: [],
       rowHeader: [
         {
           prop: "time",
-          label: "节点ID"
+          label: "节点ID",
         },
         {
           prop: "totals",
-          label: "使用流量"
+          label: "使用流量",
         },
         {
           prop: "online_devices",
-          label: "传输次数"
+          label: "传输次数",
         },
         {
           prop: "average_online",
-          label: "日期"
-        }
+          label: "日期",
+        },
       ],
       rowHeader1: [
         {
           prop: "time",
-          label: "节点ID"
+          label: "节点ID",
         },
         {
           prop: "totals",
-          label: "存储容量"
+          label: "存储容量",
         },
         {
           prop: "online_devices",
-          label: "存储次数"
+          label: "存储次数",
         },
         {
           prop: "average_online",
-          label: "日期"
-        }
+          label: "日期",
+        },
       ],
       tableData: [
         {
@@ -423,8 +437,8 @@ export default {
           totals: "测试数据1",
           online_devices: "测试数据1",
           average_online: "测试数据1",
-          new_percent: "测试数据1"
-        }
+          new_percent: "测试数据1",
+        },
       ],
       timeUnit: 60,
       starttime: "",
@@ -437,7 +451,7 @@ export default {
       pageNo: 1, //当前页码
       total_cnt: 1, //数据总量
       chanid: "",
-      pageActive: 0
+      pageActive: 0,
     };
   },
   filters: {
@@ -447,10 +461,10 @@ export default {
     },
     setbytes(data) {
       return (data / 1024 / 1024 / 1024).toFixed(2) + "GB";
-    }
+    },
   },
   components: {
-    fenye2
+    fenye2,
   },
   mounted() {
     // if (this.$cookies.get("id")) {
@@ -463,13 +477,13 @@ export default {
     // if (this.$route.query.urldata) {
     //   console.log(this.$route.query.urldata);
     // }
-      let monitorUrlname = this.$route.query.monitorUrlname
+    let monitorUrlname = this.$route.query.monitorUrlname;
     if (monitorUrlname) {
       this.value1 = monitorUrlname;
     } else {
       this.value1 = "";
     }
-    let monitorChanId = this.$route.query.monitorChanId
+    let monitorChanId = this.$route.query.monitorChanId;
     if (monitorChanId) {
       this.value1Activechanid = monitorChanId;
     } else {
@@ -490,6 +504,97 @@ export default {
     this.chart = null;
   },
   methods: {
+    //回源统计图表导出
+    exoprtant_backsource(){
+        let params = new Object();
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      //params.chanId = this.chanid + "";
+      if (this.valuea1) {
+        params.fileName = this.valuea1;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.valuea2[1]) {
+        params.region = this.valuea2[1];
+      } else {
+        params.region = "*";
+      }
+
+      if (this.value3) {
+        params.isp = this.value3;
+      } else {
+        params.isp = "*";
+      }
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.value1acce !== "") {
+        params.acce = this.value1acce;
+      } else {
+        params.acce = "*";
+      }
+      // params.time_unit=this.common.timeUnit(this.starttime, this.endtime)
+      params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+          export_backsource_flow_file(params).then(res=>{
+        if(res.status==0){
+        window.open(res.msg, '_blank');
+        }
+      }).catch(err=>{
+        
+      })
+
+    },
+    //加速流量图标导出
+    exoprtant_pupv(){
+       let params = new Object();
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      // params.chanId = this.chanid + "";
+      if (this.value1) {
+        params.fileName = this.value1;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.value2[1]) {
+        params.region = this.value2[1];
+      } else {
+        params.region = "*";
+      }
+      if (this.value3) {
+        params.isp = this.value3;
+      } else {
+        params.isp = "*";
+      }
+      if (this.value3) {
+        params.isp = this.value3;
+      } else {
+        params.isp = "*";
+      }
+
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.valueacce !== "") {
+        params.acce = this.valueacce;
+      } else {
+        params.acce = "*";
+      }
+
+      // params.time_unit = this.timeUnit;
+      params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+      export_accelerate_flow_file(params).then(res=>{
+        if(res.status==0){
+        window.open(res.msg, '_blank');
+        }
+      }).catch(err=>{
+        
+      })
+    },
     //输入渠道ID查询
     onchanidChange() {
       this.options1chanid = [];
@@ -578,12 +683,12 @@ export default {
           //     obj.value = index;
           //     this.options2.push(obj);
           //   });
-          // res.data.ispSet.forEach((item, index) => {
-          //     let obj = {};
-          //     obj.label = item;
-          //     obj.value = index;
-          //     this.options3.push(obj);
-          // });
+          res.data.hashidSet.forEach((item, index) => {
+            let obj = {};
+            obj.label = item;
+            obj.value = index;
+            this.hashidSet.push(obj);
+          });
           res.data.chanIdSet.forEach((item, index) => {
             let obj = {};
             obj.label = item;
@@ -628,6 +733,12 @@ export default {
       } else {
         params.chanId = "*";
       }
+      if (this.valueacce !== "") {
+        params.acce = this.valueacce;
+      } else {
+        params.acce = "*";
+      }
+
       // params.time_unit = this.timeUnit;
       params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
       accelerate_flow(params)
@@ -670,6 +781,11 @@ export default {
       } else {
         params.chanId = "*";
       }
+      if (this.valueacce !== "") {
+        params.acce = this.valueacce;
+      } else {
+        params.acce = "*";
+      }
       params.pageNo = this.pageNo - 1;
       params.pageSize = this.pageSize;
 
@@ -682,7 +798,7 @@ export default {
             for (var i = 0; i < timeArr.length; i++) {
               let obj = {
                 timeValue: timeArr[i],
-                streamAalue: streamArr[i]
+                streamAalue: streamArr[i],
               };
               this.tablecdn.push(obj);
             }
@@ -708,6 +824,7 @@ export default {
       } else {
         params.chanId = "*";
       }
+
       backsource_flow_query_conditions(params)
         .then(res => {
           res.data.fileNameSet.forEach((item, index) => {
@@ -765,6 +882,11 @@ export default {
         params.chanId = this.value1Activechanid;
       } else {
         params.chanId = "*";
+      }
+      if (this.value1acce !== "") {
+        params.acce = this.value1acce;
+      } else {
+        params.acce = "*";
       }
       // params.time_unit=this.common.timeUnit(this.starttime, this.endtime)
       params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
@@ -862,25 +984,27 @@ export default {
       return "text-align: center;";
     },
     //选项卡
+
     handleClick(tab, event) {
       if (tab.index == 0) {
-       // this.value1 = "";
+        // this.value1 = "";
         this.value2 = "";
         this.value3 = "";
-       // this.value1Activechanid = "";
-        this.options1chanid = [];
-              let monitorUrlname = this.$route.query.monitorUrlname
-    if (monitorUrlname) {
-      this.value1 = monitorUrlname;
-    } else {
-      this.value1 = "";
-    }
-    let monitorChanId =this.$route.query.monitorChanId
-    if (monitorChanId) {
-      this.value1Activechanid = monitorChanId;
-    } else {
-      this.value1Activechanid = "";
-    }
+        (this.valueacce = ""),
+          // this.value1Activechanid = "";
+          (this.options1chanid = []);
+        let monitorUrlname = this.$route.query.monitorUrlname;
+        if (monitorUrlname) {
+          this.value1 = monitorUrlname;
+        } else {
+          this.value1 = "";
+        }
+        let monitorChanId = this.$route.query.monitorChanId;
+        if (monitorChanId) {
+          this.value1Activechanid = monitorChanId;
+        } else {
+          this.value1Activechanid = "";
+        }
 
         this.timeUnit = 60;
         this.getseachlabel1();
@@ -889,40 +1013,59 @@ export default {
         //this.value1 = "";
         this.valuea2 = "";
         this.valuea3 = "";
-        this.options1chanid = [];
+        (this.value1acce = ""), (this.options1chanid = []);
         //this.value1Activechanid = "";
-              let monitorUrlname = this.$route.query.monitorUrlname
-    if (monitorUrlname) {
-      this.value1 = monitorUrlname;
-    } else {
-      this.value1 = "";
-    }
-    let monitorChanId =this.$route.query.monitorChanId
-    if (monitorChanId) {
-      this.value1Activechanid = monitorChanId;
-    } else {
-      this.value1Activechanid = "";
-    }
+        let monitorUrlname = this.$route.query.monitorUrlname;
+        if (monitorUrlname) {
+          this.value1 = monitorUrlname;
+        } else {
+          this.value1 = "";
+        }
+        let monitorChanId = this.$route.query.monitorChanId;
+        if (monitorChanId) {
+          this.value1Activechanid = monitorChanId;
+        } else {
+          this.value1Activechanid = "";
+        }
 
         this.timeUnit = 60;
         this.getseachlabel2();
       }
     },
     drawLine() {
+      let _this = this;
       // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById("myChart"));
       window.onresize = myChart.resize;
       // 绘制图表
       let options = {
         title: {
-          text: "流量"
+          text: "流量",
+        },
+        toolbox: {
+          feature: {
+            // mark: { show: true },
+            // dataView: { show: true, readOnly: false },
+            // magicType: { show: true, type: ['line', 'bar'] },
+            // restore: { show: true },
+            // saveAsImage: { show: false },
+            mydow: {
+              show: true,
+              title: "导出",
+              icon:
+                "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
+              onclick: function() {
+                _this.exoprtant_pupv();
+              },
+            },
+          },
         },
         grid: {
           // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
           left: "5%", // 默认10%，给24就挺合适的。
           top: 60, // 默认60
           right: 35, // 默认10%
-          bottom: 60 // 默认60
+          bottom: 60, // 默认60
           // width: "100%", // grid 组件的宽度。默认自适应。
           // height: "100%",
           // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
@@ -936,15 +1079,15 @@ export default {
           axisPointer: {
             type: "cross",
             label: {
-              backgroundColor: "#6a7985"
-            }
-          }
+              backgroundColor: "#6a7985",
+            },
+          },
         },
         xAxis: {
-          data: this.timeArray
+          data: this.timeArray,
         },
         yAxis: {
-          name: "GB"
+          name: "GB",
         },
         series: [
           {
@@ -953,28 +1096,29 @@ export default {
             barWidth: 30, //柱图宽度
             data: this.dataFlowArray,
             axisLabel: {
-              interval: 1
-            }
-          }
-        ]
+              interval: 1,
+            },
+          },
+        ],
       };
       myChart.setOption(options);
     },
     drawLine1(x, y) {
+      let _this=this
       // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById("myChart1"));
       window.onresize = myChart.resize;
       // 绘制图表
       let options = {
         title: {
-          text: "流量"
+          text: "流量",
         },
         grid: {
           // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
           left: "5%", // 默认10%，给24就挺合适的。
           top: 60, // 默认60
           right: 35, // 默认10%
-          bottom: 60 // 默认60
+          bottom: 60, // 默认60
           // width: "100%", // grid 组件的宽度。默认自适应。
           // height: "100%",
           // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
@@ -982,34 +1126,52 @@ export default {
           // backgroundColor:'#ccac62',
           // borderColor:"#000",
         },
+         toolbox: {
+          feature: {
+            // mark: { show: true },
+            // dataView: { show: true, readOnly: false },
+            // magicType: { show: true, type: ['line', 'bar'] },
+            // restore: { show: true },
+            // saveAsImage: { show: false },
+            mydow: {
+              show: true,
+              title: "导出",
+              icon:
+                "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
+              onclick: function() {
+                _this.exoprtant_backsource();
+              },
+            },
+          },
+        },
         color: "#297AFF",
         tooltip: {
           trigger: "axis",
           axisPointer: {
             type: "cross",
             label: {
-              backgroundColor: "#6a7985"
-            }
-          }
+              backgroundColor: "#6a7985",
+            },
+          },
         },
         xAxis: {
-          data: y
+          data: y,
         },
         yAxis: {
-          name: "GB"
+          name: "GB",
         },
         series: [
           {
             name: "销量",
             type: "bar",
             barWidth: 30, //柱图宽度
-            data: x
-          }
-        ]
+            data: x,
+          },
+        ],
       };
       myChart.setOption(options);
-    }
-  }
+    },
+  },
 };
 </script>
 

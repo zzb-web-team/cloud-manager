@@ -264,6 +264,7 @@ import {
   delete_url,
   change_state,
   query_url_for_admin,
+  url_export_for_admin,
 } from "../../servers/api";
 export default {
   data() {
@@ -747,9 +748,10 @@ export default {
     //导出
     toexportExcel() {
       let params = new Object();
-      params.page = this.pageActive;
+
+      params.page = this.currentPage - 1;
       params.buser_id = this.buser_id;
-      params.url = this.nowurl;
+      params.url_name = this.nowurl;
       params.order = this.order;
       if (this.value === "") {
         params.state = -1;
@@ -763,39 +765,20 @@ export default {
         params.end_time = 0;
         params.start_time = 0;
       }
-      query_url(params)
+      url_export_for_admin(params)
         .then(res => {
           if (res.status == 0) {
-            let tempArr = [];
-            tempArr = res.data.result;
-            for (var i = 0; i < tempArr.length; i++) {
-              tempArr[i].create_time = this.common.getTimes(
-                tempArr[i].create_time * 1000
-              );
-              if (tempArr[i].state == 1) {
-                tempArr[i].state = "正常运行";
-              } else {
-                tempArr[i].state = "已停止";
-              }
-            }
-            if (this.pageActive >= Math.ceil(res.data.total / 10)) {
-              this.exportExcel();
-              this.common.monitoringLogs("导出", "导出增加速内容信息表", 1);
-            } else {
-              this.tableData2 = this.tableData2.concat(tempArr);
+            let exportLinks = res.data.down_load;
+            window.open(exportLinks);
 
-              this.pageActive++;
-              this.toexportExcel();
-            }
-
-            // this.tableData = res.data.result;
-            this.total_cnt = res.data.total;
+            this.common.monitoringLogs("导出", "导出增加速内容信息表", 1);
           } else {
             this.common.monitoringLogs("导出", "导出增加速内容信息表", 0);
           }
         })
         .catch(err => {
           console.log(err);
+          this.common.monitoringLogs("导出", "导出增加速内容信息表", 1);
         });
     },
     //获取页码

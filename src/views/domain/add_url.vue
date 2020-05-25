@@ -1,177 +1,86 @@
 <template>
-	<div class="add_url">
-		<div class="top_title" style="display: flex;margin-top:30px;">
-			<span
-				@click="goback"
-				style="font-size: 24px;color: #202020;    margin-left: 40px;"
-				><i
-					class="el-icon-arrow-left"
-					style="color:#297AFF;font-size: 18px;margin-right:23px;font-weight: 600;"
-				></i>
-				创建加速内容</span
-			>
-		</div>
-		<div class="content">
-			<el-form :model="dynamicValidateForm" ref="dynamicValidateForm">
-				<p>创建点播加速内容</p>
-				<el-form-item
-					label="渠道ID:"
-					:label-width="formLabelWidth"
-					prop="newbuser_id"
-					:rules="[
+  <div class="add_url">
+    <div class="top_title" style="display: flex;margin-top:30px;">
+      <span @click="goback" style="font-size: 24px;color: #202020;    margin-left: 40px;">
+        <i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
+        创建加速内容</span>
+    </div>
+    <div class="content">
+      <el-form :model="dynamicValidateForm" ref="dynamicValidateForm">
+        <p>创建点播加速内容</p>
+        <el-form-item label="渠道ID:" :label-width="formLabelWidth" prop="newbuser_id" :rules="[
 						{
 							validator: jiourlid,
 							trigger: 'blur',
 							required: true,
 						},
-					]"
-				>
-					<el-input
-						class="other_bgc"
-						v-model="dynamicValidateForm.newbuser_id"
-						placeholder="12位纯数字"
-						maxlength="70"
-						@change="onchanidChange"
-					></el-input>
-				</el-form-item>
-				<el-form-item
-					label="加速内容名称:"
-					:label-width="formLabelWidth"
-					prop="url_content"
-					:rules="[
+					]">
+          <el-input class="other_bgc" v-model="dynamicValidateForm.newbuser_id" placeholder="12位纯数字" maxlength="70" @change="onchanidChange"></el-input>
+        </el-form-item>
+        <el-form-item label="加速内容名称:" :label-width="formLabelWidth" prop="url_content" :rules="[
 						{ required: true, validator: jiocon, trigger: 'blur' },
-					]"
-				>
-					<el-input
-						class="other_bgc"
-						v-model="dynamicValidateForm.url_content"
-						placeholder="4-50个字符，汉字、英文、数字任意组合"
-					></el-input>
-					<span class="add_url_point">创建成功后将无法修改</span>
-				</el-form-item>
-				<p class="add_url_title">加速配置</p>
-				<el-form-item
-					label="源站域名"
-					:label-width="formLabelWidth"
-					prop="radio"
-					:rules="{
+					]">
+          <el-input class="other_bgc" v-model="dynamicValidateForm.url_content" placeholder="4-50个字符，汉字、英文、数字任意组合"></el-input>
+          <span class="add_url_point">创建成功后将无法修改</span>
+        </el-form-item>
+        <p class="add_url_title">加速配置</p>
+        <el-form-item label="源站域名" :label-width="formLabelWidth" prop="radio" :rules="{
 						required: true,
 						message: '源站域名不能为空',
 						trigger: 'blur',
-					}"
-				>
-					<!-- <el-select
-						v-model="dynamicValidateForm.radio"
-						placeholder="请选择"
-					> -->
-						<!-- <el-option
-							v-for="(item, index) in yewu"
-							:key="index"
-							:label="item.label"
-							:value="item.value"
-						></el-option> -->
-               <el-select v-model="dynamicValidateForm.labe2" placeholder="请选择" @change="onchange">
-                 
-                    <el-option v-for="(item, index) in labelData" :key="index + item" :label="item.label" :value="item.label" style="width:250px;">
-                    </el-option>
-                </el-select>
-					<!-- </el-select> -->
-					<el-button type="text" size="small" v-show="yewu.length < 0"
-						>去添加</el-button
-					>
-				</el-form-item>
-				<el-form-item
-					label="回源路径:"
-					:label-width="formLabelWidth"
-					prop="hui_path"
-					:rules="[
-						{ validator: jiolu, trigger: 'blur', required: true },
-					]"
-				>
-					<el-input
-						class="other_bgc"
-						v-model="dynamicValidateForm.hui_path"
-						placeholder="2~1024个字符，首位字符固定为“/”"
-						autocomplete="off"
+					}">
 
-					></el-input>
-				</el-form-item>
-				<el-form-item
-					label="播放路径:"
-					:label-width="formLabelWidth"
-					prop="play_path"
-					:rules="[
+          <el-select v-model="dynamicValidateForm.labe2" placeholder="请选择" @change="onchange" :disabled="inputStatus">
+
+            <el-option v-for="(item, index) in labelData" :key="index + item" :label="item.label" :disabled="item.disabled"  :value="item.label" style="width:250px;">
+            </el-option>
+          </el-select>
+          <el-button type="text" size="small" v-show="yewu.length < 0">去添加</el-button>
+        </el-form-item>
+        <el-form-item label="回源路径:" :label-width="formLabelWidth" prop="hui_path" :rules="[
 						{ validator: jiolu, trigger: 'blur', required: true },
-					]"
-				>
-					<el-input
-						class="other_bgc"
-						v-model="dynamicValidateForm.play_path"
-						placeholder="2~1024个字符，首位字符固定为“/”"
-						autocomplete="off"
-			
-					></el-input>
-				</el-form-item>
-				<el-form-item
-					label="视频格式"
-					:label-width="formLabelWidth"
-					prop="radio"
-					:rules="{
+					]">
+          <el-input class="other_bgc" v-model="dynamicValidateForm.hui_path" placeholder="2~1024个字符，首位字符固定为“/”" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="播放路径:" :label-width="formLabelWidth" prop="play_path" :rules="[
+						{ validator: jiolu, trigger: 'blur', required: true },
+					]">
+          <el-input class="other_bgc" v-model="dynamicValidateForm.play_path" placeholder="2~1024个字符，首位字符固定为“/”" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="视频格式" :label-width="formLabelWidth" prop="radio" :rules="{
 						required: true,
 						message: '业务类型不能为空',
 						trigger: 'blur',
-					}"
-				>
-					<el-select
-						v-model="dynamicValidateForm.radio"
-						placeholder="请选择"
-					>
-						<el-option
-							v-for="(item, index) in yewu"
-							:key="index"
-							:label="item.label"
-							:value="item.value"
-						></el-option>
-					</el-select>
-				</el-form-item>
-				<!-- <el-form-item label="视频终端:" :label-width="formLabelWidth" prop="labe2" :rules="{
-            required: true,
-            message: '视频终端不能为空',
-            trigger: 'blur'
-          }">
-                <el-select v-model="dynamicValidateForm.labe2" placeholder="请选择" @change="onchange">
-                    <el-option v-for="(item, index) in labelData" :key="index + item" :label="item.label" :value="item" style="width:250px;"></el-option>
-                </el-select>
-            </el-form-item> -->
-				<!-- <el-form-item label="标签:" :label-width="formLabelWidth" prop="labe1" :rules="[{ validator: jiozhu, trigger: 'blur' }]">
-                <el-input class="other_bgc" v-model="dynamicValidateForm.labe1" placeholder="4~64个字符，英文，英文加数字组合" autocomplete="off"></el-input>
-            </el-form-item> -->
-			</el-form>
-			<p>
-				<!-- 说明：用户可以自定义标签设置，标签设置为自选项，标签设置的作用是保护源站信息隐藏不被泄露，防止黑客攻击 -->
-			</p>
-			<div slot="footer" class="add_urlfooter">
-				<el-button
-					type="primary"
-					@click="dialogFormVisiblea('dynamicValidateForm')"
-					style="width:96px;height:36px;background:rgba(41,122,255,1);border-radius:2px;"
-					>确 定</el-button
-				>
-				<el-button
-					@click="dialogFormVisibles('dynamicValidateForm')"
-					style="width:96px;height:36px;background:rgba(225,225,225,1);border-radius:2px;color:#666666;"
-					>取 消</el-button
-				>
-			</div>
-		</div>
-	</div>
+					}">
+          <el-select v-model="dynamicValidateForm.radio" placeholder="请选择">
+            <el-option v-for="(item, index) in yewu" :key="index" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+
+      </el-form>
+      <p>
+        <!-- 说明：用户可以自定义标签设置，标签设置为自选项，标签设置的作用是保护源站信息隐藏不被泄露，防止黑客攻击 -->
+      </p>
+      <div slot="footer" class="add_urlfooter">
+        <el-button type="primary" @click="dialogFormVisiblea('dynamicValidateForm')" style="width:96px;height:36px;background:rgba(41,122,255,1);border-radius:2px;">确 定</el-button>
+        <el-button @click="dialogFormVisibles('dynamicValidateForm')" style="width:96px;height:36px;background:rgba(225,225,225,1);border-radius:2px;color:#666666;">取 消</el-button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { add_url, getterminal, check_label,query_domain } from "../../servers/api";
+import {
+  add_url,
+  getterminal,
+  check_label,
+  query_domain,
+  query_domain_for_admin
+} from "../../servers/api";
 export default {
   data() {
     return {
+      inputStatus:true,
       dynamicValidateForm: {
         url_name: "",
         url_content: "",
@@ -182,14 +91,14 @@ export default {
         newbuser_id: "",
         bind_id: "",
         hui_path: "",
-        domain_id:"",
+        domain_id: "",
         play_path: "",
       },
-      newActiveFrom:{
-          buser_id:""
+      newActiveFrom: {
+        buser_id: "",
       },
       formLabelWidth: "114px",
-      domainList:[],
+      domainList: [],
       yewu: [
         {
           value: 0,
@@ -218,12 +127,11 @@ export default {
       pageActive: 0,
       nowcharId: "",
       pageActive: 0,
-      domain_id_active:""
+      domain_id_active: "",
     };
   },
   mounted: function() {
-    
-    this.queryInfoLabel()
+    //this.queryInfoLabel();
   },
   methods: {
     onchanidChange() {
@@ -234,15 +142,18 @@ export default {
       if (
         this.dynamicValidateForm.newbuser_id != this.dynamicValidateForm.bind_id
       ) {
+        this.inputStatus=false
+         this.labelData=[]
+
         this.queryInfoLabel();
       }
       return false;
     },
     onchange(val) {
-      console.log(val)
+      console.log(val);
       this.nowcharId = val.chanid;
-      this.dynamicValidateForm.labe2=val
-      this.domain_id_active=val
+      this.dynamicValidateForm.labe2 = val;
+      this.domain_id_active = val;
     },
     //字符长度限制
     getStringWidth(val) {
@@ -258,7 +169,7 @@ export default {
       return len;
     },
     //查询副标签
-    queryInfoLabel(){
+    queryInfoLabel() {
       let param = new Object();
 
       // param.chanid = this.dynamicValidateForm.newbuser_id;
@@ -266,31 +177,35 @@ export default {
       // if (param.chanid.length != 12) {
       //     return false;
       // }
-       param.buser_id="158000000011",
-    param.domain="",
-    param.state= -1,
-    param.start_time= 0,
-    param.end_time= 0,
-    param.order= 0,
-    param.page=  0
+      (param.buser_id = this.dynamicValidateForm.newbuser_id),
+        (param.domain = ""),
+        (param.state = -1),
+        (param.start_time = 0),
+        (param.end_time = 0),
+        (param.order = 0),
+     
       param.page = this.pageActive;
-      query_domain(param)
+      query_domain_for_admin(param)
         .then(res => {
-          console.log(res)
-          if (res.status == 0) 
-          
-          res.data.result.forEach((item, index) => {
-            let obj = {};
-            obj.value = item.domain_id;
-            // obj.label =
-            //   "渠道ID（" + item.chanid + "）--" + item.name + "--" + item.type;
-            // obj.chanid = item.chanid;
-          // this.labelData = [];
-             obj.label=item.domain
-            this.labelData.push(obj);
-          });
-          console.log(this.labelData)
-          console.log(res.data.remaining)
+          if (res.status == 0)
+            res.data.result.forEach((item, index) => {
+              
+              let obj = {};
+              obj.value = item.domain_id;
+              // obj.label =
+              //   "渠道ID（" + item.chanid + "）--" + item.name + "--" + item.type;
+              // obj.chanid = item.chanid;
+              // this.labelData = [];
+              obj.label = item.domain;
+                if(item.state==1){
+                  obj.disabled=false
+                }else{
+ obj.disabled=true
+                }
+              this.labelData.push(obj);
+            });
+          console.log(this.labelData.length);
+          console.log(res.data.remaining);
           if (res.data.remaining == 0) {
             return false;
           } else {
@@ -340,9 +255,9 @@ export default {
             // parmise.label2 = this.dynamicValidateForm.labe2.value;
             parmise.buser_id = this.dynamicValidateForm.newbuser_id + "";
             parmise.create_time = parseInt(new Date().getTime() / 1000);
-           parmise.domain = this.dynamicValidateForm.labe2
+            parmise.domain = this.dynamicValidateForm.labe2;
             //parmise.domain_id = this.dynamicValidateForm.labe1;
-            
+
             let newparam = new Object();
             let data_array = [];
             data_array.push(parmise);
@@ -567,17 +482,15 @@ export default {
       if (value === "") {
         callback(new Error("请输入加速内容名称"));
       } else {
-        
         var resyzm = /^[\u4e00-\u9fa5a-zA-Z0-9]{4,50}$/;
         if (this.getBLen(value) > 50) {
           callback(new Error("加速内容名称不能超出50个字符"));
         } else if (this.getBLen(value) < 4) {
           callback(new Error("加速内容名称不能少于4个字符"));
-        } 
-        // else if (resyzm.test(value) === false) {
-        // //   callback(new Error("加速内容名称格式错误"));
-        // // }
-         else {
+        } else {
+          // else if (resyzm.test(value) === false) {
+          // //   callback(new Error("加速内容名称格式错误"));
+          // // }
           callback();
         }
       }
@@ -588,15 +501,14 @@ export default {
         callback(new Error("路径不能为空"));
       } else {
         var resyzm = /^\/{1}[0-9a-zA-Z/]{2,1024}$/;
-          if (this.getBLen(value) > 1024) {
+        if (this.getBLen(value) > 1024) {
           callback(new Error("内容不能超出1024个字符"));
         } else if (this.getBLen(value) < 2) {
           callback(new Error("内容不能少于2个字符"));
-        } 
-      //    else if (resyzm.test(value) === false) {
-      //     callback(new Error("加速内容名称格式错误"));
-      //  }
-       else {
+        } else {
+          //    else if (resyzm.test(value) === false) {
+          //     callback(new Error("加速内容名称格式错误"));
+          //  }
           callback();
         }
       }

@@ -793,7 +793,9 @@ export default {
                     message: "添加成功",
                   });
                   this.common.monitoringLogs("新增", "新增域名", 1);
-                } else {
+                }
+                
+                else {
                   this.$message({
                     type: "error",
                     message: "添加失败",

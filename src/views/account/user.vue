@@ -1,7 +1,7 @@
 <template>
 <div class="content">
     <el-breadcrumb separator="/">
-        <el-breadcrumb-item>用户管理2</el-breadcrumb-item>
+        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
     </el-breadcrumb>
     <section class="myself-container">
         <div class="device_form">
@@ -716,12 +716,13 @@ export default {
         (this.ruleForm3.password = ""),
         (this.ruleForm3.password2 = ""),
         (this.ruleForm3.role_id = 0);
-
+        
       if (val.status == "启用") {
         this.ruleForm3.status = 1;
       } else {
         this.ruleForm3.status = 0;
       }
+
       let param = new Object();
       param = this.ruleForm3;
           this.ruleForm3.uid = VueCookies.get("adminid");
@@ -731,7 +732,8 @@ export default {
         type: "warning"
       })
         .then(() => {
-          userupdate(param).then(data => {
+           if (val.status == "启用") {
+              userupdate(param).then(data => {
             this.dialogVisible2 = false;
             let { msg, status, user } = data;
             if (status !== 0) {
@@ -739,17 +741,43 @@ export default {
                 message: msg,
                 type: "error"
               });
-              this.common.monitoringLogs("新增", "增加用户", 0);
+              this.common.monitoringLogs("修改", "禁用用户", 0);
             } else {
               this.$message({
-                message: "操作成功",
+                message: "禁用用户成功",
                 type: "success"
               });
-              this.common.monitoringLogs("新增", "增加用户", 1);
+              this.common.monitoringLogs("修改", "禁用用户", 1);
 
               this.queryUserList();
             }
           });
+
+           }
+           else{
+                 userupdate(param).then(data => {
+            this.dialogVisible2 = false;
+            let { msg, status, user } = data;
+            if (status !== 0) {
+              this.$message({
+                message: msg,
+                type: "error"
+              });
+              this.common.monitoringLogs("修改", "启用用户", 0);
+            } else {
+              this.$message({
+                message: "启用用户成功",
+                type: "success"
+              });
+              this.common.monitoringLogs("修改", "启用用户", 1);
+
+              this.queryUserList();
+            }
+          });
+
+
+           }
+         
         })
         .catch(() => {});
     },

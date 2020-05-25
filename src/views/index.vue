@@ -146,11 +146,15 @@ export default {
         .then(() => {
           sessionStorage.removeItem("user");
           sessionStorage.removeItem("id");
-          _this.$cookies.set("adminuser", "", 0);
-          _this.$cookies.set("adminid", "", 0);
+             _this.$cookies.remove('adminuser');
+          _this.$cookies.remove('adminid');
+          // _this.$cookies.set("adminuser", "", 0);
+          // _this.$cookies.set("adminid", "", 0);
           _this.$router.push("/");
         })
-        .catch(() => {});
+        .catch(error => {
+          console.log(error)
+        });
     },
     //折叠导航栏
     collapse: function() {

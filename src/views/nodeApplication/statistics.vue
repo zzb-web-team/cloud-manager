@@ -1,354 +1,507 @@
 <template>
-<section class="myself-container content">
+  <section class="myself-container content">
     <div class="top_title">统计分析</div>
     <!-- <div class="user-title" style="display: flex;flex-flow: column;width: 1240px;margin: auto;"> -->
     <div class="user-title">
-        <div class="statisics_con">
-            <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="PV/UV" name="first">
-                    <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                        <el-input v-model="value1Activechanid" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-                        <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-                        <el-select v-model="value_a3" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata()">
-                            <el-option label="全部" value="*"></el-option>
-                            <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
+      <div class="statisics_con">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="PV/UV" name="first">
+            <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
 
-                        <el-button-group>
-                            <el-button v-show="!shoudzy" @click="today(0)">今天</el-button>
-                            <el-button v-show="!shoudzy" @click="yesterday(0)">昨天</el-button>
-                            <el-button v-show="!shoudzy" @click="sevendat(0)">近7天</el-button>
-                            <el-button v-show="!shoudzy" @click="thirtyday(0)">近30天</el-button>
-                            <el-button @click="showzdy">自定义<i class="el-icon-date"></i></el-button>
-                        </el-button-group>
-                        <el-date-picker v-show="shoudzy" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-                        <el-button style="margin-left:10px;" type="primary" @click="seachtu(0)">查询</el-button>
-                    </div>
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata()">
+                <el-option label="全部" value="*"></el-option>
+                <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
+              </el-select>
 
-                    <div class="user_item">
-                        <div class="item_left">
-                            <div class="item_text">总访问次数(pv)</div>
-                            <div class="item_count">
-                                <span>{{ totalPV }}</span>GB
-                            </div>
+              <el-button-group>
+                <el-button v-show="!shoudzy" @click="today(0)">今天</el-button>
+                <el-button v-show="!shoudzy" @click="yesterday(0)">昨天</el-button>
+                <el-button v-show="!shoudzy" @click="sevendat(0)">近7天</el-button>
+                <el-button v-show="!shoudzy" @click="thirtyday(0)">近30天</el-button>
+                <el-button @click="showzdy">自定义
+                  <i class="el-icon-date"></i>
+                </el-button>
+              </el-button-group>
+              <el-date-picker v-show="shoudzy" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-button style="margin-left:10px;" type="primary" @click="seachtu(0)">查询</el-button>
+            </div>
+
+            <div class="user_item">
+              <div class="item_left">
+                <div class="item_text">总访问次数(pv)</div>
+                <div class="item_count">
+                  <span>{{ totalPV }}</span>GB
+                </div>
+              </div>
+              <div class="item_right">
+                <div class="item_text">独立IP访问数(pv)</div>
+                <div class="item_count">
+                  <span>{{ totalUV }}</span>MB/s
+                </div>
+              </div>
+            </div>
+            <div class="device_form">
+              <div id="myChart" :style="{ height: '607px' }"></div>
+            </div>
+
+          </el-tab-pane>
+
+          <el-tab-pane label="访问用户分布" name="second">
+            <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata1()">
+                <el-option label="全部" value="*"></el-option>
+                <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
+              </el-select>
+              <el-button-group>
+                <el-button v-show="!shoudzyx" @click="today(1)">今天</el-button>
+                <el-button v-show="!shoudzyx" @click="yesterday(1)">昨天</el-button>
+                <el-button v-show="!shoudzyx" @click="sevendat(1)">近7天</el-button>
+                <el-button v-show="!shoudzyx" @click="thirtyday(1)">近30天</el-button>
+                <el-button @click="showzdyx">自定义
+                  <i class="el-icon-date"></i>
+                </el-button>
+              </el-button-group>
+              <el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
+            </div>
+            <div class="device_form" style>
+              <el-button-group style="display: flex;justify-content: center;">
+                <el-button @click="goarea()">地区</el-button>
+                <el-button @click="gosupplier()">供应商</el-button>
+              </el-button-group>
+              <div id="myChart1" :style="{ height: '607px' }"></div>
+            </div>
+            <div class="devide_table">
+              <el-row type="flex" class="row_active">
+                <el-col :span="24" style="text-align:left;    font-weight: bold;padding-left:10px;">IP流量平均利用率表</el-col>
+              </el-row>
+              <el-row type="flex" class="row_active">
+                <el-col :span="24">
+                  <el-table :data="tablecdn" border stripe style="width: 100%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table-column label="播放URL">
+                      <template slot-scope="scope">
+                        <div v-if="scope.row.region">
+                          {{ scope.row.region }}
                         </div>
-                        <div class="item_right">
-                            <div class="item_text">独立IP访问数(pv)</div>
-                            <div class="item_count">
-                                <span>{{ totalUV }}</span>MB/s
-                            </div>
-                        </div>
-                    </div>
-                    <div class="device_form">
-                        <div id="myChart" :style="{ height: '607px' }"></div>
-                    </div>
+                        <div v-else>{{ scope.row.isp }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="流量">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.accessCnt }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="流量占比">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.accessPercent }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="访问次数">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.accessPercent }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="访问占比">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.accessPercent }}</div>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </el-col>
+              </el-row>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="播放加速内容" name="there">
+            <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
 
-                </el-tab-pane>
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata2()">
+                <el-option label="全部" value="*"></el-option>
+                <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
+              </el-select>
 
-                <el-tab-pane label="访问用户分布" name="second">
-                    <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                          <el-input v-model="value1Activechanid" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-                        <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-                        <el-select v-model="value_a3" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata1()">
-                            <el-option label="全部" value="*"></el-option>
-                            <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
+              <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-button style="margin-left:10px;" type="primary" @click="seachtu(2)">确定</el-button>
+            </div>
+            <div class="device_form" style>
+              <div id="myChart2" :style="{ height: '607px' }"></div>
+            </div>
 
-                          
-                        <el-button-group>
-                            <el-button v-show="!shoudzyx" @click="today(1)">今天</el-button>
-                            <el-button v-show="!shoudzyx" @click="yesterday(1)">昨天</el-button>
-                            <el-button v-show="!shoudzyx" @click="sevendat(1)">近7天</el-button>
-                            <el-button v-show="!shoudzyx" @click="thirtyday(1)">近30天</el-button>
-                            <el-button @click="showzdyx">自定义<i class="el-icon-date"></i></el-button>
-                        </el-button-group>
-                        <el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-                        <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
-                    </div>
-                    <!-- <div class="device_form" style>
-                        <el-button-group style="display: flex;justify-content: center;">
-                            <el-button @click="goarea()">地区</el-button>
-                            <el-button @click="gosupplier()">供应商</el-button>
-                        </el-button-group>
-                        <div id="myChart1" :style="{ height: '607px' }"></div>
-                    </div> -->
-                    <div class="devide_table">
-                        <el-row type="flex" class="row_active">
-                            <el-col :span="24" style="text-align:left;    font-weight: bold;padding-left:10px;">IP流量平均利用率表</el-col>
-                        </el-row>
-                        <el-row type="flex" class="row_active">
-                            <el-col :span="24">
-                                <el-table :data="tablecdn" border stripe style="width: 100%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                                    <el-table-column label="播放URL"><template slot-scope="scope">
-                                            <div v-if="scope.row.region">
-                                                {{ scope.row.region }}
-                                            </div>
-                                            <div v-else>{{ scope.row.isp }}</div>
-                                        </template></el-table-column>
-                                    <el-table-column label="流量">
-                                        <template slot-scope="scope">
-                                            <div>{{ scope.row.accessCnt }}</div>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column label="流量占比">
-                                        <template slot-scope="scope">
-                                            <div>{{ scope.row.accessPercent }}</div>
-                                        </template>
-                                    </el-table-column>
-                                     <el-table-column label="访问次数">
-                                        <template slot-scope="scope">
-                                            <div>{{ scope.row.accessPercent }}</div>
-                                        </template>
-                                    </el-table-column>
-                                     <el-table-column label="访问占比">
-                                        <template slot-scope="scope">
-                                            <div>{{ scope.row.accessPercent }}</div>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane label="播放加速内容" name="there">
-                    <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                        
-                        <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-                        <el-select v-model="value_a3" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata2()">
-                            <el-option label="全部" value="*"></el-option>
-                            <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
-                        </el-select>
+            <div class="devide_table">
+              <el-row type="flex" class="row_active">
+                <el-col :span="24" style="text-align:left;font-weight: bold;padding-left:10px;">IP流量平均利用率表</el-col>
+              </el-row>
+              <el-row type="flex" class="row_active">
+                <el-col :span="24">
+                  <el-table :data="tablecdn2" border stripe style="width: 100%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table-column label="加速内容名称">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.fileId }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="视频名称">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.fileName }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="流量">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.fileSize | aaa }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="流量占比">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.accessDataFlow | aaa }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="访问次数">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.accessDataFlow | aaa }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="访问占比">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.accessDataFlow | aaa }}</div>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                  <!-- <fenye style="float:right;margin:10px 0 20px 0;" @fatherMethod="getpage" @fathernum="gettol" :pagesa="total_cnt"></fenye> -->
 
-                        <el-date-picker  style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-                        <el-button style="margin-left:10px;" type="primary" @click="seachtu(2)">确定</el-button>
-                    </div>
-                 
-                    <div class="devide_table">
-                        <el-row type="flex" class="row_active">
-                            <el-col :span="24" style="text-align:left;font-weight: bold;padding-left:10px;">IP流量平均利用率表</el-col>
-                        </el-row>
-                        <el-row type="flex" class="row_active">
-                            <el-col :span="24">
-                                <el-table :data="tablecdn2" border stripe style="width: 100%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                                    <el-table-column label="加速内容名称"><template slot-scope="scope">
-                                            <div>{{ scope.row.fileId }}</div>
-                                        </template></el-table-column>
-                                    <el-table-column label="视频名称">
-                                        <template slot-scope="scope">
-                                            <div>{{ scope.row.fileName }}</div>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column label="流量">
-                                        <template slot-scope="scope">
-                                            <div>{{ scope.row.fileSize | aaa }}</div>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column label="流量占比">
-                                        <template slot-scope="scope">
-                                            <div>{{ scope.row.accessDataFlow | aaa }}</div>
-                                        </template>
-                                    </el-table-column>
-                                       <el-table-column label="访问次数">
-                                        <template slot-scope="scope">
-                                            <div>{{ scope.row.accessDataFlow | aaa }}</div>
-                                        </template>
-                                    </el-table-column>
-                                       <el-table-column label="访问占比">
-                                        <template slot-scope="scope">
-                                            <div>{{ scope.row.accessDataFlow | aaa }}</div>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                                <fenye style="float:right;margin:10px 0 20px 0;" @fatherMethod="getpage" @fathernum="gettol" :pagesa="total_cnt"></fenye>
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-tab-pane>
-            </el-tabs>
-        </div>
+                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
+                </el-col>
+              </el-row>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
     </div>
-</section>
+  </section>
 </template>
 
 <script>
-import {
-    dateToMs,
-    getymdtime
-} from "../../servers/sevdate";
+import { dateToMs, getymdtime } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
 import {
-    pv_uv_query_conditions,
-    pv_uv_curve,
-    region_query_conditions,
-    query_topregion_accesscnt_curve,
-    isp_query_conditions,
-    query_topisp_accesscnt_curve,
-    query_playtimes_conditions,
-    query_playtimes_curve,
-    query_playdata_table,
-    getvideo
+  pv_uv_query_conditions,
+  pv_uv_curve,
+  region_query_conditions,
+  query_topregion_accesscnt_curve,
+  isp_query_conditions,
+  query_topisp_accesscnt_curve,
+  query_playtimes_conditions,
+  query_playtimes_curve,
+  query_playdata_table,
+  getvideo,
+  export_pv_uv_curve_file,
+  export_playtimes_curve_file,
+  export_topregion_accesscnt_curve_file,
 } from "../../servers/api";
 import echarts from "echarts";
-import common from '../../comm/js/util'
+import common from "../../comm/js/util";
 
 export default {
-    data() {
-        return {
-             options3: [
+  data() {
+    return {
+      currentPage: 1,
+      pagesize: 10,
+      total_cnt: 0,
+      value1fileName: "",
+      valueacce: "",
+      options3: [
         {
-            value:"1",
-          label: "终端1"
+          value: "1",
+          label: "终端1",
         },
 
         {
-              value:"2",
-          label: "终端2"
+          value: "2",
+          label: "终端2",
         },
 
         {
-              value:"3",
-          label: "终端3"
+          value: "3",
+          label: "终端3",
         },
-     
       ],
-   
-          activeDq:true,
-          activeGys:false,
-            shoudzy: false,
-            shoudzyx: false,
-            shoudzyz: false,
-            value1Active: "",
-            value1Activechanid:"",
-            options1Active: [],
-            optionsa1: [],
-            optionsa2: [],
-            optionsa3: [],
-            optionsb1: [],
-            optionsb2: [],
-            optionsb3: [],
-            optionsc1: [],
-            optionsc2: [],
-            optionsc3: [],
-            value_a1: "",
-            value_a2: "",
-            value_a3: "",
-            value_b1: "",
-            value_b2: "",
-            value_b3: "",
-            value_c1: "",
-            value_c2: "",
-            value_c3: "",
-            pageSize: 10, //煤业
-            pageNo: 1, //页码
-            total_cnt: 1, //数据总量
-            tablecdn: [],
-            tablecdn2: [],
-            activeName: "first",
-            totalPV: 0,
-            totalUV: 0,
-            twob: false,
-            pickerOptions: {
-                shortcuts: [{
-                        text: "昨天",
-                        onClick(picker) {
-                            const end = new Date(
-                                new Date(new Date().toLocaleDateString()).getTime()
-                            );
-                            const start =
-                                new Date(new Date(new Date().toLocaleDateString()).getTime()) -
-                                3600 * 1000 * 24 * 1;
-                            picker.$emit("pick", [start, end]);
-                        }
-                    },
-                    {
-                        text: "今天",
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date(
-                                new Date(new Date().toLocaleDateString()).getTime()
-                            );
-                            picker.$emit("pick", [start, end]);
-                        }
-                    },
-                    {
-                        text: "最近一周",
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date(
-                                new Date(new Date().toLocaleDateString()).getTime()
-                            );
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
-                            picker.$emit("pick", [start, end]);
-                        }
-                    },
-                    {
-                        text: "最近一个月",
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date(
-                                new Date(new Date().toLocaleDateString()).getTime()
-                            );
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 29);
-                            picker.$emit("pick", [start, end]);
-                        }
-                    }
-                ],
-                disabledDate(time) {
-                    return time.getTime() > Date.now();
-                }
+
+      activeDq: true,
+      activeGys: false,
+      shoudzy: false,
+      shoudzyx: false,
+      shoudzyz: false,
+      value1Active: "",
+      value1Activechanid: "",
+      options1Active: [],
+      optionsa1: [],
+      optionsa2: [],
+      optionsa3: [],
+      optionsb1: [],
+      optionsb2: [],
+      optionsb3: [],
+      optionsc1: [],
+      optionsc2: [],
+      optionsc3: [],
+      value_a1: "",
+      value_a2: "",
+      value_a3: "",
+      value_b1: "",
+      value_b2: "",
+      value_b3: "",
+      value_c1: "",
+      value_c2: "",
+      value_c3: "",
+      pageSize: 10, //煤业
+      pageNo: 1, //页码
+      total_cnt: 1, //数据总量
+      tablecdn: [],
+      tablecdn2: [],
+      activeName: "first",
+      totalPV: 0,
+      totalUV: 0,
+      twob: false,
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "昨天",
+            onClick(picker) {
+              const end = new Date(
+                new Date(new Date().toLocaleDateString()).getTime()
+              );
+              const start =
+                new Date(new Date(new Date().toLocaleDateString()).getTime()) -
+                3600 * 1000 * 24 * 1;
+              picker.$emit("pick", [start, end]);
             },
-            value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-            val2: [],
-            starttime: "",
-            endtime: "",
-            timeUnit: 60,
-            chanid: "",
-            uvArray: [], //图一y1
-            pvArray: [], //图一y2
-            timeArray: [], //图一x
-            playTimesArray1: [], //图二y
-            timeArray1: [], //图二x
-            playTimesArray2: [], //图三y
-            timeArray2: [], //图三x
-            options1chanid: [
-
-            ],
-            value1Activechanid: "",
-        };
-    },
-    filters: {
-        setthtim(data) {
-            var stat = getymdtime(data);
-            return stat;
+          },
+          {
+            text: "今天",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date(
+                new Date(new Date().toLocaleDateString()).getTime()
+              );
+              picker.$emit("pick", [start, end]);
+            },
+          },
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date(
+                new Date(new Date().toLocaleDateString()).getTime()
+              );
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
+              picker.$emit("pick", [start, end]);
+            },
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date(
+                new Date(new Date().toLocaleDateString()).getTime()
+              );
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 29);
+              picker.$emit("pick", [start, end]);
+            },
+          },
+        ],
+        disabledDate(time) {
+          return time.getTime() > Date.now();
         },
-        aaa(data) {
-            var liu = (data / 1024 / 1024 / 1024).toFixed(4);
-            return liu;
-        }
+      },
+      value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
+      val2: [],
+      starttime: "",
+      endtime: "",
+      timeUnit: 60,
+      chanid: "",
+      uvArray: [], //图一y1
+      pvArray: [], //图一y2
+      timeArray: [], //图一x
+      playTimesArray1: [], //图二y
+      timeArray1: [], //图二x
+      playTimesArray2: [], //图三y
+      timeArray2: [], //图三x
+      options1chanid: [],
+      value1Activechanid: "",
+    };
+  },
+  filters: {
+    setthtim(data) {
+      var stat = getymdtime(data);
+      return stat;
     },
-    components: {
-        fenye
+    aaa(data) {
+      var liu = (data / 1024 / 1024 / 1024).toFixed(4);
+      return liu;
     },
-    mounted() {
-        // if (this.$cookies.get("id")) {
-        //   this.chanid = this.$cookies.get("id") * 1;
-        // } else {
-        //   this.$router.push({ path: "/" });
-        // }
-        this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-        this.endtime = Date.parse(new Date()) / 1000;
+  },
+  components: {
+    fenye,
+  },
+  mounted() {
+    // if (this.$cookies.get("id")) {
+    //   this.chanid = this.$cookies.get("id") * 1;
+    // } else {
+    //   this.$router.push({ path: "/" });
+    // }
+    this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+    this.endtime = Date.parse(new Date()) / 1000;
 
-        this.getseach(0);
+    this.getseach(0);
+  },
+  beforeDestroy() {
+    if (!this.chart) {
+      return;
+    }
+    this.chart.dispose();
+    this.chart = null;
+  },
+  methods: {
+    //访问用户分布导出
+    exoprtant_accesscnt() {
+      let params = new Object();
+      params.chanId = this.chanid + "";
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      params.time_unit = this.timeUnit;
+      if (this.value1fileName) {
+        params.fileName = this.value1fileName;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.value_b2) {
+        params.region = this.value_b2;
+      } else {
+        params.region = "*";
+      }
+      if (this.value_b3) {
+        params.isp = this.value_b3;
+      } else {
+        params.isp = "*";
+      }
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.valueacce !== "") {
+        params.acce = this.valueacce;
+      } else {
+        params.acce = "*";
+      }
+      params.top = 10;
+      // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
+      params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+      // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
+      params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+      export_topregion_accesscnt_curve_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {});
     },
-    beforeDestroy() {
-        if (!this.chart) {
-            return;
-        }
-        this.chart.dispose();
-        this.chart = null;
+    //加速内容导出
+    exoprtant_content() {
+      let params = new Object();
+      params.chanId = this.chanid + "";
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      params.time_unit = this.timeUnit;
+      if (this.value1fileName) {
+        params.fileName = this.value1fileName;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.value_b2) {
+        params.region = this.value_b2;
+      } else {
+        params.region = "*";
+      }
+      if (this.value_b3) {
+        params.isp = this.value_b3;
+      } else {
+        params.isp = "*";
+      }
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.valueacce !== "") {
+        params.acce = this.valueacce;
+      } else {
+        params.acce = "*";
+      }
+      params.top = 10;
+      // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
+      params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+      export_playtimes_curve_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {});
     },
-    methods: {
-         //输入渠道ID查询
+    //PV/UV导出
+    exoprtant_pupv() {
+      let params = new Object();
+      params.chanId = this.chanid + "";
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      params.time_unit = this.timeUnit;
+
+      if (this.value1fileName) {
+        params.fileName = this.value1fileName;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.value_a2[1]) {
+        params.region = this.value_a2[1];
+      } else {
+        params.region = "*";
+      }
+      if (this.value_a3) {
+        params.isp = this.value_a3;
+      } else {
+        params.isp = "*";
+      }
+
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.valueacce !== "") {
+        params.acce = this.valueacce;
+      } else {
+        params.acce = "*";
+      }
+
+      this.uvArray = [];
+      this.pvArray = [];
+      this.timeArray = [];
+      // params.time_unit = this.common.timeUnit(this.starttime, this.endtime),
+      params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+      export_pv_uv_curve_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {});
+    },
+    //输入渠道ID查询
     onchanidChange() {
       this.options1chanid = [];
       this.pageActive = 0;
@@ -388,828 +541,942 @@ export default {
           console.log(error);
         });
     },
-        //获取页码
-        getpage(pages) {
-            this.pageNo = pages;
-            this.gettable();
-        },
-        //获取每页数量
-        gettol(pagetol) {
-            this.pagesize = pagetol;
-            // this.getuserlist();
-        },
-        getdata() {
-            this.getseach(0);
-        },
-        getdata1() {
-            this.getseach(1);
-        },
-        getdata2() {
-            this.getseach(3);
-        },
-        //请求数据--查询条件
-        getseach(data) {
-            this.val2 = [];
-            let params = new Object();
-            params.chanId = "*";
-            if (data == 0) {
-                //pv/uv
-                this.optionsa1 = [];
-                this.optionsa2 = [];
-                this.optionsa3 = [];
-                pv_uv_query_conditions(params)
-                    .then(res => {
-                        res.data.fileNameSet.forEach((item, index) => {
-                            let obj = {};
-                            obj.label = item;
-                            obj.value = index;
-                            this.optionsa1.push(obj);
-                        });
-                        res.data.regionSet.forEach((item, index) => {
-                            let obj = {};
-                            obj.label = item;
-                            obj.value = index;
-                            this.optionsa2.push(obj);
-                        });
-                        res.data.ispSet.forEach((item, index) => {
-                            let obj = {};
-                            obj.label = item;
-                            obj.value = index;
-                            this.optionsa3.push(obj);
-                        });
-                        res.data.chanIdSet.forEach((item, index) => {
-                            let obj = {};
-                            obj.label = item;
-                            obj.value = index;
-                            this.options1Active.push(obj);
-                        });
-                        this.getcure(0);
-                    })
-                    .catch(err => {});
-            } else if (data == 1) {
-                //地区
-                // this.optionsb1 = [];
-                this.activeDq=true
-                this.activeGys=false
-                this.optionsb2 = [];
-                this.optionsb3 = [];
-                region_query_conditions(params)
-                    .then(res => {
-                        if (res.data.ispSet.length == 0 || res.data.fileNameSet == 0) {
-                            return false;
-                        }
-                        res.data.fileNameSet.forEach((item, index) => {
-                            let obj = {};
-                            obj.label = item;
-                            obj.value = index;
-                            this.optionsb2.push(obj);
-                        });
-                        res.data.ispSet.forEach((item, index) => {
-                            let obj = {};
-                            obj.label = item;
-                            obj.value = index;
-                            this.optionsb3.push(obj);
-                        });
-                        this.getcure(1);
-                    })
-                    .catch(err => {});
-            } else if (data == 2) {
-                //运营商
-                    //    alert("运营商")
-                          this.activeDq=false
-                this.activeGys=true
-                // this.optionsb1 = [];
-                this.optionsb2 = [];
-                this.optionsb3 = [];
-                isp_query_conditions(params)
-                    .then(res => {
-                        if (res.data.regionSet.length == 0 || res.data.fileNameSet == 0) {
-                            return false;
-                        }
-                        res.data.regionSet.forEach((item, index) => {
-                            let obj = {};
-                            obj.label = item;
-                            obj.value = index;
-                            this.optionsb3.push(obj);
-                        });
-                        res.data.fileNameSet.forEach((item, index) => {
-                            let obj = {};
-                            obj.label = item;
-                            obj.value = index;
-                            this.optionsb2.push(obj);
-                        });
+    //获取页码
+    handleCurrentChange(pages) {
+      this.pageNo = pages;
+      this.gettable();
+    },
+    //获取每页数量
+    handleSizeChange(pagetol) {
+      this.pagesize = pagetol;
+      // this.getuserlist();
+    },
+    getdata() {
+      this.getseach(0);
+    },
+    getdata1() {
+      this.getseach(1);
+    },
+    getdata2() {
+      this.getseach(3);
+    },
+    //请求数据--查询条件
+    getseach(data) {
+      this.val2 = [];
+      let params = new Object();
+      params.chanId = "*";
+      if (data == 0) {
+        //pv/uv
+        this.optionsa1 = [];
+        this.optionsa2 = [];
+        this.optionsa3 = [];
+        this.options3 = [];
+        pv_uv_query_conditions(params)
+          .then(res => {
+            res.data.fileNameSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.optionsa1.push(obj);
+            });
+            res.data.regionSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.optionsa2.push(obj);
+            });
+            res.data.ispSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.optionsa3.push(obj);
+            });
+            res.data.chanIdSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.options1Active.push(obj);
+            });
+            res.data.hashidSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.options3.push(obj);
+            });
+            this.getcure(0);
+          })
+          .catch(err => {});
+      } else if (data == 1) {
+        //地区
+        // this.optionsb1 = [];
+        this.activeDq = true;
+        this.activeGys = false;
+        this.optionsb2 = [];
+        this.optionsb3 = [];
+        this.options3 = [];
+        region_query_conditions(params)
+          .then(res => {
+            if (res.data.ispSet.length == 0 || res.data.fileNameSet == 0) {
+              return false;
+            }
+            res.data.fileNameSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.optionsb2.push(obj);
+            });
+            res.data.ispSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.optionsb3.push(obj);
+            });
+            res.data.hashidSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.options3.push(obj);
+            });
+            this.getcure(1);
+          })
+          .catch(err => {});
+      } else if (data == 2) {
+        //运营商
+        //    alert("运营商")
+        this.activeDq = false;
+        this.activeGys = true;
+        // this.optionsb1 = [];
+        this.optionsb2 = [];
+        this.optionsb3 = [];
+        this.options3 = [];
 
-                        this.getcure(2);
-                    })
-                    .catch(err => {});
-            } else {
-                //播放统计
-                this.optionsc1 = [];
-                this.optionsc2 = [];
-                this.optionsc3 = [];
-                query_playtimes_conditions(params)
-                    .then(res => {
-                        res.data.fileNameSet.forEach((item, index) => {
-                            let obj = {};
-                            obj.label = item;
-                            obj.value = index;
-                            this.optionsc1.push(obj);
-                        });
-                        res.data.regionSet.forEach((item, index) => {
-                            let obj = {};
-                            obj.label = item;
-                            obj.value = index;
-                            this.optionsc2.push(obj);
-                        });
-                        res.data.ispSet.forEach((item, index) => {
-                            let obj = {};
-                            obj.label = item;
-                            obj.value = index;
-                            this.optionsc3.push(obj);
-                        });
-                        this.getcure(3);
-                    })
-                    .catch(err => {});
+        isp_query_conditions(params)
+          .then(res => {
+            if (res.data.regionSet.length == 0 || res.data.fileNameSet == 0) {
+              return false;
             }
-        },
-        //请求数据--曲线图
-        getcure(data) {
-            let params = new Object();
-            params.chanId = this.chanid + "";
-            params.start_ts = this.starttime;
-            params.end_ts = this.endtime;
-            params.time_unit = this.timeUnit;
-            if (data == 0) {
-                if (this.value1Activechanid) {
-                    params.fileName = this.value1Activechanid;
-                } else {
-                    params.fileName = "*";
-                }
-                if (this.value_a2[1]) {
-                    params.region = this.value_a2[1];
-                } else {
-                    params.region = "*";
-                }
-                if (this.value_a3) {
-                    params.isp = this.value_a3;
-                } else {
-                    params.isp = "*";
-                }
+            res.data.regionSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.optionsb3.push(obj);
+            });
+            res.data.fileNameSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.optionsb2.push(obj);
+            });
+            // res.data.hashidSet.forEach((item, index) => {
+            //   let obj = {};
+            //   obj.label = item;
+            //   obj.value = index;
+            //   this.options3.push(obj);
+            // });
 
-                if (this.value1Activechanid !== "") {
-                    params.chanId = this.value1Activechanid;
-                } else {
-                    params.chanId = "*";
-                }
-                this.uvArray = [];
-                this.pvArray = [];
-                this.timeArray = [];
-                // params.time_unit = this.common.timeUnit(this.starttime, this.endtime),
-                            params.time_unit=Math.ceil((this.endtime-this.starttime)/60/12)
+            this.getcure(2);
+          })
+          .catch(err => {});
+      } else {
+        //播放统计
+        this.optionsc1 = [];
+        this.optionsc2 = [];
+        this.optionsc3 = [];
+        this.options3 = [];
 
-                    pv_uv_curve(params)
-                    .then(res => {
-                        if (res.data.uvArray) {
-                            res.data.uvArray.forEach((item, index) => {
-                                this.uvArray.push(Math.floor(item));
-                            });
-                        }
-                        if (res.data.pvArray) {
-                            res.data.pvArray.forEach((item, index) => {
-                                this.pvArray.push(Math.floor(item));
-                            });
-                        }
-                        res.data.timeArray.forEach((item, index) => {
-                            this.timeArray.push(getymdtime(item));
-                        });
-                        this.drawLine();
-                    })
-                    .catch(err => {});
-            } else if (data == 1 || data == 2) {
-                this.tablecdn = [];
-                if (this.value_b1) {
-                    params.fileName = this.value_b1;
-                } else {
-                    params.fileName = "*";
-                }
-                if (this.value_b2) {
-                    params.region = this.value_b2;
-                } else {
-                    params.region = "*";
-                }
-                if (this.value_b3) {
-                    params.isp = this.value_b3;
-                } else {
-                    params.isp = "*";
-                }
-                if (this.value1Activechanid !== "") {
-                    params.chanId = this.value1Activechanid;
-                } else {
-                    params.chanId = "*";
-                }
-                params.top = 10;
-                // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
-                            params.time_unit=Math.ceil((this.endtime-this.starttime)/60/12)
-
-
-                if (data == 1) {
-                    this.playTimesArray1 = [];
-                    this.timeArray1 = [];
-                    query_topregion_accesscnt_curve(params)
-                        .then(res => {
-                            this.playTimesArray1 = res.data.accessCntArray;
-                            this.timeArray1 = res.data.regionArray;
-                            this.drawLine1();
-                            this.tablecdn = res.data.accessCntTable;
-                            this.totalPV = res.data.totalPV;
-                            this.totalUV = res.data.totalUV;
-                        })
-                        .catch(err => {});
-                } else {
-                    this.playTimesArray1 = [];
-                    this.timeArray1 = [];
-                    query_topisp_accesscnt_curve(params)
-                        .then(res => {
-                            this.playTimesArray1 = res.data.accessCntArray;
-                            this.timeArray1 = res.data.ispArray;
-                            this.drawLine1();
-                            this.tablecdn = res.data.accessCntTable;
-                        })
-                        .catch(err => {});
-                }
-            } else {
-                if (this.value_c1) {
-                    params.fileName = this.value_c1;
-                } else {
-                    params.fileName = "*";
-                }
-                if (this.value_c2) {
-                    params.region = this.value_c2;
-                } else {
-                    params.region = "*";
-                }
-                if (this.value_c3) {
-                    params.isp = this.value_c3;
-                } else {
-                    params.isp = "*";
-                }
-                if (this.value1Activechanid !== "") {
-                    params.chanId = this.value1Activechanid;
-                } else {
-                    params.chanId = "*";
-                }
-                this.playTimesArray2 = [];
-                this.timeArray2 = [];
-                // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
-                            params.time_unit=Math.ceil((this.endtime-this.starttime)/60/12)
-
-
-                query_playtimes_curve(params)
-                    .then(res => {
-                        this.playTimesArray2 = res.data.playTimesArray;
-                        res.data.timeArray.forEach((item, index) => {
-                            this.timeArray2.push(getymdtime(item));
-                        });
-                        this.gettable();
-                        this.drawLine2();
-                    })
-                    .catch(err => {});
-            }
-        },
-        //请求数据--表格
-        gettable() {
-            this.tablecdn2 = [];
-            let params = new Object();
-            // params.chanId = this.chanid + "";
-            params.start_ts = this.starttime;
-            params.end_ts = this.endtime;
-            params.pageNo = this.pageNo - 1;
-            params.pageSize = this.pageSize;
-            if (this.value_c1) {
-                params.fileName = this.value_c1;
-            } else {
-                params.fileName = "*";
-            }
-            if (this.value_c2) {
-                params.region = this.value_c2;
-            } else {
-                params.region = "*";
-            }
-            if (this.value_c3) {
-                params.isp = this.value_c3;
-            } else {
-                params.isp = "*";
-            }
-            if (this.value1Activechanid !== "") {
-                params.chanId = this.value1Activechanid;
-            } else {
-                params.chanId = "*";
-            }
-            query_playdata_table(params)
-                .then(res => {
-                    if (res.status == 0) {
-                        this.tablecdn2 = res.data.fileList;
-                        this.total_cnt = res.data.totalCnt;
-                    }
-                })
-                .catch(err => {});
-        },
-        //自定义时间确定按钮
-        seachtu(data) {
-            if (data == 0) {
-                this.getseach(0);
-            } else if (data == 1) {
-                this.getseach(1);
-            } else {
-                this.getseach(3);
-            }
-        },
-        //自定义时间显示
-        showzdy() {
-            this.shoudzy = !this.shoudzy;
-        },
-        showzdyx() {
-            this.shoudzyx = !this.shoudzyx;
-        },
-        showzdyz() {
-            this.shoudzyz = !this.shoudzyz;
-        },
-        //今天
-        today(data) {
-            let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-            this.starttime = times;
-            this.endtime = Date.parse(new Date()) / 1000;
-            this.timeUnit = 60;
-            if (data == 0) {
-                this.getseach(0);
-            } else if (data == 1) {
-                this.getseach(1);
-            } else {
-                this.getseach(3);
-            }
-        },
-        //昨天
-        yesterday(data) {
-            let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-            this.starttime = times - 24 * 60 * 60 * 1;
-            this.endtime = times;
-            this.timeUnit = 60;
-            if (data == 0) {
-                this.getseach(0);
-            } else if (data == 1) {
-                this.getseach(1);
-            } else {
-                this.getseach(3);
-            }
-        },
-        //七天
-        sevendat(data) {
-            let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-            this.starttime = times - 24 * 60 * 60 * 7;
-            this.endtime = times;
-            this.timeUnit = 60 * 24;
-            if (data == 0) {
-                this.getseach(0);
-            } else if (data == 1) {
-                this.getseach(1);
-            } else {
-                this.getseach(3);
-            }
-        },
-        //三十天
-        thirtyday(data) {
-            let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-            this.starttime = times - 24 * 60 * 60 * 30;
-            this.endtime = times;
-            this.timeUnit = 60 * 24;
-            if (data == 0) {
-                this.getseach(0);
-            } else if (data == 1) {
-                this.getseach(1);
-            } else {
-                this.getseach(3);
-            }
-        },
-        //自定义时间-确定
-        gettimes(cal) {
-            this.starttime = dateToMs(this.val2[0]);
-            this.endtime = dateToMs(this.val2[1]);
-            if (this.endtime - this.starttime < 21600) {
-                this.timeUnit = 60;
-            } else if (
-                this.endtime - this.starttime >= 21600 &&
-                this.endtime - this.starttime < 86400
-            ) {
-                this.timeUnit = 60;
-            } else if (this.endtime - this.starttime >= 86400) {
-                this.timeUnit = 60 * 24;
-            }
-        },
-        //切换到地区
-        goarea() {
-            this.twob = false;
-            this.getseach(1);
-        },
-        //切换到运营商
-        gosupplier() {
-            this.twob = true;
-            this.getseach(2);
-        },
-
-        // 表头样式设置
-        headClass() {
-            return "text-align: center;background:#F3F6FB;";
-        },
-        // 表格样式设置
-        rowClass() {
-            return "text-align: center;";
-        },
-        //选项卡
-        handleClick(tab, event) {
-            //切换时重置时间为当前时间
-            this.starttime =
-                new Date(new Date().toLocaleDateString()).getTime() / 1000;
-            this.endtime = Date.parse(new Date()) / 1000;
-            if (tab.index == 0) {
-                this.value_a1 = "";
-                this.value_a2 = "";
-                this.value_a3 = "";
-                this.value1Activechanid=""
-                this.getseach(0);
-            } else if (tab.index == 1) {
-                this.value_b1 = "";
-                this.value_b2 = "";
-                this.value_b3 = "";
-                this.twob = false;
-                this.value1Activechanid=""
-
-                this.getseach(1);
-            } else if (tab.index == 2) {
-                this.value_c1 = "";
-                this.value_c2 = "";
-                this.value_c3 = "";
-                this.value1Activechanid=""
-
-                this.getseach(3);
-            }
-        },
-        drawLine() {
-            // 基于准备好的dom，初始化echarts实例
-            let myChart = this.$echarts.init(document.getElementById("myChart"));
-            window.onresize = myChart.resize;
-            // 绘制图表
-            let options = {
-                title: {
-                    text: "PV/UV",
-                    left: "center"
-                },
-                tooltip: {
-                    trigger: "axis",
-                    axisPointer: {
-                        type: "cross",
-                        label: {
-                            backgroundColor: "#6a7985"
-                        }
-                    }
-                },
-                legend: {
-                    left: "left",
-                    data: ["pv", "uv"]
-                },
-                color: ["#A7D5FF", "#BEA7FF"],
-                xAxis: {
-                    type: "category",
-                    name: "日期",
-                    splitLine: {
-                        show: false
-                    },
-                    data: this.timeArray
-                },
-                grid: {
-                    left: "3%",
-                    right: "4%",
-                    bottom: "3%",
-                    containLabel: true
-                },
-                yAxis: {
-                    type: "value",
-                    name: "pv/uv",
-                    min: 0
-                },
-                series: [{
-                        name: "pv",
-                        type: "line",
-                        smooth: true,
-                        lineStyle: {
-                            color: "#A7D5FF"
-                        },
-                        areaStyle: {
-                            normal: {
-                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                        offset: 0,
-                                        color: "#A7D5FF"
-                                    },
-                                    {
-                                        offset: 0.5,
-                                        color: "#D0E8FF"
-                                    },
-                                    {
-                                        offset: 1,
-                                        color: "#ffffff"
-                                    }
-                                ])
-                            }
-                        }, //填充区域样式
-                        data: this.uvArray
-                    },
-                    {
-                        name: "uv",
-                        type: "line",
-                        smooth: true,
-                        lineStyle: {
-                            color: "#BEA7FF"
-                        },
-                        areaStyle: {
-                            normal: {
-                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                        offset: 0,
-                                        color: "#BEA7FF"
-                                    },
-                                    {
-                                        offset: 0.5,
-                                        color: "#D2D0FF"
-                                    },
-                                    {
-                                        offset: 1,
-                                        color: "#ffffff"
-                                    }
-                                ])
-                            }
-                        }, //填充区域样式
-                        data: this.pvArray
-                    }
-                ]
-            };
-            myChart.setOption(options);
-        },
-        drawLine1() {
-            // 基于准备好的dom，初始化echarts实例
-            let myChart = this.$echarts.init(document.getElementById("myChart1"));
-            window.onresize = myChart.resize;
-            // 绘制图表
-            let options = {
-                title: {
-                    text: "地区和运营商"
-                },
-                grid: {
-                    // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
-                    left: "3%", // 默认10%，给24就挺合适的。
-                    top: 60, // 默认60
-                    right: 35, // 默认10%
-                    bottom: 60 // 默认60
-                    // width: "100%", // grid 组件的宽度。默认自适应。
-                    // height: "100%",
-                    // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
-                    // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
-                    // backgroundColor:'#ccac62',
-                    // borderColor:"#000",
-                },
-                toolbox: {
-                    //show: true,
-                    itemSize: 20,
-                    itemGap: 30,
-                    right: 50,
-                    feature: {
-                        // dataView: { show: true },
-                        saveAsImage: {
-                            //excludeComponents :['toolbox'],
-                            pixelRatio: 2
-                        }
-                    }
-                },
-                color: "#297AFF",
-                tooltip: {
-                    trigger: "axis",
-                    axisPointer: {
-                        type: "cross",
-                        label: {
-                            backgroundColor: "#6a7985"
-                        }
-                    }
-                },
-                xAxis: {
-                    data: this.timeArray1
-                },
-                yAxis: {},
-                series: [{
-                    name: "流量",
-                    type: "bar",
-                    barWidth: 30, //柱图宽度
-                    data: this.playTimesArray1
-                }]
-            };
-            myChart.setOption(options);
-        },
-        drawLine2() {
-            // 基于准备好的dom，初始化echarts实例
-            let myChart = this.$echarts.init(document.getElementById("myChart2"));
-            window.onresize = myChart.resize;
-            // 绘制图表
-            let option = {
-                title: {
-                    text: "访问TOP10"
-                },
-                grid: {
-                    // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
-                    left: "3%", // 默认10%，给24就挺合适的。
-                    top: 60, // 默认60
-                    right: 35, // 默认10%
-                    bottom: 60 // 默认60
-                    // width: "100%", // grid 组件的宽度。默认自适应。
-                    // height: "100%",
-                    // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
-                    // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
-                    // backgroundColor:'#ccac62',
-                    // borderColor:"#000",
-                },
-                tooltip: {
-                    trigger: "axis",
-                    axisPointer: {
-                        type: "cross",
-                        label: {
-                            backgroundColor: "#6a7985"
-                        }
-                    }
-                },
-                xAxis: {
-                    type: "category",
-                    data: this.timeArray2
-                },
-                yAxis: {
-                    type: "value"
-                },
-                series: [{
-                    data: this.playTimesArray2,
-                    type: "line",
-                    smooth: true,
-                    itemStyle: {
-                        normal: {
-                            color: "#8cd5c2", //改变折线点的颜色
-                            lineStyle: {
-                                color: "#409EFF" //改变折线颜色
-                            }
-                        }
-                    }
-                }]
-            };
-            myChart.setOption(option);
+        query_playtimes_conditions(params)
+          .then(res => {
+            res.data.fileNameSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.optionsc1.push(obj);
+            });
+            res.data.regionSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.optionsc2.push(obj);
+            });
+            res.data.ispSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.optionsc3.push(obj);
+            });
+            res.data.hashidSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.options3.push(obj);
+            });
+            this.getcure(3);
+          })
+          .catch(err => {});
+      }
+    },
+    //请求数据--曲线图
+    getcure(data) {
+      let params = new Object();
+      params.chanId = this.chanid + "";
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      params.time_unit = this.timeUnit;
+      if (data == 0) {
+        if (this.value1fileName) {
+          params.fileName = this.value1fileName;
+        } else {
+          params.fileName = "*";
         }
-    }
+        if (this.value_a2[1]) {
+          params.region = this.value_a2[1];
+        } else {
+          params.region = "*";
+        }
+        if (this.value_a3) {
+          params.isp = this.value_a3;
+        } else {
+          params.isp = "*";
+        }
+
+        if (this.value1Activechanid !== "") {
+          params.chanId = this.value1Activechanid;
+        } else {
+          params.chanId = "*";
+        }
+        if (this.valueacce !== "") {
+          params.acce = this.valueacce;
+        } else {
+          params.acce = "*";
+        }
+
+        this.uvArray = [];
+        this.pvArray = [];
+        this.timeArray = [];
+        // params.time_unit = this.common.timeUnit(this.starttime, this.endtime),
+        params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+
+        pv_uv_curve(params)
+          .then(res => {
+            if (res.data.uvArray) {
+              res.data.uvArray.forEach((item, index) => {
+                this.uvArray.push(Math.floor(item));
+              });
+            }
+            if (res.data.pvArray) {
+              res.data.pvArray.forEach((item, index) => {
+                this.pvArray.push(Math.floor(item));
+              });
+            }
+            res.data.timeArray.forEach((item, index) => {
+              this.timeArray.push(getymdtime(item));
+            });
+            this.drawLine();
+          })
+          .catch(err => {});
+      } else if (data == 1 || data == 2) {
+        this.tablecdn = [];
+        if (this.value1fileName) {
+          params.fileName = this.value1fileName;
+        } else {
+          params.fileName = "*";
+        }
+        if (this.value_b2) {
+          params.region = this.value_b2;
+        } else {
+          params.region = "*";
+        }
+        if (this.value_b3) {
+          params.isp = this.value_b3;
+        } else {
+          params.isp = "*";
+        }
+        if (this.value1Activechanid !== "") {
+          params.chanId = this.value1Activechanid;
+        } else {
+          params.chanId = "*";
+        }
+        if (this.valueacce !== "") {
+          params.acce = this.valueacce;
+        } else {
+          params.acce = "*";
+        }
+        params.top = 10;
+        // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
+        params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+
+        if (data == 1) {
+          this.playTimesArray1 = [];
+          this.timeArray1 = [];
+          query_topregion_accesscnt_curve(params)
+            .then(res => {
+              this.playTimesArray1 = res.data.accessCntArray;
+              this.timeArray1 = res.data.regionArray;
+              this.drawLine1(this.playTimesArray1, this.timeArray1);
+              this.tablecdn = res.data.accessCntTable;
+              this.totalPV = res.data.totalPV;
+              this.totalUV = res.data.totalUV;
+              console.log(this.tablecdn);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        } else {
+          this.playTimesArray1 = [];
+          this.timeArray1 = [];
+          query_topisp_accesscnt_curve(params)
+            .then(res => {
+              this.playTimesArray1 = res.data.accessCntArray;
+              this.timeArray1 = res.data.ispArray;
+              this.drawLine1(this.playTimesArray1, this.timeArray1);
+              this.tablecdn = res.data.accessCntTable;
+              console.log(this.tablecdn);
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        }
+      } else {
+        if (this.value1fileName) {
+          params.fileName = this.value1fileName;
+        } else {
+          params.fileName = "*";
+        }
+        if (this.value_c2) {
+          params.region = this.value_c2;
+        } else {
+          params.region = "*";
+        }
+        if (this.value_c3) {
+          params.isp = this.value_c3;
+        } else {
+          params.isp = "*";
+        }
+        if (this.value1Activechanid !== "") {
+          params.chanId = this.value1Activechanid;
+        } else {
+          params.chanId = "*";
+        }
+        if (this.valueacce !== "") {
+          params.acce = this.valueacce;
+        } else {
+          params.acce = "*";
+        }
+        this.playTimesArray2 = [];
+        this.timeArray2 = [];
+        // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
+        params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+
+        query_playtimes_curve(params)
+          .then(res => {
+            this.playTimesArray2 = res.data.playTimesArray;
+            res.data.timeArray.forEach((item, index) => {
+              this.timeArray2.push(getymdtime(item));
+            });
+            this.gettable();
+            this.drawLine2(this.playTimesArray2, this.timeArray2);
+          })
+          .catch(err => {});
+      }
+    },
+    //请求数据--表格
+    gettable() {
+      this.tablecdn2 = [];
+      let params = new Object();
+      // params.chanId = this.chanid + "";
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = this.pageSize;
+      if (this.value1fileName) {
+        params.fileName = this.value1fileName;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.value_c2) {
+        params.region = this.value_c2;
+      } else {
+        params.region = "*";
+      }
+      if (this.value_c3) {
+        params.isp = this.value_c3;
+      } else {
+        params.isp = "*";
+      }
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.valueacce !== "") {
+        params.acce = this.valueacce;
+      } else {
+        params.acce = "*";
+      }
+      params.time_unit = 85;
+      query_playdata_table(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.tablecdn2 = res.data.fileList;
+            this.total_cnt = res.data.totalCnt;
+          }
+        })
+        .catch(err => {});
+    },
+    //自定义时间确定按钮
+    seachtu(data) {
+      if (data == 0) {
+        this.getseach(0);
+      } else if (data == 1) {
+        this.getseach(1);
+      } else {
+        this.getseach(3);
+      }
+    },
+    //自定义时间显示
+    showzdy() {
+      this.shoudzy = !this.shoudzy;
+    },
+    showzdyx() {
+      this.shoudzyx = !this.shoudzyx;
+    },
+    showzdyz() {
+      this.shoudzyz = !this.shoudzyz;
+    },
+    //今天
+    today(data) {
+      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.starttime = times;
+      this.endtime = Date.parse(new Date()) / 1000;
+      this.timeUnit = 60;
+      if (data == 0) {
+        this.getseach(0);
+      } else if (data == 1) {
+        this.getseach(1);
+      } else {
+        this.getseach(3);
+      }
+    },
+    //昨天
+    yesterday(data) {
+      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.starttime = times - 24 * 60 * 60 * 1;
+      this.endtime = times;
+      this.timeUnit = 60;
+      if (data == 0) {
+        this.getseach(0);
+      } else if (data == 1) {
+        this.getseach(1);
+      } else {
+        this.getseach(3);
+      }
+    },
+    //七天
+    sevendat(data) {
+      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.starttime = times - 24 * 60 * 60 * 7;
+      this.endtime = times;
+      this.timeUnit = 60 * 24;
+      if (data == 0) {
+        this.getseach(0);
+      } else if (data == 1) {
+        this.getseach(1);
+      } else {
+        this.getseach(3);
+      }
+    },
+    //三十天
+    thirtyday(data) {
+      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.starttime = times - 24 * 60 * 60 * 30;
+      this.endtime = times;
+      this.timeUnit = 60 * 24;
+      if (data == 0) {
+        this.getseach(0);
+      } else if (data == 1) {
+        this.getseach(1);
+      } else {
+        this.getseach(3);
+      }
+    },
+    //自定义时间-确定
+    gettimes(cal) {
+      this.starttime = dateToMs(this.val2[0]);
+      this.endtime = dateToMs(this.val2[1]);
+      if (this.endtime - this.starttime < 21600) {
+        this.timeUnit = 60;
+      } else if (
+        this.endtime - this.starttime >= 21600 &&
+        this.endtime - this.starttime < 86400
+      ) {
+        this.timeUnit = 60;
+      } else if (this.endtime - this.starttime >= 86400) {
+        this.timeUnit = 60 * 24;
+      }
+    },
+    //切换到地区
+    goarea() {
+      this.twob = false;
+      this.getseach(1);
+    },
+    //切换到运营商
+    gosupplier() {
+      this.twob = true;
+      this.getseach(2);
+    },
+
+    // 表头样式设置
+    headClass() {
+      return "text-align: center;background:#F3F6FB;";
+    },
+    // 表格样式设置
+    rowClass() {
+      return "text-align: center;";
+    },
+    //选项卡
+    handleClick(tab, event) {
+      this.value1fileName = "";
+      this.value1Activechanid = "";
+      this.valueacce = "";
+      //切换时重置时间为当前时间
+      this.starttime =
+        new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.endtime = Date.parse(new Date()) / 1000;
+      if (tab.index == 0) {
+        this.value_a1 = "";
+        this.value_a2 = "";
+        this.value_a3 = "";
+        this.value1Activechanid = "";
+        this.getseach(0);
+      } else if (tab.index == 1) {
+        this.value_b1 = "";
+        this.value_b2 = "";
+        this.value_b3 = "";
+        this.twob = false;
+        this.value1Activechanid = "";
+
+        this.getseach(1);
+      } else if (tab.index == 2) {
+        this.value_c1 = "";
+        this.value_c2 = "";
+        this.value_c3 = "";
+        this.value1Activechanid = "";
+
+        this.getseach(3);
+      }
+    },
+    drawLine() {
+      let _this = this;
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = this.$echarts.init(document.getElementById("myChart"));
+      window.onresize = myChart.resize;
+      // 绘制图表
+      let options = {
+        title: {
+          text: "PV/UV",
+          left: "center",
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "cross",
+            label: {
+              backgroundColor: "#6a7985",
+            },
+          },
+        },
+        toolbox: {
+          feature: {
+            // mark: { show: true },
+            // dataView: { show: true, readOnly: false },
+            // magicType: { show: true, type: ['line', 'bar'] },
+            // restore: { show: true },
+            // saveAsImage: { show: false },
+            mydow: {
+              show: true,
+              title: "导出",
+              icon:
+                "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
+              onclick: function() {
+                _this.exoprtant_pupv();
+              },
+            },
+          },
+        },
+        legend: {
+          left: "left",
+          data: ["pv", "uv"],
+        },
+        color: ["#A7D5FF", "#BEA7FF"],
+        xAxis: {
+          type: "category",
+          name: "日期",
+          splitLine: {
+            show: false,
+          },
+          data: this.timeArray,
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
+          containLabel: true,
+        },
+        yAxis: {
+          type: "value",
+          name: "pv/uv",
+          min: 0,
+        },
+        series: [
+          {
+            name: "pv",
+            type: "line",
+            smooth: true,
+            lineStyle: {
+              color: "#A7D5FF",
+            },
+            areaStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: "#A7D5FF",
+                  },
+                  {
+                    offset: 0.5,
+                    color: "#D0E8FF",
+                  },
+                  {
+                    offset: 1,
+                    color: "#ffffff",
+                  },
+                ]),
+              },
+            }, //填充区域样式
+            data: this.uvArray,
+          },
+          {
+            name: "uv",
+            type: "line",
+            smooth: true,
+            lineStyle: {
+              color: "#BEA7FF",
+            },
+            areaStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: "#BEA7FF",
+                  },
+                  {
+                    offset: 0.5,
+                    color: "#D2D0FF",
+                  },
+                  {
+                    offset: 1,
+                    color: "#ffffff",
+                  },
+                ]),
+              },
+            }, //填充区域样式
+            data: this.pvArray,
+          },
+        ],
+      };
+      myChart.setOption(options);
+    },
+    drawLine1(a, b) {
+      let _this = this;
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = this.$echarts.init(document.getElementById("myChart1"));
+      window.onresize = myChart.resize;
+      // 绘制图表
+      let options = {
+        title: {
+          text: "地区和运营商",
+        },
+        grid: {
+          // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
+          left: "3%", // 默认10%，给24就挺合适的。
+          top: 60, // 默认60
+          right: 35, // 默认10%
+          bottom: 60, // 默认60
+          // width: "100%", // grid 组件的宽度。默认自适应。
+          // height: "100%",
+          // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
+          // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
+          // backgroundColor:'#ccac62',
+          // borderColor:"#000",
+        },
+        toolbox: {
+          //show: true,
+          itemSize: 20,
+          itemGap: 30,
+          right: 50,
+          feature: {
+            // mark: { show: true },
+            // dataView: { show: true, readOnly: false },
+            // magicType: { show: true, type: ['line', 'bar'] },
+            // restore: { show: true },
+            // saveAsImage: { show: false },
+            mydow: {
+              show: true,
+              title: "导出",
+              icon:
+                "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
+              onclick: function() {
+                _this.exoprtant_accesscnt();
+              },
+            },
+          },
+        },
+        color: "#297AFF",
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "cross",
+            label: {
+              backgroundColor: "#6a7985",
+            },
+          },
+        },
+        xAxis: {
+          data: b,
+        },
+        yAxis: {},
+        series: [
+          {
+            name: "流量",
+            type: "bar",
+            barWidth: 30, //柱图宽度
+            data: a,
+          },
+        ],
+      };
+      myChart.setOption(options);
+    },
+    drawLine2(a, b) {
+      let _this = this;
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = this.$echarts.init(document.getElementById("myChart2"));
+      window.onresize = myChart.resize;
+      // 绘制图表
+      let option = {
+        title: {
+          text: "访问TOP10",
+        },
+        grid: {
+          // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
+          left: "3%", // 默认10%，给24就挺合适的。
+          top: 60, // 默认60
+          right: 35, // 默认10%
+          bottom: 60, // 默认60
+          // width: "100%", // grid 组件的宽度。默认自适应。
+          // height: "100%",
+          // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
+          // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
+          // backgroundColor:'#ccac62',
+          // borderColor:"#000",
+        },
+        toolbox: {
+          feature: {
+            // mark: { show: true },
+            // dataView: { show: true, readOnly: false },
+            // magicType: { show: true, type: ['line', 'bar'] },
+            // restore: { show: true },
+            // saveAsImage: { show: false },
+            mydow: {
+              show: true,
+              title: "导出",
+              icon:
+                "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
+              onclick: function() {
+                _this.exoprtant_content();
+              },
+            },
+          },
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "cross",
+            label: {
+              backgroundColor: "#6a7985",
+            },
+          },
+        },
+        xAxis: {
+          type: "category",
+          data: b,
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: [
+          {
+            data: a,
+            type: "line",
+            smooth: true,
+            itemStyle: {
+              normal: {
+                color: "#8cd5c2", //改变折线点的颜色
+                lineStyle: {
+                  color: "#409EFF", //改变折线颜色
+                },
+              },
+            },
+          },
+        ],
+      };
+      myChart.setOption(option);
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .myself-container {
+  width: 100%;
+  //min-width: 1600px;
+
+  .device_form {
+    width: auto;
+    height: auto;
+
+    overflow: hidden;
+    margin-top: 20px;
+    background: #ffffff;
+    padding: 15px 30px;
+    box-sizing: border-box;
+    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+    border-radius: 2px;
+
+    .bottom {
+      margin-top: 20px;
+    }
+
+    .el-form-item__label {
+      white-space: nowrap;
+    }
+
+    .el-form-item {
+      margin-bottom: 0px;
+      margin-left: 10px;
+    }
+
+    .row_activess {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .div_show {
+      width: auto;
+      display: flex;
+      height: 40px;
+      justify-content: center;
+      align-items: center;
+      color: #409eff;
+      cursor: pointer;
+      margin-left: 20px;
+    }
+  }
+
+  .devide_table {
+    width: auto;
+
+    height: auto;
+    overflow: hidden;
+    margin-top: 20px;
+    background: #ffffff;
+    padding: 37px;
+    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+    border-radius: 2px;
+
+    .el-table td,
+    .el-table th {
+      padding: 6px 0px;
+    }
+
+    .row_active {
+      margin-top: 10px;
+    }
+  }
+
+  .devide_pageNation {
     width: 100%;
-    //min-width: 1600px;
+    height: auto;
+    overflow: hidden;
+    margin-top: 20px;
 
-    .device_form {
-        width: auto;
-        height: auto;
-
-        overflow: hidden;
-        margin-top: 20px;
-        background: #ffffff;
-        padding: 15px 30px;
-        box-sizing: border-box;
-        box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-        border-radius: 2px;
-
-        .bottom {
-            margin-top: 20px;
-        }
-
-        .el-form-item__label {
-            white-space: nowrap;
-        }
-
-        .el-form-item {
-            margin-bottom: 0px;
-            margin-left: 10px;
-        }
-
-        .row_activess {
-            margin-top: 20px;
-            display: flex;
-            justify-content: flex-start;
-        }
-
-        .div_show {
-            width: auto;
-            display: flex;
-            height: 40px;
-            justify-content: center;
-            align-items: center;
-            color: #409eff;
-            cursor: pointer;
-            margin-left: 20px;
-        }
+    .devide_pageNation_active {
+      float: right;
     }
-
-    .devide_table {
-        width: auto;
-
-        height: auto;
-        overflow: hidden;
-        margin-top: 20px;
-        background: #ffffff;
-        padding: 37px;
-        box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-        border-radius: 2px;
-
-        .el-table td,
-        .el-table th {
-            padding: 6px 0px;
-        }
-
-        .row_active {
-            margin-top: 10px;
-        }
-    }
-
-    .devide_pageNation {
-        width: 100%;
-        height: auto;
-        overflow: hidden;
-        margin-top: 20px;
-
-        .devide_pageNation_active {
-            float: right;
-        }
-    }
+  }
 }
 
 .addaccout {
-    .el-form--label-left .el-form-item__label {
-        text-align: right;
-        width: 90px;
-    }
+  .el-form--label-left .el-form-item__label {
+    text-align: right;
+    width: 90px;
+  }
 
-    .el-form-item__error {
-        margin-left: 80px;
-    }
+  .el-form-item__error {
+    margin-left: 80px;
+  }
 }
 
 .user_item {
-    width: auto;
-    height: 130px;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 2px;
-    margin-top: 20px;
+  width: auto;
+  height: 130px;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+  border-radius: 2px;
+  margin-top: 20px;
 
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    text-align: left;
-    padding: 36px 71px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+  padding: 36px 71px;
 
-    .item_left {
-        width: 49%;
-        height: 58px;
-        border-right: 1px solid #e6e9ed;
+  .item_left {
+    width: 49%;
+    height: 58px;
+    border-right: 1px solid #e6e9ed;
 
-        .item_text {
-            font-size: 14px;
-            color: #333333;
-        }
-
-        .item_count {
-            line-height: 55px;
-
-            span {
-                font-size: 34px;
-            }
-        }
+    .item_text {
+      font-size: 14px;
+      color: #333333;
     }
 
-    .item_right {
-        height: 48px;
-        width: 49%;
-        padding-left: 40px;
+    .item_count {
+      line-height: 55px;
 
-        .item_text {
-            font-size: 14px;
-            color: #333333;
-        }
-
-        .item_count {
-            line-height: 55px;
-
-            span {
-                font-size: 34px;
-            }
-        }
+      span {
+        font-size: 34px;
+      }
     }
+  }
+
+  .item_right {
+    height: 48px;
+    width: 49%;
+    padding-left: 40px;
+
+    .item_text {
+      font-size: 14px;
+      color: #333333;
+    }
+
+    .item_count {
+      line-height: 55px;
+
+      span {
+        font-size: 34px;
+      }
+    }
+  }
 }
 </style>

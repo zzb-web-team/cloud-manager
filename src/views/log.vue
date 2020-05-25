@@ -116,7 +116,8 @@ export default {
           // });
           requestLoginOwn(loginParams).then(data => {
             this.logining = false;
-
+console.log(data)
+console.log(data.status)
             if (data.status !== 0) {
               this.$message({
                 message: data.msg,
