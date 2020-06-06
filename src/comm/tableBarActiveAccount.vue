@@ -58,7 +58,6 @@ export default {
     },
     methods: {
         checkboxT(row, rowIndex) {
-            console.log(row)
       if (row.id == this.uid || row.id == 1) {
         //if(row.lie =='1'){
         return false; //禁用

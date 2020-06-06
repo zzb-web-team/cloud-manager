@@ -39,14 +39,20 @@
               <el-row type="flex" class="row_active">
                 <el-col :span="24">
                   <el-table :data="tablecdn" border style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
-                    <el-table-column label="时间">
+                      <el-table-column label="渠道ID">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.timeValue | settimes }}</div>
+                        <div>{{ scope.row.chanelId }}</div>
                       </template>
                     </el-table-column>
+             
                     <el-table-column label="总流量">
                       <template slot-scope="scope">
                         <div>{{ scope.row.streamAalue |setbytes }}</div>
+                      </template>
+                    </el-table-column>
+                           <el-table-column label="时间">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.timeValue | settimes }}</div>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -792,11 +798,13 @@ export default {
       accelerate_flow_table(params)
         .then(res => {
           if (res.status == 0) {
+            let chanelIdArr = res.data.chanelIdArray;
             let timeArr = res.data.timeArray;
             let streamArr = res.data.streamArray;
             this.tablecdn = [];
             for (var i = 0; i < timeArr.length; i++) {
               let obj = {
+                chanelId:chanelIdArr[i],
                 timeValue: timeArr[i],
                 streamAalue: streamArr[i],
               };

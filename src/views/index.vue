@@ -12,7 +12,7 @@
               {{sysUserName}}
             </span>
             <el-dropdown-menu slot="dropdown">
-              <!-- <el-dropdown-item>我的消息</el-dropdown-item> -->
+              <!-- <el-dropdown-item @click.native="goLinkCenter">个人中心</el-dropdown-item> -->
               <!-- <el-dropdown-item>设置</el-dropdown-item> -->
               <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
@@ -136,6 +136,11 @@ export default {
     },
     handleclose() {
     },
+    goLinkCenter(){
+      this.$router.push({
+        path:"/user_center"
+      })
+    },
     handleselect: function(a, b) {},
     //退出登录
     logout: function() {
@@ -148,6 +153,7 @@ export default {
           sessionStorage.removeItem("id");
              _this.$cookies.remove('adminuser');
           _this.$cookies.remove('adminid');
+          _this.$cookies.remove('clouduser');
           // _this.$cookies.set("adminuser", "", 0);
           // _this.$cookies.set("adminid", "", 0);
           _this.$router.push("/");

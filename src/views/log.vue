@@ -56,15 +56,32 @@
         <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
       </el-form-item>
     </el-form>
+    <el-dialog title="谷歌验证" :visible.sync="recodecisbity" width="20%" customClass="recustomWidth" :show-close="false"  class="dialogactive">
+			<el-form ref="ruleFormre" >
+			
+				<el-form-item prop="name" style="    display: flex;justify-content: center;">
+					<el-input v-model="yzmcode" autocomplete="off" placeholder="验证码" maxlength="6"></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer"   style="    display: flex;justify-content: center;">
+				<el-button @click="nohand('ruleFormre')">取 消</el-button>
+				<el-button type="primary" @click.native.prevent="rehandle">确 定</el-button>
+			</div>
+		</el-dialog>
   </div>
+  
 </template>
 
 <script>
-import { requestLoginOwn } from "../servers/api";
+import { requestLoginOwn,qrcode,check_login } from "../servers/api";
+
 //import NProgress from 'nprogress'
 export default {
   data() {
     return {
+      token:"",
+      yzmcode:"",
+      recodecisbity:false,
       logining: false,
       ruleForm2: {
         account: "",
@@ -99,6 +116,43 @@ export default {
     }
   },
   methods: {
+    //登陆校验code
+    rehandle(){
+      let param={
+
+      }
+      param.token=this.token
+      param.code=this.yzmcode
+      check_login(param).then(data=>{
+        if(data.status==0){
+                  sessionStorage.setItem("id", JSON.stringify(data.usermsg.id));
+              sessionStorage.setItem("id", JSON.stringify(data.usermsg.username));
+              console.log( JSON.stringify(data.usermsg))
+               data.usermsg.google=data.google
+               data.usermsg.lvmsg=data.lvmsg
+              this.$cookies.set("clouduser", JSON.stringify(data.usermsg), 7 * 24 * 60 * 60);
+              this.$cookies.set("adminuser", data.usermsg.username, 7 * 24 * 60 * 60);
+              this.$cookies.set("adminid", data.usermsg.id, 7 * 24 * 60 * 60);
+              this.$router.push({
+                path: "/user"
+              });
+
+        }
+        else{
+               this.$message({
+                message: data.msg,
+                type: "error"
+              });
+
+        }
+      }).catch(error=>{
+
+      })
+    },
+    //取消
+    nohand(){
+      this.recodecisbity=false
+    },
     handleReset2() {
       this.$refs.ruleForm2.resetFields();
     },
@@ -116,23 +170,45 @@ export default {
           // });
           requestLoginOwn(loginParams).then(data => {
             this.logining = false;
-console.log(data)
-console.log(data.status)
-            if (data.status !== 0) {
-              this.$message({
-                message: data.msg,
-                type: "error"
-              });
-            } else {
-              console.log(data);
-              sessionStorage.setItem("id", JSON.stringify(data.msg.id));
+            if(data.status==0){
+                     sessionStorage.setItem("id", JSON.stringify(data.msg.id));
               sessionStorage.setItem("id", JSON.stringify(data.msg.username));
+              console.log( JSON.stringify(data.msg))
+              data.msg.google=data.google
+              data.msg.lvmsg=data.lvmsg
+              this.$cookies.set("clouduser", JSON.stringify(data.msg), 7 * 24 * 60 * 60);
               this.$cookies.set("adminuser", data.msg.username, 7 * 24 * 60 * 60);
               this.$cookies.set("adminid", data.msg.id, 7 * 24 * 60 * 60);
               this.$router.push({
                 path: "/user"
               });
             }
+            else if(data.status==1){
+              this.recodecisbity=true
+              this.token=data.token
+            }else if(data.status !==0){
+                 this.$message({
+                message: data.msg,
+                type: "error"
+              });
+            }
+
+            // if (data.status !== 0) {
+            //   this.$message({
+            //     message: data.msg,
+            //     type: "error"
+            //   });
+            // } else {
+            //   sessionStorage.setItem("id", JSON.stringify(data.msg.id));
+            //   sessionStorage.setItem("id", JSON.stringify(data.msg.username));
+            //   console.log( JSON.stringify(data.msg))
+            //   this.$cookies.set("clouduser", JSON.stringify(data.msg), 7 * 24 * 60 * 60);
+            //   this.$cookies.set("adminuser", data.msg.username, 7 * 24 * 60 * 60);
+            //   this.$cookies.set("adminid", data.msg.id, 7 * 24 * 60 * 60);
+            //   this.$router.push({
+            //     path: "/user"
+            //   });
+            // }
           });
         } else {
           console.log("error !!");
@@ -146,6 +222,13 @@ console.log(data.status)
 
 <style lang="scss">
 .Login {
+  .dialogactive{
+  
+    .el-dialog{
+      padding-right: 0px;
+    }
+
+  }
   background: url(../assets/img/login.png);
   background-size: 100% 100%;
   width: 100%;

@@ -898,11 +898,15 @@ export default {
     },
     //单个禁用启用
     onDisable(row) {
-      this.$confirm("确定要执行此操作", "提示", {
-        type: "warning",
-      })
-        .then(() => {
-          if (row.state == 1) {
+      if (row.state == 1) {
+        this.$confirm(
+          "停用后该渠道ID的此加速内容将关闭加速服务，是否继续？",
+          "提示",
+          {
+            type: "warning",
+          }
+        )
+          .then(() => {
             //停用
             let tempArr = [];
             let tempArr1 = [];
@@ -938,7 +942,15 @@ export default {
               .catch(error => {
                 console.log(error);
               });
-          } else if (row.state == 0) {
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else if (row.state == 0) {
+        this.$confirm("是否要启用此加速内容？", "提示", {
+          type: "warning",
+        })
+          .then(() => {
             //启用
             let tempArr = [];
             let tempArr1 = [];
@@ -971,11 +983,11 @@ export default {
               .catch(error => {
                 console.log(error);
               });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
 
       // this.ruleForm.account = row.account;
       // this.dialpwdset = true;
@@ -1053,50 +1065,62 @@ export default {
     },
     //禁用
     disableuser() {
-      this.tempArray = {};
-
-      let tempArr = this.multipleSelection;
-      let tempArr2 = [];
-      for (var i = 0; i < tempArr.length; i++) {
-        tempArr2.push(tempArr[i].url_name);
-        if (!this.tempArray[tempArr[i].buser_id]) {
-          this.tempArray[tempArr[i].buser_id] = [];
+      this.$confirm(
+        "停用后该渠道ID的此加速内容将关闭加速服务，是否继续？",
+        "提示",
+        {
+          type: "warning",
         }
-        this.tempArray[tempArr[i].buser_id].push(tempArr[i].url_name);
-      }
-      // console.log(tempArr2);
-      let _this = this;
-      let tempparam = {};
-      tempparam.data_count = 0;
-      tempparam.data = [];
+      )
+        .then(() => {
+          this.tempArray = {};
 
-      Object.keys(this.tempArray).forEach(function(key) {
-        let obj = {
-          buser_id: key,
-          data_count: 0,
-          state: 0,
-          data_array: _this.tempArray[key],
-        };
-        tempparam.data.push(obj);
-      });
-
-      let param = new Object();
-      param.buser_id = this.buser_id_active;
-      param.data_count = tempArr2.length;
-      param.data_array = tempArr2;
-      param.state = 0;
-      change_state(tempparam)
-        .then(res => {
-          if (res.status == 0) {
-            this.$message({
-              type: "success",
-              message: "批量禁用成功!",
-            });
-            this.queryUrlList();
-            this.common.monitoringLogs("修改 ", "批量禁用加速内容", 1);
-          } else {
-            this.common.monitoringLogs("修改 ", "批量禁用加速内容", 0);
+          let tempArr = this.multipleSelection;
+          let tempArr2 = [];
+          for (var i = 0; i < tempArr.length; i++) {
+            tempArr2.push(tempArr[i].url_name);
+            if (!this.tempArray[tempArr[i].buser_id]) {
+              this.tempArray[tempArr[i].buser_id] = [];
+            }
+            this.tempArray[tempArr[i].buser_id].push(tempArr[i].url_name);
           }
+          // console.log(tempArr2);
+          let _this = this;
+          let tempparam = {};
+          tempparam.data_count = 0;
+          tempparam.data = [];
+
+          Object.keys(this.tempArray).forEach(function(key) {
+            let obj = {
+              buser_id: key,
+              data_count: 0,
+              state: 0,
+              data_array: _this.tempArray[key],
+            };
+            tempparam.data.push(obj);
+          });
+
+          let param = new Object();
+          param.buser_id = this.buser_id_active;
+          param.data_count = tempArr2.length;
+          param.data_array = tempArr2;
+          param.state = 0;
+          change_state(tempparam)
+            .then(res => {
+              if (res.status == 0) {
+                this.$message({
+                  type: "success",
+                  message: "批量禁用成功!",
+                });
+                this.queryUrlList();
+                this.common.monitoringLogs("修改 ", "批量禁用加速内容", 1);
+              } else {
+                this.common.monitoringLogs("修改 ", "批量禁用加速内容", 0);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
         })
         .catch(error => {
           console.log(error);
@@ -1151,11 +1175,15 @@ export default {
       // param.data_count = tempArr.length;
       // param.data_array = tempArr1;
       // param.buser_id = this.buser_id_active;
-      this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
+      this.$confirm(
+        "删除后该渠道ID的此加速内容信息将从列表上移除，删除后信息不可恢复，是否继续？",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
         .then(() => {
           delete_url(tempparam)
             .then(res => {
@@ -1202,11 +1230,15 @@ export default {
       obj.data_array = tempArr1;
       parmas.data[0] = obj;
 
-      this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
+      this.$confirm(
+        "删除后该渠道ID的此加速内容信息将从列表上移除，删除后信息不可恢复，是否继续？",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
         .then(() => {
           delete_url(parmas)
             .then(res => {

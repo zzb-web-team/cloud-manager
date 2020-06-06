@@ -32,7 +32,7 @@
 
           <el-select v-model="dynamicValidateForm.labe2" placeholder="请选择" @change="onchange" :disabled="inputStatus">
 
-            <el-option v-for="(item, index) in labelData" :key="index + item" :label="item.label" :disabled="item.disabled"  :value="item.label" style="width:250px;">
+            <el-option v-for="(item, index) in labelData" :key="index + item" :label="item.label" :disabled="item.disabled" :value="item.label" style="width:250px;">
             </el-option>
           </el-select>
           <el-button type="text" size="small" v-show="yewu.length < 0">去添加</el-button>
@@ -75,12 +75,12 @@ import {
   getterminal,
   check_label,
   query_domain,
-  query_domain_for_admin
+  query_domain_for_admin,
 } from "../../servers/api";
 export default {
   data() {
     return {
-      inputStatus:true,
+      inputStatus: true,
       dynamicValidateForm: {
         url_name: "",
         url_content: "",
@@ -142,8 +142,8 @@ export default {
       if (
         this.dynamicValidateForm.newbuser_id != this.dynamicValidateForm.bind_id
       ) {
-        this.inputStatus=false
-         this.labelData=[]
+        this.inputStatus = false;
+        this.labelData = [];
 
         this.queryInfoLabel();
       }
@@ -183,13 +183,11 @@ export default {
         (param.start_time = 0),
         (param.end_time = 0),
         (param.order = 0),
-     
-      param.page = this.pageActive;
+        (param.page = this.pageActive);
       query_domain_for_admin(param)
         .then(res => {
           if (res.status == 0)
             res.data.result.forEach((item, index) => {
-              
               let obj = {};
               obj.value = item.domain_id;
               // obj.label =
@@ -197,11 +195,11 @@ export default {
               // obj.chanid = item.chanid;
               // this.labelData = [];
               obj.label = item.domain;
-                if(item.state==1){
-                  obj.disabled=false
-                }else{
- obj.disabled=true
-                }
+              if (item.state == 1) {
+                obj.disabled = false;
+              } else {
+                obj.disabled = true;
+              }
               this.labelData.push(obj);
             });
           console.log(this.labelData.length);
@@ -300,7 +298,7 @@ export default {
                     });
                   } else if (res.data.res_data[0][1] == 4) {
                     this.$message({
-                      message: "渠道ID不存在",
+                      message: "渠道ID不存在,或者该渠道ID已被冻结！",
                       type: "error",
                     });
                   } else if (res.data.res_data[0][1] == 5) {

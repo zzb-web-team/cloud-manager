@@ -6,6 +6,7 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     var serverUrl = 'http://xyj.grapefruitcloud.com' //PHP服务域名
 } else {
     var serverUrl = 'http://zzb.onezen.net' //PHP服务域名
+    var serverUrl2 = 'http://test.zzb.com' //PHP服务域名
 }
 
 export const hostUrl = serverUrl;
@@ -43,8 +44,10 @@ export const userctrl = params => {
 export const setactionlog = params => {
     return axios.post(`${serverUrl}/cloudterminal/setactionlog`, params).then(res => res.data)
 };
-
-
+//二维码绑定
+export const qrcode = params => { return axios.post(`${serverUrl2}/cloud/system/bind_login`, params).then(res => res.data) };
+//成功登录后校验code
+export const check_login = params => { return axios.post(`${serverUrl2}/cloud/system/check_login`, params).then(res => res.data) };
 
 //URL管理
 /**获取URL列表 */
@@ -59,6 +62,7 @@ export const query_url_for_admin = params => {
 };
 
 export const query_config = params => {
+
     return axios.post(`${serverUrl}/url_mgmt/query_config`, params).then(res => res.data)
 };
 /*新增URL */
@@ -322,3 +326,8 @@ export const export_backsource_flow_file = (params) => {
 export const export_dataflow_curve_file = (params) => {
     return axios.post(`${serverUrl}/file_download/export_dataflow_curve_file`, params).then(res => res.data)
 };
+//运营商访问次数导出
+export const export_topisp_accesscnt_curve_file = (params) => {
+    return axios.post(`${serverUrl}/file_download/export_topisp_accesscnt_curve_file`, params).then(res => res.data)
+};
+

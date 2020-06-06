@@ -32,13 +32,13 @@
               <div class="item_left">
                 <div class="item_text">总访问次数(pv)</div>
                 <div class="item_count">
-                  <span>{{ totalPV }}</span>GB
+                  <span>{{ totalPV }}</span>
                 </div>
               </div>
               <div class="item_right">
                 <div class="item_text">独立IP访问数(pv)</div>
                 <div class="item_count">
-                  <span>{{ totalUV }}</span>MB/s
+                  <span>{{ totalUV }}</span>
                 </div>
               </div>
             </div>
@@ -71,19 +71,21 @@
             </div>
             <div class="device_form" style>
               <el-button-group style="display: flex;justify-content: center;">
-                <el-button @click="goarea()">地区</el-button>
-                <el-button @click="gosupplier()">供应商</el-button>
+                <!-- <el-button :type="primaryActive"  plain @click="goarea()">地区</el-button>
+                <el-button :type="!primaryActive"  plain @click="gosupplier()">运营商</el-button> -->
+                 <el-button plain @click="goarea()">地区</el-button>
+                <el-button   plain @click="gosupplier()">运营商</el-button>
               </el-button-group>
               <div id="myChart1" :style="{ height: '607px' }"></div>
             </div>
             <div class="devide_table">
               <el-row type="flex" class="row_active">
-                <el-col :span="24" style="text-align:left;    font-weight: bold;padding-left:10px;">IP流量平均利用率表</el-col>
+                <el-col :span="24" style="text-align:left;    font-weight: bold;padding-left:10px;">{{exportTitle}}</el-col>
               </el-row>
               <el-row type="flex" class="row_active">
                 <el-col :span="24">
                   <el-table :data="tablecdn" border stripe style="width: 100%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                    <el-table-column label="播放URL">
+                    <el-table-column :label="exportTitleTable">
                       <template slot-scope="scope">
                         <div v-if="scope.row.region">
                           {{ scope.row.region }}
@@ -91,9 +93,15 @@
                         <div v-else>{{ scope.row.isp }}</div>
                       </template>
                     </el-table-column>
+                    <el-table-column label="渠道ID">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.chanId }}</div>
+                      </template>
+                    </el-table-column>
+
                     <el-table-column label="流量">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.accessCnt }}</div>
+                        <div>{{ scope.row.dataFlow | formatDataFlow }}</div>
                       </template>
                     </el-table-column>
                     <el-table-column label="流量占比">
@@ -103,7 +111,7 @@
                     </el-table-column>
                     <el-table-column label="访问次数">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.accessPercent }}</div>
+                        <div>{{ scope.row.accessCnt }}</div>
                       </template>
                     </el-table-column>
                     <el-table-column label="访问占比">
@@ -111,12 +119,17 @@
                         <div>{{ scope.row.accessPercent }}</div>
                       </template>
                     </el-table-column>
+                     <el-table-column label="平均响应时间(/s)">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.avgTime | formatAvgTime }}</div>
+                      </template>
+                    </el-table-column>
                   </el-table>
                 </el-col>
               </el-row>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="播放加速内容" name="there">
+          <el-tab-pane label="热门加速内容" name="there">
             <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
@@ -129,47 +142,49 @@
               <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(2)">确定</el-button>
             </div>
-            <div class="device_form" style>
+            <!-- <div class="device_form" style>
               <div id="myChart2" :style="{ height: '607px' }"></div>
-            </div>
+            </div> -->
 
             <div class="devide_table">
               <el-row type="flex" class="row_active">
-                <el-col :span="24" style="text-align:left;font-weight: bold;padding-left:10px;">IP流量平均利用率表</el-col>
+                <el-col :span="24" style="text-align:left;font-weight: bold;padding-left:10px;">热门加速内容表</el-col>
               </el-row>
               <el-row type="flex" class="row_active">
                 <el-col :span="24">
                   <el-table :data="tablecdn2" border stripe style="width: 100%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                    <el-table-column label="加速内容名称">
+                    <el-table-column label="渠道ID">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.fileId }}</div>
+                        <div>{{ scope.row.channelId }}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="视频名称">
+                    <el-table-column label="加速内容名称" width="500">
                       <template slot-scope="scope">
                         <div>{{ scope.row.fileName }}</div>
                       </template>
                     </el-table-column>
+
                     <el-table-column label="流量">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.fileSize | aaa }}</div>
+                        <div>{{ scope.row.dataFlow | formatDataFlow}}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="流量占比">
+                    <el-table-column label="流量占比(%)">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.accessDataFlow | aaa }}</div>
+                        <div>{{ scope.row.dfPercent |formatPercent }}</div>
                       </template>
                     </el-table-column>
                     <el-table-column label="访问次数">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.accessDataFlow | aaa }}</div>
+                        <div>{{ scope.row.totalCnt }}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="访问占比">
+                    <el-table-column label="访问占比(%)">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.accessDataFlow | aaa }}</div>
+                        <div>{{ scope.row.cntPercent }}</div>
                       </template>
                     </el-table-column>
+                       
                   </el-table>
                   <!-- <fenye style="float:right;margin:10px 0 20px 0;" @fatherMethod="getpage" @fathernum="gettol" :pagesa="total_cnt"></fenye> -->
 
@@ -201,6 +216,7 @@ import {
   export_pv_uv_curve_file,
   export_playtimes_curve_file,
   export_topregion_accesscnt_curve_file,
+  export_topisp_accesscnt_curve_file,
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -208,6 +224,10 @@ import common from "../../comm/js/util";
 export default {
   data() {
     return {
+      primaryActive: "primary",
+      exportActive: 0,
+      exportTitle: "用户访问分布",
+      exportTitleTable: "省市",
       currentPage: 1,
       pagesize: 10,
       total_cnt: 0,
@@ -342,6 +362,27 @@ export default {
       var liu = (data / 1024 / 1024 / 1024).toFixed(4);
       return liu;
     },
+    formatDataFlow(data) {
+      if (data == 0) {
+        return 0;
+      } else {
+        return common.formatByteActive(data);
+      }
+    },
+    formatPercent(data) {
+      if (data == 0) {
+        return 0;
+      } else {
+        return (data * 100).toFixed(2);
+      }
+    },
+    formatAvgTime(data){
+       if (data == 0) {
+        return 0;
+      } else {
+        return data;
+      }
+    }
   },
   components: {
     fenye,
@@ -365,8 +406,8 @@ export default {
     this.chart = null;
   },
   methods: {
-    //访问用户分布导出
-    exoprtant_accesscnt() {
+    //用户用户供应商导出
+    exoprtant_topisp() {
       let params = new Object();
       params.chanId = this.chanid + "";
       params.start_ts = this.starttime;
@@ -400,6 +441,48 @@ export default {
       params.top = 10;
       // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
       params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+      export_topisp_accesscnt_curve_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {});
+    },
+
+    //访问用户地区导出
+    exoprtant_topregion() {
+      let params = new Object();
+      params.chanId = this.chanid + "";
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      params.time_unit = this.timeUnit;
+      if (this.value1fileName) {
+        params.fileName = this.value1fileName;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.value_b2) {
+        params.region = this.value_b2;
+      } else {
+        params.region = "*";
+      }
+      if (this.value_b3) {
+        params.isp = this.value_b3;
+      } else {
+        params.isp = "*";
+      }
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.valueacce !== "") {
+        params.acce = this.valueacce;
+      } else {
+        params.acce = "*";
+      }
+      params.top = 10;
       // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
       params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
       export_topregion_accesscnt_curve_file(params)
@@ -874,7 +957,7 @@ export default {
               this.timeArray2.push(getymdtime(item));
             });
             this.gettable();
-            this.drawLine2(this.playTimesArray2, this.timeArray2);
+            //this.drawLine2(this.playTimesArray2, this.timeArray2);
           })
           .catch(err => {});
       }
@@ -886,23 +969,23 @@ export default {
       // params.chanId = this.chanid + "";
       params.start_ts = this.starttime;
       params.end_ts = this.endtime;
-      params.pageNo = this.pageNo - 1;
+      params.pageNo = this.pageNo;
       params.pageSize = this.pageSize;
       if (this.value1fileName) {
         params.fileName = this.value1fileName;
       } else {
         params.fileName = "*";
       }
-      if (this.value_c2) {
-        params.region = this.value_c2;
-      } else {
-        params.region = "*";
-      }
-      if (this.value_c3) {
-        params.isp = this.value_c3;
-      } else {
-        params.isp = "*";
-      }
+      // if (this.value_c2) {
+      //   params.region = this.value_c2;
+      // } else {
+      //   params.region = "*";
+      // }
+      // if (this.value_c3) {
+      //   params.isp = this.value_c3;
+      // } else {
+      //   params.isp = "*";
+      // }
       if (this.value1Activechanid !== "") {
         params.chanId = this.value1Activechanid;
       } else {
@@ -913,7 +996,7 @@ export default {
       } else {
         params.acce = "*";
       }
-      params.time_unit = 85;
+      //params.time_unit = 85;
       query_playdata_table(params)
         .then(res => {
           if (res.status == 0) {
@@ -1017,11 +1100,19 @@ export default {
     //切换到地区
     goarea() {
       this.twob = false;
+      this.exportActive = 0;
+      this.exportTitle = "用户访问分布";
+      this.exportTitleTable = "省市";
+     this.primaryActive = !this.primaryActive;
       this.getseach(1);
     },
     //切换到运营商
     gosupplier() {
       this.twob = true;
+      this.exportActive = 1;
+      this.exportTitle = "用户运营商分布";
+      this.exportTitleTable = "运营商";
+      this.primaryActive = !this.primaryActive;
       this.getseach(2);
     },
 
@@ -1194,7 +1285,7 @@ export default {
       // 绘制图表
       let options = {
         title: {
-          text: "地区和运营商",
+          text: "访问用户数(TOP10)",
         },
         grid: {
           // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
@@ -1226,7 +1317,11 @@ export default {
               icon:
                 "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
               onclick: function() {
-                _this.exoprtant_accesscnt();
+                if (_this.exportActive == 0) {
+                  _this.exoprtant_topregion();
+                } else {
+                  _this.exoprtant_topisp();
+                }
               },
             },
           },

@@ -886,6 +886,12 @@ export default {
                 message: "修改成功",
                 type: "success"
               });
+           let obj  = this.$cookies.get('clouduser')
+             obj.name=data.result[0].name
+             obj.status=data.result[0].status
+             obj.phone=data.result[0].phone
+             obj.username=data.result[0].username
+              	this.$cookies.set("clouduser", obj, 7 * 24 * 60 * 60);
               this.queryUserList();
               this.common.monitoringLogs("新增", "增加用户", 1);
             }

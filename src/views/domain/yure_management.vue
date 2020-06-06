@@ -109,7 +109,7 @@ export default {
 
         {
           value: 0,
-          label: "URL刷新",
+          label: "刷新缓存",
         },
         {
           value: 1,
@@ -257,7 +257,7 @@ export default {
               if (tempArr[i].refresh_type == 1) {
                 tempArr[i].refresh_type = "内容预热";
               } else {
-                tempArr[i].refresh_type = "URL刷新";
+                tempArr[i].refresh_type = "刷新缓存";
               }
               if (tempArr[i].state == 1) {
                 tempArr[i].state = "已完成";

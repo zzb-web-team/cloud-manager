@@ -21,6 +21,8 @@ import copy from "@/views/domain/copy_configuration.vue";
 //用户
 import user from "@/views/account/user";
 import userli from "@/views/account/userli";
+import user_center from "@/views/account/user_center";
+
 
 //用户管理
 import operating_user from "@/views/oper_user/operating_user";
@@ -68,6 +70,13 @@ export default new Router({
           component: userli,
           hidden: true,
         },
+        {
+          path: "/user_center",
+          name: "用户列表",
+          component: user_center,
+          hidden: true,
+        },
+        
       ],
     },
     {

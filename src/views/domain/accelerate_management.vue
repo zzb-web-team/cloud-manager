@@ -152,10 +152,7 @@ export default {
           value: 1,
           label: "正常运行",
         },
-        {
-          value: 2,
-          label: "回源失败",
-        },
+
         {
           value: 0,
           label: "已停用",
@@ -421,7 +418,7 @@ export default {
           } else {
             this.$message({
               type: "error",
-              message: "删除失败,请查看要删除的域名下是否存在加速内容",
+              message: "该渠道ID的此域名下仍有关联的加速内容，不可删除！",
             });
             this.common.monitoringLogs("删除 ", "删除域名", 0);
           }
@@ -519,8 +516,21 @@ export default {
     },
     //停用
     disableuser(num, row) {
-      this.operatingFrom = row;
+       this.$confirm(
+        "停用后该渠道ID与此域名相关的所有加速内容将停用，是否继续？",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(() => {
+            this.operatingFrom = row;
       this.operating(1);
+        })
+        .catch(() => {});
+   
     },
     //启用
     enableuser(num, row) {
@@ -529,8 +539,20 @@ export default {
     },
     //删除
     deleateuser(num, row) {
-      this.operatingFrom = row;
-      this.operating(3);
+      this.$confirm(
+        "删除后该渠道ID的此域名将从列表移动，删除后信息不可恢复，是否继续？",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          this.operatingFrom = row;
+          this.operating(3);
+        })
+        .catch(() => {});
     },
     //批量启用
     batchenableuser() {
@@ -563,7 +585,19 @@ export default {
         });
         return false;
       }
-      this.operating(6);
+      this.$confirm(
+        "删除后该渠道ID的此域名将从列表移动，删除后信息不可恢复，是否继续？",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          this.operating(6);
+        })
+        .catch(() => {});
     },
     //添加URL
     new_btn() {
@@ -793,12 +827,29 @@ export default {
                     message: "添加成功",
                   });
                   this.common.monitoringLogs("新增", "新增域名", 1);
-                }
-                
-                else {
+                  this.dialogFormVisible = false;
+                } else if (res.status == 0 && res.data.res_data[0][1] == 1) {
                   this.$message({
                     type: "error",
-                    message: "添加失败",
+                    message: "格式错误，添加失败",
+                  });
+                  this.common.monitoringLogs("新增", "新增域名", 0);
+                } else if (res.status == 0 && res.data.res_data[0][1] == 2) {
+                  this.$message({
+                    type: "error",
+                    message: "域名重复，添加失败",
+                  });
+                  this.common.monitoringLogs("新增", "新增域名", 0);
+                } else if (res.status == 0 && res.data.res_data[0][1] == 3) {
+                  this.$message({
+                    type: "error",
+                    message: "渠道ID不存在或者该渠道ID已被冻结，添加失败",
+                  });
+                  this.common.monitoringLogs("新增", "新增域名", 0);
+                } else if (res.status == 0 && res.data.res_data[0][1] == 4) {
+                  this.$message({
+                    type: "error",
+                    message: "数据库写入错误，添加失败",
                   });
                   this.common.monitoringLogs("新增", "新增域名", 0);
                 }
@@ -811,8 +862,6 @@ export default {
                 });
                 this.common.monitoringLogs("新增", "新增域名", 0);
               });
-
-            this.dialogFormVisible = false;
           }
         }
       });
