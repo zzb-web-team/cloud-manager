@@ -936,9 +936,9 @@ export default {
     disableuser(state) {
       let messagetext = "";
       if (state == 0) {
-        messagetext = "停用后该URL将无法使用, 是否继续?";
+        messagetext = "停用后该渠道ID与此域名相关的所有加速内容将停用，是否继续？";
       } else {
-        messagetext = "启用该URL?";
+        messagetext = "是否启用该域名?";
       }
       this.$confirm(messagetext, "提示", {
         confirmButtonText: "确定",
@@ -956,13 +956,31 @@ export default {
           params.data_count = 0;
           params.state=state
            params.buser_id=this.buser_ids
-          change_state(params)
+
+         let tempparam = {};
+            tempparam.data_count = 0;
+            tempparam.data = [];
+
+            let obj = {
+              buser_id: this.buser_ids,
+              data_count: 0,
+              state: state,
+              data_array: urllist,
+            };
+            tempparam.data.push(obj);
+
+          change_state(tempparam)
             .then(res => {
-              if (res.status == 0) {
+              if (res.status== 0) {
                 this.geturlconfig();
                 this.$message({
                   type: "success",
                   message: "操作成功!",
+                });
+              }else{
+                  this.$message({
+                  type: "error",
+                  message: "操作失败!",
                 });
               }
             })

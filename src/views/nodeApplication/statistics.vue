@@ -969,7 +969,7 @@ export default {
       // params.chanId = this.chanid + "";
       params.start_ts = this.starttime;
       params.end_ts = this.endtime;
-      params.pageNo = this.pageNo;
+      params.pageNo = this.pageNo-1;
       params.pageSize = this.pageSize;
       if (this.value1fileName) {
         params.fileName = this.value1fileName;
@@ -1008,6 +1008,7 @@ export default {
     },
     //自定义时间确定按钮
     seachtu(data) {
+      this.pageNo=1
       if (data == 0) {
         this.getseach(0);
       } else if (data == 1) {

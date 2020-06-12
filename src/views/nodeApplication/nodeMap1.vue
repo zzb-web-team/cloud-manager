@@ -689,10 +689,10 @@ export default {
           //     obj.value = index;
           //     this.options2.push(obj);
           //   });
-          res.data.hashidSet.forEach((item, index) => {
+          res.data.terminalSet.forEach((item, index) => {
             let obj = {};
             obj.label = item;
-            obj.value = index;
+            obj.value = item;
             this.hashidSet.push(obj);
           });
           res.data.chanIdSet.forEach((item, index) => {
@@ -913,6 +913,7 @@ export default {
         .catch(err => {});
     },
     seachtu(data) {
+      this.pageNo=1
       if (data == 1) {
         this.getseachlabel1();
       } else {

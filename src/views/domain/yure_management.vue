@@ -207,7 +207,7 @@ export default {
     },
     //获取每页数量
     handleSizeChange(pagetol) {
-      this.currentPage = pagetol;
+     // this.currentPage = pagetol;
       //this.getdata();
     },
     queryInfo() {
@@ -259,10 +259,14 @@ export default {
               } else {
                 tempArr[i].refresh_type = "刷新缓存";
               }
-              if (tempArr[i].state == 1) {
-                tempArr[i].state = "已完成";
-              } else {
+              if (tempArr[i].state == 0) {
                 tempArr[i].state = "进行中";
+              } else if(tempArr[i].state == 1) {
+                tempArr[i].state = "已完成";
+              } else if(tempArr[i].state == 2) {
+                tempArr[i].state = "等待中";
+              } else if(tempArr[i].state == 3) {
+                tempArr[i].state = "失败";
               }
             }
 
