@@ -1,58 +1,58 @@
 <template>
-    <div class="content">
-        <!-- 头部 -->
-        <div class="bread_crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>视频点播日志</el-breadcrumb-item>
-                <!-- <el-breadcrumb-item>
+  <div class="content">
+    <!-- 头部 -->
+    <div class="bread_crumbs">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>视频点播日志</el-breadcrumb-item>
+        <!-- <el-breadcrumb-item>
           <a href="/">FS存储</a>
         </el-breadcrumb-item> -->
-            </el-breadcrumb>
-        </div>
-
-        <!-- 搜索 -->
-        <div class="seach">
-            <div class="seach_top">
-                <el-input placeholder="视频ID" v-model="input" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70">
-                    <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
-                </el-input>
-                <el-input placeholder="渠道ID" v-model="inputActive1" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px">
-                    <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
-                </el-input>
-                <el-input placeholder="加速内容名称" v-model="inputActive2" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px">
-                    <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
-                </el-input>
-                <div class="seach_top_right" @click="option_display()">
-                    筛选
-                    <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
-                </div>
-            </div>
-            <div v-if="optiondisplay" class="seach_bottom">
-                <span>点播时间：</span>
-                <el-date-picker v-model="value1" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
-                <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button>
-                <el-button type="primary" @click="reset()">重置</el-button>
-            </div>
-        </div>
-
-        <!-- 表格 -->
-        <div style="text-align:right;padding: 10px;background: #fff;margin-top:20px;padding-right:20px;">
-            <el-button type="primary" @click="toexportExcelNew()" style="margin-top:10px;">导出</el-button>
-
-        </div>
-        <div style="background: #fff;padding:20px;padding-top:0px;">
-            <el-table stripe :data="tableData" border :cell-style="rowClass" :header-cell-style="headClass" style="width: 100%">
-                <el-table-column prop="fileId" label="视频ID" width="180"></el-table-column>
-                <el-table-column prop="chanId" label="渠道ID" width="180"></el-table-column>
-                <el-table-column prop="fileName" label="加速内容名称"></el-table-column>
-                <el-table-column prop="fileSize" label="文件大小"></el-table-column>
-                <el-table-column prop="dataFlow" label="点播流量"></el-table-column>
-                <el-table-column prop="userIpInfo" label="点播IP"></el-table-column>
-                <el-table-column prop="startTS" label="点播时间"></el-table-column>
-            </el-table>
-        </div>
-        <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
+      </el-breadcrumb>
     </div>
+
+    <!-- 搜索 -->
+    <div class="seach">
+      <div class="seach_top">
+        <el-input placeholder="视频ID" v-model="input" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70">
+          <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
+        </el-input>
+        <el-input placeholder="渠道ID" v-model="inputActive1" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px">
+          <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
+        </el-input>
+        <el-input placeholder="加速内容名称" v-model="inputActive2" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px">
+          <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
+        </el-input>
+        <div class="seach_top_right" @click="option_display()">
+          筛选
+          <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
+        </div>
+      </div>
+      <div v-if="optiondisplay" class="seach_bottom">
+        <span>点播时间：</span>
+        <el-date-picker v-model="value1" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+        <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button>
+        <el-button type="primary" @click="reset()">重置</el-button>
+      </div>
+    </div>
+
+    <!-- 表格 -->
+    <div style="text-align:right;padding: 10px;background: #fff;margin-top:20px;padding-right:20px;">
+      <el-button type="primary" @click="toexportExcelNew()" style="margin-top:10px;">导出</el-button>
+
+    </div>
+    <div style="background: #fff;padding:20px;padding-top:0px;">
+      <el-table stripe :data="tableData" border :cell-style="rowClass" :header-cell-style="headClass" style="width: 100%">
+        <el-table-column prop="fileId" label="视频ID" width="180"></el-table-column>
+        <el-table-column prop="chanId" label="渠道ID" width="180"></el-table-column>
+        <el-table-column prop="fileName" label="加速内容名称"></el-table-column>
+        <el-table-column prop="fileSize" label="文件大小"></el-table-column>
+        <el-table-column prop="dataFlow" label="点播流量"></el-table-column>
+        <el-table-column prop="userIpInfo" label="点播IP"></el-table-column>
+        <el-table-column prop="startTS" label="点播时间"></el-table-column>
+      </el-table>
+    </div>
+    <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
+  </div>
 </template>
 
 <script>
@@ -198,6 +198,20 @@ export default {
               tempArr[i].startTS = this.common.getTimes(
                 tempArr[i].startTS * 1000
               );
+              if (tempArr[i].fileSize == 0) {
+                tempArr[i].fileSize = 0;
+              } else {
+                tempArr[i].fileSize = this.common.formatByteActive(
+                  tempArr[i].fileSize
+                );
+              }
+              if (tempArr[i].dataFlow == 0) {
+                tempArr[i].dataFlow = 0;
+              } else {
+                tempArr[i].dataFlow = this.common.formatByteActive(
+                  tempArr[i].dataFlow
+                );
+              }
             }
             this.tableData = tempArr;
             this.total_cnt = res.data.totalCnt;

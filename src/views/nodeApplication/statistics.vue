@@ -439,8 +439,7 @@ export default {
         params.acce = "*";
       }
       params.top = 10;
-      // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
-      params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+      params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
       export_topisp_accesscnt_curve_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -483,8 +482,7 @@ export default {
         params.acce = "*";
       }
       params.top = 10;
-      // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
-      params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+      params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
       export_topregion_accesscnt_curve_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -526,8 +524,7 @@ export default {
         params.acce = "*";
       }
       params.top = 10;
-      // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
-      params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+      params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
       export_playtimes_curve_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -574,8 +571,7 @@ export default {
       this.uvArray = [];
       this.pvArray = [];
       this.timeArray = [];
-      // params.time_unit = this.common.timeUnit(this.starttime, this.endtime),
-      params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+     params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
       export_pv_uv_curve_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -836,11 +832,13 @@ export default {
         this.uvArray = [];
         this.pvArray = [];
         this.timeArray = [];
-        // params.time_unit = this.common.timeUnit(this.starttime, this.endtime),
-        params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+       
+        params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
 
         pv_uv_curve(params)
           .then(res => {
+              this.totalPV = res.data.totalPV;
+              this.totalUV = res.data.totalUV;
             if (res.data.uvArray) {
               res.data.uvArray.forEach((item, index) => {
                 this.uvArray.push(Math.floor(item));
@@ -885,8 +883,7 @@ export default {
           params.acce = "*";
         }
         params.top = 10;
-        // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
-        params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+       params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
 
         if (data == 1) {
           this.playTimesArray1 = [];
@@ -897,8 +894,6 @@ export default {
               this.timeArray1 = res.data.regionArray;
               this.drawLine1(this.playTimesArray1, this.timeArray1);
               this.tablecdn = res.data.accessCntTable;
-              this.totalPV = res.data.totalPV;
-              this.totalUV = res.data.totalUV;
               console.log(this.tablecdn);
             })
             .catch(err => {
@@ -947,8 +942,7 @@ export default {
         }
         this.playTimesArray2 = [];
         this.timeArray2 = [];
-        // params.time_unit = this.common.timeUnit(this.starttime, this.endtime)
-        params.time_unit = Math.ceil((this.endtime - this.starttime) / 60 / 12);
+       params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
 
         query_playtimes_curve(params)
           .then(res => {

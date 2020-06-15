@@ -217,6 +217,17 @@ export default {
       return 24 * 60;
     }
   },
+  timeUnitActive: function(startTime,endTime) {
+    
+    let tempTime = endTime - startTime;
+    if (tempTime <= 86400) {
+      return  5;
+    } else if (86400 < tempTime <= 2592000) {
+      return 60;
+    } else if (tempTime > 2592000) {
+      return   1440;
+    }
+  },
   //操作日志公共方法
   monitoringLogs: function(
     action,
