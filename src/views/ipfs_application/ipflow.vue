@@ -50,8 +50,8 @@
                 <el-table-column prop="dataFlow" label="消费流量"></el-table-column>
                 <el-table-column prop="reqCount" label="请求数"></el-table-column>
                 <el-table-column prop="failCount" label="失败请求数"></el-table-column>
-                <el-table-column prop="reqStartTime" label="启用时间"></el-table-column>
-                <el-table-column prop="reqEndTime" label="结束时间"></el-table-column>
+                <el-table-column prop="reqStartTime" label="启用时间" sortable></el-table-column>
+                <el-table-column prop="reqEndTime" label="结束时间" sortable></el-table-column>
                 <el-table-column prop="useTime" label="用时(s)"></el-table-column>
                 <!-- <el-table-column prop="endTS" label="结束时间"></el-table-column>
             <el-table-column prop="totalTime" label="用时"></el-table-column> -->

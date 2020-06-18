@@ -5,7 +5,7 @@ var href = window.location.href
 if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     var serverUrl = 'http://xyj.grapefruitcloud.com' //PHP服务域名
 } else {
-    var serverUrl = 'http://zzb.onezen.net' //PHP服务域名
+    var serverUrl = 'http://xyj.grapefruitcloud.com' //PHP服务域名
     var serverUrl2 = 'http://test.zzb.com' //PHP服务域名
 }
 

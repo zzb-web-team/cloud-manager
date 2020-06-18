@@ -10,7 +10,7 @@
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata()">
+              <el-select v-model="valueacce" placeholder="全部终端"  style="width: 10%;margin-right: 10px;" @change="getdata()">
                 <el-option label="全部" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
               </el-select>
@@ -30,13 +30,13 @@
 
             <div class="user_item">
               <div class="item_left">
-                <div class="item_text">总访问次数(pv)</div>
+                <div class="item_text">总访问次数(UV)</div>
                 <div class="item_count">
                   <span>{{ totalPV }}</span>
                 </div>
               </div>
               <div class="item_right">
-                <div class="item_text">独立IP访问数(pv)</div>
+                <div class="item_text">独立IP访问数(PV)</div>
                 <div class="item_count">
                   <span>{{ totalUV }}</span>
                 </div>
@@ -53,7 +53,7 @@
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata1()">
+              <el-select v-model="valueacce" placeholder="全部终端"  style="width: 10%;margin-right: 10px;" @change="getdata1()">
                 <el-option label="全部" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
               </el-select>
@@ -106,7 +106,7 @@
                     </el-table-column>
                     <el-table-column label="流量占比">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.accessPercent }}</div>
+                        <div>{{ scope.row.dataFlowPercnt }}</div>
                       </template>
                     </el-table-column>
                     <el-table-column label="访问次数">
@@ -125,6 +125,8 @@
                       </template>
                     </el-table-column>
                   </el-table>
+                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :currentPage="currentPage1" :pagesa="total_cnt1"></fenye>
+
                 </el-col>
               </el-row>
             </div>
@@ -134,7 +136,7 @@
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata2()">
+              <el-select v-model="valueacce" placeholder="全部终端"  style="width: 10%;margin-right: 10px;" @change="getdata2()">
                 <el-option label="全部" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
               </el-select>
@@ -181,7 +183,7 @@
                     </el-table-column>
                     <el-table-column label="访问占比(%)">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.cntPercent }}</div>
+                        <div>{{ scope.row.cntPercent |formatPercent }}</div>
                       </template>
                     </el-table-column>
                        
@@ -217,6 +219,7 @@ import {
   export_playtimes_curve_file,
   export_topregion_accesscnt_curve_file,
   export_topisp_accesscnt_curve_file,
+  getterminal
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -224,11 +227,14 @@ import common from "../../comm/js/util";
 export default {
   data() {
     return {
+      ableStatus:true,
       primaryActive: "primary",
       exportActive: 0,
       exportTitle: "用户访问分布",
       exportTitleTable: "省市",
       currentPage: 1,
+      currentPage1: 1,
+      total_cnt1:0,
       pagesize: 10,
       total_cnt: 0,
       value1fileName: "",
@@ -351,6 +357,7 @@ export default {
       timeArray2: [], //图三x
       options1chanid: [],
       value1Activechanid: "",
+      pagesActive:true,
     };
   },
   filters: {
@@ -373,7 +380,7 @@ export default {
       if (data == 0) {
         return 0;
       } else {
-        return (data * 100).toFixed(2);
+        return (data * 100).toFixed(6);
       }
     },
     formatAvgTime(data){
@@ -596,15 +603,16 @@ export default {
       param.chanid = this.value1Activechanid;
 
       param.page = this.pageActive;
-      getvideo(param)
+      getterminal(param)
         .then(res => {
           if (res.status == 0) {
-            this.labelData = [];
+            this.ableStatus=false
+            this.options3 = [];
             res.result.cols.forEach((item, index) => {
               let obj = {};
-              obj.value = item.url_name;
-              obj.label = item.url_name;
-              this.labelData.push(obj);
+              obj.value = item.name;
+              obj.label = item.name;
+              this.options3.push(obj);
             });
             this.options1chanid = this.options1chanid.concat(this.labelData);
             if (res.result.les_count == 0) {
@@ -625,10 +633,25 @@ export default {
       this.pageNo = pages;
       this.gettable();
     },
+       //获取页码
+    handleCurrentChange1(pages) {
+       
+      this.currentPage1 = pages;
+      if(this.pagesActive==true){
+         this.getcure(1) 
+      }else{
+         this.getcure(2) 
+      }
+     
+    
+    },
     //获取每页数量
     handleSizeChange(pagetol) {
       this.pagesize = pagetol;
       // this.getuserlist();
+    },
+    handleSizeChange1(){
+
     },
     getdata() {
       this.getseach(0);
@@ -888,13 +911,16 @@ export default {
         if (data == 1) {
           this.playTimesArray1 = [];
           this.timeArray1 = [];
+            params.pageNo=this.currentPage1-1
+          params.pageSize=10
+        
           query_topregion_accesscnt_curve(params)
             .then(res => {
               this.playTimesArray1 = res.data.accessCntArray;
               this.timeArray1 = res.data.regionArray;
               this.drawLine1(this.playTimesArray1, this.timeArray1);
               this.tablecdn = res.data.accessCntTable;
-              console.log(this.tablecdn);
+              this.total_cnt1=res.data.totalCnt
             })
             .catch(err => {
               console.log(err);
@@ -902,13 +928,16 @@ export default {
         } else {
           this.playTimesArray1 = [];
           this.timeArray1 = [];
+            params.pageNo=this.currentPage1-1
+          params.pageSize=10
           query_topisp_accesscnt_curve(params)
             .then(res => {
               this.playTimesArray1 = res.data.accessCntArray;
               this.timeArray1 = res.data.ispArray;
               this.drawLine1(this.playTimesArray1, this.timeArray1);
               this.tablecdn = res.data.accessCntTable;
-              console.log(this.tablecdn);
+              this.total_cnt1=res.data.totalCnt
+
             })
             .catch(err => {
               console.log(err);
@@ -1051,7 +1080,7 @@ export default {
     },
     //七天
     sevendat(data) {
-      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      let times = parseInt(new Date(new Date()).getTime() / 1000) 
       this.starttime = times - 24 * 60 * 60 * 7;
       this.endtime = times;
       this.timeUnit = 60 * 24;
@@ -1065,7 +1094,7 @@ export default {
     },
     //三十天
     thirtyday(data) {
-      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      let times = parseInt(new Date(new Date()).getTime() / 1000) 
       this.starttime = times - 24 * 60 * 60 * 30;
       this.endtime = times;
       this.timeUnit = 60 * 24;
@@ -1096,15 +1125,19 @@ export default {
     goarea() {
       this.twob = false;
       this.exportActive = 0;
+      this.currentPage1=1
       this.exportTitle = "用户访问分布";
       this.exportTitleTable = "省市";
      this.primaryActive = !this.primaryActive;
+     this.pagesActive=true,
       this.getseach(1);
     },
     //切换到运营商
     gosupplier() {
+      this.currentPage1=1
       this.twob = true;
       this.exportActive = 1;
+        this.pagesActive=false,
       this.exportTitle = "用户运营商分布";
       this.exportTitleTable = "运营商";
       this.primaryActive = !this.primaryActive;
@@ -1121,6 +1154,7 @@ export default {
     },
     //选项卡
     handleClick(tab, event) {
+      this.ableStatus=true
       this.value1fileName = "";
       this.value1Activechanid = "";
       this.valueacce = "";

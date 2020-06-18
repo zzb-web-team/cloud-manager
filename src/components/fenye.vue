@@ -24,7 +24,7 @@ export default {
   props: {
     pagesa: {
       type: Number,
-      default: ""
+      default: 0
     },
     currentPage:{
       type:Number,

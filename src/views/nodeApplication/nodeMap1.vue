@@ -109,7 +109,8 @@ import {
   getvideo,
   export_pv_uv_curve_file,
   export_backsource_flow_file,
-  export_accelerate_flow_file
+  export_accelerate_flow_file,
+  getterminal
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -621,15 +622,15 @@ export default {
       param.chanid = this.value1Activechanid;
 
       param.page = this.pageActive;
-      getvideo(param)
+      getterminal(param)
         .then(res => {
           if (res.status == 0) {
-            this.labelData = [];
+            this.hashidSet = [];
             res.result.cols.forEach((item, index) => {
               let obj = {};
-              obj.value = item.url_name;
-              obj.label = item.url_name;
-              this.labelData.push(obj);
+              obj.value = item.name;
+              obj.label = item.name;
+              this.hashidSet.push(obj);
             });
             this.options1chanid = this.options1chanid.concat(this.labelData);
             console.log(this.labelData);
@@ -693,7 +694,13 @@ export default {
           //     obj.value = index;
           //     this.options2.push(obj);
           //   });
-          res.data.terminalSet.forEach((item, index) => {
+          // res.data.terminalSet.forEach((item, index) => {
+          //   let obj = {};
+          //   obj.label = item;
+          //   obj.value = item;
+          //   this.hashidSet.push(obj);
+          // });
+            res.data.hashidSet.forEach((item, index) => {
             let obj = {};
             obj.label = item;
             obj.value = item;
@@ -877,11 +884,12 @@ export default {
             obj.value = index;
             this.optionsa3.push(obj);
           });
-          res.data.chanIdSet.forEach((item, index) => {
+ 
+              res.data.hashidSet.forEach((item, index) => {
             let obj = {};
             obj.label = item;
-            obj.value = index;
-            this.options1Active.push(obj);
+            obj.value = item;
+            this.hashidSet.push(obj);
           });
           this.gettable2();
         })
@@ -984,7 +992,7 @@ export default {
     },
     //七天
     sevendat(data) {
-      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      let times = parseInt(new Date(new Date()).getTime() / 1000) ;
       this.starttime = times - 24 * 60 * 60 * 7;
       this.endtime = times;
       this.timeUnit = 60 * 24;
@@ -996,7 +1004,7 @@ export default {
     },
     //三十天
     thirtyday(data) {
-      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      let times = parseInt(new Date(new Date()).getTime() / 1000) ;
       this.starttime = times - 24 * 60 * 60 * 30;
       this.endtime = times;
       this.timeUnit = 60 * 24;
@@ -1033,6 +1041,7 @@ export default {
     //选项卡
 
     handleClick(tab, event) {
+      this.hashidSet = []
       if (tab.index == 0) {
         // this.value1 = "";
         this.value2 = "*";
