@@ -1,44 +1,46 @@
 import store2 from 'store2'
 const config = {
-        proxy: '/api', //代理配置
-    }
-    //axios基本配置
+    proxy: '/api', //代理配置
+}
+//axios基本配置
 const api = axios.create({
-        timeout: 10000,
-        withCredentials: true
-    })
-    //请求开始拦截
+    timeout: 10000,
+    withCredentials: true
+})
+//请求开始拦截
 api.interceptors.request.use(conf => {
-            //请求带token
-            conf.headers['Authorization'] = store2('accesstoken')
-            return conf
-        },
-        error => ({ status: 0, msg: error.message })
-    )
-    //请求返回拦截
+        //请求带token
+        conf.headers['Authorization'] = store2('accesstoken')
+        return conf
+    },
+    error => ({
+        status: 0,
+        msg: error.message
+    })
+)
+//请求返回拦截
 api.interceptors.response.use(response => {
-            return Promise.resolve(response).then(checkCode)
-        },
-        error => {
-            checkStatus(error.response)
-            return Promise.reject(error)
-        }
-    )
-    // http状态码错误处理
-const checkStatus = (res) => {
-        window.$pig.$vux.loading.hide()
-        switch (res.status) {
-            case 401:
-                { //登录过期
-                    console.log('登录过期')
-                    break;
-                }
-            default:
-                console.log('服务器存在异常', 'middle')
-                break;
-        }
+        return Promise.resolve(response).then(checkCode)
+    },
+    error => {
+        checkStatus(error.response)
+        return Promise.reject(error)
     }
-    // 后台自定义 code错误处理
+)
+// http状态码错误处理
+const checkStatus = (res) => {
+    window.$pig.$vux.loading.hide()
+    switch (res.status) {
+        case 401: { //登录过期
+            console.log('登录过期')
+            break;
+        }
+        default:
+            console.log('服务器存在异常', 'middle')
+            break;
+    }
+}
+// 后台自定义 code错误处理
 const checkCode = (res) => {
     if (res) {
         if (res.data.code === 0 || moreCodeFn(res)) { //code为0成功
@@ -77,29 +79,33 @@ const formatParams = (method = 'GET', params) => {
                 method,
                 data: params
             }
-        case 'PUT':
-            return {
-                headers,
-                method,
-                data: params
-            }
-        case 'DELETE':
-            return {
-                headers,
-                method,
-            }
-        case 'GET':
-            return {
-                headers,
-                method,
-                params
-            }
-        default:
-            return {
-                headers,
-                method,
-                params
-            }
+            case 'PUT':
+                return {
+                    headers,
+                    method,
+                    data: params
+                }
+                case 'DELETE':
+                    return {
+                        headers,
+                        method,
+                    }
+                    case 'GET':
+                        return {
+                            headers,
+                            method,
+                            params
+                        }
+                        default:
+                            return {
+                                headers,
+                                method,
+                                params
+                            }
     }
 }
-export { api, formatParams, config }
+export {
+    api,
+    formatParams,
+    config
+}

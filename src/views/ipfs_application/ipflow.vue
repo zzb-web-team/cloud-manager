@@ -40,18 +40,18 @@
             <div style="text-align:right;padding-bottom:10px;">
                 <el-button type="primary" @click="toexportExcelNew()">导出</el-button>
             </div>
-            <el-table stripe :data="tableData" :cell-style="rowClass" :header-cell-style="headClass" style="width: 100%">
+            <el-table stripe :data="tableData" :cell-style="rowClass" :header-cell-style="headClass" @sort-change="tableSortChange" style="width: 100%">
                 <el-table-column prop="accelTypes" label="业务场景" width="180"></el-table-column>
                 <el-table-column prop="chanId" label="渠道ID" width="180"></el-table-column>
                 <el-table-column prop="terminalName" label="点播终端"></el-table-column>
                 <el-table-column prop="ipInfo" label="点播IP"></el-table-column>
                 <el-table-column prop="urlName" label="加速内容名称"></el-table-column>
-                <el-table-column prop="fileUrl" label="播放URL"></el-table-column>
+                <el-table-column prop="fileUrl" label="播放地址"></el-table-column>
                 <el-table-column prop="dataFlow" label="消费流量"></el-table-column>
                 <el-table-column prop="reqCount" label="请求数"></el-table-column>
                 <el-table-column prop="failCount" label="失败请求数"></el-table-column>
-                <el-table-column prop="reqStartTime" label="启用时间" sortable></el-table-column>
-                <el-table-column prop="reqEndTime" label="结束时间" sortable></el-table-column>
+                <el-table-column prop="reqStartTime" label="启用时间" sortable="custom"></el-table-column>
+                <el-table-column prop="reqEndTime" label="结束时间"></el-table-column>
                 <el-table-column prop="useTime" label="用时(s)"></el-table-column>
                 <!-- <el-table-column prop="endTS" label="结束时间"></el-table-column>
             <el-table-column prop="totalTime" label="用时"></el-table-column> -->
@@ -133,6 +133,7 @@ export default {
       fileUrl: "",
       userIp: "",
       chanId: "",
+    orderBy:2,
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now() - 8.64e6; //如果没有后面的-8.64e6就是不可以选择今天的
@@ -147,6 +148,18 @@ export default {
     this.queryInfo();
   },
   methods: {
+      //排序
+    tableSortChange(column) {
+      console.log(column)
+    
+      this.currentPage = 1;
+      if (column.order == "descending") {
+        this.orderBy = 2;
+      } else {
+        this.orderBy = 1;
+      }
+      this.queryInfo();
+    },
     //导出
     toexportExcelNew() {
       if (this.tableData.length == 0) {
@@ -228,6 +241,7 @@ export default {
         pageSize: 10,
         requestFlag: 2,
         accelType: this.inputActive3,
+        orderBy:this.orderBy
       };
       query_accelerate_log(param)
         .then(res => {
@@ -298,61 +312,7 @@ export default {
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]));
     },
-    toexportExcel() {
-      let startTime = 0;
-      let endTime = 0;
-      if (this.value1) {
-        if (this.value1 == "") {
-          startTime = 1571465783;
-          endTime = 1576736183;
-        } else {
-          endTime = this.value1[1].getTime() / 1000;
-          startTime = this.value1[0].getTime() / 1000;
-        }
-      } else {
-        startTime = 1571465783;
-        endTime = 1576736183;
-      }
-
-      let param = {
-        start_ts: startTime,
-        end_ts: endTime,
-        chanId: this.inputActive1 == "" ? "*" : this.inputActive,
-        fileUrl: this.inputActive2 == "" ? "*" : this.inputActive2,
-        userIp: this.input == "" ? "*" : this.input,
-        pageNo: this.pageActive,
-        pageSize: 10,
-        requestFlag: 2,
-      };
-      query_accelerate_log(param)
-        .then(res => {
-          if (res.status == 0) {
-            if (this.pageActive >= res.data.totalPage) {
-              this.exportExcel();
-              this.common.monitoringLogs("导出", "导出点播加速日志", 1);
-            } else {
-              let tempArr = res.data.list;
-              for (var i = 0; i < tempArr.length; i++) {
-                tempArr[i].startTS = this.common.getTimes(
-                  tempArr[i].startTS * 1000
-                );
-                tempArr[i].endTS = this.common.getTimes(
-                  tempArr[i].endTS * 1000
-                );
-              }
-              this.tableData2 = this.tableData2.concat(tempArr);
-              this.pageActive++;
-              this.toexportExcel();
-            }
-
-            this.total_cnt = res.data.totalCnt;
-          } else {
-            this.common.monitoringLogs("导出", "导出点播加速日志", 0);
-          }
-        })
-        .catch(error => {});
-    },
-
+  
     //筛选按钮
     option_display() {
       this.optiondisplay = !this.optiondisplay;

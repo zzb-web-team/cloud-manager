@@ -30,7 +30,7 @@
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
             </div>
             <div class="device_form">
-              <div id="myChart" :style="{ height: '607px' }"></div>
+              <div id="myChartMap" :style="{ height: '607px' }"></div>
             </div>
             <div class="devide_table">
               <el-row type="flex" class="row_active">
@@ -39,18 +39,18 @@
               <el-row type="flex" class="row_active">
                 <el-col :span="24">
                   <el-table :data="tablecdn" border style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
-                      <el-table-column label="渠道ID">
+                    <el-table-column label="渠道ID">
                       <template slot-scope="scope">
                         <div>{{ scope.row.chanelId }}</div>
                       </template>
                     </el-table-column>
-             
+
                     <el-table-column label="总流量">
                       <template slot-scope="scope">
                         <div>{{ scope.row.streamAalue |setbytes }}</div>
                       </template>
                     </el-table-column>
-                           <el-table-column label="时间">
+                    <el-table-column label="时间">
                       <template slot-scope="scope">
                         <div>{{ scope.row.timeValue | settimes }}</div>
                       </template>
@@ -88,7 +88,7 @@
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(2)">确定</el-button>
             </div>
             <div class="device_form" style>
-              <div id="myChart1" :style="{ height: '607px' }"></div>
+              <div id="myChartMap1" :style="{ height: '607px' }"></div>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import { dateToMs, getymdtime,getymdtime1 } from "../../servers/sevdate";
+import { dateToMs, getymdtime, getymdtime1 } from "../../servers/sevdate";
 import fenye2 from "@/components/fenye2";
 import {
   accelerate_flow_query_conditions,
@@ -110,7 +110,7 @@ import {
   export_pv_uv_curve_file,
   export_backsource_flow_file,
   export_accelerate_flow_file,
-  getterminal
+  getterminal,
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -118,13 +118,13 @@ import common from "../../comm/js/util";
 export default {
   data() {
     return {
-      value1acce: "",
-      valueacce: "",
+      value1acce: "*",
+      valueacce: "*",
       hashidSet: [],
       options2: [
         {
-          value:"*",
-          label:"全部"
+          value: "*",
+          label: "全部",
         },
         {
           value: "华北",
@@ -321,20 +321,18 @@ export default {
       options1chanid: [],
 
       options3: [
-        {
-          label: "电信",
-        },
-
-        {
-          label: "移动",
-        },
-
-        {
-          label: "联通",
-        },
-        {
-          label: "其他",
-        },
+        // {
+        //   label: "电信",
+        // },
+        // {
+        //   label: "移动",
+        // },
+        // {
+        //   label: "联通",
+        // },
+        // {
+        //   label: "其他",
+        // },
       ],
       options4: [],
       optionsa1: [],
@@ -345,11 +343,11 @@ export default {
       optionsa4: [],
       value1: "",
       value2: "*",
-      value3: "",
+      value3: "*",
       value4: "",
       valuea1: "",
       valuea2: "*",
-      valuea3: "",
+      valuea3: "*",
       valuea4: "",
       tablecdn: [],
       activeName: "first",
@@ -515,11 +513,13 @@ export default {
     }
     this.chart.dispose();
     this.chart = null;
+    this.drawLine();
+    this.drawLine1();
   },
   methods: {
     //回源统计图表导出
-    exoprtant_backsource(){
-        let params = new Object();
+    exoprtant_backsource() {
+      let params = new Object();
       params.start_ts = this.starttime;
       params.end_ts = this.endtime;
       //params.chanId = this.chanid + "";
@@ -549,19 +549,21 @@ export default {
       } else {
         params.acce = "*";
       }
-    params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
-          export_backsource_flow_file(params).then(res=>{
-        if(res.status==0){
-        window.open(res.msg, '_blank');
-        }
-      }).catch(err=>{
-        
-      })
-
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      export_backsource_flow_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {});
     },
     //加速流量图标导出
-    exoprtant_pupv(){
-       let params = new Object();
+    exoprtant_pupv() {
+      let params = new Object();
       params.start_ts = this.starttime;
       params.end_ts = this.endtime;
       // params.chanId = this.chanid + "";
@@ -597,14 +599,17 @@ export default {
         params.acce = "*";
       }
 
-    params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
-      export_accelerate_flow_file(params).then(res=>{
-        if(res.status==0){
-        window.open(res.msg, '_blank');
-        }
-      }).catch(err=>{
-        
-      })
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      export_accelerate_flow_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {});
     },
     //输入渠道ID查询
     onchanidChange() {
@@ -682,45 +687,44 @@ export default {
       params.chanId = "*";
       accelerate_flow_query_conditions(params)
         .then(res => {
-          res.data.fileNameSet.forEach((item, index) => {
+          // res.data.fileNameSet.forEach((item, index) => {
+          //   let obj = {};
+          //   obj.label = item;
+          //   obj.value = index;
+          //   this.options1.push(obj);
+          // });
+          res.data.ispSet.forEach((item, index) => {
             let obj = {};
             obj.label = item;
             obj.value = index;
-            this.options1.push(obj);
+            this.options3.push(obj);
           });
-          //   res.data.regionSet.forEach((item, index) => {
-          //     let obj = {};
-          //     obj.label = item;
-          //     obj.value = index;
-          //     this.options2.push(obj);
-          //   });
-          // res.data.terminalSet.forEach((item, index) => {
-          //   let obj = {};
-          //   obj.label = item;
-          //   obj.value = item;
-          //   this.hashidSet.push(obj);
-          // });
-            res.data.hashidSet.forEach((item, index) => {
+          res.data.terminalSet.forEach((item, index) => {
             let obj = {};
             obj.label = item;
             obj.value = item;
             this.hashidSet.push(obj);
           });
-          res.data.chanIdSet.forEach((item, index) => {
-            let obj = {};
-            obj.label = item;
-            obj.value = index;
-            this.options1Active.push(obj);
-          });
+          //   res.data.hashidSet.forEach((item, index) => {
+          //   let obj = {};
+          //   obj.label = item;
+          //   obj.value = item;
+          //   this.hashidSet.push(obj);
+          // });
+          // res.data.chanIdSet.forEach((item, index) => {
+          //   let obj = {};
+          //   obj.label = item;
+          //   obj.value = index;
+          //   this.options1Active.push(obj);
+          // });
           this.gettable1();
         })
         .catch(Error => {
-          console.log(Error)
+          console.log(Error);
         });
     },
     //请求数据--加速流量条形图
     gettable1() {
-      
       this.dataFlowArray = [];
       this.timeArray = [];
       let params = new Object();
@@ -758,7 +762,10 @@ export default {
       } else {
         params.acce = "*";
       }
-    params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
       accelerate_flow(params)
         .then(res => {
           res.data.streamArray.forEach((item, index) => {
@@ -769,27 +776,27 @@ export default {
           //   this.timeArray.push(getymdtime1(item));
           // });
 
-         // this.dataFlowArray = res.data.dataFlowArray;
-				//	this.dataFlownum = res.data.dataFlowArray.length - 1;
+          // this.dataFlowArray = res.data.dataFlowArray;
+          //	this.dataFlownum = res.data.dataFlowArray.length - 1;
 
-					this.dataFlownum = res.data.streamArray.length - 1;
-						let upcli = Math.floor(this.dataFlownum / 12);
-						res.data.timeArray.forEach((item, index) => {
-							if (
-								index == 0 ||
-								index == this.dataFlownum ||
-								(index % upcli == 0 && index < upcli * 11)
-							) {
-								this.timeArray.push(getymdtime1(item));
-							} else {
-								this.timeArray.push('');
-							}
-						});
+          this.dataFlownum = res.data.streamArray.length - 1;
+          let upcli = Math.floor(this.dataFlownum / 12);
+          res.data.timeArray.forEach((item, index) => {
+            if (
+              index == 0 ||
+              index == this.dataFlownum ||
+              (index % upcli == 0 && index < upcli * 11)
+            ) {
+              this.timeArray.push(getymdtime1(item));
+            } else {
+              this.timeArray.push("");
+            }
+          });
           this.getbot();
           this.drawLine();
         })
         .catch(err => {
-          console.log(err)
+          console.log(err);
         });
     },
     //请求数据--加速流量表格
@@ -835,7 +842,7 @@ export default {
             this.tablecdn = [];
             for (var i = 0; i < timeArr.length; i++) {
               let obj = {
-                chanelId:chanelIdArr[i],
+                chanelId: chanelIdArr[i],
                 timeValue: timeArr[i],
                 streamAalue: streamArr[i],
               };
@@ -866,26 +873,38 @@ export default {
 
       backsource_flow_query_conditions(params)
         .then(res => {
-          res.data.fileNameSet.forEach((item, index) => {
-            let obj = {};
-            obj.label = item;
-            obj.value = index;
-            this.optionsa1.push(obj);
-          });
-          res.data.regionSet.forEach((item, index) => {
-            let obj = {};
-            obj.label = item;
-            obj.value = index;
-            this.optionsa2.push(obj);
-          });
+          // res.data.fileNameSet.forEach((item, index) => {
+          //   let obj = {};
+          //   obj.label = item;
+          //   obj.value = index;
+          //   this.optionsa1.push(obj);
+          // });
+          // res.data.regionSet.forEach((item, index) => {
+          //   let obj = {};
+          //   obj.label = item;
+          //   obj.value = index;
+          //   this.optionsa2.push(obj);
+          // });
+          // res.data.ispSet.forEach((item, index) => {
+          //   let obj = {};
+          //   obj.label = item;
+          //   obj.value = index;
+          //   this.optionsa3.push(obj);
+          // });
+
+          //     res.data.hashidSet.forEach((item, index) => {
+          //   let obj = {};
+          //   obj.label = item;
+          //   obj.value = item;
+          //   this.hashidSet.push(obj);
+          // });
           res.data.ispSet.forEach((item, index) => {
             let obj = {};
             obj.label = item;
             obj.value = index;
-            this.optionsa3.push(obj);
+            this.options3.push(obj);
           });
- 
-              res.data.hashidSet.forEach((item, index) => {
+          res.data.terminalSet.forEach((item, index) => {
             let obj = {};
             obj.label = item;
             obj.value = item;
@@ -913,8 +932,8 @@ export default {
         params.region = "*";
       }
 
-      if (this.value3) {
-        params.isp = this.value3;
+      if (this.valuea3) {
+        params.isp = this.valuea3;
       } else {
         params.isp = "*";
       }
@@ -928,7 +947,10 @@ export default {
       } else {
         params.acce = "*";
       }
-    params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
       backsource_flow(params)
         .then(res => {
           res.data.streamArray.forEach((item, index) => {
@@ -939,27 +961,33 @@ export default {
           //   this.timeArray2.push(getymdtime1(item));
           // });
 
-
-          	this.dataFlownum1 = res.data.streamArray.length - 1;
-						let upcli = Math.floor(this.dataFlownum1 / 12);
-						res.data.timeArray.forEach((item, index) => {
-							if (
-								index == 0 ||
-								index == this.dataFlownum1 ||
-								(index % upcli == 0 && index < upcli * 11)
-							) {
-								this.timeArray2.push(getymdtime1(item));
-							} else {
-								this.timeArray2.push('');
-							}
-						});
+          this.dataFlownum1 = res.data.streamArray.length - 1;
+          let upcli = Math.floor(this.dataFlownum1 / 12);
+          res.data.timeArray.forEach((item, index) => {
+            if (
+              index == 0 ||
+              index == this.dataFlownum1 ||
+              (index % upcli == 0 && index < upcli * 11)
+            ) {
+              this.timeArray2.push(getymdtime1(item));
+            } else {
+              this.timeArray2.push("");
+            }
+          });
 
           this.drawLine1(this.dataFlowArray2, this.timeArray2);
         })
         .catch(err => {});
     },
     seachtu(data) {
-      this.pageNo=1
+        if (this.endtime - this.starttime > 7776000) {
+        this.$message({
+          message: "起始时间和结束时间最大跨度不能超过三个月",
+          type: "error",
+        });
+        return false;
+      }
+      this.pageNo = 1;
       if (data == 1) {
         this.getseachlabel1();
       } else {
@@ -992,7 +1020,7 @@ export default {
     },
     //七天
     sevendat(data) {
-      let times = parseInt(new Date(new Date()).getTime() / 1000) ;
+      let times = parseInt(new Date(new Date()).getTime() / 1000);
       this.starttime = times - 24 * 60 * 60 * 7;
       this.endtime = times;
       this.timeUnit = 60 * 24;
@@ -1004,7 +1032,7 @@ export default {
     },
     //三十天
     thirtyday(data) {
-      let times = parseInt(new Date(new Date()).getTime() / 1000) ;
+      let times = parseInt(new Date(new Date()).getTime() / 1000);
       this.starttime = times - 24 * 60 * 60 * 30;
       this.endtime = times;
       this.timeUnit = 60 * 24;
@@ -1041,12 +1069,13 @@ export default {
     //选项卡
 
     handleClick(tab, event) {
-      this.hashidSet = []
+      this.hashidSet = [];
+      this.options3 = [];
       if (tab.index == 0) {
         // this.value1 = "";
         this.value2 = "*";
-        this.value3 = "";
-        (this.valueacce = ""),
+        this.value3 = "*";
+        (this.valueacce = "*"),
           // this.value1Activechanid = "";
           (this.options1chanid = []);
         let monitorUrlname = this.$route.query.monitorUrlname;
@@ -1068,8 +1097,8 @@ export default {
         this.valuea1 = "";
         //this.value1 = "";
         this.valuea2 = "*";
-        this.valuea3 = "";
-        (this.value1acce = ""), (this.options1chanid = []);
+        this.valuea3 = "*";
+        (this.value1acce = "*"), (this.options1chanid = []);
         //this.value1Activechanid = "";
         let monitorUrlname = this.$route.query.monitorUrlname;
         if (monitorUrlname) {
@@ -1088,251 +1117,246 @@ export default {
         this.getseachlabel2();
       }
     },
+    destroyed: function () {
+    this.drawLine();
+    this.drawLine1();
+},
     drawLine() {
-     let _this = this;
-			// 基于准备好的dom，初始化echarts实例
-			let myChart = this.$echarts.init(
-				document.getElementById('myChart')
-			);
-			window.onresize = myChart.resize;
-			// 绘制图表
-			let options = {
-				title: {
-					text: '流量',
-				},
-				toolbox: {
-					//show: true,
-					itemSize: 20,
-					itemGap: 30,
-					right: 50,
-					feature: {
-						// mark: { show: true },
-						// dataView: { show: true, readOnly: false },
-						// magicType: { show: true, type: ['line', 'bar'] },
-						// restore: { show: true },
-						// saveAsImage: { show: false },
-						mydow: {
-							show: true,
-							title: '导出',
-							icon:
-								'path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z',
-							onclick: function() {
-								_this.export_accelerate();
-							},
-						},
-					},
-				},
-				grid: {
-					// 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
-					left: '8%', // 默认10%，给24就挺合适的。
-					top: 60, // 默认60
-					right: 35, // 默认10%
-					bottom: 60, // 默认60
-					// width: "100%", // grid 组件的宽度。默认自适应。
-					// height: "100%",
-					// containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
-					// show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
-					// backgroundColor:'#ccac62',
-					// borderColor:"#000",
-				},
-				color: '#297AFF',
-				tooltip: {
-					trigger: 'axis',
-					axisPointer: {
-						type: 'cross',
-						label: {
-							backgroundColor: '#6a7985',
-						},
-					},
-				},
-				xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-					data: this.timeArray,
-					axisTick: {
-						show: false,
-					},
-					axisLabel: {
-						interval: 0, //代表显示所有x轴标签
-						// rotate: -30, //代表逆时针旋转45度
-						textStyle: {
-							color: '#999',
-						},
-					},
-				},
-				yAxis: {},
-				series: [
-					{
-						name: '流量',
-						type: 'bar',
-						barWidth: 30, //柱图宽度
-						data: this.dataFlowArray,
-						itemStyle: {
-							normal: {
-								//每根柱子颜色设置
-								color: function(params) {
-									let colorList = ['#297AFF', '#297AFF00'];
-									let upcli = Math.floor(
-										_this.dataFlownum / 12
-									);
-									let data_index = params.dataIndex;
-									if (
-										(data_index % upcli == 0 &&
-											data_index < upcli * 11) ||
-										data_index == 0 ||
-										data_index == _this.dataFlownum
-									) {
-										return colorList[0];
-									} else {
-										return colorList[1];
-									}
-								},
-							},
-						},
-						showBackground: true,
-						backgroundStyle: {
-							color: 'rgba(220, 220, 220, 0.8)',
-						},
-					},
-					// {
-					//     type: 'bar',
-					//     itemStyle:{normal:{color:"#e8e8e8"}},
-					//     barGap:"-100%",
-					//     // barGategoryGap:30,
-					//     data:[300,300,300,300,300,300,300,300,300,300,300,300,],
-					//     animation:false,
-					// }
-				],
-				//   dataZoom : [
-				// 	{
-				//           type: 'slider',
-				//           show: true,
-				//           start: 94,
-				//           end: 100,
-				//           handleSize: 8
-				//       },
-				//       {
-				//           type: 'inside',
-				//           start: 94,
-				//           end: 100
-				//       },
-				//       {
-				//           type: 'slider',
-				//           show: true,
-				//           yAxisIndex: 0,
-				//           filterMode: 'empty',
-				//           width: 12,
-				//           height: '70%',
-				//           handleSize: 8,
-				//           showDataShadow: false,
-				//           left: '93%'
-				//       }
-				// ]
-			};
-			myChart.setOption(options);
+      let _this = this;
+      // 基于准备好的dom，初始化echarts实例
+      let myChartMap = this.$echarts.init(document.getElementById("myChartMap"));
+      window.onresize = myChartMap.resize;
+      // 绘制图表
+      let options = {
+        title: {
+          text: "流量",
+        },
+        toolbox: {
+          //show: true,
+          itemSize: 20,
+          itemGap: 30,
+          right: 50,
+          feature: {
+            // mark: { show: true },
+            // dataView: { show: true, readOnly: false },
+            // magicType: { show: true, type: ['line', 'bar'] },
+            // restore: { show: true },
+            // saveAsImage: { show: false },
+            mydow: {
+              show: true,
+              title: "导出",
+              icon:
+                "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
+              onclick: function() {
+                _this.export_accelerate();
+              },
+            },
+          },
+        },
+        grid: {
+          // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
+          left: "8%", // 默认10%，给24就挺合适的。
+          top: 60, // 默认60
+          right: 35, // 默认10%
+          bottom: 60, // 默认60
+          // width: "100%", // grid 组件的宽度。默认自适应。
+          // height: "100%",
+          // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
+          // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
+          // backgroundColor:'#ccac62',
+          // borderColor:"#000",
+        },
+        color: "#297AFF",
+        tooltip: {
+          trigger: "axis",
+           formatter: function (params) { 
+              return (
+                params[0].name +
+                '<br>' +
+                params[0].seriesName +
+                ':' +
+                params[0].data +
+                '(GB)'
+              );
+             },
+          axisPointer: {
+            type: "shadow",
+   
+
+            
+          },
+        },
+        xAxis: {
+          type: "category",
+          boundaryGap: false,
+          data: this.timeArray,
+          axisTick: {
+            show: false,
+          },
+          axisLabel: {
+            interval: 0, //代表显示所有x轴标签
+            // rotate: -30, //代表逆时针旋转45度
+            textStyle: { 
+              color: "#999",
+            },
+          },
+        },
+        yAxis: {
+           name: 'GB',
+        },
+        
+        series: [
+          {
+            name: "流量",
+            type: "bar",
+            barWidth: 30, //柱图宽度
+            data: this.dataFlowArray,
+            itemStyle: {
+              normal: {
+                //每根柱子颜色设置
+                color: function(params) {
+                  let colorList = ["#297AFF", "#297AFF00"];
+                  let upcli = Math.floor(_this.dataFlownum / 12);
+                  let data_index = params.dataIndex;
+                  if (
+                    (data_index % upcli == 0 && data_index < upcli * 11) ||
+                    data_index == 0 ||
+                    data_index == _this.dataFlownum
+                  ) {
+                    return colorList[0];
+                  } else {
+                    return colorList[1];
+                  }
+                },
+              },
+            },
+            showBackground: true,
+            backgroundStyle: {
+              color: "rgba(220, 220, 220, 0.8)",
+            },
+          },
+          // {
+          //     type: 'bar',
+          //     itemStyle:{normal:{color:"#e8e8e8"}},
+          //     barGap:"-100%",
+          //     // barGategoryGap:30,
+          //     data:[300,300,300,300,300,300,300,300,300,300,300,300,],
+          //     animation:false,
+          // }
+        ],
+     
+      };
+      myChartMap.setOption(options);
     },
     drawLine1(x, y) {
-     let _this = this;
-			// 基于准备好的dom，初始化echarts实例
-			let myChart = this.$echarts.init(
-				document.getElementById('myChart1')
-			);
-			window.onresize = myChart.resize;
-			// 绘制图表
-			let options = {
-				title: {
-					text: '流量',
-				},
-				toolbox: {
-					//show: true,
-					itemSize: 20,
-					itemGap: 30,
-					right: 50,
-					feature: {
-						// mark: { show: true },
-						// dataView: { show: true, readOnly: false },
-						// magicType: { show: true, type: ['line', 'bar'] },
-						// restore: { show: true },
-						// saveAsImage: { show: false },
-						mydow: {
-							show: true,
-							title: '导出',
-							icon:
-								'path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z',
-							onclick: function() {
-								_this.export_backsource();
-							},
-						},
-					},
-				},
-				grid: {
-					// 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
-					left: '8%', // 默认10%，给24就挺合适的。
-					top: 60, // 默认60
-					right: 35, // 默认10%
-					bottom: 60, // 默认60
-					// width: "100%", // grid 组件的宽度。默认自适应。
-					// height: "100%",
-					// containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
-					// show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
-					// backgroundColor:'#ccac62',
-					// borderColor:"#000",
-				},
-				color: '#297AFF',
-				tooltip: {
-					trigger: 'axis',
-					axisPointer: {
-						type: 'cross',
-						label: {
-							backgroundColor: '#6a7985',
-						},
-					},
-				},
-				xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-					data: this.timeArray2,
-					axisLabel: {
-						interval: 0, //代表显示所有x轴标签
-					},
-					axisTick: {
-						show: false,
-					},
-				},
-				yAxis: {},
-				series: [
-					{
-						name: '销量',
-						type: 'bar',
-						barWidth: 30, //柱图宽度
-						data: this.dataFlowArray2,
-						itemStyle: {
-							normal: {
-								//每根柱子颜色设置
-								color: function(params) {
-									let colorList = ['#297AFF', '#297AFF00'];
-									let upcli = Math.floor(
-										_this.dataFlownum2 / 12
-									);
-									let data_index = params.dataIndex;
-									if (
-										(data_index % upcli == 0 &&
-											data_index < upcli * 11) ||
-										data_index == 0 ||
-										data_index == _this.dataFlownum2
-									) {
-										return colorList[0];
-									} else {
-										return colorList[1];
-									}
-								},
-							},
-						},
-					},
-				],
-			};
-			myChart.setOption(options);
-		},
+      let _this = this;
+      // 基于准备好的dom，初始化echarts实例
+      let myChartMap1 = this.$echarts.init(document.getElementById("myChartMap1"));
+      window.onresize = myChartMap1.resize;
+      // 绘制图表
+      let options = {
+        title: {
+          text: "流量",
+        },
+        toolbox: {
+          //show: true,
+          itemSize: 20,
+          itemGap: 30,
+          right: 50,
+          feature: {
+            // mark: { show: true },
+            // dataView: { show: true, readOnly: false },
+            // magicType: { show: true, type: ['line', 'bar'] },
+            // restore: { show: true },
+            // saveAsImage: { show: false },
+            mydow: {
+              show: true,
+              title: "导出",
+              icon:
+                "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
+              onclick: function() {
+                _this.export_backsource();
+              },
+            },
+          },
+        },
+        grid: {
+          // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
+          left: "8%", // 默认10%，给24就挺合适的。
+          top: 60, // 默认60
+          right: 35, // 默认10%
+          bottom: 60, // 默认60
+          // width: "100%", // grid 组件的宽度。默认自适应。
+          // height: "100%",
+          // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
+          // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
+          // backgroundColor:'#ccac62',
+          // borderColor:"#000",
+        },
+        color: "#297AFF",
+        tooltip: {
+          trigger: "axis",
+            formatter: function (params) { 
+              return (
+                params[0].name +
+                '<br>' +
+                params[0].seriesName +
+                ':' +
+                params[0].data +
+                '(GB)'
+              );
+             },
+          axisPointer: {
+            type: "shadow",
+            label: {
+              backgroundColor: "#6a7985",
+            },
+          },
+        },
+        xAxis: {
+          type: "category",
+          boundaryGap: false,
+          data: this.timeArray2,
+          axisLabel: {
+            interval: 0, //代表显示所有x轴标签
+          },
+          axisTick: {
+            show: false,
+          },
+        },
+        yAxis: {
+           name: 'GB',
+        },
+        series: [
+          {
+            name: "流量",
+            type: "bar",
+            barWidth: 30, //柱图宽度
+            data: this.dataFlowArray2,
+            itemStyle: {
+              normal: {
+                //每根柱子颜色设置
+                color: function(params) {
+                  let colorList = ["#297AFF", "#297AFF00"];
+                  let upcli = Math.floor(_this.dataFlownum2 / 12);
+                  let data_index = params.dataIndex;
+                  if (
+                    (data_index % upcli == 0 && data_index < upcli * 11) ||
+                    data_index == 0 ||
+                    data_index == _this.dataFlownum2
+                  ) {
+                    return colorList[0];
+                  } else {
+                    return colorList[1];
+                  }
+                },
+              },
+            },
+          },
+        ],
+      };
+      myChartMap1.setOption(options);
+    },
   },
 };
 </script>

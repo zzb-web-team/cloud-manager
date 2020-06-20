@@ -10,7 +10,7 @@
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-select v-model="valueacce" placeholder="全部终端"  style="width: 10%;margin-right: 10px;" @change="getdata()">
+              <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata()">
                 <el-option label="全部" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
               </el-select>
@@ -25,18 +25,18 @@
                 </el-button>
               </el-button-group>
               <el-date-picker v-show="shoudzy" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-              <el-button style="margin-left:10px;" type="primary" @click="seachtu(0)">查询</el-button>
+              <el-button style="margin-left:10px;" type="primary" @click="seachtu(0)">确定</el-button>
             </div>
 
             <div class="user_item">
               <div class="item_left">
-                <div class="item_text">总访问次数(UV)</div>
+                <div class="item_text">总访问次数(PV)</div>
                 <div class="item_count">
                   <span>{{ totalPV }}</span>
                 </div>
               </div>
               <div class="item_right">
-                <div class="item_text">独立IP访问数(PV)</div>
+                <div class="item_text">独立IP访问数(UV)</div>
                 <div class="item_count">
                   <span>{{ totalUV }}</span>
                 </div>
@@ -53,7 +53,7 @@
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-select v-model="valueacce" placeholder="全部终端"  style="width: 10%;margin-right: 10px;" @change="getdata1()">
+              <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata1()">
                 <el-option label="全部" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
               </el-select>
@@ -73,8 +73,8 @@
               <el-button-group style="display: flex;justify-content: center;">
                 <!-- <el-button :type="primaryActive"  plain @click="goarea()">地区</el-button>
                 <el-button :type="!primaryActive"  plain @click="gosupplier()">运营商</el-button> -->
-                 <el-button plain @click="goarea()">地区</el-button>
-                <el-button   plain @click="gosupplier()">运营商</el-button>
+                <el-button plain @click="goarea()">地区</el-button>
+                <el-button plain @click="gosupplier()">运营商</el-button>
               </el-button-group>
               <div id="myChart1" :style="{ height: '607px' }"></div>
             </div>
@@ -119,7 +119,7 @@
                         <div>{{ scope.row.accessPercent }}</div>
                       </template>
                     </el-table-column>
-                     <el-table-column label="平均响应时间(/s)">
+                    <el-table-column label="平均响应时间(/s)">
                       <template slot-scope="scope">
                         <div>{{ scope.row.avgTime | formatAvgTime }}</div>
                       </template>
@@ -136,7 +136,7 @@
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-select v-model="valueacce" placeholder="全部终端"  style="width: 10%;margin-right: 10px;" @change="getdata2()">
+              <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata2()">
                 <el-option label="全部" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
               </el-select>
@@ -186,7 +186,7 @@
                         <div>{{ scope.row.cntPercent |formatPercent }}</div>
                       </template>
                     </el-table-column>
-                       
+
                   </el-table>
                   <!-- <fenye style="float:right;margin:10px 0 20px 0;" @fatherMethod="getpage" @fathernum="gettol" :pagesa="total_cnt"></fenye> -->
 
@@ -219,7 +219,7 @@ import {
   export_playtimes_curve_file,
   export_topregion_accesscnt_curve_file,
   export_topisp_accesscnt_curve_file,
-  getterminal
+  getterminal,
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -227,18 +227,18 @@ import common from "../../comm/js/util";
 export default {
   data() {
     return {
-      ableStatus:true,
+      ableStatus: true,
       primaryActive: "primary",
       exportActive: 0,
       exportTitle: "用户访问分布",
       exportTitleTable: "省市",
       currentPage: 1,
       currentPage1: 1,
-      total_cnt1:0,
+      total_cnt1: 0,
       pagesize: 10,
       total_cnt: 0,
       value1fileName: "",
-      valueacce: "",
+      valueacce: "*",
       options3: [
         {
           value: "1",
@@ -357,7 +357,7 @@ export default {
       timeArray2: [], //图三x
       options1chanid: [],
       value1Activechanid: "",
-      pagesActive:true,
+      pagesActive: true,
     };
   },
   filters: {
@@ -383,13 +383,13 @@ export default {
         return (data * 100).toFixed(6);
       }
     },
-    formatAvgTime(data){
-       if (data == 0) {
+    formatAvgTime(data) {
+      if (data == 0) {
         return 0;
       } else {
         return data;
       }
-    }
+    },
   },
   components: {
     fenye,
@@ -411,6 +411,9 @@ export default {
     }
     this.chart.dispose();
     this.chart = null;
+    this.drawLine();
+    this.drawLine1();
+    this.drawLine2();
   },
   methods: {
     //用户用户供应商导出
@@ -446,7 +449,10 @@ export default {
         params.acce = "*";
       }
       params.top = 10;
-      params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
       export_topisp_accesscnt_curve_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -489,7 +495,10 @@ export default {
         params.acce = "*";
       }
       params.top = 10;
-      params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
       export_topregion_accesscnt_curve_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -531,7 +540,10 @@ export default {
         params.acce = "*";
       }
       params.top = 10;
-      params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
       export_playtimes_curve_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -578,7 +590,10 @@ export default {
       this.uvArray = [];
       this.pvArray = [];
       this.timeArray = [];
-     params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
       export_pv_uv_curve_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -606,7 +621,7 @@ export default {
       getterminal(param)
         .then(res => {
           if (res.status == 0) {
-            this.ableStatus=false
+            this.ableStatus = false;
             this.options3 = [];
             res.result.cols.forEach((item, index) => {
               let obj = {};
@@ -633,26 +648,21 @@ export default {
       this.pageNo = pages;
       this.gettable();
     },
-       //获取页码
+    //获取页码
     handleCurrentChange1(pages) {
-       
       this.currentPage1 = pages;
-      if(this.pagesActive==true){
-         this.getcure(1) 
-      }else{
-         this.getcure(2) 
+      if (this.pagesActive == true) {
+        this.getcure(1);
+      } else {
+        this.getcure(2);
       }
-     
-    
     },
     //获取每页数量
     handleSizeChange(pagetol) {
       this.pagesize = pagetol;
       // this.getuserlist();
     },
-    handleSizeChange1(){
-
-    },
+    handleSizeChange1() {},
     getdata() {
       this.getseach(0);
     },
@@ -664,7 +674,15 @@ export default {
     },
     //请求数据--查询条件
     getseach(data) {
-      this.val2 = [];
+      if (this.endtime - this.starttime > 7776000) {
+        this.$message({
+          message: "起始时间和结束时间最大跨度不能超过三个月",
+          type: "error",
+        });
+        return false;
+      }
+
+      // this.val2 = [];
       let params = new Object();
       params.chanId = "*";
       if (data == 0) {
@@ -819,6 +837,9 @@ export default {
     },
     //请求数据--曲线图
     getcure(data) {
+      // if(this.endtime-this.starttime){
+
+      // }
       let params = new Object();
       params.chanId = this.chanid + "";
       params.start_ts = this.starttime;
@@ -855,13 +876,16 @@ export default {
         this.uvArray = [];
         this.pvArray = [];
         this.timeArray = [];
-       
-        params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
+
+        params.time_unit = this.common.timeUnitActive(
+          this.starttime,
+          this.endtime
+        );
 
         pv_uv_curve(params)
           .then(res => {
-              this.totalPV = res.data.totalPV;
-              this.totalUV = res.data.totalUV;
+            this.totalPV = res.data.totalPV;
+            this.totalUV = res.data.totalUV;
             if (res.data.uvArray) {
               res.data.uvArray.forEach((item, index) => {
                 this.uvArray.push(Math.floor(item));
@@ -906,21 +930,24 @@ export default {
           params.acce = "*";
         }
         params.top = 10;
-       params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
+        params.time_unit = this.common.timeUnitActive(
+          this.starttime,
+          this.endtime
+        );
 
         if (data == 1) {
           this.playTimesArray1 = [];
           this.timeArray1 = [];
-            params.pageNo=this.currentPage1-1
-          params.pageSize=10
-        
+          params.pageNo = this.currentPage1 - 1;
+          params.pageSize = 10;
+
           query_topregion_accesscnt_curve(params)
             .then(res => {
               this.playTimesArray1 = res.data.accessCntArray;
               this.timeArray1 = res.data.regionArray;
               this.drawLine1(this.playTimesArray1, this.timeArray1);
               this.tablecdn = res.data.accessCntTable;
-              this.total_cnt1=res.data.totalCnt
+              this.total_cnt1 = res.data.totalCnt;
             })
             .catch(err => {
               console.log(err);
@@ -928,16 +955,15 @@ export default {
         } else {
           this.playTimesArray1 = [];
           this.timeArray1 = [];
-            params.pageNo=this.currentPage1-1
-          params.pageSize=10
+          params.pageNo = this.currentPage1 - 1;
+          params.pageSize = 10;
           query_topisp_accesscnt_curve(params)
             .then(res => {
               this.playTimesArray1 = res.data.accessCntArray;
               this.timeArray1 = res.data.ispArray;
               this.drawLine1(this.playTimesArray1, this.timeArray1);
               this.tablecdn = res.data.accessCntTable;
-              this.total_cnt1=res.data.totalCnt
-
+              this.total_cnt1 = res.data.totalCnt;
             })
             .catch(err => {
               console.log(err);
@@ -971,7 +997,10 @@ export default {
         }
         this.playTimesArray2 = [];
         this.timeArray2 = [];
-       params.time_unit = this.common.timeUnitActive(this.starttime,this.endtime);
+        params.time_unit = this.common.timeUnitActive(
+          this.starttime,
+          this.endtime
+        );
 
         query_playtimes_curve(params)
           .then(res => {
@@ -992,7 +1021,7 @@ export default {
       // params.chanId = this.chanid + "";
       params.start_ts = this.starttime;
       params.end_ts = this.endtime;
-      params.pageNo = this.pageNo-1;
+      params.pageNo = this.pageNo - 1;
       params.pageSize = this.pageSize;
       if (this.value1fileName) {
         params.fileName = this.value1fileName;
@@ -1031,7 +1060,7 @@ export default {
     },
     //自定义时间确定按钮
     seachtu(data) {
-      this.pageNo=1
+      this.pageNo = 1;
       if (data == 0) {
         this.getseach(0);
       } else if (data == 1) {
@@ -1080,7 +1109,7 @@ export default {
     },
     //七天
     sevendat(data) {
-      let times = parseInt(new Date(new Date()).getTime() / 1000) 
+      let times = parseInt(new Date(new Date()).getTime() / 1000);
       this.starttime = times - 24 * 60 * 60 * 7;
       this.endtime = times;
       this.timeUnit = 60 * 24;
@@ -1094,7 +1123,7 @@ export default {
     },
     //三十天
     thirtyday(data) {
-      let times = parseInt(new Date(new Date()).getTime() / 1000) 
+      let times = parseInt(new Date(new Date()).getTime() / 1000);
       this.starttime = times - 24 * 60 * 60 * 30;
       this.endtime = times;
       this.timeUnit = 60 * 24;
@@ -1125,20 +1154,18 @@ export default {
     goarea() {
       this.twob = false;
       this.exportActive = 0;
-      this.currentPage1=1
+      this.currentPage1 = 1;
       this.exportTitle = "用户访问分布";
       this.exportTitleTable = "省市";
-     this.primaryActive = !this.primaryActive;
-     this.pagesActive=true,
-      this.getseach(1);
+      this.primaryActive = !this.primaryActive;
+      (this.pagesActive = true), this.getseach(1);
     },
     //切换到运营商
     gosupplier() {
-      this.currentPage1=1
+      this.currentPage1 = 1;
       this.twob = true;
       this.exportActive = 1;
-        this.pagesActive=false,
-      this.exportTitle = "用户运营商分布";
+      (this.pagesActive = false), (this.exportTitle = "用户运营商分布");
       this.exportTitleTable = "运营商";
       this.primaryActive = !this.primaryActive;
       this.getseach(2);
@@ -1154,10 +1181,10 @@ export default {
     },
     //选项卡
     handleClick(tab, event) {
-      this.ableStatus=true
+      this.ableStatus = true;
       this.value1fileName = "";
       this.value1Activechanid = "";
-      this.valueacce = "";
+      this.valueacce = "*";
       //切换时重置时间为当前时间
       this.starttime =
         new Date(new Date().toLocaleDateString()).getTime() / 1000;
@@ -1184,6 +1211,11 @@ export default {
 
         this.getseach(3);
       }
+    },
+    destroyed: function() {
+      this.drawLine();
+      this.drawLine1();
+      this.drawLine2();
     },
     drawLine() {
       let _this = this;
