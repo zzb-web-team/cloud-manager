@@ -463,6 +463,7 @@ export default {
       pageActive: 0,
       dataFlownum: 0,
       dataFlownum1: 0,
+      flowunit:""
     };
   },
   filters: {
@@ -768,8 +769,13 @@ export default {
       );
       accelerate_flow(params)
         .then(res => {
+              var num=res.data.streamArray;
+var max=Math.max.apply(null, num);
+this.flowunit=this.common.formatByteActiveunit(max)
+
+
           res.data.streamArray.forEach((item, index) => {
-            this.dataFlowArray.push((item / 1024 / 1024 / 1024).toFixed(2));
+            this.dataFlowArray.push((item/1024/1024/1024).toFixed(2));
           });
           // this.timeArray = res.data.timeArray;
           // res.data.timeArray.forEach((item, index) => {
@@ -915,6 +921,7 @@ export default {
         .catch(err => {});
     },
     gettable2() {
+      let _this=this
       this.dataFlowArray2 = [];
       this.timeArray2 = [];
       let params = new Object();
@@ -951,10 +958,15 @@ export default {
         this.starttime,
         this.endtime
       );
+
       backsource_flow(params)
         .then(res => {
+               var num=res.data.streamArray;
+var max=Math.max.apply(null, num);
+this.flowunit=this.common.formatByteActiveunit(max)
+          
           res.data.streamArray.forEach((item, index) => {
-            this.dataFlowArray2.push((item / 1024 / 1024 / 1024).toFixed(2));
+            this.dataFlowArray2.push(this.common.formatByteNum(item,this.flowunit));
           });
           // this.timeArray = res.data.timeArray;
           // res.data.timeArray.forEach((item, index) => {
@@ -1170,20 +1182,18 @@ export default {
         tooltip: {
           trigger: "axis",
            formatter: function (params) { 
+                       //   _this.common.formatByteActive(params[0].data)
+
               return (
-                params[0].name +
-                '<br>' +
+                 params[0].name +
+                 '<br>' +
                 params[0].seriesName +
-                ':' +
-                params[0].data +
-                '(GB)'
+                 ':' +
+              params[0].data+_this.flowunit
               );
              },
           axisPointer: {
             type: "shadow",
-   
-
-            
           },
         },
         xAxis: {
@@ -1202,7 +1212,7 @@ export default {
           },
         },
         yAxis: {
-           name: 'GB',
+           name: _this.flowunit,
         },
         
         series: [
@@ -1215,7 +1225,7 @@ export default {
               normal: {
                 //每根柱子颜色设置
                 color: function(params) {
-                  let colorList = ["#297AFF", "#297AFF00"];
+                  let colorList = ["#297AFF", "#297AFF"];
                   let upcli = Math.floor(_this.dataFlownum / 12);
                   let data_index = params.dataIndex;
                   if (
@@ -1298,12 +1308,11 @@ export default {
           trigger: "axis",
             formatter: function (params) { 
               return (
-                params[0].name +
-                '<br>' +
+                 params[0].name +
+                 '<br>' +
                 params[0].seriesName +
-                ':' +
-                params[0].data +
-                '(GB)'
+                 ':' +
+            params[0].data+_this.flowunit
               );
              },
           axisPointer: {
@@ -1325,13 +1334,13 @@ export default {
           },
         },
         yAxis: {
-           name: 'GB',
+           name: this.flowunit,
         },
         series: [
           {
             name: "流量",
             type: "bar",
-            barWidth: 30, //柱图宽度
+            // barWidth: 30, //柱图宽度
             data: this.dataFlowArray2,
             itemStyle: {
               normal: {

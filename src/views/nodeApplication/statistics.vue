@@ -109,12 +109,12 @@
                         <div>{{ scope.row.dataFlowPercnt }}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="访问次数">
+                    <el-table-column label="访问用户">
                       <template slot-scope="scope">
                         <div>{{ scope.row.accessCnt }}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="访问占比">
+                    <el-table-column label="占比">
                       <template slot-scope="scope">
                         <div>{{ scope.row.accessPercent }}</div>
                       </template>
