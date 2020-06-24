@@ -1,67 +1,67 @@
 <template>
-    <div class="content">
-        <el-breadcrumb separator="/">
-            <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-        </el-breadcrumb>
-        <section class="myself-container">
-            <div class="device_form">
-                <el-form ref="form" :model="form">
-                    <el-row type="flex">
-                        <!-- <div class="search-con">
+  <div class="content">
+    <el-breadcrumb separator="/">
+      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+    </el-breadcrumb>
+    <section class="myself-container">
+      <div class="device_form">
+        <el-form ref="form" :model="form">
+          <el-row type="flex">
+            <!-- <div class="search-con">
                         <i class="el-icon-search" @click="searchInfo" style="color:#606266"></i>
                         <el-input class="search-input" v-model="searchText" maxlength="70" placeholder="用户ID,账号,手机号" @keyup.enter.native="searchInfo"></el-input>
                     </div> -->
-                        <el-input placeholder="用户ID,账号,手机号" style="width:230px" v-model="searchText" class="input-with-select" @keyup.enter.native="searchInfo" maxlength="70">
-                            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                        </el-input>
-                        <div @click="getShow()" class="div_show" style="color:#606266">
-                            筛选
-                            <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
-                        </div>
-                    </el-row>
-                    <el-row type="flex" class="row_activess" v-show="showState">
-                        <el-form-item label="状态" style="display: flex;">
-                            <el-select v-model="value" placeholder="请选择" @change="onChangeTab">
-                                <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="注册时间" style="display: flex;">
-                            <el-date-picker style="margin-left:10px;" v-model="valueTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left"></el-date-picker>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" @click="searchInfo">确定</el-button>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" @click="reset()">重置</el-button>
-                        </el-form-item>
-                    </el-row>
-                </el-form>
+            <el-input placeholder="用户ID,账号,手机号" style="width:230px" v-model="searchText" class="input-with-select" @keyup.enter.native="searchInfo" maxlength="70">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <div @click="getShow()" class="div_show" style="color:#606266">
+              筛选
+              <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
             </div>
-            <div class="devide_table">
-                <div style="    display: flex;justify-content: flex-end;">
-                    <el-button type="primary" @click="toexportExcel">导出</el-button>
-                </div>
-                <el-row type="flex" class="row_active">
-                    <el-col :span="24">
-                        <tableBarActive1 id="rebateSetTable" ref="table1" tooltip-effect="dark" @tableSortChange='tableSortChange' :tableData="tableData" :operatingStatus="operatingStatus" @handleSelectionChange="handleSelectionChange" :clomnSelection="clomnSelection" :rowHeader="rowHeader" :tableOption="tableOption" @disable="disable" @toChange="toChange"></tableBarActive1>
-                    </el-col>
-                </el-row>
-            </div>
-            <div class="devide_pageNation" style="display: flex;justify-content: space-between;">
-                <el-row type="flex">
-                    <el-col :span="6" style="display: flex;justify-content: justify-content: flex-start;">
-                        <el-button type="text" size="small" @click="allOn">启用</el-button>
-                        <el-button type="text" size="small" style="margin-left:30px;" @click="allOff">禁用</el-button>
-                    </el-col>
-                </el-row>
-                <el-row type="flex">
-                    <el-col :span="6">
-                        <pageNation :pager="pager" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange"></pageNation>
-                    </el-col>
-                </el-row>
-            </div>
-        </section>
-    </div>
+          </el-row>
+          <el-row type="flex" class="row_activess" v-show="showState">
+            <el-form-item label="状态" style="display: flex;">
+              <el-select v-model="value" placeholder="请选择" @change="onChangeTab">
+                <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="注册时间" style="display: flex;">
+              <el-date-picker style="margin-left:10px;" v-model="valueTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left"></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="searchInfo">确定</el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="reset()">重置</el-button>
+            </el-form-item>
+          </el-row>
+        </el-form>
+      </div>
+      <div class="devide_table">
+        <div style="    display: flex;justify-content: flex-end;">
+          <el-button type="primary" @click="toexportExcel">导出</el-button>
+        </div>
+        <el-row type="flex" class="row_active">
+          <el-col :span="24">
+            <tableBarActive1 id="rebateSetTable" ref="table1" tooltip-effect="dark" @tableSortChange='tableSortChange' :tableData="tableData" :operatingStatus="operatingStatus" @handleSelectionChange="handleSelectionChange" :clomnSelection="clomnSelection" :rowHeader="rowHeader" :tableOption="tableOption" @disable="disable" @toChange="toChange"></tableBarActive1>
+          </el-col>
+        </el-row>
+      </div>
+      <div class="devide_pageNation" style="display: flex;justify-content: space-between;">
+        <el-row type="flex">
+          <el-col :span="6" style="display: flex;justify-content: justify-content: flex-start;">
+            <el-button type="text" size="small" @click="allOn">启用</el-button>
+            <el-button type="text" size="small" style="margin-left:30px;" @click="allOff">禁用</el-button>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <el-col :span="6">
+            <pageNation :pager="pager" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange"></pageNation>
+          </el-col>
+        </el-row>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -415,8 +415,8 @@ export default {
                 res.result.les_count;
             } else {
               this.pager.count =
-                10 +
-                res.result.cols.length * res.result.page +
+                res.result.cols.length +
+                10 * res.result.page +
                 res.result.les_count;
             }
             let nowArr = res.result.cols;
@@ -631,7 +631,7 @@ export default {
           phone: val.phone,
           username: val.username,
           email: val.email,
-          dataFlow:val.dataFlow
+          dataFlow: val.dataFlow,
         },
       });
 

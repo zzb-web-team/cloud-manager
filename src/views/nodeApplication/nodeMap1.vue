@@ -463,7 +463,7 @@ export default {
       pageActive: 0,
       dataFlownum: 0,
       dataFlownum1: 0,
-      flowunit:""
+      flowunit: "",
     };
   },
   filters: {
@@ -769,37 +769,18 @@ export default {
       );
       accelerate_flow(params)
         .then(res => {
-              var num=res.data.streamArray;
-var max=Math.max.apply(null, num);
-this.flowunit=this.common.formatByteActiveunit(max)
-
+          var num = res.data.streamArray;
+          var max = Math.max.apply(null, num);
+          this.flowunit = this.common.formatByteActiveunit(max);
 
           res.data.streamArray.forEach((item, index) => {
-            this.dataFlowArray.push((item/1024/1024/1024).toFixed(2));
+            this.dataFlowArray.push((item / 1024 / 1024 / 1024).toFixed(2));
           });
-          // this.timeArray = res.data.timeArray;
-          // res.data.timeArray.forEach((item, index) => {
-          //   this.timeArray.push(getymdtime1(item));
-          // });
-
-          // this.dataFlowArray = res.data.dataFlowArray;
-          //	this.dataFlownum = res.data.dataFlowArray.length - 1;
-
-          this.dataFlownum = res.data.streamArray.length - 1;
-          let upcli = Math.floor(this.dataFlownum / 12);
           res.data.timeArray.forEach((item, index) => {
-            if (
-              index == 0 ||
-              index == this.dataFlownum ||
-              (index % upcli == 0 && index < upcli * 11)
-            ) {
-              this.timeArray.push(getymdtime1(item));
-            } else {
-              this.timeArray.push("");
-            }
+            this.timeArray.push(getymdtime1(item));
           });
           this.getbot();
-          this.drawLine();
+          this.drawLine(this.dataFlowArray, this.timeArray);
         })
         .catch(err => {
           console.log(err);
@@ -879,31 +860,6 @@ this.flowunit=this.common.formatByteActiveunit(max)
 
       backsource_flow_query_conditions(params)
         .then(res => {
-          // res.data.fileNameSet.forEach((item, index) => {
-          //   let obj = {};
-          //   obj.label = item;
-          //   obj.value = index;
-          //   this.optionsa1.push(obj);
-          // });
-          // res.data.regionSet.forEach((item, index) => {
-          //   let obj = {};
-          //   obj.label = item;
-          //   obj.value = index;
-          //   this.optionsa2.push(obj);
-          // });
-          // res.data.ispSet.forEach((item, index) => {
-          //   let obj = {};
-          //   obj.label = item;
-          //   obj.value = index;
-          //   this.optionsa3.push(obj);
-          // });
-
-          //     res.data.hashidSet.forEach((item, index) => {
-          //   let obj = {};
-          //   obj.label = item;
-          //   obj.value = item;
-          //   this.hashidSet.push(obj);
-          // });
           res.data.ispSet.forEach((item, index) => {
             let obj = {};
             obj.label = item;
@@ -921,7 +877,7 @@ this.flowunit=this.common.formatByteActiveunit(max)
         .catch(err => {});
     },
     gettable2() {
-      let _this=this
+      let _this = this;
       this.dataFlowArray2 = [];
       this.timeArray2 = [];
       let params = new Object();
@@ -961,12 +917,14 @@ this.flowunit=this.common.formatByteActiveunit(max)
 
       backsource_flow(params)
         .then(res => {
-               var num=res.data.streamArray;
-var max=Math.max.apply(null, num);
-this.flowunit=this.common.formatByteActiveunit(max)
-          
+          var num = res.data.streamArray;
+          var max = Math.max.apply(null, num);
+          this.flowunit = this.common.formatByteActiveunit(max);
+
           res.data.streamArray.forEach((item, index) => {
-            this.dataFlowArray2.push(this.common.formatByteNum(item,this.flowunit));
+            this.dataFlowArray2.push(
+              this.common.formatByteNum(item, this.flowunit)
+            );
           });
           // this.timeArray = res.data.timeArray;
           // res.data.timeArray.forEach((item, index) => {
@@ -992,7 +950,7 @@ this.flowunit=this.common.formatByteActiveunit(max)
         .catch(err => {});
     },
     seachtu(data) {
-        if (this.endtime - this.starttime > 7776000) {
+      if (this.endtime - this.starttime > 7776000) {
         this.$message({
           message: "起始时间和结束时间最大跨度不能超过三个月",
           type: "error",
@@ -1129,14 +1087,16 @@ this.flowunit=this.common.formatByteActiveunit(max)
         this.getseachlabel2();
       }
     },
-    destroyed: function () {
-    this.drawLine();
-    this.drawLine1();
-},
-    drawLine() {
+    destroyed: function() {
+      this.drawLine();
+      this.drawLine1();
+    },
+    drawLine(x, y) {
       let _this = this;
       // 基于准备好的dom，初始化echarts实例
-      let myChartMap = this.$echarts.init(document.getElementById("myChartMap"));
+      let myChartMap = this.$echarts.init(
+        document.getElementById("myChartMap")
+      );
       window.onresize = myChartMap.resize;
       // 绘制图表
       let options = {
@@ -1144,16 +1104,10 @@ this.flowunit=this.common.formatByteActiveunit(max)
           text: "流量",
         },
         toolbox: {
-          //show: true,
           itemSize: 20,
           itemGap: 30,
           right: 50,
           feature: {
-            // mark: { show: true },
-            // dataView: { show: true, readOnly: false },
-            // magicType: { show: true, type: ['line', 'bar'] },
-            // restore: { show: true },
-            // saveAsImage: { show: false },
             mydow: {
               show: true,
               title: "导出",
@@ -1166,102 +1120,58 @@ this.flowunit=this.common.formatByteActiveunit(max)
           },
         },
         grid: {
-          // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
-          left: "8%", // 默认10%，给24就挺合适的。
+          left: "2%", // 默认10%，给24就挺合适的。
           top: 60, // 默认60
           right: 35, // 默认10%
           bottom: 60, // 默认60
-          // width: "100%", // grid 组件的宽度。默认自适应。
-          // height: "100%",
-          // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
-          // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
-          // backgroundColor:'#ccac62',
-          // borderColor:"#000",
         },
         color: "#297AFF",
         tooltip: {
           trigger: "axis",
-           formatter: function (params) { 
-                       //   _this.common.formatByteActive(params[0].data)
+          formatter: function(params) {
+            //   _this.common.formatByteActive(params[0].data)
 
-              return (
-                 params[0].name +
-                 '<br>' +
-                params[0].seriesName +
-                 ':' +
-              params[0].data+_this.flowunit
-              );
-             },
+            return (
+              params[0].name +
+              "<br>" +
+              params[0].seriesName +
+              ":" +
+              params[0].data +
+              _this.flowunit
+            );
+          },
           axisPointer: {
             type: "shadow",
           },
         },
         xAxis: {
           type: "category",
-          boundaryGap: false,
-          data: this.timeArray,
-          axisTick: {
-            show: false,
-          },
-          axisLabel: {
-            interval: 0, //代表显示所有x轴标签
-            // rotate: -30, //代表逆时针旋转45度
-            textStyle: { 
-              color: "#999",
-            },
-          },
+          data: y,
         },
         yAxis: {
-           name: _this.flowunit,
+          name: _this.flowunit,
         },
-        
+
         series: [
           {
             name: "流量",
+            data: x,
             type: "bar",
-            barWidth: 30, //柱图宽度
-            data: this.dataFlowArray,
-            itemStyle: {
-              normal: {
-                //每根柱子颜色设置
-                color: function(params) {
-                  let colorList = ["#297AFF", "#297AFF"];
-                  let upcli = Math.floor(_this.dataFlownum / 12);
-                  let data_index = params.dataIndex;
-                  if (
-                    (data_index % upcli == 0 && data_index < upcli * 11) ||
-                    data_index == 0 ||
-                    data_index == _this.dataFlownum
-                  ) {
-                    return colorList[0];
-                  } else {
-                    return colorList[1];
-                  }
-                },
-              },
-            },
             showBackground: true,
             backgroundStyle: {
               color: "rgba(220, 220, 220, 0.8)",
             },
           },
-          // {
-          //     type: 'bar',
-          //     itemStyle:{normal:{color:"#e8e8e8"}},
-          //     barGap:"-100%",
-          //     // barGategoryGap:30,
-          //     data:[300,300,300,300,300,300,300,300,300,300,300,300,],
-          //     animation:false,
-          // }
         ],
-     
       };
       myChartMap.setOption(options);
     },
     drawLine1(x, y) {
       let _this = this;
       // 基于准备好的dom，初始化echarts实例
-      let myChartMap1 = this.$echarts.init(document.getElementById("myChartMap1"));
+      let myChartMap1 = this.$echarts.init(
+        document.getElementById("myChartMap1")
+      );
       window.onresize = myChartMap1.resize;
       // 绘制图表
       let options = {
@@ -1274,11 +1184,6 @@ this.flowunit=this.common.formatByteActiveunit(max)
           itemGap: 30,
           right: 50,
           feature: {
-            // mark: { show: true },
-            // dataView: { show: true, readOnly: false },
-            // magicType: { show: true, type: ['line', 'bar'] },
-            // restore: { show: true },
-            // saveAsImage: { show: false },
             mydow: {
               show: true,
               title: "导出",
@@ -1292,74 +1197,44 @@ this.flowunit=this.common.formatByteActiveunit(max)
         },
         grid: {
           // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
-          left: "8%", // 默认10%，给24就挺合适的。
+          left: "2%", // 默认10%，给24就挺合适的。
           top: 60, // 默认60
           right: 35, // 默认10%
           bottom: 60, // 默认60
-          // width: "100%", // grid 组件的宽度。默认自适应。
-          // height: "100%",
-          // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
-          // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
-          // backgroundColor:'#ccac62',
-          // borderColor:"#000",
         },
         color: "#297AFF",
         tooltip: {
           trigger: "axis",
-            formatter: function (params) { 
-              return (
-                 params[0].name +
-                 '<br>' +
-                params[0].seriesName +
-                 ':' +
-            params[0].data+_this.flowunit
-              );
-             },
+          formatter: function(params) {
+            return (
+              params[0].name +
+              "<br>" +
+              params[0].seriesName +
+              ":" +
+              params[0].data +
+              _this.flowunit
+            );
+          },
           axisPointer: {
             type: "shadow",
-            label: {
-              backgroundColor: "#6a7985",
-            },
           },
         },
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: this.timeArray2,
-          axisLabel: {
-            interval: 0, //代表显示所有x轴标签
-          },
-          axisTick: {
-            show: false,
-          },
+          data: y,
         },
         yAxis: {
-           name: this.flowunit,
+          name: this.flowunit,
         },
         series: [
           {
             name: "流量",
+            data: x,
             type: "bar",
-            // barWidth: 30, //柱图宽度
-            data: this.dataFlowArray2,
-            itemStyle: {
-              normal: {
-                //每根柱子颜色设置
-                color: function(params) {
-                  let colorList = ["#297AFF", "#297AFF00"];
-                  let upcli = Math.floor(_this.dataFlownum2 / 12);
-                  let data_index = params.dataIndex;
-                  if (
-                    (data_index % upcli == 0 && data_index < upcli * 11) ||
-                    data_index == 0 ||
-                    data_index == _this.dataFlownum2
-                  ) {
-                    return colorList[0];
-                  } else {
-                    return colorList[1];
-                  }
-                },
-              },
+            showBackground: true,
+            backgroundStyle: {
+              color: "rgba(220, 220, 220, 0.8)",
             },
           },
         ],
