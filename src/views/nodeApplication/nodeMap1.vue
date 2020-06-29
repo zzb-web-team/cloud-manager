@@ -9,12 +9,12 @@
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata()">
-                <el-option label="全部" value="*"></el-option>
+                <el-option label="全部终端" value="*"></el-option>
                 <el-option v-for="(item, index) in hashidSet" :key="index" :label="item.label" :value="item.label"></el-option>
               </el-select>
               <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="options2" ref="cascaderAddr" :show-all-levels="false" v-model="value2" @change="getdata"></el-cascader>
               <el-select v-model="value3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata()">
-                <el-option label="全部" value="*"></el-option>
+                <el-option label="全部运营商" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
               </el-select>
               <el-button-group>
@@ -26,7 +26,7 @@
                   <i class="el-icon-date"></i>
                 </el-button>
               </el-button-group>
-              <el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange"  range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
             </div>
             <div class="device_form">
@@ -67,12 +67,12 @@
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-select v-model="value1acce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata1()">
-                <el-option label="全部" value="*"></el-option>
+                <el-option label="全部终端" value="*"></el-option>
                 <el-option v-for="(item, index) in hashidSet" :key="index" :label="item.label" :value="item.label"></el-option>
               </el-select>
               <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="options2" ref="cascaderAddr" :show-all-levels="false" v-model="valuea2" @change="getdata1"></el-cascader>
               <el-select v-model="valuea3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata1()">
-                <el-option label="全部" value="*"></el-option>
+                <el-option label="全部运营商" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
               </el-select>
               <el-button-group>
@@ -84,7 +84,7 @@
                   <i class="el-icon-date"></i>
                 </el-button>
               </el-button-group>
-              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange"  range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(2)">确定</el-button>
             </div>
             <div class="device_form" style>
@@ -472,7 +472,7 @@ export default {
       return stat;
     },
     setbytes(data) {
-      return (data / 1024 / 1024 / 1024).toFixed(2) + "GB";
+      return common.formatByteActive(data);
     },
   },
   components: {
@@ -683,7 +683,7 @@ export default {
       this.options1 = [];
       this.options1chanid = [];
       //this.options2 = [];
-      //this.options3 = [];
+      this.options3 = [];
       let params = new Object();
       params.chanId = "*";
       accelerate_flow_query_conditions(params)
@@ -774,7 +774,7 @@ export default {
           this.flowunit = this.common.formatByteActiveunit(max);
 
           res.data.streamArray.forEach((item, index) => {
-            this.dataFlowArray.push((item / 1024 / 1024 / 1024).toFixed(2));
+            this.dataFlowArray.push(this.common.formatByteNum(item,this.flowunit));
           });
           res.data.timeArray.forEach((item, index) => {
             this.timeArray.push(getymdtime1(item));
@@ -847,6 +847,7 @@ export default {
     },
     //请求数据--回源查询条件
     getseachlabel2() {
+      this.options3=[]
       this.optionsa1 = [];
       this.optionsa2 = [];
       this.optionsa3 = [];
@@ -1114,13 +1115,13 @@ export default {
               icon:
                 "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
               onclick: function() {
-                _this.export_accelerate();
+                _this.exoprtant_pupv();
               },
             },
           },
         },
         grid: {
-          left: "2%", // 默认10%，给24就挺合适的。
+          left: "3%", // 默认10%，给24就挺合适的。
           top: 60, // 默认60
           right: 35, // 默认10%
           bottom: 60, // 默认60
@@ -1190,14 +1191,14 @@ export default {
               icon:
                 "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
               onclick: function() {
-                _this.export_backsource();
+                _this.exoprtant_backsource();
               },
             },
           },
         },
         grid: {
           // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
-          left: "2%", // 默认10%，给24就挺合适的。
+          left: "3%", // 默认10%，给24就挺合适的。
           top: 60, // 默认60
           right: 35, // 默认10%
           bottom: 60, // 默认60

@@ -11,7 +11,7 @@
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata()">
-                <el-option label="全部" value="*"></el-option>
+                <el-option label="全部终端" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
               </el-select>
 
@@ -24,7 +24,7 @@
                   <i class="el-icon-date"></i>
                 </el-button>
               </el-button-group>
-              <el-date-picker v-show="shoudzy" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="shoudzy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(0)">确定</el-button>
             </div>
 
@@ -54,7 +54,7 @@
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata1()">
-                <el-option label="全部" value="*"></el-option>
+                <el-option label="全部终端" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
               </el-select>
               <el-button-group>
@@ -66,7 +66,7 @@
                   <i class="el-icon-date"></i>
                 </el-button>
               </el-button-group>
-              <el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
             </div>
             <div class="device_form" style>
@@ -137,11 +137,20 @@
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata2()">
-                <el-option label="全部" value="*"></el-option>
+                <el-option label="全部终端" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
               </el-select>
+              <el-button-group>
+                <el-button v-show="!shoudzyz" @click="today(2)">今天</el-button>
+                <el-button v-show="!shoudzyz" @click="yesterday(2)">昨天</el-button>
+                <el-button v-show="!shoudzyz" @click="sevendat(2)">近7天</el-button>
+                <el-button v-show="!shoudzyz" @click="thirtyday(2)">近30天</el-button>
+                <el-button @click="showzdyz">自定义
+                  <i class="el-icon-date"></i>
+                </el-button>
+              </el-button-group>
 
-              <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="shoudzyz" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(2)">确定</el-button>
             </div>
             <!-- <div class="device_form" style>
@@ -174,6 +183,11 @@
                     <el-table-column label="流量占比(%)">
                       <template slot-scope="scope">
                         <div>{{ scope.row.dfPercent |formatPercent }}</div>
+                      </template>
+                    </el-table-column>
+                     <el-table-column label="加速次数">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.totalAccelCnt  }}</div>
                       </template>
                     </el-table-column>
                     <el-table-column label="访问次数">
@@ -1181,6 +1195,11 @@ export default {
     },
     //选项卡
     handleClick(tab, event) {
+      this.shoudzy = false;
+      this.shoudzyx = false;
+
+      this.shoudzyz = false;
+
       this.ableStatus = true;
       this.value1fileName = "";
       this.value1Activechanid = "";
