@@ -55,7 +55,7 @@
           </el-table-column>
           <el-table-column prop="time_create" sortable="custom" label="创建时间">
             <template slot-scope="scope">
-              <span>{{ scope.row.create_time | settimes }}
+              <span>{{ scope.row.create_time }}
               </span>
             </template>
           </el-table-column>
@@ -236,14 +236,14 @@ export default {
     };
   },
   filters: {
-    settimes(data) {
-      if (data) {
-        var stat = getymdtime(data * 1000);
-        return data;
-      } else {
-        return data;
-      }
-    },
+    // settimes(data) {
+    //   if (data) {
+    //     var stat = getymdtime(data * 1000);
+    //     return data;
+    //   } else {
+    //     return data;
+    //   }
+    // },
   },
   components: {
     pageNation,
@@ -301,7 +301,14 @@ export default {
             let tempArr = [];
             tempArr = res.data.result;
             tempArr.forEach((item, index) => {
-              item.create_time = this.common.getTimes(item.create_time * 1000);
+              let nowlength = item.create_time + "";
+              if (nowlength.length == 10) {
+                item.create_time = this.common.getTimes(
+                  item.create_time * 1000
+                );
+              } else {
+                item.create_time = this.common.getTimes(item.create_time);
+              }
             });
             this.tableData = [];
             this.tableData = tempArr;
@@ -516,7 +523,7 @@ export default {
     },
     //停用
     disableuser(num, row) {
-       this.$confirm(
+      this.$confirm(
         "停用后该渠道ID与此域名相关的所有加速内容将停用，是否继续？",
         "提示",
         {
@@ -526,11 +533,10 @@ export default {
         }
       )
         .then(() => {
-            this.operatingFrom = row;
-      this.operating(1);
+          this.operatingFrom = row;
+          this.operating(1);
         })
         .catch(() => {});
-   
     },
     //启用
     enableuser(num, row) {

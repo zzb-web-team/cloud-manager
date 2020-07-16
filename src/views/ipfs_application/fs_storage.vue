@@ -42,10 +42,10 @@
     </div>
     <div style="background: #fff;padding:20px;padding-top:0px;">
       <el-table stripe :data="tableData" border :cell-style="rowClass" :header-cell-style="headClass" style="width: 100%">
-        <el-table-column prop="fileId" label="视频ID" width="180"></el-table-column>
+        <el-table-column prop="fileIdActive" label="视频ID" width="500"></el-table-column>
         <el-table-column prop="chanId" label="渠道ID" width="180"></el-table-column>
         <el-table-column prop="fileName" label="加速内容名称"></el-table-column>
-        <el-table-column prop="fileSize" label="文件大小"></el-table-column>
+        <el-table-column prop="fileSize" label="文件大小" width="120"></el-table-column>
         <el-table-column prop="dataFlow" label="点播流量"></el-table-column>
         <el-table-column prop="userIpInfo" label="点播IP"></el-table-column>
         <el-table-column prop="startTS" label="点播时间"></el-table-column>
@@ -134,8 +134,8 @@ export default {
         endTime = new Date().getTime() / 1000;
       }
       let param = {
-        start_ts: startTime,
-        end_ts: endTime,
+        start_ts: parseInt(startTime) ,
+        end_ts: parseInt(endTime) ,
         chanId: this.inputActive1 == "" ? "*" : this.inputActive1,
         fileId: this.input == "" ? "*" : this.input,
         fileName: this.inputActive2 == "" ? "*" : this.inputActive2,
@@ -147,6 +147,7 @@ export default {
               message: "下载成功",
               type: "success",
             });
+          
             window.location.href = res.msg;
           }
         })
@@ -169,19 +170,22 @@ export default {
       let endTime = 0;
       if (this.value1) {
         if (this.value1 == "" || this.value1 == null) {
-          startTime =
-            new Date(new Date().toLocaleDateString()).getTime() / 1000;
+         
+            startTime =
+            (new Date().getTime() / 1000)-60*60*24*90
           endTime = new Date().getTime() / 1000;
         } else {
           endTime = this.value1[1].getTime() / 1000;
           startTime = this.value1[0].getTime() / 1000;
         }
       } else {
-        startTime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+       startTime =  (new Date().getTime() / 1000)-60*60*24*90
         endTime = new Date().getTime() / 1000;
       }
+      
 
       let param = {
+        
         start_ts: parseInt(startTime),
         end_ts: parseInt(endTime),
         chanId: this.inputActive1 == "" ? "*" : this.inputActive1,
@@ -190,9 +194,17 @@ export default {
         pageNo: this.currentPage - 1,
         pageSize: 10,
       };
+        if(endTime-startTime>60*60*24*90){
+            this.$message({
+          message: "只能查询三个月以内的数据",
+          type: "error",
+        });
+        return false
+      }
       query_videoplay_log(param)
         .then(res => {
           if (res.status == 0) {
+            this.tableData =[]
             let tempArr = res.data.list;
             for (var i = 0; i < tempArr.length; i++) {
               tempArr[i].startTS = this.common.getTimes(
@@ -212,6 +224,16 @@ export default {
                   tempArr[i].dataFlow
                 );
               }
+              if(tempArr[i].videoType==0){
+                    tempArr[i].fileIdActive="mp4"+"_"+tempArr[i].fileId
+              }
+              else if(tempArr[i].videoType==1){
+                    tempArr[i].fileIdActive="hls"+"_"+tempArr[i].fileId
+              }
+              else if(tempArr[i].videoType==0){
+                    tempArr[i].fileIdActive="flv"+"_"+tempArr[i].fileId
+              }
+             
             }
             this.tableData = tempArr;
             this.total_cnt = res.data.totalCnt;

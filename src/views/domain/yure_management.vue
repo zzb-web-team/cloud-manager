@@ -54,7 +54,7 @@
                 </el-table>
 
                 <!-- 按钮 -->
-                <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center;">
+                <div style="margin-top: 20px;display: flex;justify-content:  flex-end;align-items: center;">
                     <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
 
                 </div>
@@ -176,17 +176,19 @@ export default {
     },
     //状态选这改变
     onchangeTab(val) {
+      this.currentPage=1
       this.queryInfo();
     },
     //状态选这改变
     onchangeTab1(val) {
+      this.currentPage=1
       this.queryInfo();
     },
     //重置
     reset() {
       this.input = "";
       this.value1 = "";
-      this.value = 1;
+      this.value = -1;
       this.queryInfo();
     },
     //跳转

@@ -377,6 +377,9 @@ export default {
       param.area = this.area;
       param.url_name = this.refreshurl;
       param.type = this.opType;
+      param.createdtime=parseInt(new Date().getTime()/1000)
+      localStorage.setItem("WarmParam","" )
+      localStorage.setItem("WarmParam",JSON.stringify(param) )
       resource_refresh(param)
         .then(res => {
           if (res.status == 0) {
@@ -386,6 +389,7 @@ export default {
                 type: "error",
               });
               return false;
+
             }
             //debugger
             let teampArr = res.data.res_data;

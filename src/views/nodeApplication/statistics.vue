@@ -180,9 +180,9 @@
                         <div>{{ scope.row.dataFlow | formatDataFlow}}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="流量占比(%)">
+                    <el-table-column label="流量占比">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.dfPercent |formatPercent }}</div>
+                        <div>{{ scope.row.dfPercent |formatPercent }}%</div>
                       </template>
                     </el-table-column>
                      <el-table-column label="加速次数">
@@ -195,9 +195,9 @@
                         <div>{{ scope.row.totalCnt }}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="访问占比(%)">
+                    <el-table-column label="访问占比">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.cntPercent |formatPercent }}</div>
+                        <div>{{ scope.row.cntPercent |formatPercent }}%</div>
                       </template>
                     </el-table-column>
 
@@ -707,30 +707,30 @@ export default {
         this.options3 = [];
         pv_uv_query_conditions(params)
           .then(res => {
-            res.data.fileNameSet.forEach((item, index) => {
-              let obj = {};
-              obj.label = item;
-              obj.value = index;
-              this.optionsa1.push(obj);
-            });
-            res.data.regionSet.forEach((item, index) => {
-              let obj = {};
-              obj.label = item;
-              obj.value = index;
-              this.optionsa2.push(obj);
-            });
+            // res.data.fileNameSet.forEach((item, index) => {
+            //   let obj = {};
+            //   obj.label = item;
+            //   obj.value = index;
+            //   this.optionsa1.push(obj);
+            // });
+            // res.data.regionSet.forEach((item, index) => {
+            //   let obj = {};
+            //   obj.label = item;
+            //   obj.value = index;
+            //   this.optionsa2.push(obj);
+            // });
             res.data.ispSet.forEach((item, index) => {
               let obj = {};
               obj.label = item;
               obj.value = index;
               this.optionsa3.push(obj);
             });
-            res.data.chanIdSet.forEach((item, index) => {
-              let obj = {};
-              obj.label = item;
-              obj.value = index;
-              this.options1Active.push(obj);
-            });
+            // res.data.chanIdSet.forEach((item, index) => {
+            //   let obj = {};
+            //   obj.label = item;
+            //   obj.value = index;
+            //   this.options1Active.push(obj);
+            // });
             res.data.hashidSet.forEach((item, index) => {
               let obj = {};
               obj.label = item;
@@ -748,17 +748,17 @@ export default {
         this.optionsb2 = [];
         this.optionsb3 = [];
         this.options3 = [];
-        region_query_conditions(params)
+        pv_uv_query_conditions(params)
           .then(res => {
-            if (res.data.ispSet.length == 0 || res.data.fileNameSet == 0) {
-              return false;
-            }
-            res.data.fileNameSet.forEach((item, index) => {
-              let obj = {};
-              obj.label = item;
-              obj.value = index;
-              this.optionsb2.push(obj);
-            });
+            // if (res.data.ispSet.length == 0 || res.data.fileNameSet == 0) {
+            //   return false;
+            // }
+            // res.data.fileNameSet.forEach((item, index) => {
+            //   let obj = {};
+            //   obj.label = item;
+            //   obj.value = index;
+            //   this.optionsb2.push(obj);
+            // });
             res.data.ispSet.forEach((item, index) => {
               let obj = {};
               obj.label = item;
@@ -784,29 +784,29 @@ export default {
         this.optionsb3 = [];
         this.options3 = [];
 
-        isp_query_conditions(params)
+        pv_uv_query_conditions(params)
           .then(res => {
-            if (res.data.regionSet.length == 0 || res.data.fileNameSet == 0) {
-              return false;
-            }
-            res.data.regionSet.forEach((item, index) => {
-              let obj = {};
-              obj.label = item;
-              obj.value = index;
-              this.optionsb3.push(obj);
-            });
-            res.data.fileNameSet.forEach((item, index) => {
-              let obj = {};
-              obj.label = item;
-              obj.value = index;
-              this.optionsb2.push(obj);
-            });
-            // res.data.hashidSet.forEach((item, index) => {
+            // if (res.data.regionSet.length == 0 || res.data.fileNameSet == 0) {
+            //   return false;
+            // }
+            // res.data.regionSet.forEach((item, index) => {
             //   let obj = {};
             //   obj.label = item;
             //   obj.value = index;
-            //   this.options3.push(obj);
+            //   this.optionsb3.push(obj);
             // });
+            // res.data.fileNameSet.forEach((item, index) => {
+            //   let obj = {};
+            //   obj.label = item;
+            //   obj.value = index;
+            //   this.optionsb2.push(obj);
+            // });
+            res.data.hashidSet.forEach((item, index) => {
+              let obj = {};
+              obj.label = item;
+              obj.value = index;
+              this.options3.push(obj);
+            });
 
             this.getcure(2);
           })
@@ -818,27 +818,27 @@ export default {
         this.optionsc3 = [];
         this.options3 = [];
 
-        query_playtimes_conditions(params)
+        pv_uv_query_conditions(params)
           .then(res => {
-            res.data.fileNameSet.forEach((item, index) => {
-              let obj = {};
-              obj.label = item;
-              obj.value = index;
-              this.optionsc1.push(obj);
-            });
-            res.data.regionSet.forEach((item, index) => {
-              let obj = {};
-              obj.label = item;
-              obj.value = index;
-              this.optionsc2.push(obj);
-            });
+            // res.data.fileNameSet.forEach((item, index) => {
+            //   let obj = {};
+            //   obj.label = item;
+            //   obj.value = index;
+            //   this.optionsc1.push(obj);
+            // });
+            // res.data.regionSet.forEach((item, index) => {
+            //   let obj = {};
+            //   obj.label = item;
+            //   obj.value = index;
+            //   this.optionsc2.push(obj);
+            // });
             res.data.ispSet.forEach((item, index) => {
               let obj = {};
               obj.label = item;
               obj.value = index;
               this.optionsc3.push(obj);
             });
-            res.data.hashidSet.forEach((item, index) => {
+           res.data.hashidSet.forEach((item, index) => {
               let obj = {};
               obj.label = item;
               obj.value = index;
@@ -851,9 +851,7 @@ export default {
     },
     //请求数据--曲线图
     getcure(data) {
-      // if(this.endtime-this.starttime){
-
-      // }
+     
       let params = new Object();
       params.chanId = this.chanid + "";
       params.start_ts = this.starttime;
@@ -948,7 +946,7 @@ export default {
           this.starttime,
           this.endtime
         );
-
+        
         if (data == 1) {
           this.playTimesArray1 = [];
           this.timeArray1 = [];
@@ -1324,7 +1322,7 @@ export default {
                 ]),
               },
             }, //填充区域样式
-            data: this.uvArray,
+            data: this.pvArray,
           },
           {
             name: "uv",
@@ -1351,7 +1349,7 @@ export default {
                 ]),
               },
             }, //填充区域样式
-            data: this.pvArray,
+            data: this.uvArray,
           },
         ],
       };

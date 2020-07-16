@@ -51,7 +51,7 @@
         <el-row type="flex">
           <el-col :span="6" style="display: flex;justify-content: justify-content: flex-start;">
             <el-button type="text" size="small" @click="allOn">启用</el-button>
-            <el-button type="text" size="small" style="margin-left:30px;" @click="allOff">禁用</el-button>
+            <el-button type="text" size="small" style="margin-left:30px;" @click="allOff">冻结</el-button>
           </el-col>
         </el-row>
         <el-row type="flex">
@@ -227,6 +227,7 @@ export default {
   methods: {
     //状态筛选
     onChangeTab() {
+      this.pager.page =1
       this.queryUserList();
     },
 
@@ -276,6 +277,7 @@ export default {
       this.value = "";
       this.searchText = "";
       this.valueTime = "";
+      this.pager.page = 1
       this.queryUserList();
     },
     handleSelectionChange(val) {
@@ -432,8 +434,9 @@ export default {
               } else {
                 nowArr[i].status = "冻结";
               }
-              if (nowArr[i].dataFlow == 0) {
-                nowArr[i].dataFlow = 0;
+              
+              if (nowArr[i].dataFlow == 0 || nowArr[i].dataFlow==undefined) {
+                nowArr[i].dataFlow = 0 +"GB";
               } else {
                 nowArr[i].dataFlow = this.common.formatByteActive(
                   nowArr[i].dataFlow

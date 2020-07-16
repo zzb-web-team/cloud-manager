@@ -8,8 +8,7 @@
         <el-col :span="4" class="userinfo">
           <el-dropdown trigger="hover">
             <span class="el-dropdown-link userinfo-inner">
-              <img src="../assets/download.jpg" />
-              {{sysUserName}}
+              <img src="../assets/download.jpg" /> {{sysUserName}}
             </span>
             <el-dropdown-menu slot="dropdown">
               <!-- <el-dropdown-item @click.native="goLinkCenter">个人中心</el-dropdown-item> -->
@@ -21,23 +20,10 @@
       </el-col>
       <el-col :span="24" class="main">
         <aside :class="collapsed?'menu-collapsed':'menu-expanded'">
-          <el-menu
-            :default-active="$route.path"
-            class="el-menu-vertical-demo"
-            @open="handleopen"
-            @close="handleclose"
-            @select="handleselect"
-            unique-opened
-            router
-          >
+          <el-menu :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect" unique-opened router>
             <!-- 一级菜单 -->
             <template v-for="item in  $router.options.routes" v-if="!item.hidden">
-              <el-submenu
-                v-if="item.children && item.children.length"
-                :index="item.path"
-                :key="item.path"
-                style="text-align: left;"
-              >
+              <el-submenu v-if="item.children && item.children.length" :index="item.path" :key="item.path" style="text-align: left;">
                 <template slot="title">
                   <i :class="item.icon" style="margin-right: 10px;margin-left: 10px;"></i>
                   <span>{{item.name}}</span>
@@ -45,23 +31,14 @@
 
                 <!-- 二级菜单 -->
                 <template v-for="itemChild in item.children" v-if="!itemChild.hidden">
-                  <el-submenu
-                    v-if="itemChild.children && itemChild.children.length"
-                    :index="itemChild.path"
-                    :key="itemChild.path"
-                  >
+                  <el-submenu v-if="itemChild.children && itemChild.children.length" :index="itemChild.path" :key="itemChild.path">
                     <template slot="title">
                       <i :class="itemChild.icon"></i>
                       <span>{{itemChild.name}}</span>
                     </template>
 
                     <!-- 三级菜单 -->
-                    <el-menu-item
-                      v-for="itemChild_Child in itemChild.children"
-                      :index="itemChild_Child.path"
-                      :key="itemChild_Child.path"
-                      v-if="!itemChild_Child.hidden"
-                    >
+                    <el-menu-item v-for="itemChild_Child in itemChild.children" :index="itemChild_Child.path" :key="itemChild_Child.path" v-if="!itemChild_Child.hidden">
                       <i :class="itemChild_Child.icon"></i>
                       <span slot="title">{{itemChild_Child.name}}</span>
                     </el-menu-item>
@@ -110,6 +87,9 @@
 </template>
 
 <script>
+import { refresh_state_admin } from "../servers/api";
+import { fail } from "assert";
+
 export default {
   data() {
     return {
@@ -125,52 +105,9 @@ export default {
         delivery: false,
         type: [],
         resource: "",
-        desc: ""
-      }
+        desc: "",
+      },
     };
-  },
-  methods: {
-    onSubmit() {
-    },
-    handleopen() {
-    },
-    handleclose() {
-    },
-    goLinkCenter(){
-      this.$router.push({
-        path:"/user_center"
-      })
-    },
-    handleselect: function(a, b) {},
-    //退出登录
-    logout: function() {
-      var _this = this;
-      this.$confirm("确认退出吗?", "提示", {
-        type: "warning"
-      })
-        .then(() => {
-          sessionStorage.removeItem("user");
-          sessionStorage.removeItem("id");
-             _this.$cookies.remove('adminuser');
-          _this.$cookies.remove('adminid');
-          _this.$cookies.remove('clouduser');
-          // _this.$cookies.set("adminuser", "", 0);
-          // _this.$cookies.set("adminid", "", 0);
-          _this.$router.push("/");
-        })
-        .catch(error => {
-          console.log(error)
-        });
-    },
-    //折叠导航栏
-    collapse: function() {
-      this.collapsed = !this.collapsed;
-    },
-    showMenu(i, status) {
-      this.$refs.menuCollapsed.getElementsByClassName(
-        "submenu-hook-" + i
-      )[0].style.display = status ? "block" : "none";
-    }
   },
   mounted() {
     var user = this.$cookies.get("adminuser");
@@ -183,7 +120,166 @@ export default {
     //     path: "/user"
     //   });
     // }
-  }
+    this.queryInfo();
+  },
+  methods: {
+    queryInfo() {
+      if (localStorage.getItem("WarmParam")) {
+        //this.queryWarmupInfo();
+        setInterval(() => {
+          let _this = this;
+          setTimeout(_this.queryWarmupInfo(), 0);
+        }, 20000);
+      }
+    },
+    //
+    queryWarmupInfo() {
+      let localparam = JSON.parse(localStorage.getItem("WarmParam"));
+   
+      if(localparam.url_name.length!=0){
+           let param = new Object();
+
+      param.buser_id = localparam.buser_id;
+      param.end_time = 0;
+      param.order = 1;
+      param.page = 0;
+      param.refresh_type = -1;
+      param.start_time = 0;
+      param.state = -1;
+      param.url = "";
+      refresh_state_admin(param)
+        .then(res => {
+          let tempName = [];
+          tempName = localparam.url_name;
+          let temp = res.data.result;
+
+          // debugger
+          let resSussess = [];
+          let resFail = [];
+          let resProcessing = [];
+          for (var k = 0; k < tempName.length; k++) {
+            for (var i = 0; i < temp.length; i++) {
+              if (temp[i].url_name == tempName[k]) {
+                if (temp[i].state == 1) {
+                  resSussess.push(temp[i].url_name)
+                } else if (temp[i].state == 3) {
+                  resFail.push(temp[i].url_name)
+                } else if (temp[i].state == 0) {
+                  resProcessing.push(temp[i].url_name)
+                }
+              }
+            }
+          }
+          //     let test1=["杨国栋1","杨国栋3","杨国栋2"]
+          // let test2=["杨国栋1"]
+          // console.log(this.setdatas(test1,test2))
+          // console.log(resSussess);
+          // console.log(resFail);
+          // console.log(resProcessing);
+          if (resSussess.length!=0) {
+            this.$notify({
+              title: "预热成功",
+              message: resSussess,
+              type: "success",
+            });
+            console.log(localparam.url_name)
+                   let temparr1=localparam.url_name
+                   console.log(temparr1)
+                   console.log(resSussess)
+            let temparr2=this.setdatas(temparr1,resSussess)
+            console.log(temparr2+"**")
+            let localparam1 = JSON.parse(localStorage.getItem("WarmParam"))
+              localparam1.url_name=temparr2
+              localStorage.setItem("WarmParam",JSON.stringify(localparam1) )
+
+          }
+          if (resFail.length!=0) {
+            this.$notify({
+              title: "预热失败",
+              message: resFail,
+              type: "error",
+              offset: 100,
+            });
+            let temparr1=localparam.url_name
+              console.log(localparam.url_name)
+                             console.log(temparr1)
+                   console.log(resFail)
+
+            let temparr2=this.setdatas(temparr1,resFail)
+             console.log(temparr2+"^^^")
+            let localparam1 = JSON.parse(localStorage.getItem("WarmParam"))
+              localparam1.url_name=temparr2
+              localStorage.setItem("WarmParam",JSON.stringify(localparam1) )
+
+
+           
+          }
+          // if (resProcessing.length!=0) {
+          //   this.$notify({
+          //     title: "预热中",
+          //     message: resProcessing,
+          //     type: "info",
+          //     offset: 200,
+          //   });
+          //   let temparr1=localparam.url_name
+          //   let temparr2=this.setdatas(temparr1,resProcessing)
+          //   console.log(temparr2)
+          // }
+      
+          
+          
+        })
+        .catch(error => {});
+
+      }
+   
+    },
+    setdatas(a,b) {
+      return a.filter(function(item){
+        return b.indexOf(item)==-1
+      })
+    
+    },
+    onSubmit() {},
+    handleopen() {},
+    handleclose() {},
+    goLinkCenter() {
+      this.$router.push({
+        path: "/user_center",
+      });
+    },
+    handleselect: function(a, b) {},
+    //退出登录
+    logout: function() {
+      var _this = this;
+      this.$confirm("确认退出吗?", "提示", {
+        type: "warning",
+      })
+        .then(() => {
+          sessionStorage.removeItem("user");
+          sessionStorage.removeItem("id");
+          _this.$cookies.remove("adminuser");
+          _this.$cookies.remove("adminid");
+          _this.$cookies.remove("clouduser");
+          localStorage.clear();
+          // _this.$cookies.set("adminuser", "", 0);
+          // _this.$cookies.set("adminid", "", 0);
+          _this.$router.push("/");
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //折叠导航栏
+    collapse: function() {
+      this.collapsed = !this.collapsed;
+    },
+    showMenu(i, status) {
+      this.$refs.menuCollapsed.getElementsByClassName(
+        "submenu-hook-" + i
+      )[0].style.display = status ? "block" : "none";
+    },
+  },
 };
 </script>
 
@@ -240,7 +336,7 @@ export default {
     }
     .logo-width {
       width: 230px;
-     background: #297aff;
+      background: #297aff;
     }
     .logo-collapse-width {
       width: 60px;
@@ -302,7 +398,7 @@ export default {
       // top: 0px;
       // bottom: 0px;
       // left: 230px;
-     // overflow-y: scroll;
+      // overflow-y: scroll;
       //padding: 20px;
       .breadcrumb-container {
         //margin-bottom: 15px;

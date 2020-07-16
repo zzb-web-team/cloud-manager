@@ -155,13 +155,31 @@ export default {
       this.uploadData(list, 1);
     },
     uploadData(list, page) {
-      let len = list.length;
-      let i = (page - 1) * 10;
-      if (i > len) {
-        return false;
-      }
-      var res = [];
-      res = list.slice(i, i + 10);
+     var remaining = 0;
+			var len = list.length;
+			var i = (page - 1) * 10;
+			if (i > len) {
+				return false;
+			}
+			if (list.length - 10 <= 0) {
+				remaining = 0;
+			} else {
+				remaining = list.length - i;
+			}
+			var res = [];
+			if (i != 0) {
+				if (remaining > 10) {
+					res = list.slice(i, i + 10);
+				} else {
+					res = list.slice(i, i + remaining);
+				}
+			} else {
+				if (remaining > 10) {
+					res = list.slice(i, i + 10);
+				} else {
+					res = list.slice(i, len);
+				}
+			}
       let param = new Object();
       param.data_count = res.length;
       // param.data_array = res;

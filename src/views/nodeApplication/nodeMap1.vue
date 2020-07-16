@@ -56,7 +56,7 @@
                       </template>
                     </el-table-column>
                   </el-table>
-                  <!-- <fenye2 style="float:right;margin:10px 0 20px 0;" @fatherMethod="getpage" @fathernum="gettol" :pagesa="total_cnt"></fenye2> -->
+                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :pagesa="total_cnt"></fenye>
                 </el-col>
               </el-row>
             </div>
@@ -99,7 +99,7 @@
 
 <script>
 import { dateToMs, getymdtime, getymdtime1 } from "../../servers/sevdate";
-import fenye2 from "@/components/fenye2";
+import fenye from "@/components/fenye";
 import {
   accelerate_flow_query_conditions,
   accelerate_flow,
@@ -476,7 +476,7 @@ export default {
     },
   },
   components: {
-    fenye2,
+    fenye,
   },
   mounted() {
     // if (this.$cookies.get("id")) {
@@ -518,6 +518,17 @@ export default {
     this.drawLine1();
   },
   methods: {
+    //获取页码
+    handleCurrentChange(pages) {
+      this.pageNo = pages;
+      this.getbot();
+    },
+
+    //获取每页数量
+    handleSizeChange(pagetol) {
+      //this.pagesize = pagetol;
+      // this.getuserlist();
+    },
     //回源统计图表导出
     exoprtant_backsource() {
       let params = new Object();
@@ -599,7 +610,7 @@ export default {
       } else {
         params.acce = "*";
       }
-
+      console.log(params)
       params.time_unit = this.common.timeUnitActive(
         this.starttime,
         this.endtime
@@ -610,7 +621,9 @@ export default {
             window.open(res.msg, "_blank");
           }
         })
-        .catch(err => {});
+        .catch(err => {
+          console.log(err)
+        });
     },
     //输入渠道ID查询
     onchanidChange() {
@@ -619,6 +632,7 @@ export default {
       if (this.value1Activechanid.length != 12) {
         return false;
       }
+      this.pageNo=1
       this.queryInfoVideo();
     },
     //查询视频名称
@@ -639,7 +653,6 @@ export default {
               this.hashidSet.push(obj);
             });
             this.options1chanid = this.options1chanid.concat(this.labelData);
-            console.log(this.labelData);
             if (res.result.les_count == 0) {
               return false;
             } else {
@@ -671,6 +684,7 @@ export default {
       // this.getuserlist();
     },
     getdata() {
+      this.pageNo=1
       this.gettable1();
     },
     getdata1() {
@@ -688,12 +702,7 @@ export default {
       params.chanId = "*";
       accelerate_flow_query_conditions(params)
         .then(res => {
-          // res.data.fileNameSet.forEach((item, index) => {
-          //   let obj = {};
-          //   obj.label = item;
-          //   obj.value = index;
-          //   this.options1.push(obj);
-          // });
+        
           res.data.ispSet.forEach((item, index) => {
             let obj = {};
             obj.label = item;
@@ -706,18 +715,7 @@ export default {
             obj.value = item;
             this.hashidSet.push(obj);
           });
-          //   res.data.hashidSet.forEach((item, index) => {
-          //   let obj = {};
-          //   obj.label = item;
-          //   obj.value = item;
-          //   this.hashidSet.push(obj);
-          // });
-          // res.data.chanIdSet.forEach((item, index) => {
-          //   let obj = {};
-          //   obj.label = item;
-          //   obj.value = index;
-          //   this.options1Active.push(obj);
-          // });
+          
           this.gettable1();
         })
         .catch(Error => {
@@ -823,6 +821,8 @@ export default {
       accelerate_flow_table(params)
         .then(res => {
           if (res.status == 0) {
+                //this.tablecdn2 = res.data.fileList;
+            this.total_cnt = res.data.totalCnt;
             let chanelIdArr = res.data.chanelIdArray;
             let timeArr = res.data.timeArray;
             let streamArr = res.data.streamArray;
@@ -923,28 +923,15 @@ export default {
           this.flowunit = this.common.formatByteActiveunit(max);
 
           res.data.streamArray.forEach((item, index) => {
-            this.dataFlowArray2.push(
-              this.common.formatByteNum(item, this.flowunit)
-            );
+                   this.dataFlowArray2.push(this.common.formatByteNum(item,this.flowunit));
+
           });
           // this.timeArray = res.data.timeArray;
-          // res.data.timeArray.forEach((item, index) => {
-          //   this.timeArray2.push(getymdtime1(item));
-          // });
-
-          this.dataFlownum1 = res.data.streamArray.length - 1;
-          let upcli = Math.floor(this.dataFlownum1 / 12);
           res.data.timeArray.forEach((item, index) => {
-            if (
-              index == 0 ||
-              index == this.dataFlownum1 ||
-              (index % upcli == 0 && index < upcli * 11)
-            ) {
-              this.timeArray2.push(getymdtime1(item));
-            } else {
-              this.timeArray2.push("");
-            }
+            this.timeArray2.push(getymdtime1(item));
           });
+
+          
 
           this.drawLine1(this.dataFlowArray2, this.timeArray2);
         })
@@ -992,7 +979,7 @@ export default {
     //七天
     sevendat(data) {
       let times = parseInt(new Date(new Date()).getTime() / 1000);
-      this.starttime = times - 24 * 60 * 60 * 7;
+      this.starttime = times - 24 * 60 * 60 * 6;
       this.endtime = times;
       this.timeUnit = 60 * 24;
       if (!data) {
@@ -1004,7 +991,7 @@ export default {
     //三十天
     thirtyday(data) {
       let times = parseInt(new Date(new Date()).getTime() / 1000);
-      this.starttime = times - 24 * 60 * 60 * 30;
+      this.starttime = times - 24 * 60 * 60 * 29;
       this.endtime = times;
       this.timeUnit = 60 * 24;
       if (!data) {
@@ -1040,7 +1027,12 @@ export default {
     //选项卡
 
     handleClick(tab, event) {
+      this.val2=[]
       this.hashidSet = [];
+            let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.starttime = times;
+      
+      this.endtime = Date.parse(new Date()) / 1000;
       this.options3 = [];
       if (tab.index == 0) {
         // this.value1 = "";
@@ -1165,6 +1157,7 @@ export default {
           },
         ],
       };
+        myChartMap.clear();
       myChartMap.setOption(options);
     },
     drawLine1(x, y) {
@@ -1240,6 +1233,7 @@ export default {
           },
         ],
       };
+              myChartMap1.clear();
       myChartMap1.setOption(options);
     },
   },

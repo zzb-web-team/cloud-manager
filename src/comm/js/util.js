@@ -197,11 +197,11 @@ export default {
      }else if(unit=="MB"){
       return (num/1024/1024).toFixed(2)
      }else if(unit=="GB"){
-      return (num/1024/1024/1024).toFixed(2)
+      return (num/1024/1024/1024).toFixed(6)
      }else if(unit=="TB"){
-      return (num/1024/1024/1024/1024).toFixed(4)
+      return (num/1024/1024/1024/1024).toFixed(6)
      }else if(unit=="PB"){
-      return (num/1024/1024/1024/1024/1024).toFixed(4)
+      return (num/1024/1024/1024/1024/1024).toFixed(6)
      }
    
   },

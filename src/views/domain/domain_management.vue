@@ -67,7 +67,9 @@
 
             </template>
           </el-table-column>
-          <el-table-column prop="state" label="状态" :formatter="formatState"></el-table-column>
+          <el-table-column prop="state" label="状态" :formatter="formatState">
+        
+          </el-table-column>
           <el-table-column prop="create_time" label="创建时间" sortable="custom"></el-table-column>
           <el-table-column label="操作" width="350">
             <template slot-scope="scope">
@@ -472,7 +474,8 @@ export default {
   methods: {
     //监控
     monitor(row) {
-      let monitorUrlname = row.url;
+      console.log(row)
+      let monitorUrlname = row.url_name;
       let monitorChanId = row.buser_id;
       //localStorage.setItem("monitorUrlname", monitorUrlname);
       // localStorage.setItem("monitorChanId", monitorChanId);
@@ -486,6 +489,7 @@ export default {
     },
     //状态选这改变
     onchangeTab(val) {
+        this.currentPage = 1;
       this.queryUrlList();
     },
     //排序
@@ -561,15 +565,15 @@ export default {
     formatState(rows) {
       if (rows.state == 1) {
         return "正常运行";
-      } else {
+      }
+       else if(rows.state==0) {
         return "已停止";
+      }else if(rows.state==2){
+        return "回源失败"
       }
       //return jsonData.map(v => filterVal.map(j => v[j]));
     },
-    formatTime(rows) {
-      let tempTime = rows.create_time * 1000;
-      return this.common.getTimes(tempTime);
-    },
+
     //复制配置下一步
     next() {
       if (this.actives == 2) {
@@ -725,13 +729,23 @@ export default {
         params.end_time = 0;
         params.start_time = 0;
       }
+      console.log(params.page)
       query_url_for_admin(params)
         .then(res => {
           if (res.status == 0) {
             let tempArr = [];
             tempArr = res.data.result;
             tempArr.forEach((item, index) => {
-              item.create_time = this.common.getTimes(item.create_time * 1000);
+             let nowlength=item.create_time+""
+              if (nowlength.length == 10) {
+                item.create_time = this.common.getTimes(
+                  item.create_time * 1000
+                );
+              }
+           else {
+                item.create_time = this.common.getTimes(item.create_time);
+              }
+             
             });
             this.tableData = [];
             this.tableData = tempArr;
