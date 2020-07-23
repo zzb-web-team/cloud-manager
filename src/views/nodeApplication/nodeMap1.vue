@@ -119,7 +119,7 @@
                   <i class="el-icon-date"></i>
                 </el-button>
               </el-button-group>
-              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button>
             </div>
             <div class="user_item">
@@ -840,19 +840,68 @@ export default {
           if (res.status == 0) {
             this.totalp2p = res.data.totalp2p;
             this.totalcdn = res.data.totalcdn;
-            this.timeArrayJk = [];
+
+            var num = res.data.iospstreamarray;
+            var num1 = res.data.ioscstreamarray;
+            var num2 = res.data.andriodpstreamarray;
+            var num3 = res.data.andriodcstreamarray;
+            let max=""
+            if (num != 0) {
+							 max = Math.max.apply(null, num);
+						} else if (ioscmaxnum != 0) {
+							 max = Math.max.apply(null, num);
+						} else if (andriodmaxnum != 0) {
+							 max = Math.max.apply(null, num);
+						} else if (andriodcmaxnum != 0) {
+							 max = Math.max.apply(null, num);
+						} else {
+							 max = Math.max.apply(null, num);
+						}
+
+         // var max = Math.max.apply(null, num);
+          this.flowunit = this.common.formatByteActiveunit(max);
+          console.log(this.flowunit)
+
+        //   res.data.streamArray.forEach((item, index) => {
+        //     this.dataFlowArray.push(
+        //       this.common.formatByteNum(item, this.flowunit)
+        //     );
+        //   });
+         this.timeArrayJk = [];
             this.dataJk1 = [];
             this.dataJk2 = [];
             this.dataJk3 = [];
             this.dataJk4 = [];
 
+           res.data.iospstreamarray.forEach((item, index) => {
+            this.dataJk1.push(
+              this.common.formatByteNum(item, this.flowunit)
+            );
+          });
+           res.data.ioscstreamarray.forEach((item, index) => {
+            this.dataJk2.push(
+              this.common.formatByteNum(item, this.flowunit)
+            );
+          });
+           res.data.andriodpstreamarray.forEach((item, index) => {
+            this.dataJk3.push(
+              this.common.formatByteNum(item, this.flowunit)
+            );
+          });
+           res.data.andriodcstreamarray.forEach((item, index) => {
+            this.dataJk4.push(
+              this.common.formatByteNum(item, this.flowunit)
+            );
+          });
+           
+
             res.data.timeArray.forEach((item, index) => {
               this.timeArrayJk.push(getymdtime1(item));
             });
-            this.dataJk1 = res.data.iospstreamarray;
-            this.dataJk2 = res.data.ioscstreamarray;
-            this.dataJk3 = res.data.andriodpstreamarray;
-            this.dataJk4 = res.data.andriodcstreamarray;
+            // this.dataJk1 = res.data.iospstreamarray;
+            // this.dataJk2 = res.data.ioscstreamarray;
+            // this.dataJk3 = res.data.andriodpstreamarray;
+            // this.dataJk4 = res.data.andriodcstreamarray;
             this.drawLine3(
               this.timeArrayJk,
               this.dataJk1,
@@ -879,9 +928,9 @@ export default {
         params.urlName = "*";
       }
       if (this.value1Activechanid !== "") {
-        params.channelid = this.value1Activechanid;
+        params.channelId = this.value1Activechanid;
       } else {
-        params.channelid = "*";
+        params.channelId = "*";
       }
       if (this.value1acce1 !== "-1") {
         params.terminalName = parseInt(this.value1acce1);
@@ -905,6 +954,7 @@ export default {
     
       export_sdk_flow_control_file(params)
         .then(res => {
+            console.log(res);
           if (res.status == 0) {
             window.open(res.msg, "_blank");
           }
@@ -926,9 +976,9 @@ export default {
         params.urlName = "*";
       }
       if (this.value1Activechanid !== "") {
-        params.channelid = this.value1Activechanid;
+        params.channelId = this.value1Activechanid;
       } else {
-        params.channelid = "*";
+        params.channelId = "*";
       }
       if (this.value1acce1 !== "-1") {
         params.terminalName = parseInt(this.value1acce1);
@@ -942,12 +992,13 @@ export default {
         params.domain = "*";
       }
 
-      params.timeUnit = this.common.timeUnitActive(
+      params.timeUnit = this.common.timeUnitActive1(
         this.starttime,
         this.endtime
       );
       export_sdk_flow_table_file(params)
         .then(res => {
+             console.log(res);
           if (res.status == 0) {
             window.open(res.msg, "_blank");
           }
@@ -1990,6 +2041,7 @@ export default {
           },
         },
         yAxis: {
+             name: _this.flowunit,
           splitLine: {
             show: false,
           },

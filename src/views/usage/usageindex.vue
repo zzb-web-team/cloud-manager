@@ -1,5 +1,5 @@
 <template>
-	<section class="myself-container content">
+	<section class="myself-container content" @click="closeSel">
 		<div class="top_title">资源用量</div>
 		<div class="user-title" style="display: flex;flex-flow: column;">
 			<div class="resources_con">
@@ -91,14 +91,14 @@
 				</div>
 				<div
 					class="device_form"
-					style="    display: flex;justify-content: flex-start;"
+					style="display: flex;justify-content: flex-start;position:relative;"
 				>
 					<div
 						style="width: 150px;height: 40px;border: 1px solid #C0C4CC;color: #000;text-align:center;line-height:40px;margin-right:30px;border-radius: 2px;"
 					>
 						用户对比
 					</div>
-					<el-select
+					<!-- <el-select
 						v-model="valuess"
 						filterable
 						placeholder="请选择对比用户"
@@ -113,7 +113,7 @@
 							:value="item.value"
 						>
 						</el-option>
-					</el-select>
+					</el-select> -->
 					<!-- <el-button
 						style="margin-left:10px;"
 						type="primary"
@@ -121,6 +121,46 @@
 						>确定</el-button
 					>
                      -->
+					<div
+						v-show="duibi"
+						style="width: 234px;position:absolute;top: -340px;left: 211px;z-index: 100;height: 350px;border-radius: 5px;box-shadow: -1px 5px 10px -3px;"
+						class="shopw"
+						id="shopw"
+					>
+						<el-table
+							ref="multipleTable"
+							:data="optionssearch"
+							tooltip-effect="dark"
+							:header-cell-class-name="cellClass"
+							style="width:234px;"
+							height="350"
+							@selection-change="handleSelectionChange"
+						>
+							<el-table-column type="selection" width="30">
+							</el-table-column>
+							<el-table-column align="right" width="200">
+								<template slot="header" slot-scope="scope">
+									<el-input
+										v-model="search"
+										size="mini"
+										placeholder="输入用户id"
+										@keyup.enter.native="searchid"
+									/>
+								</template>
+								<template slot-scope="scope">{{
+									scope.row.label
+								}}</template>
+							</el-table-column>
+						</el-table>
+					</div>
+
+					<el-button
+						type="primary"
+						icon="el-icon-plus"
+						id="sellineName"
+						@click="showduibi"
+						>添加对比</el-button
+					>
 				</div>
 
 				<div class="devide_table">
@@ -194,8 +234,10 @@ import common from '../../comm/js/util';
 export default {
 	data() {
 		return {
+			search: '',
 			valuedomian: '',
 			value1acce1: '-1',
+			duibi: false,
 			hashidSets: [
 				{
 					value: '1',
@@ -410,6 +452,47 @@ export default {
 		this.drawLine1();
 	},
 	methods: {
+		closeSel(event) {
+			var currentCli = document.getElementById('sellineName');
+			var shopw = document.getElementById('shopw');
+			if (currentCli || shopw) {
+				if (
+					!currentCli.contains(event.target) &&
+					!shopw.contains(event.target)
+				) {
+					//点击到了id为sellineName以外的区域，隐藏下拉框
+					this.duibi = false;
+				}
+			}
+		},
+		showduibi() {
+			this.duibi = !this.duibi;
+		},
+		searchid() {
+			this.pageActive1 = 0;
+			this.optionssearch = [];
+			this.querychanId(this.search);
+		},
+		handleSelectionChange(val) {
+			console.log(val);
+			let arrlist = [];
+			if (val.length > 0) {
+				val.forEach((item) => {
+					arrlist.push(item.value);
+				});
+				this.gettable1(arrlist);
+				this.gettable2(arrlist);
+			} else {
+				this.gettable1(val);
+				this.gettable2(val);
+			}
+		},
+		cellClass(row) {
+			if (row.columnIndex === 0) {
+				//你需要判断的条件
+				return 'disabledCheck';
+			}
+		},
 		//终端查询信息
 		getdata2(val) {
 			console.log(val);
@@ -422,7 +505,7 @@ export default {
 			this.chanIds = event;
 		},
 		querychanIds() {
-            console.log(this.valuess);
+			console.log(this.valuess);
 			this.gettable1(this.valuess);
 			this.gettable2(this.valuess);
 		},
@@ -525,10 +608,14 @@ export default {
 					console.log(error);
 				});
 		},
-		//查询视频名称
-		querychanId() {
+		//查询用户id
+		querychanId(data) {
 			let param = new Object();
-			param.search = '';
+			if (!data || data == '') {
+				param.search = '';
+			} else {
+				param.search = data + '';
+			}
 			param.status = null;
 			param.start_ts = '';
 			param.end_ts = '';
@@ -537,20 +624,29 @@ export default {
 			cloudUserList(param)
 				.then((res) => {
 					if (res.status == 0) {
-						let tempArr = [];
-						res.result.cols.forEach((item, index) => {
+						if (data) {
 							let obj = {};
-							obj.value = item.id;
-							obj.label = item.id;
-							tempArr.push(obj);
-						});
-
-						this.optionssearch = this.optionssearch.concat(tempArr);
-						if (res.result.les_count == 0) {
-							return false;
+							obj.value = res.result.cols[0].id;
+							obj.label = res.result.cols[0].id;
+							this.optionssearch.push(obj);
 						} else {
-							this.pageActive1++;
-							this.querychanId();
+							let tempArr = [];
+							res.result.cols.forEach((item, index) => {
+								let obj = {};
+								obj.value = item.id;
+								obj.label = item.id;
+								tempArr.push(obj);
+							});
+
+							this.optionssearch = this.optionssearch.concat(
+								tempArr
+							);
+							if (res.result.les_count == 0) {
+								return false;
+							} else {
+								this.pageActive1++;
+								this.querychanId();
+							}
 						}
 					} else {
 					}
@@ -634,15 +730,15 @@ export default {
 						this.totalYl = res.data.total;
 						let nowlengh = res.data.data.length;
 						let nowtemp = res.data.data;
-                        let nowarr = [];
-                        let childlist=[];
+						let nowarr = [];
+						let childlist = [];
 						for (var i = 0; i < nowlengh; i++) {
-                            childlist.push(res.data.data[i].channelid);
+							childlist.push(res.data.data[i].channelid);
 							let obj = {};
 							obj.type = 'bar';
 							obj.barGap = '6%';
-                            // obj.name = getymdtime1(res.data.data[0].timeArray[i]);
-                            obj.name=res.data.data[i].channelid;
+							// obj.name = getymdtime1(res.data.data[0].timeArray[i]);
+							obj.name = res.data.data[i].channelid;
 							obj.data = nowtemp[i].dataflowArray;
 							nowarr.push(obj);
 						}
@@ -660,7 +756,7 @@ export default {
 							this.timeArray.push(getymdtime1(item));
 						});
 						// this.getbot();
-						this.drawLine(nowarr, this.timeArray,childlist);
+						this.drawLine(nowarr, this.timeArray, childlist);
 					})
 					.catch((err) => {
 						console.log(err);
@@ -823,7 +919,7 @@ export default {
 		rowClass() {
 			return 'text-align: center;';
 		},
-		drawLine(x, y,idlist) {
+		drawLine(x, y, idlist) {
 			let myChart = echarts.init(document.getElementById('myChartMap')); //这里是为了获得容器所在位置
 			window.onresize = myChart.resize;
 
@@ -957,8 +1053,8 @@ export default {
 							},
 						},
 					},
-                },
-                legend: {
+				},
+				legend: {
 					data: idlist,
 					bottom: 50,
 				},
@@ -1002,11 +1098,14 @@ export default {
 </script>
 
 <style lang="scss">
-.el-checkbox {
-    text-align: right;
-    width: 100%;
-    padding-right: 10px;
-  }
+.el-table /deep/.disabledCheck .cell .el-checkbox__inner {
+	display: none !important;
+}
+.el-table /deep/.disabledCheck .cell:before {
+	content: '';
+	position: absolute;
+	right: 11px;
+}
 .myself-container {
 	width: 100%;
 	//min-width: 1600px;
