@@ -51,7 +51,6 @@
           style="width:100%;margin-top:50px;"
           size="medium"
           @click.native.prevent="handleSubmit2"
-          :loading="logining"
         >登录</el-button>
         <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
       </el-form-item>
@@ -127,7 +126,6 @@ export default {
         if(data.status==0){
                   sessionStorage.setItem("id", JSON.stringify(data.usermsg.id));
               sessionStorage.setItem("id", JSON.stringify(data.usermsg.username));
-              console.log( JSON.stringify(data.usermsg))
                data.usermsg.google=data.google
                data.usermsg.lvmsg=data.lvmsg
               this.$cookies.set("clouduser", JSON.stringify(data.usermsg), 7 * 24 * 60 * 60);
@@ -173,7 +171,6 @@ export default {
             if(data.status==0){
                      sessionStorage.setItem("id", JSON.stringify(data.msg.id));
               sessionStorage.setItem("id", JSON.stringify(data.msg.username));
-              console.log( JSON.stringify(data.msg))
               data.msg.google=data.google
               data.msg.lvmsg=data.lvmsg
               this.$cookies.set("clouduser", JSON.stringify(data.msg), 7 * 24 * 60 * 60);

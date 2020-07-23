@@ -309,6 +309,15 @@ export default {
       return   1440;
     }
   },
+  timeUnitActive1: function(startTime,endTime) {
+    
+    let tempTime = endTime - startTime;
+    if (tempTime <= 86400) {
+      return  60;
+    } else{
+      return 1440
+    }
+  },
   //操作日志公共方法
   monitoringLogs: function(
     action,

@@ -107,6 +107,7 @@ export default {
         resource: "",
         desc: "",
       },
+      yureData:[]
     };
   },
   mounted() {
@@ -120,22 +121,29 @@ export default {
     //     path: "/user"
     //   });
     // }
-    this.queryInfo();
+   //this.queryInfo();
   },
   methods: {
     queryInfo() {
-      if (localStorage.getItem("WarmParam")) {
+     
+ 
         //this.queryWarmupInfo();
+         var _this = this;
         setInterval(() => {
-          let _this = this;
+               if (localStorage.getItem("WarmParam")) {
+                    
           setTimeout(_this.queryWarmupInfo(), 0);
+               }
+       
         }, 20000);
-      }
+      
     },
     //
     queryWarmupInfo() {
       let localparam = JSON.parse(localStorage.getItem("WarmParam"));
-   
+    this.yureData=localparam.url_name
+  
+
       if(localparam.url_name.length!=0){
            let param = new Object();
 
@@ -182,15 +190,13 @@ export default {
               message: resSussess,
               type: "success",
             });
-            console.log(localparam.url_name)
-                   let temparr1=localparam.url_name
-                   console.log(temparr1)
-                   console.log(resSussess)
-            let temparr2=this.setdatas(temparr1,resSussess)
-            console.log(temparr2+"**")
-            let localparam1 = JSON.parse(localStorage.getItem("WarmParam"))
-              localparam1.url_name=temparr2
-              localStorage.setItem("WarmParam",JSON.stringify(localparam1) )
+                 //  let temparr1=localparam.url_name
+                 
+            let temparr2=this.setdatas(this.yureData,resSussess)
+            this.yureData=temparr2
+            // let localparam1 = JSON.parse(localStorage.getItem("WarmParam"))
+            //   localparam1.url_name=temparr2
+            //   localStorage.setItem("WarmParam",JSON.stringify(localparam1) )
 
           }
           if (resFail.length!=0) {
@@ -201,35 +207,39 @@ export default {
               offset: 100,
             });
             let temparr1=localparam.url_name
-              console.log(localparam.url_name)
-                             console.log(temparr1)
-                   console.log(resFail)
+        
 
-            let temparr2=this.setdatas(temparr1,resFail)
-             console.log(temparr2+"^^^")
-            let localparam1 = JSON.parse(localStorage.getItem("WarmParam"))
-              localparam1.url_name=temparr2
-              localStorage.setItem("WarmParam",JSON.stringify(localparam1) )
+            let temparr2=this.setdatas(this.yureData,resFail)
+             console.log(temparr2)
+                         this.yureData=temparr2
+
+
 
 
            
           }
-          // if (resProcessing.length!=0) {
-          //   this.$notify({
-          //     title: "预热中",
-          //     message: resProcessing,
-          //     type: "info",
-          //     offset: 200,
-          //   });
-          //   let temparr1=localparam.url_name
-          //   let temparr2=this.setdatas(temparr1,resProcessing)
-          //   console.log(temparr2)
-          // }
+     
+          if (resProcessing.length!=0) {
+            // this.$notify({
+            //   title: "预热中",
+            //   message: resProcessing,
+            //   type: "info",
+            //   offset: 200,
+            // });
+            let temparr1=localparam.url_name
+            let temparr2=this.setdatas(temparr1,resProcessing)
+            console.log(this.yureData)
+                       let localparam1 = JSON.parse(localStorage.getItem("WarmParam"))
+              localparam1.url_name=this.yureData
+            localStorage.setItem("WarmParam",JSON.stringify(localparam1) )
+          }
       
           
           
         })
-        .catch(error => {});
+        .catch(error => {
+          console.log(error)
+        });
 
       }
    

@@ -5,8 +5,8 @@ var href = window.location.href
 if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     var serverUrl = 'http://xyj.grapefruitcloud.com' //PHP服务域名
 } else {
-  // var serverUrl = 'http://zzb.onezen.net' //PHP服务域名
-    var serverUrl = 'http://xyj.grapefruitcloud.com' //PHP服务域名
+ var serverUrl = 'http://zzb.onezen.net' //PHP服务域名
+  //var serverUrl = 'http://xyj.grapefruitcloud.com' //PHP服务域名
 }
 
 export const hostUrl = serverUrl;
@@ -196,6 +196,40 @@ export const accelerate_flow_table = params => {
 export const getvideo = params => {
     return axios.post(`${serverUrl}/url_mgmt/getvideo`, params).then(res => res.data)
 };
+/**流量占比图表 */
+export const sdk_flow = params => {
+    return axios.post(`${serverUrl}/resource_manage/sdk_flow`, params).then(res => res.data)
+};
+/**流量占比列表 */
+export const sdk_flow_table = params => {
+    return axios.post(`${serverUrl}/resource_manage/sdk_flow_table`, params).then(res => res.data)
+};
+/**流量监控图表 */
+export const sdk_flow_control = params => {
+    return axios.post(`${serverUrl}/resource_manage/sdk_flow_control`, params).then(res => res.data)
+};
+/**流量占比导出 */
+export const export_sdk_flow_table_file = params => {
+    return axios.post(`${serverUrl}/file_download/export_sdk_flow_table_file`, params).then(res => res.data)
+};
+/**流量监控导出 */
+export const export_sdk_flow_control_file = params => {
+    return axios.post(`${serverUrl}/file_download/export_sdk_flow_control_file`, params).then(res => res.data)
+};
+/**用量查询图表 */
+export const manage_dataflow_curve = params => {
+    return axios.post(`${serverUrl}/resource_usage/manage_dataflow_curve`, params).then(res => res.data)
+};
+/**用量查询列表 */
+export const manage_dataflow_table = params => {
+    return axios.post(`${serverUrl}/resource_usage/manage_dataflow_table`, params).then(res => res.data)
+};
+/**用量图表导出 */
+/**用量查询列表 */
+export const export_manage_dataflow_table_file = params => {
+    return axios.post(`${serverUrl}/file_download/export_manage_dataflow_table_file`, params).then(res => res.data)
+};
+
 
 
 //点播数据统计

@@ -43,6 +43,11 @@ import nodeMap1 from "@/views/nodeApplication/nodeMap1";
 import statistics from "@/views/nodeApplication/statistics";
 import downloadLogs from "@/views/nodeApplication/downloadLogs";
 
+//用量查询
+import usageindex from "@/views/usage/usageindex";
+
+
+
 Vue.use(Router);
 
 export default new Router({
@@ -174,31 +179,19 @@ export default new Router({
         },
       ],
     },
-    // {
-    //   path: "/d",
-    //   name: "点播加速",
-    //   component: index,
-    //   icon: "iconfont icon-yonghufenzuyingyong",
-    //   // hidden: true,
-    //   children: [
-    //     {
-    //       path: "/ipflow",
-    //       name: "点播加速日志",
-    //       component: ipflow,
-    //     },
-    //     {
-    //       path: "/fs_storage",
-    //       name: "视频点播日志",
-    //       component: fs_storage,
-    //     },
-    //   ],
-    // },
+
     {
       path: "/home_fosdr",
       name: "数据中心",
       component: index,
       icon: "iconfont icon-tongji",
       children: [
+        {
+          path: "/usageindex",
+          name: "用量查询",
+          component: usageindex,
+       
+        },
         {
           path: "/gewsrg",
           name: "监控统计",
@@ -214,11 +207,7 @@ export default new Router({
               name: "访问统计",
               component: statistics,
             },
-            // {
-            //   path: "/downloadLogs",
-            //   name: "加速日志下载",
-            //   component: downloadLogs,
-            // },
+       
           ],
         },
         {

@@ -68,6 +68,7 @@ import {
   export_videoaccel_file,
 } from "../../servers/api";
 import common from "../../comm/js/util";
+import { fail } from 'assert';
 export default {
   data() {
     return {
@@ -177,16 +178,17 @@ export default {
       let startTime = 0;
       let endTime = 0;
       if (this.value1) {
-        if (this.value1 == "") {
-          startTime = 1571465783;
-          endTime = 1576736183;
+        if (this.value1 == "" || this.value1 == null) {
+               startTime =
+            (new Date().getTime() / 1000)-60*60*24*90
+          endTime = new Date().getTime() / 1000;
         } else {
           endTime = this.value1[1].getTime() / 1000;
           startTime = this.value1[0].getTime() / 1000;
         }
       } else {
-        startTime = 1571465783;
-        endTime = 1576736183;
+          startTime =  (new Date().getTime() / 1000)-60*60*24*90
+        endTime = new Date().getTime() / 1000;
       }
 
       let param = {
