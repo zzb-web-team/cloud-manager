@@ -1799,10 +1799,10 @@ export default {
 
     drawLine2(x, y, z) {
        for (var i = 0; i < y.length; i++) {
-          y[i]=(y[i]*100).toFixed(2)
+          y[i]=(y[i]*100).toFixed(1)
         }
          for (var i = 0; i < z.length; i++) {
-          z[i]=(z[i]*100).toFixed(2)
+          z[i]=(z[i]*100).toFixed(1)
         }
       var data1 = y;
       var data2 = z;
@@ -1880,12 +1880,13 @@ export default {
             itemStyle: {
               normal: { color: "#394989" },
             },
-            label: {
-              normal: {
-                show: false,
-                position: "insideRight",
-              },
-            },
+           label: {
+							normal: {
+								show: true,
+								position: 'insideLeft',
+								color: '#ffffff',
+							},
+						},
           },
           {
             name: "P2P流量",
@@ -1897,11 +1898,12 @@ export default {
               normal: { color: "#64A7FC" },
             },
             label: {
-              normal: {
-                show: false,
-                position: "insideRight",
-              },
-            },
+							normal: {
+								show: true,
+								position: 'insideLeft',
+								color: '#333333',
+							},
+						},
           },
           // {
           //   name: "总计",
