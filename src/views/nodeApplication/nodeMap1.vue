@@ -4,14 +4,10 @@
     <div class="user-title" style="display: flex;flex-flow: column;">
       <div class="resources_con">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="P2P加速流量" name="first" :lazy="true">
+          <!-- <el-tab-pane label="P2P加速流量" name="first" :lazy="true">
             <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <!-- <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata()">
-                <el-option label="全部终端" value="*"></el-option>
-                <el-option v-for="(item, index) in hashidSet" :key="index" :label="item.label" :value="item.label"></el-option>
-              </el-select> -->
               <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata2(1)">
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
@@ -64,21 +60,16 @@
                 </el-col>
               </el-row>
             </div>
-          </el-tab-pane>
+          </el-tab-pane> -->
 
-          <el-tab-pane label="P2P回源统计" name="second" :lazy="true">
+          <!-- <el-tab-pane label="P2P回源统计" name="second" :lazy="true">
             <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <!-- <el-select v-model="value1acce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata1()">
-                <el-option label="全部终端" value="*"></el-option>
-                <el-option v-for="(item, index) in hashidSet" :key="index" :label="item.label" :value="item.label"></el-option>
-              </el-select> -->
                 <el-select v-model="value1acce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata2(2)">
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
-              
               <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="options2" ref="cascaderAddr" :show-all-levels="false" v-model="valuea2" @change="getdata1"></el-cascader>
               <el-select v-model="valuea3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata1()">
                 <el-option label="全部运营商" value="*"></el-option>
@@ -99,7 +90,7 @@
             <div class="device_form" style>
               <div id="myChartMap1" :style="{ height: '607px' }"></div>
             </div>
-          </el-tab-pane>
+          </el-tab-pane> -->
           <el-tab-pane label="流量占比" name="threed" :lazy="true">
             <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
@@ -109,7 +100,6 @@
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
-
               <el-button-group>
                 <el-button v-show="!showzdyz" @click="today(3)">今天</el-button>
                 <el-button v-show="!showzdyz" @click="yesterday(3)">昨天</el-button>
@@ -128,7 +118,6 @@
                   <span>{{totalp2p |setbytes}}</span>
                 </div>
                 <div class="item_text" style="text-align:center;">P2P流量</div>
-
               </div>
               <div class="item_right">
                 <div class="item_count" style="text-align:center;">
@@ -139,7 +128,6 @@
               </div>
             </div>
             <div class="device_form" style>
-
               <div id="myChartMap2" :style="{ height: '607px' }"></div>
             </div>
             <div class="devide_table">
@@ -242,6 +230,8 @@ import common from "../../comm/js/util";
 export default {
   data() {
     return {
+      dataAry:[],
+      dataAry1:[],
       value1acce: "-1",
       value1acce1: "-1",
       valueacce: "-1",
@@ -491,7 +481,7 @@ export default {
       valuea4: "",
       tablecdn: [],
       tableZb: [],
-      activeName: "first",
+      activeName: "threed",
       pickerOptions: {
         shortcuts: [
           {
@@ -609,7 +599,9 @@ export default {
       dataFlownum1: 0,
       flowunit: "",
       timeArrayZb: [],
+      timeArrayZb1:[],
       dataZb1: [],
+       dataZb3: [],
       dataZb2: [],
       totalp2p: 0,
       totalcdn: 0,
@@ -639,6 +631,10 @@ export default {
     fenye,
   },
   mounted() {
+    this.today()
+    //注释
+    this.querySdkflow()
+    this.querySdkflowTable()
     // if (this.$cookies.get("id")) {
     //     this.chanid = this.$cookies.get("id") * 1;
     // } else {
@@ -665,7 +661,7 @@ export default {
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.endtime = Date.parse(new Date()) / 1000;
 
-    this.getseachlabel1();
+    //this.getseachlabel1();
     // this.configure()
   },
   beforeDestroy() {
@@ -733,9 +729,21 @@ export default {
       sdk_flow(params)
         .then(res => {
           if (res.status == 0) {
+             var num = res.data.pdataArray;
+             var num1 = res.data.cdataArray;
+             if(num!==0){
+              var  max = Math.max.apply(null, num);
+             }
+             else if(num1!==0){
+                var max = Math.max.apply(null, num);
+             }
+         //  max = Math.max.apply(null, num);
+          this.flowunit = this.common.formatByteActiveunit(max);
+          console.log(this.flowunit)
             this.totalp2p = res.data.totalp2p;
             this.totalcdn = res.data.totalcdn;
             this.timeArrayZb = [];
+            this.timeArrayZb1= [];
             this.dataZb1 = [];
             this.dataZb2 = [];
             res.data.timearray.forEach((item, index) => {
@@ -743,6 +751,9 @@ export default {
             });
             this.dataZb1 = res.data.cdnarray;
             this.dataZb2 = res.data.p2parray;
+            this.dataZb3= res.data.cdataArray
+            this.dataAry=res.data.pdataArray
+            this.dataAry1=res.data.cdataArray
             this.drawLine2(this.timeArrayZb, this.dataZb1, this.dataZb2);
           }
         })
@@ -1620,6 +1631,7 @@ export default {
     //选项卡
 
     handleClick(tab, event) {
+      console.log(tab)
       this.val2 = [];
       this.hashidSet = [];
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
@@ -1627,51 +1639,52 @@ export default {
 
       this.endtime = Date.parse(new Date()) / 1000;
       this.options3 = [];
+      // if (tab.index == 0) {
+      //   // this.value1 = "";
+      //   this.value2 = "*";
+      //   this.value3 = "*";
+      //   (this.valueacce = "-1"),
+      //     // this.value1Activechanid = "";
+      //     (this.options1chanid = []);
+      //   let monitorUrlname = this.$route.query.monitorUrlname;
+      //   if (monitorUrlname) {
+      //     this.value1 = monitorUrlname;
+      //   } else {
+      //     this.value1 = "";
+      //   }
+      //   let monitorChanId = this.$route.query.monitorChanId;
+      //   if (monitorChanId) {
+      //     this.value1Activechanid = monitorChanId;
+      //   } else {
+      //     this.value1Activechanid = "";
+      //   }
+
+      //   this.timeUnit = 60;
+      //   this.getseachlabel1();
+      // } else if (tab.index == 1) {
+      //   this.valuea1 = "";
+      //   //this.value1 = "";
+      //   this.valuea2 = "*";
+      //   this.valuea3 = "*";
+      //   (this.value1acce = "-1"), (this.options1chanid = []);
+      //   //this.value1Activechanid = "";
+      //   let monitorUrlname = this.$route.query.monitorUrlname;
+      //   if (monitorUrlname) {
+      //     this.value1 = monitorUrlname;
+      //   } else {
+      //     this.value1 = "";
+      //   }
+      //   let monitorChanId = this.$route.query.monitorChanId;
+      //   if (monitorChanId) {
+      //     this.value1Activechanid = monitorChanId;
+      //   } else {
+      //     this.value1Activechanid = "";
+      //   }
+
+      //   this.timeUnit = 60;
+      //   this.getseachlabel2();
+      // } 
       if (tab.index == 0) {
-        // this.value1 = "";
-        this.value2 = "*";
-        this.value3 = "*";
-        (this.valueacce = "-1"),
-          // this.value1Activechanid = "";
-          (this.options1chanid = []);
-        let monitorUrlname = this.$route.query.monitorUrlname;
-        if (monitorUrlname) {
-          this.value1 = monitorUrlname;
-        } else {
-          this.value1 = "";
-        }
-        let monitorChanId = this.$route.query.monitorChanId;
-        if (monitorChanId) {
-          this.value1Activechanid = monitorChanId;
-        } else {
-          this.value1Activechanid = "";
-        }
-
-        this.timeUnit = 60;
-        this.getseachlabel1();
-      } else if (tab.index == 1) {
-        this.valuea1 = "";
-        //this.value1 = "";
-        this.valuea2 = "*";
-        this.valuea3 = "*";
-        (this.value1acce = "-1"), (this.options1chanid = []);
-        //this.value1Activechanid = "";
-        let monitorUrlname = this.$route.query.monitorUrlname;
-        if (monitorUrlname) {
-          this.value1 = monitorUrlname;
-        } else {
-          this.value1 = "";
-        }
-        let monitorChanId = this.$route.query.monitorChanId;
-        if (monitorChanId) {
-          this.value1Activechanid = monitorChanId;
-        } else {
-          this.value1Activechanid = "";
-        }
-
-        this.timeUnit = 60;
-        this.getseachlabel2();
-      } else if (tab.index == 2) {
         (this.value1acce1 = "-1"), this.getseachlabel1();
         this.querySdkflow();
         let _this = this;
@@ -1680,7 +1693,7 @@ export default {
           _this.querySdkflowTable();
           // console.log(this.$refs['hello']);
         });
-      } else if (tab.index == 3) {
+      } else if (tab.index == 1) {
         this.getseachlabel1();
         let _this = this;
         _this.querySdkflowControl();
@@ -1850,10 +1863,10 @@ export default {
 
     drawLine2(x, y, z) {
        for (var i = 0; i < y.length; i++) {
-          y[i]=(y[i]*100).toFixed(1)
+          y[i]=(y[i]*100).toFixed(2)
         }
          for (var i = 0; i < z.length; i++) {
-          z[i]=(z[i]*100).toFixed(1)
+          z[i]=(z[i]*100).toFixed(2)
         }
       var data1 = y;
       var data2 = z;
@@ -1904,6 +1917,22 @@ export default {
         },
         tooltip: {
           trigger: "axis",
+           formatter: function(params) {
+             console.log(_this.flowunit)
+            //  console.log(_this.dataAry)
+            //  for(var i=0;i<_this.dataAry.length;i++){
+                return (
+                params[0].axisValue+"</br>"+
+              "P2P流量:" +  _this.common.formatByteActive( _this.dataAry[params[0].dataIndex])+"</br>"+
+                 "CDN流量:" +  _this.common.formatByteActive( _this.dataAry1[params[0].dataIndex])
+              // "<br>" +
+              // "CDN流量:"+_this.common.formatByteNum(_this.dataAry1[i], _this.flowunit)+_this.flowunit
+            
+             
+            );
+            // }
+            
+          },
         },
         grid: {
           left: "3%", // 默认10%，给24就挺合适的。
@@ -1931,13 +1960,14 @@ export default {
             itemStyle: {
               normal: { color: "#394989" },
             },
-           label: {
-							normal: {
-								show: true,
-								position: 'insideLeft',
-								color: '#ffffff',
-							},
-						},
+          label: {
+              normal: {
+                show: true,
+                position: 'inside',
+                color: '#ffffff',
+                                fontSize: 10,
+              },
+            },
           },
           {
             name: "P2P流量",
@@ -1949,33 +1979,34 @@ export default {
               normal: { color: "#64A7FC" },
             },
             label: {
-							normal: {
-								show: true,
-								position: 'insideLeft',
-								color: '#333333',
-							},
-						},
+              normal: {
+                show: true,
+                position: 'inside',
+                color: '#333333',
+                                fontSize: 10,
+              },
+            },
           },
-          // {
-          //   name: "总计",
-          //   type: "line",
-          //   stack: "总量",
-          //   symbol: "none",
-          //   barMaxWidth: 30, //柱图宽度
-          //   label: {
-          //     normal: {
-          //       show: true,
-          //       formatter: "{c}",
-          //       textStyle: { color: "#333333" },
-          //     },
-          //   },
-          //   itemStyle: {
-          //     normal: {
-          //       color: "rgba(128, 128, 128, 0)",
-          //     },
-          //   },
-          //   data: data3,
-          // },
+          {
+            name: "总计",
+            type: "line",
+            stack: "总量",
+            symbol: "none",
+            barMaxWidth: 30, //柱图宽度
+            label: {
+              normal: {
+                show: true,
+                formatter: "{c}",
+                textStyle: { color: "#333333" },
+              },
+            },
+            itemStyle: {
+              normal: {
+                color: "rgba(128, 128, 128, 0)",
+              },
+            },
+            data: [100]
+          },
         ],
       };
       myChart.setOption(options);
@@ -1994,7 +2025,7 @@ export default {
       // 绘制图表
       let options = {
         title: {
-          text: "流量占比",
+          text: "流量监控",
           left: "12px",
           textStyle: {
             color: "#333333",
@@ -2027,6 +2058,32 @@ export default {
         },
         tooltip: {
           trigger: "axis",
+           formatter: function(params) {
+             console.log(_this.flowunit)
+              let str = '';
+            params.forEach((item, index) => {
+              if (index == 0) {
+                str +=
+                  item.axisValue +
+                  '</br>' +
+                  item.seriesName +
+                  '：' +
+                  item.value +
+                  _this.flowunit +
+                  '</br>';
+              } else {
+                str +=
+                  item.seriesName +
+                  '：' +
+                  item.value +
+                  _this.flowunit +
+                  '</br>';
+              }
+            });
+            return str;
+          
+            
+          },
         },
         grid: {
           left: "4%", // 默认10%，给24就挺合适的。

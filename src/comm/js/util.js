@@ -157,7 +157,7 @@ export default {
     return size;
   },
   //得到最大值单位
-  formatByteActiveunit: function(cellValue, index) {
+  formatByteActiveunitssss: function(cellValue, index) {
     var limit = parseInt(cellValue);
     var size = "";
     if (limit < 0.1 * 1024) {

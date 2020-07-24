@@ -3,10 +3,12 @@ import axios from 'axios'
 
 var href = window.location.href
 if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
-    var serverUrl = 'http://xyj.grapefruitcloud.com' //PHP服务域名
+    var serverUrl = 'http://xyj.grapefruitcloud.com'; //PHP服务URL
+} else if (href.indexOf('service.kclgames.com') >= 0) {
+    var serverUrl = 'http://service.kclgames.com'; //PHP服务URL
 } else {
- var serverUrl = 'http://zzb.onezen.net' //PHP服务域名
-  //var serverUrl = 'http://xyj.grapefruitcloud.com' //PHP服务域名
+    //var serverUrl = 'http://zzb.onezen.net';
+    var serverUrl = 'http://xyj.grapefruitcloud.com';
 }
 
 export const hostUrl = serverUrl;

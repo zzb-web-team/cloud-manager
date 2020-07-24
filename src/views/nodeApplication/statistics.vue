@@ -10,9 +10,13 @@
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata()">
+              <!-- <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata()">
                 <el-option label="全部终端" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
+              </el-select> -->
+                <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata2(3)">
+                <el-option label="全部终端" value="-1"></el-option>
+                <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
 
               <el-button-group>
@@ -53,9 +57,9 @@
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata1()">
-                <el-option label="全部终端" value="*"></el-option>
-                <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
+                <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata2(3)">
+                <el-option label="全部终端" value="-1"></el-option>
+                <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
               <el-button-group>
                 <el-button v-show="!shoudzyx" @click="today(1)">今天</el-button>
@@ -136,9 +140,9 @@
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata2()">
-                <el-option label="全部终端" value="*"></el-option>
-                <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
+              <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata2(3)">
+                <el-option label="全部终端" value="-1"></el-option>
+                <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
               <el-button-group>
                 <el-button v-show="!shoudzyz" @click="today(2)">今天</el-button>
@@ -241,6 +245,20 @@ import common from "../../comm/js/util";
 export default {
   data() {
     return {
+        hashidSets: [
+        {
+          value: "1",
+          label: "iOS",
+        },
+        {
+          value: "0",
+          label: "android",
+        },
+        {
+          value: "2",
+          label: "其他",
+        },
+      ],
       ableStatus: true,
       primaryActive: "primary",
       exportActive: 0,
@@ -252,7 +270,7 @@ export default {
       pagesize: 10,
       total_cnt: 0,
       value1fileName: "",
-      valueacce: "*",
+      valueacce: "-1",
       options3: [
         {
           value: "1",
@@ -460,7 +478,7 @@ export default {
       if (this.valueacce !== "") {
         params.acce = this.valueacce;
       } else {
-        params.acce = "*";
+        params.acce = "-1";
       }
       params.top = 10;
       params.time_unit = this.common.timeUnitActive(
@@ -506,7 +524,7 @@ export default {
       if (this.valueacce !== "") {
         params.acce = this.valueacce;
       } else {
-        params.acce = "*";
+        params.acce = "-1";
       }
       params.top = 10;
       params.time_unit = this.common.timeUnitActive(
@@ -551,7 +569,7 @@ export default {
       if (this.valueacce !== "") {
         params.acce = this.valueacce;
       } else {
-        params.acce = "*";
+        params.acce = "-1";
       }
       params.top = 10;
       params.time_unit = this.common.timeUnitActive(
@@ -598,7 +616,7 @@ export default {
       if (this.valueacce !== "") {
         params.acce = this.valueacce;
       } else {
-        params.acce = "*";
+        params.acce = "-1";
       }
 
       this.uvArray = [];
@@ -882,7 +900,7 @@ export default {
         if (this.valueacce !== "") {
           params.acce = this.valueacce;
         } else {
-          params.acce = "*";
+          params.acce = "-1";
         }
 
         this.uvArray = [];
@@ -939,7 +957,7 @@ export default {
         if (this.valueacce !== "") {
           params.acce = this.valueacce;
         } else {
-          params.acce = "*";
+          params.acce = "-1";
         }
         params.top = 10;
         params.time_unit = this.common.timeUnitActive(
@@ -1005,7 +1023,7 @@ export default {
         if (this.valueacce !== "") {
           params.acce = this.valueacce;
         } else {
-          params.acce = "*";
+          params.acce = "-1";
         }
         this.playTimesArray2 = [];
         this.timeArray2 = [];
@@ -1058,7 +1076,7 @@ export default {
       if (this.valueacce !== "") {
         params.acce = this.valueacce;
       } else {
-        params.acce = "*";
+        params.acce = "-1";
       }
       //params.time_unit = 85;
       query_playdata_table(params)
@@ -1201,7 +1219,7 @@ export default {
       this.ableStatus = true;
       this.value1fileName = "";
       this.value1Activechanid = "";
-      this.valueacce = "*";
+      this.valueacce = "-1";
       //切换时重置时间为当前时间
       this.starttime =
         new Date(new Date().toLocaleDateString()).getTime() / 1000;
