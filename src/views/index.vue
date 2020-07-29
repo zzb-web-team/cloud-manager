@@ -34,7 +34,7 @@
                   <el-submenu v-if="itemChild.children && itemChild.children.length" :index="itemChild.path" :key="itemChild.path">
                     <template slot="title">
                       <i :class="itemChild.icon"></i>
-                      <span>{{itemChild.name}}</span>
+                      <span style="margin-left:20px;">{{itemChild.name}}</span>
                     </template>
 
                     <!-- 三级菜单 -->
@@ -46,7 +46,7 @@
 
                   <el-menu-item v-else :index="itemChild.path" :key="itemChild.path">
                     <i :class="itemChild.icon"></i>
-                    <span slot="title">{{itemChild.name}}</span>
+                    <span slot="title" style="margin-left:20px;">{{itemChild.name}}</span>
                   </el-menu-item>
                 </template>
               </el-submenu>

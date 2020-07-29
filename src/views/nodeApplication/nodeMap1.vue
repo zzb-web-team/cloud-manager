@@ -704,7 +704,7 @@ export default {
             slot: "content",
             style: "margin-bottom:5px",
           },
-          "加速节点有拟加速资源缓存时产生的流量"
+          "节点有资源缓存时，切换至CDN加速通道所产生的CDN加速流量"
         ),
       ];
       const paymentContent = h(
@@ -712,7 +712,7 @@ export default {
         {
           slot: "content",
         },
-        "加速节点无拟加速资源缓存时产生的流量"
+        "节点无资源缓存时，切换至CDN加速通道所产生的的CDN加速流量"
       );
       return h("div", [
         h("span", column.label),
@@ -942,7 +942,9 @@ export default {
             }
            // console.log(max);
             // var max = Math.max.apply(null, num);
+            
             this.flowunit = this.common.formatByteActiveunit(max);
+          console.log(this.flowunit )
 
             //   res.data.streamArray.forEach((item, index) => {
             //     this.dataFlowArray.push(
@@ -956,16 +958,16 @@ export default {
             this.dataJk4 = [];
 
             res.data.iospstreamarray.forEach((item, index) => {
-              this.dataJk1.push(this.common.formatByteNum(item, this.flowunit));
+              this.dataJk1.push(this.common.formatByteNum(item*1, this.flowunit));
             });
             res.data.ioscstreamarray.forEach((item, index) => {
-              this.dataJk2.push(this.common.formatByteNum(item, this.flowunit));
+              this.dataJk2.push(this.common.formatByteNum(item*1, this.flowunit));
             });
             res.data.andriodpstreamarray.forEach((item, index) => {
-              this.dataJk3.push(this.common.formatByteNum(item, this.flowunit));
+              this.dataJk3.push(this.common.formatByteNum(item*1, this.flowunit));
             });
             res.data.andriodcstreamarray.forEach((item, index) => {
-              this.dataJk4.push(this.common.formatByteNum(item, this.flowunit));
+              this.dataJk4.push(this.common.formatByteNum(item*1, this.flowunit));
             });
 
             res.data.timeArray.forEach((item, index) => {
@@ -2078,11 +2080,12 @@ export default {
     },
 
     drawLine3(a, b, c, d, e) {
+      // console.log(b)
+      // console.log(c)
+      // console.log(d)
+      // console.log(e)
       var dataTime = a;
-      var data1 = b;
-      var data2 = c;
-      var data3 = d;
-      var data4 = e;
+   
       let _this = this;
       // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById("myChartMap3"));
@@ -2124,6 +2127,7 @@ export default {
         tooltip: {
           trigger: "axis",
           formatter: function(params) {
+            console.log(_this.flowunit)
             let str = "";
             params.forEach((item, index) => {
               if (index == 0) {
@@ -2161,9 +2165,7 @@ export default {
         },
         yAxis: {
           name: _this.flowunit,
-          splitLine: {
-            show: false,
-          },
+        
         },
         series: [
           {
