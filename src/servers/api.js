@@ -7,8 +7,8 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
 } else if (href.indexOf('service.kclgames.com') >= 0) {
     var serverUrl = 'http://service.kclgames.com'; //PHP服务URL
 } else {
-    //var serverUrl = 'http://zzb.onezen.net';
-    var serverUrl = 'http://xyj.grapefruitcloud.com';
+    var serverUrl = 'http://zzb.onezen.net';
+    // var serverUrl = 'http://xyj.grapefruitcloud.com';
 }
 
 export const hostUrl = serverUrl;
@@ -232,6 +232,30 @@ export const export_manage_dataflow_table_file = params => {
     return post(`${serverUrl}/file_download/export_manage_dataflow_table_file`, params)
 };
 
+//节点流量图
+export const node_traffic_curve = params => {
+    return post(`${serverUrl}/resource_manage/ipfs_flow_curve`, params)
+};
+
+//节点流量统计表
+export const node_traffic_table = params => {
+    return post(`${serverUrl}/resource_manage/ipfs_flow_table`, params)
+};
+
+//节点流量监控下载
+export const node_traffic_download = params => {
+    return post(`${serverUrl}/file_download/export_ipfs_flow_table_file`, params)
+};
+
+//TOP加速次数排行
+export const top_accelcnt_ranking = params => {
+    return post(`${serverUrl}/resource_manage/query_accelcnt_ranking`, params)
+};
+
+//TOP加速流量排行
+export const top_dataflow_ranking = params => {
+    return post(`${serverUrl}/resource_manage/query_dataflow_ranking`, params)
+};
 
 
 //点播数据统计

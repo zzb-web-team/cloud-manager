@@ -46,6 +46,16 @@ import downloadLogs from "@/views/nodeApplication/downloadLogs";
 //用量查询
 import usageindex from "@/views/usage/usageindex";
 
+//节点统计
+import trafficMonitor from "@/views/statistics/node-traffic-monitoring";
+import trafficUsage from "@/views/statistics/node-traffic-usage";
+
+//播放统计
+import visitStatistics from "@/views/statistics/visit-statistics";
+import playTraffic from "@/views/statistics/play-traffic";
+import playDetails from "@/views/statistics/play-details-statistics";
+
+
 
 
 Vue.use(Router);
@@ -187,12 +197,6 @@ export default new Router({
       icon: "iconfont icon-tongji",
       children: [
         {
-          path: "/usageindex",
-          name: "用量查询",
-          component: usageindex,
-       
-        },
-        {
           path: "/gewsrg",
           name: "监控统计",
           component: home_two,
@@ -201,32 +205,66 @@ export default new Router({
               path: "/nodeMap1",
               name: "资源监控",
               component: nodeMap1,
+            },    
+          ],
+        },
+        {
+          path: "/gewsrg2",
+          name: "节点统计",
+          component: home_two,
+          children: [
+            {
+              path: "/trafficMonitor",
+              name: "节点流量监控",
+              component: trafficMonitor,
+            },
+            {
+              path: "/usageindex",
+              name: "节点流量用量",
+              component: usageindex,
+            },
+          ],
+        },
+        {
+          path: "/gewsrg3",
+          name: "播放统计",
+          component: home_two,
+          children: [
+            {
+              path: "/playTraffic",
+              name: "播放流量",
+              component: playTraffic,
             },
             {
               path: "/statistics",
               name: "访问统计",
               component: statistics,
             },
-       
+            {
+              path: "/playDetails",
+              name: "播放详情统计",
+              component: playDetails,
+            },
           ],
         },
         {
-            path: "/gewsrg1",
-            name: "加速日志",
-            component: home_three,
-            children: [
+          path: "/gewsrg1",
+          name: "加速日志",
+          component: home_three,
+          hidden: true,
+          children: [
+              {
+                path: "/ipflow",
+                name: "点播加速日志",
+                component: ipflow,
+              },
                 {
-                        path: "/ipflow",
-                        name: "点播加速日志",
-                        component: ipflow,
-                      },
-                       {
-                        path: "/fs_storage",
-                        name: "视频点播日志",
-                         component: fs_storage,
-                      },
-            ],
-          },
+                path: "/fs_storage",
+                name: "视频点播日志",
+                  component: fs_storage,
+              },
+          ],
+        }
       ],
     },
     {

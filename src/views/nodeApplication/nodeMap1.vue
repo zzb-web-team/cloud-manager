@@ -782,7 +782,7 @@ export default {
         params.domain = "*";
       }
 
-      params.timeUnit = this.common.timeUnitActive1(
+      params.timeUnit = this.common.timeUnitActive(
         this.starttime,
         this.endtime
       );
@@ -859,7 +859,7 @@ export default {
       (params.pageNo = this.pageNo1 - 1),
         (params.pageSize = this.pageSize1),
         // params.domain="*"
-        (params.timeUnit = this.common.timeUnitActive1(
+        (params.timeUnit = this.common.timeUnitActive(
           this.starttime,
           this.endtime
         ));
@@ -908,7 +908,7 @@ export default {
       // params.pageNo= 0,
       // params.pageSize= 10,
       // params.domain="*"
-      params.timeUnit = this.common.timeUnitActive(
+      params.timeUnit = this.common.timeUnitActive1(
         this.starttime,
         this.endtime
       );
@@ -1064,7 +1064,7 @@ export default {
         params.domain = "*";
       }
 
-      params.timeUnit = this.common.timeUnitActive1(
+      params.timeUnit = this.common.timeUnitActive(
         this.starttime,
         this.endtime
       );
