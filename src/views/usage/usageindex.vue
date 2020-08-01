@@ -9,7 +9,7 @@
 
 					<el-input v-model="valuedomian" placeholder="请输入加速域名" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
 					<el-select v-model="value1acce1" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;" @change="getdata2">
-						<el-option label="全部" value="0"></el-option>
+						<el-option label="全部" value="-1"></el-option>
 						<el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
 					</el-select>
 
@@ -390,7 +390,7 @@ export default {
       //this.pagesize = pagetol;
       // this.getuserlist();
     },
-    //回源统计图表导出
+    //图表导出
     exoprtant_Yl() {
       this.dataFlowArray = [];
       this.timeArray = [];
@@ -429,10 +429,10 @@ export default {
       } else {
         params.domain = "*";
       }
-      if (this.value1acce1 != 0) {
+      if (this.value1acce1 != "") {
         params.ipfschanel = parseInt(this.value1acce1);
       } else {
-        params.ipfschanel = 0;
+        params.ipfschanel = -1;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -594,10 +594,10 @@ export default {
       } else {
         params.domain = "*";
       }
-      if (this.value1acce1 != 0) {
+      if (this.value1acce1 != "") {
         params.ipfschanel = parseInt(this.value1acce1);
       } else {
-        params.ipfschanel = 0;
+        params.ipfschanel = -1;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -672,10 +672,10 @@ export default {
       } else {
         params.domain = "*";
       }
-      if (this.value1acce1 !== 0) {
+      if (this.value1acce1 != "") {
         params.ipfschanel = parseInt(this.value1acce1);
       } else {
-        params.ipfschanel = 0;
+        params.ipfschanel = -1;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -956,7 +956,7 @@ export default {
           {
             type: "category",
             axisTick: { show: false },
-			data: y,
+			      data: y,
 			
           },
         ],
@@ -970,13 +970,20 @@ export default {
           {
             type: "slider",
             xAxisIndex: 0,
-            filterMode: "empty",
             start: 0,
-            end: 8,
-            zoomLock: true,
+            end: 50,
+            throttle: 10,
+            zoomLock: false,
+            show: false
           },
+          {
+            type: 'inside',
+            realtime: true,
+            start: 0,
+            end: 50
+          }
         ],
-        series: x,
+        series: x
       };
       myChart.clear();
       myChart.setOption(options);

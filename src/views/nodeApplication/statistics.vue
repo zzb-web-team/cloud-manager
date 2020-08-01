@@ -6,7 +6,7 @@
       <div class="statisics_con">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="PV/UV" name="first">
-            <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+            <div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
@@ -53,7 +53,7 @@
           </el-tab-pane>
 
           <el-tab-pane label="访问用户分布" name="second">
-            <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+            <div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
@@ -105,7 +105,7 @@
 
                     <el-table-column label="流量">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.dataFlow | formatDataFlow }}</div>
+                        <div>{{ scope.row.dataflow | formatDataFlow }}</div>
                       </template>
                     </el-table-column>
                     <el-table-column label="流量占比">

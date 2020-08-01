@@ -92,13 +92,17 @@
             </div>
           </el-tab-pane> -->
           <el-tab-pane label="播放流量占比" name="threed" :lazy="true">
-            <div style="display: flex;align-items: center; flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+            <div style="display: flex;align-items: center; flex-flow: row; margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="value1Activechanidactive" placeholder="请输入域名" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-select v-model="value1acce1" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata2(3)">
+              <el-select v-model="value1acce1" placeholder="终端" style="width: 10%;margin-right: 10px;">
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+              <el-select v-model="valueChanel" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;">
+                <el-option label="全部" value="-1"></el-option>
+                <el-option v-for="(item, index) in hashidSets1" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
               <el-button-group>
                 <el-button v-show="!showzdyz" @click="today(3)">今天</el-button>
@@ -202,7 +206,14 @@
             <div style="display: flex;align-items: center; flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
               <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-
+              <el-select v-model="value1acce1" placeholder="终端" style="width: 10%;margin-right: 10px;">
+                <el-option label="全部终端" value="-1"></el-option>
+                <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+              <el-select v-model="valueChanel1" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;">
+                <el-option label="全部" value="-1"></el-option>
+                <el-option v-for="(item, index) in hashidSets1" :key="index" :label="item.label" :value="item.value"></el-option>
+              </el-select>
               <el-button-group>
                 <el-button v-show="!showzdyz" @click="today(4)">今天</el-button>
                 <el-button v-show="!showzdyz" @click="yesterday(4)">昨天</el-button>
@@ -257,6 +268,8 @@ export default {
       value1acce: "-1",
       value1acce1: "-1",
       valueacce: "-1",
+      valueChanel: "",
+      valueChanel1: "",
       hashidSet: [],
       hashidSets: [
         {
@@ -269,6 +282,20 @@ export default {
         },
         {
           value: "2",
+          label: "其他",
+        },
+      ],
+      hashidSets1: [
+        {
+          value: "1",
+          label: "云链",
+        },
+        {
+          value: "2",
+          label: "西柚机",
+        },
+        {
+          value: "3",
           label: "其他",
         },
       ],
@@ -775,6 +802,11 @@ export default {
       } else {
         params.terminalName = -1;
       }
+      if (this.valueChanel !== "") {
+        params.ipfschanel = parseInt(this.valueChanel);
+      } else {
+        params.ipfschanel = -1;
+      }
 
       if (this.value1Activechanidactive !== "") {
         params.domain = this.value1Activechanidactive;
@@ -828,7 +860,7 @@ export default {
           console.log(error);
         });
     },
-    //列表占比图标
+    //流量占比表
     querySdkflowTable() {
       let params = new Object();
       params.startTs = this.starttime;
@@ -849,7 +881,11 @@ export default {
       } else {
         params.terminalName = -1;
       }
-
+      if (this.valueChanel !== "") {
+        params.ipfschanel = parseInt(this.valueChanel);
+      } else {
+        params.ipfschanel = -1;
+      }
       if (this.value1Activechanidactive !== "") {
         params.domain = this.value1Activechanidactive;
       } else {
@@ -898,7 +934,11 @@ export default {
       } else {
         params.terminalName = -1;
       }
-
+      if (this.valueChanel1 !== "") {
+        params.ipfschanel1 = parseInt(this.valueChanel1);
+      } else {
+        params.ipfschanel = -1;
+      }
       if (this.value1Activechanidactive !== "") {
         params.domain = this.value1Activechanidactive;
       } else {
@@ -1013,6 +1053,12 @@ export default {
         params.terminalName = -1;
       }
 
+      if (this.valueChanel1 !== "") {
+        params.ipfschanel1 = parseInt(this.valueChanel1);
+      } else {
+        params.ipfschanel = -1;
+      }
+
       if (this.value1Activechanidactive !== "") {
         params.domain = this.value1Activechanidactive;
       } else {
@@ -1057,7 +1103,11 @@ export default {
       } else {
         params.terminalName = -1;
       }
-
+      if (this.valueChanel !== "") {
+        params.ipfschanel = parseInt(this.valueChanel);
+      } else {
+        params.ipfschanel = -1;
+      }
       if (this.value1Activechanidactive !== "") {
         params.domain = this.value1Activechanidactive;
       } else {
@@ -1694,52 +1744,52 @@ export default {
 
       this.endtime = Date.parse(new Date()) / 1000;
       this.options3 = [];
+      // if (tab.index == 0) {
+      //   // this.value1 = "";
+      //   this.value2 = "*";
+      //   this.value3 = "*";
+      //   (this.valueacce = "-1"),
+      //     // this.value1Activechanid = "";
+      //     (this.options1chanid = []);
+      //   let monitorUrlname = this.$route.query.monitorUrlname;
+      //   if (monitorUrlname) {
+      //     this.value1 = monitorUrlname;
+      //   } else {
+      //     this.value1 = "";
+      //   }
+      //   let monitorChanId = this.$route.query.monitorChanId;
+      //   if (monitorChanId) {
+      //     this.value1Activechanid = monitorChanId;
+      //   } else {
+      //     this.value1Activechanid = "";
+      //   }
+
+      //   this.timeUnit = 60;
+      //   this.getseachlabel1();
+      // } else if (tab.index == 1) {
+      //   this.valuea1 = "";
+      //   //this.value1 = "";
+      //   this.valuea2 = "*";
+      //   this.valuea3 = "*";
+      //   (this.value1acce = "-1"), (this.options1chanid = []);
+      //   //this.value1Activechanid = "";
+      //   let monitorUrlname = this.$route.query.monitorUrlname;
+      //   if (monitorUrlname) {
+      //     this.value1 = monitorUrlname;
+      //   } else {
+      //     this.value1 = "";
+      //   }
+      //   let monitorChanId = this.$route.query.monitorChanId;
+      //   if (monitorChanId) {
+      //     this.value1Activechanid = monitorChanId;
+      //   } else {
+      //     this.value1Activechanid = "";
+      //   }
+
+      //   this.timeUnit = 60;
+      //   this.getseachlabel2();
+      // }
       if (tab.index == 0) {
-        // this.value1 = "";
-        this.value2 = "*";
-        this.value3 = "*";
-        (this.valueacce = "-1"),
-          // this.value1Activechanid = "";
-          (this.options1chanid = []);
-        let monitorUrlname = this.$route.query.monitorUrlname;
-        if (monitorUrlname) {
-          this.value1 = monitorUrlname;
-        } else {
-          this.value1 = "";
-        }
-        let monitorChanId = this.$route.query.monitorChanId;
-        if (monitorChanId) {
-          this.value1Activechanid = monitorChanId;
-        } else {
-          this.value1Activechanid = "";
-        }
-
-        this.timeUnit = 60;
-        this.getseachlabel1();
-      } else if (tab.index == 1) {
-        this.valuea1 = "";
-        //this.value1 = "";
-        this.valuea2 = "*";
-        this.valuea3 = "*";
-        (this.value1acce = "-1"), (this.options1chanid = []);
-        //this.value1Activechanid = "";
-        let monitorUrlname = this.$route.query.monitorUrlname;
-        if (monitorUrlname) {
-          this.value1 = monitorUrlname;
-        } else {
-          this.value1 = "";
-        }
-        let monitorChanId = this.$route.query.monitorChanId;
-        if (monitorChanId) {
-          this.value1Activechanid = monitorChanId;
-        } else {
-          this.value1Activechanid = "";
-        }
-
-        this.timeUnit = 60;
-        this.getseachlabel2();
-      }
-      if (tab.index == 2) {
         (this.value1acce1 = "-1"), this.getseachlabel1();
         this.querySdkflow();
         let _this = this;
@@ -1748,7 +1798,7 @@ export default {
           _this.querySdkflowTable();
           // console.log(this.$refs['hello']);
         });
-      } else if (tab.index == 3) {
+      } else if (tab.index == 1) {
         // this.getseachlabel1();
         let _this = this;
         _this.querySdkflowControl();
