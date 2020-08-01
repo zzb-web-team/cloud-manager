@@ -135,7 +135,7 @@
               </el-row>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="热门加速内容" name="there">
+          <!-- <el-tab-pane label="热门加速内容" name="there">
             <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
 
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
@@ -157,10 +157,6 @@
               <el-date-picker v-show="shoudzyz" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(2)">确定</el-button>
             </div>
-            <!-- <div class="device_form" style>
-              <div id="myChart2" :style="{ height: '607px' }"></div>
-            </div> -->
-
             <div class="devide_table">
               <el-row type="flex" class="row_active">
                 <el-col :span="24" style="text-align:left;font-weight: bold;padding-left:10px;">热门加速内容表</el-col>
@@ -206,13 +202,12 @@
                     </el-table-column>
 
                   </el-table>
-                  <!-- <fenye style="float:right;margin:10px 0 20px 0;" @fatherMethod="getpage" @fathernum="gettol" :pagesa="total_cnt"></fenye> -->
 
                   <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
                 </el-col>
               </el-row>
             </div>
-          </el-tab-pane>
+          </el-tab-pane>  -->
         </el-tabs>
       </div>
     </div>

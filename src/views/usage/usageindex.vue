@@ -1,27 +1,28 @@
 <template>
 	<section class="myself-container content" @click="closeSel">
-		<div class="top_title">资源用量</div>
+		<div class="top_title">节点流量用量</div>
 		<div class="user-title" style="display: flex;flex-flow: column;">
 			<div class="resources_con">
-				<div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+				<div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
 					<el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
 					<el-input v-model="value1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
 
 					<el-input v-model="valuedomian" placeholder="请输入加速域名" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-					<el-select v-model="value1acce1" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata2">
-						<el-option label="全部终端" value="-1"></el-option>
+					<el-select v-model="value1acce1" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;" @change="getdata2">
+						<el-option label="全部" value="0"></el-option>
 						<el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
 					</el-select>
 
-					<el-radio-group v-model="radio1" @change="onchangeTab">
-						<el-radio-button @click="today()" label="one">今天</el-radio-button>
-						<el-radio-button @click="yesterday()" label="two">昨天</el-radio-button>
-						<el-radio-button @click="sevendat()" label="three">近7天</el-radio-button>
-						<el-radio-button @click="thirtyday()" label="four">近30天</el-radio-button>
-						<el-radio-button @click="showzdyx">自定义
+
+					<el-button-group>
+						<el-button v-show="!shoudzyx" @click="today()" label="one">今天</el-button>
+						<el-button v-show="!shoudzyx" @click="yesterday()" label="two">昨天</el-button>
+						<el-button v-show="!shoudzyx" @click="sevendat()" label="three">近7天</el-button>
+						<el-button v-show="!shoudzyx" @click="thirtyday()" label="four">近30天</el-button>
+						<el-button @click="showzdyx">自定义
 							<i class="el-icon-date"></i>
-						</el-radio-button>
-					</el-radio-group>
+						</el-button>
+					</el-button-group>
 					<el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
 					<el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
 				</div>
@@ -142,19 +143,19 @@ export default {
       plain: "",
       search: "",
       valuedomian: "",
-      value1acce1: "-1",
+      value1acce1: "",
       duibi: false,
       hashidSets: [
         {
           value: "1",
-          label: "iOS",
-        },
-        {
-          value: "0",
-          label: "android",
+          label: "云链",
         },
         {
           value: "2",
+          label: "西柚机",
+        },
+        {
+          value: "3",
           label: "其他",
         },
       ],
@@ -428,10 +429,10 @@ export default {
       } else {
         params.domain = "*";
       }
-      if (this.value1acce1 !== "-1") {
-        params.terminalName = parseInt(this.valuedomian);
+      if (this.value1acce1 != 0) {
+        params.ipfschanel = parseInt(this.value1acce1);
       } else {
-        params.terminalName = -1;
+        params.ipfschanel = 0;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -593,10 +594,10 @@ export default {
       } else {
         params.domain = "*";
       }
-      if (this.value1acce1 !== "-1") {
-        params.terminalName = parseInt(this.value1acce1);
+      if (this.value1acce1 != 0) {
+        params.ipfschanel = parseInt(this.value1acce1);
       } else {
-        params.terminalName = -1;
+        params.ipfschanel = 0;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -671,10 +672,10 @@ export default {
       } else {
         params.domain = "*";
       }
-      if (this.value1acce1 !== "-1") {
-        params.terminalName = parseInt(this.value1acce1);
+      if (this.value1acce1 !== 0) {
+        params.ipfschanel = parseInt(this.value1acce1);
       } else {
-        params.terminalName = -1;
+        params.ipfschanel = 0;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,

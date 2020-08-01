@@ -34,19 +34,23 @@
                   <el-submenu v-if="itemChild.children && itemChild.children.length" :index="itemChild.path" :key="itemChild.path">
                     <template slot="title">
                       <i :class="itemChild.icon"></i>
-                      <span style="margin-left:20px;">{{itemChild.name}}</span>
+                      <div style="margin-left:20px;">
+                        <div style="display:inline-block;width:4px;height:4px;backgroundColor:rgba(102,102,102,1);border-radius:50%;margin-right: 5px;"></div>{{itemChild.name}}
+                      </div>
                     </template>
 
                     <!-- 三级菜单 -->
                     <el-menu-item v-for="itemChild_Child in itemChild.children" :index="itemChild_Child.path" :key="itemChild_Child.path" v-if="!itemChild_Child.hidden">
                       <i :class="itemChild_Child.icon"></i>
-                      <span slot="title">{{itemChild_Child.name}}</span>
+                      <span style="margin-left:20px;" slot="title">{{itemChild_Child.name}}</span>
                     </el-menu-item>
                   </el-submenu>
 
                   <el-menu-item v-else :index="itemChild.path" :key="itemChild.path">
                     <i :class="itemChild.icon"></i>
-                    <span slot="title" style="margin-left:20px;">{{itemChild.name}}</span>
+                   <div slot="title" style="margin-left:20px;">
+                      <div style="display: inline-block;width:4px;height:4px;backgroundColor:rgba(102,102,102,1);border-radius:50%;margin-right: 5px;"></div>{{itemChild.name}}
+                    </div>
                   </el-menu-item>
                 </template>
               </el-submenu>
@@ -402,13 +406,13 @@ export default {
     }
     .content-container {
       // background: #f1f2f7;
-      //flex: 1;
+      flex: 1;
       // position: absolute;
       // right: 0px;
       // top: 0px;
       // bottom: 0px;
       // left: 230px;
-      // overflow-y: scroll;
+      overflow-y: scroll;
       //padding: 20px;
       .breadcrumb-container {
         //margin-bottom: 15px;

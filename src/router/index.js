@@ -200,6 +200,7 @@ export default new Router({
           path: "/gewsrg",
           name: "监控统计",
           component: home_two,
+          hidden: true,
           children: [
             {
               path: "/nodeMap1",
@@ -210,18 +211,18 @@ export default new Router({
         },
         {
           path: "/gewsrg2",
-          name: "节点统计",
+          name: "节点流量统计",
           component: home_two,
           children: [
-            {
-              path: "/trafficMonitor",
-              name: "节点流量监控",
-              component: trafficMonitor,
-            },
             {
               path: "/usageindex",
               name: "节点流量用量",
               component: usageindex,
+            },
+            {
+              path: "/trafficMonitor",
+              name: "节点流量监控",
+              component: trafficMonitor,
             },
           ],
         },
@@ -244,6 +245,7 @@ export default new Router({
               path: "/playDetails",
               name: "播放详情统计",
               component: playDetails,
+              // hidden: true,
             },
           ],
         },

@@ -3,111 +3,223 @@
     <div class="top_title">播放流量</div>
     <div class="user-title" style="display: flex;flex-flow: column;">
       <div class="resources_con">
-        <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-            <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;"></el-input>
-            <el-input v-model="valuea1" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;"></el-input>
-            <el-input v-model="value1Activechanidactive" placeholder="请输入域名" style="width:160px;margin-right: 10px;"></el-input>
-            <el-select v-model="value1acce1" placeholder="终端" style="width: 10%;margin-right: 10px;" >
-            <el-option label="全部终端" value="-1"></el-option>
-            <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-            <el-button-group>
-            <el-button v-show="!showzdyz" @click="today(3)">今天</el-button>
-            <el-button v-show="!showzdyz" @click="yesterday(3)">昨天</el-button>
-            <el-button v-show="!showzdyz" @click="sevendat(3)">近7天</el-button>
-            <el-button v-show="!showzdyz" @click="thirtyday(3)">近30天</el-button>
-            <el-button @click="showzdyzs">自定义
-                <i class="el-icon-date"></i>
-            </el-button>
-            </el-button-group>
-            <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-            <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button>
-        </div>
-        <div class="user_item">
-            <div class="item_left">
-            <div class="item_count" style="text-align:center;">
-                <span>{{totalp2p |setbytes}}</span>
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <!-- <el-tab-pane label="P2P加速流量" name="first" :lazy="true">
+            <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="value1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata2(1)">
+                <el-option label="全部终端" value="-1"></el-option>
+                <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+              <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="options2" ref="cascaderAddr" :show-all-levels="false" v-model="value2" @change="getdata"></el-cascader>
+              <el-select v-model="value3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata()">
+                <el-option label="全部运营商" value="*"></el-option>
+                <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
+              </el-select>
+              <el-button-group>
+                <el-button v-show="!shoudzyx" @click="today(1)">今天</el-button>
+                <el-button v-show="!shoudzyx" @click="yesterday(1)">昨天</el-button>
+                <el-button v-show="!shoudzyx" @click="sevendat(1)">近7天</el-button>
+                <el-button v-show="!shoudzyx" @click="thirtyday(1)">近30天</el-button>
+                <el-button @click="showzdyx">自定义
+                  <i class="el-icon-date"></i>
+                </el-button>
+              </el-button-group>
+              <el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
             </div>
-            <div class="item_text" style="text-align:center;">P2P流量</div>
+            <div class="device_form">
+              <div id="myChartMap" :style="{ height: '607px' }"></div>
             </div>
-            <div class="item_right">
-            <div class="item_count" style="text-align:center;">
-                <span>{{totalcdn |setbytes}}</span>
+            <div class="devide_table">
+              <el-row type="flex" class="row_active">
+                <el-col :span="24" style="text-align:left;font-weight: bold;padding-left: 10px;">加速流量</el-col>
+              </el-row>
+              <el-row type="flex" class="row_active">
+                <el-col :span="24">
+                  <el-table :data="tablecdn" border style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table-column label="渠道ID">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.chanelId }}</div>
+                      </template>
+                    </el-table-column>
+
+                    <el-table-column label="总流量">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.streamAalue |setbytes }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="时间">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.timeValue | settimes }}</div>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :pagesa="total_cnt"></fenye>
+                </el-col>
+              </el-row>
             </div>
-            <div class="item_text" style="text-align:center;">CDN流量</div>
+          </el-tab-pane>
 
+          <el-tab-pane label="回源统计" name="second" :lazy="true">
+            <div style="display: flex;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-select v-model="value1acce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata2(2)">
+                <el-option label="全部终端" value="-1"></el-option>
+                <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+              <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="options2" ref="cascaderAddr" :show-all-levels="false" v-model="valuea2" @change="getdata1"></el-cascader>
+              <el-select v-model="valuea3" placeholder="运营商" style="width: 10%;margin-right: 10px;" @change="getdata1()">
+                <el-option label="全部运营商" value="*"></el-option>
+                <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
+              </el-select>
+              <el-button-group>
+                <el-button v-show="!showzdyz" @click="today(2)">今天</el-button>
+                <el-button v-show="!showzdyz" @click="yesterday(2)">昨天</el-button>
+                <el-button v-show="!showzdyz" @click="sevendat(2)">近7天</el-button>
+                <el-button v-show="!showzdyz" @click="thirtyday(2)">近30天</el-button>
+                <el-button @click="showzdyzs">自定义
+                  <i class="el-icon-date"></i>
+                </el-button>
+              </el-button-group>
+              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-button style="margin-left:10px;" type="primary" @click="seachtu(2)">确定</el-button>
             </div>
-        </div>
-        <div class="device_form" style>
-            <div id="myChartMap2" :style="{ height: '607px' }"></div>
-        </div>
-        <div class="devide_table">
+            <div class="device_form" style>
+              <div id="myChartMap1" :style="{ height: '607px' }"></div>
+            </div>
+          </el-tab-pane> -->
+          <el-tab-pane label="播放流量占比" name="threed" :lazy="true">
+            <div style="display: flex;align-items: center; flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="value1Activechanidactive" placeholder="请输入域名" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-select v-model="value1acce1" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata2(3)">
+                <el-option label="全部终端" value="-1"></el-option>
+                <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+              <el-button-group>
+                <el-button v-show="!showzdyz" @click="today(3)">今天</el-button>
+                <el-button v-show="!showzdyz" @click="yesterday(3)">昨天</el-button>
+                <el-button v-show="!showzdyz" @click="sevendat(3)">近7天</el-button>
+                <el-button v-show="!showzdyz" @click="thirtyday(3)">近30天</el-button>
+                <el-button @click="showzdyzs">自定义
+                  <i class="el-icon-date"></i>
+                </el-button>
+              </el-button-group>
+              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button>
+            </div>
+            <div class="user_item">
+              <div class="item_left">
+                <div class="item_count" style="text-align:center;">
+                  <span>{{totalp2p |setbytes}}</span>
+                </div>
+                <div class="item_text" style="text-align:center;">P2P流量</div>
+              </div>
+              <div class="item_right">
+                <div class="item_count" style="text-align:center;">
+                  <span>{{totalcdn |setbytes}}</span>
+                </div>
+                <div class="item_text" style="text-align:center;">CDN流量</div>
 
-            <el-row type="flex" class="row_active">
-            <el-col :span="24">
-                <el-table :data="tableZb" border style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
-                <el-table-column label="加速内容名称">
-                    <template slot-scope="scope">
-                    <div>{{ scope.row.urlname }}</div>
-                    </template>
-                </el-table-column>
+              </div>
+            </div>
+            <div class="device_form" style>
+              <div id="myChartMap2" :style="{ height: '607px' }"></div>
+            </div>
+            <div class="devide_table">
 
-                <el-table-column label="播放URL"  width="400">
-                    <template slot-scope="scope">
-                    <div>{{ scope.row.playurl }}</div>
-                    </template>
-                </el-table-column>
-                <el-table-column label="P2P加速流量（%）">
-                    <template slot-scope="scope">
-                    <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.p2pflow | setbytes }}</div>
-                        <div>({{ scope.row.p2ppercent | percentss }})</div>
-                    </div>
+              <el-row type="flex" class="row_active">
+                <el-col :span="24">
+                  <el-table :data="tableZb" border style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table-column label="加速内容名称">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.urlname }}</div>
+                      </template>
+                    </el-table-column>
 
-                    </template>
-                </el-table-column>
-                <el-table-column label="CDN加速流量（%）">
-                    <template slot-scope="scope">
-                    <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.cdnflow | setbytes }}</div>
-                        <div>({{ scope.row.cdnpercent | percentss }})</div>
-                    </div>
-                    </template>
-                </el-table-column>
-                <el-table-column :render-header="renderHeader" label="节点有资源时CDN加速流量（%）" >
-                    <template slot-scope="scope">
-                    <div style="display: flex;justify-content: center;">
+                    <el-table-column label="播放URL"  width="400">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.playurl }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="P2P加速流量（%）">
+                      <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
+                          <div>{{ scope.row.p2pflow | setbytes }}</div>
+                          <div>({{ scope.row.p2ppercent | percentss }})</div>
+                        </div>
 
-                        <div>{{ scope.row.cdnactiveflow | setbytes }}</div>
-                        <div>({{ scope.row.cdnactivepercent | percentss }})</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="CDN加速流量（%）">
+                      <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
+                          <div>{{ scope.row.cdnflow | setbytes }}</div>
+                          <div>({{ scope.row.cdnpercent | percentss }})</div>
+                        </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column :render-header="renderHeader" label="节点有资源时CDN加速流量（%）" >
+                      <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
 
-                    </div>
+                          <div>{{ scope.row.cdnactiveflow | setbytes }}</div>
+                          <div>({{ scope.row.cdnactivepercent | percentss }})</div>
 
-                    </template>
-                </el-table-column>
-                <el-table-column :render-header="renderHeader" label="节点无资源时CDN加速流量（%）">
-                    <template slot-scope="scope">
-                    <div style="display: flex;justify-content: center;">
+                        </div>
 
-                        <div>{{ scope.row.cdnpassiveflow | setbytes }}</div>
-                        <div>({{ scope.row.cdnpassivepercent | percentss }})</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column :render-header="renderHeader" label="节点无资源时CDN加速流量（%）">
+                      <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
 
-                    </div>
+                          <div>{{ scope.row.cdnpassiveflow | setbytes }}</div>
+                          <div>({{ scope.row.cdnpassivepercent | percentss }})</div>
 
-                    </template>
-                </el-table-column>
+                        </div>
 
-                <el-table-column label="统计时间">
-                    <template slot-scope="scope">
-                    <div>{{ scope.row.stime | settimes }}</div>
-                    <div>{{ scope.row.etime | settimes }}</div>
-                    </template>
-                </el-table-column>
-                </el-table>
-                <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
-            </el-col>
-            </el-row>
-        </div>
+                      </template>
+                    </el-table-column>
+
+                    <el-table-column label="统计时间">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.stime | settimes }}</div>
+                        <div>{{ scope.row.etime | settimes }}</div>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
+                </el-col>
+              </el-row>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="播放流量终端" name="four" :lazy="true">
+            <div style="display: flex;align-items: center; flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+
+              <el-button-group>
+                <el-button v-show="!showzdyz" @click="today(4)">今天</el-button>
+                <el-button v-show="!showzdyz" @click="yesterday(4)">昨天</el-button>
+                <el-button v-show="!showzdyz" @click="sevendat(4)">近7天</el-button>
+                <el-button v-show="!showzdyz" @click="thirtyday(4)">近30天</el-button>
+                <el-button @click="showzdyzs">自定义
+                  <i class="el-icon-date"></i>
+                </el-button>
+              </el-button-group>
+              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-button style="margin-left:10px;" type="primary" @click="seachtu(4)">确定</el-button>
+            </div>
+            <div class="device_form" style>
+              <div id="myChartMap3" :style="{ height: '607px' }"></div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
       </div>
     </div>
   </section>
@@ -161,6 +273,196 @@ export default {
         },
       ],
       value1Activechanidactive: "",
+      options2: [
+        {
+          value: "*",
+          label: "全部地区",
+        },
+        {
+          value: "华北",
+          label: "华北",
+          children: [
+            {
+              value: "北京",
+              label: "北京",
+            },
+            {
+              value: "内蒙古",
+              label: "内蒙古",
+            },
+            {
+              value: "山西",
+              label: "山西",
+            },
+            {
+              value: "河北",
+              label: "河北",
+            },
+            {
+              value: "天津",
+              label: "天津",
+            },
+          ],
+        },
+        {
+          value: "西北",
+          label: "西北",
+          children: [
+            {
+              value: "宁夏",
+              label: "宁夏",
+            },
+            {
+              value: "陕西",
+              label: "陕西",
+            },
+            {
+              value: "甘肃",
+              label: "甘肃",
+            },
+            {
+              value: "青海",
+              label: "青海",
+            },
+            {
+              value: "新疆",
+              label: "新疆",
+            },
+          ],
+        },
+        {
+          value: "东北",
+          label: "东北",
+          children: [
+            {
+              value: "黑龙江",
+              label: "黑龙江",
+            },
+            {
+              value: "吉林",
+              label: "吉林",
+            },
+            {
+              value: "辽宁",
+              label: "辽宁",
+            },
+          ],
+        },
+        {
+          value: "华东",
+          label: "华东",
+          children: [
+            {
+              value: "福建",
+              label: "福建",
+            },
+            {
+              value: "江苏",
+              label: "江苏",
+            },
+            {
+              value: "安徽",
+              label: "安徽",
+            },
+            {
+              value: "山东",
+              label: "山东",
+            },
+            {
+              value: "上海",
+              label: "上海",
+            },
+            {
+              value: "浙江",
+              label: "浙江",
+            },
+          ],
+        },
+        {
+          value: "华中",
+          label: "华中",
+          children: [
+            {
+              value: "河南",
+              label: "河南",
+            },
+            {
+              value: "湖北",
+              label: "湖北",
+            },
+            {
+              value: "江西",
+              label: "江西",
+            },
+            {
+              value: "湖南",
+              label: "湖南",
+            },
+          ],
+        },
+        {
+          value: "西南",
+          label: "西南",
+          children: [
+            {
+              value: "贵州",
+              label: "贵州",
+            },
+            {
+              value: "云南",
+              label: "云南",
+            },
+            {
+              value: "重庆",
+              label: "重庆",
+            },
+            {
+              value: "四川",
+              label: "四川",
+            },
+            {
+              value: "西藏",
+              label: "西藏",
+            },
+          ],
+        },
+        {
+          value: "华南",
+          label: "华南",
+          children: [
+            {
+              value: "广东",
+              label: "广东",
+            },
+            {
+              value: "广西",
+              label: "广西",
+            },
+            {
+              value: "海南",
+              label: "海南",
+            },
+          ],
+        },
+        {
+          value: "其他",
+          label: "其他",
+          children: [
+            {
+              value: "香港",
+              label: "香港",
+            },
+            {
+              value: "澳门",
+              label: "澳门",
+            },
+            {
+              value: "台湾",
+              label: "台湾",
+            },
+          ],
+        },
+      ],
       value1Activechanid: "",
       value1Activechanid1: "",
       value1Active: "",
@@ -201,7 +503,7 @@ export default {
       valuea4: "",
       tablecdn: [],
       tableZb: [],
-      activeName: "first",
+      activeName: "threed",
       pickerOptions: {
         shortcuts: [
           {
@@ -381,8 +683,7 @@ export default {
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.endtime = Date.parse(new Date()) / 1000;
 
-    this.querySdkflow();
-    this.querySdkflowTable();
+    this.getseachlabel1();
     // this.configure()
   },
   beforeDestroy() {
@@ -481,7 +782,7 @@ export default {
         params.domain = "*";
       }
 
-      params.timeUnit = this.common.timeUnitActive1(
+      params.timeUnit = this.common.timeUnitActive(
         this.starttime,
         this.endtime
       );
@@ -527,7 +828,7 @@ export default {
           console.log(error);
         });
     },
-    //流量占比图标
+    //列表占比图标
     querySdkflowTable() {
       let params = new Object();
       params.startTs = this.starttime;
@@ -558,7 +859,7 @@ export default {
       (params.pageNo = this.pageNo1 - 1),
         (params.pageSize = this.pageSize1),
         // params.domain="*"
-        (params.timeUnit = this.common.timeUnitActive1(
+        (params.timeUnit = this.common.timeUnitActive(
           this.starttime,
           this.endtime
         ));
@@ -574,6 +875,165 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+
+    //流量监控图表
+    querySdkflowControl() {
+      let params = new Object();
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      // params.chanId = this.chanid + "";
+      if (this.valuea1) {
+        params.urlName = this.valuea1;
+      } else {
+        params.urlName = "*";
+      }
+      if (this.value1Activechanid !== "") {
+        params.channelId = this.value1Activechanid;
+      } else {
+        params.channelId = "*";
+      }
+      if (this.value1acce1 !== "-1") {
+        params.terminalName = parseInt(this.value1acce1);
+      } else {
+        params.terminalName = -1;
+      }
+
+      if (this.value1Activechanidactive !== "") {
+        params.domain = this.value1Activechanidactive;
+      } else {
+        params.domain = "*";
+      }
+
+      // params.pageNo= 0,
+      // params.pageSize= 10,
+      // params.domain="*"
+      params.timeUnit = this.common.timeUnitActive1(
+        this.starttime,
+        this.endtime
+      );
+
+      sdk_flow_control(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.totalp2p = res.data.totalp2p;
+            this.totalcdn = res.data.totalcdn;
+
+            var num = res.data.iospstreamarray;
+            var num1 = res.data.ioscstreamarray;
+            var num2 = res.data.andriodpstreamarray;
+            var num3 = res.data.andriodcstreamarray;
+            // console.log(num);
+            // console.log(num1);
+            // console.log(num2);
+            // console.log(num3);
+
+            let max = "";
+            if (num != 0) {
+              max = Math.max.apply(null, num);
+            } else if (num1 != 0) {
+              max = Math.max.apply(null, num);
+            } else if (num2 != 0) {
+              max = Math.max.apply(null, num);
+            } else if (num3 != 0) {
+              max = Math.max.apply(null, num);
+            } else {
+              max = 0;
+            }
+           // console.log(max);
+            // var max = Math.max.apply(null, num);
+            
+            this.flowunit = this.common.formatByteActiveunit(max);
+          console.log(this.flowunit )
+
+            //   res.data.streamArray.forEach((item, index) => {
+            //     this.dataFlowArray.push(
+            //       this.common.formatByteNum(item, this.flowunit)
+            //     );
+            //   });
+            this.timeArrayJk = [];
+            this.dataJk1 = [];
+            this.dataJk2 = [];
+            this.dataJk3 = [];
+            this.dataJk4 = [];
+
+            res.data.iospstreamarray.forEach((item, index) => {
+              this.dataJk1.push(this.common.formatByteNum(item*1, this.flowunit));
+            });
+            res.data.ioscstreamarray.forEach((item, index) => {
+              this.dataJk2.push(this.common.formatByteNum(item*1, this.flowunit));
+            });
+            res.data.andriodpstreamarray.forEach((item, index) => {
+              this.dataJk3.push(this.common.formatByteNum(item*1, this.flowunit));
+            });
+            res.data.andriodcstreamarray.forEach((item, index) => {
+              this.dataJk4.push(this.common.formatByteNum(item*1, this.flowunit));
+            });
+
+            res.data.timeArray.forEach((item, index) => {
+              this.timeArrayJk.push(getymdtime1(item));
+            });
+            // this.dataJk1 = res.data.iospstreamarray;
+            // this.dataJk2 = res.data.ioscstreamarray;
+            // this.dataJk3 = res.data.andriodpstreamarray;
+            // this.dataJk4 = res.data.andriodcstreamarray;
+            this.drawLine3(
+              this.timeArrayJk,
+              this.dataJk1,
+              this.dataJk2,
+              this.dataJk3,
+              this.dataJk4
+            );
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //流量监控导出
+
+    exoprtant_Ll() {
+      let params = new Object();
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      // params.chanId = this.chanid + "";
+      if (this.valuea1) {
+        params.urlName = this.valuea1;
+      } else {
+        params.urlName = "*";
+      }
+      if (this.value1Activechanid !== "") {
+        params.channelId = this.value1Activechanid;
+      } else {
+        params.channelId = "*";
+      }
+      if (this.value1acce1 !== "-1") {
+        params.terminalName = parseInt(this.value1acce1);
+      } else {
+        params.terminalName = -1;
+      }
+
+      if (this.value1Activechanidactive !== "") {
+        params.domain = this.value1Activechanidactive;
+      } else {
+        params.domain = "*";
+      }
+
+      // params.pageNo= 0,
+      // params.pageSize= 10,
+      // params.domain="*"
+      params.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+
+      export_sdk_flow_control_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {});
     },
 
     //流量占比导出
@@ -604,7 +1064,7 @@ export default {
         params.domain = "*";
       }
 
-      params.timeUnit = this.common.timeUnitActive1(
+      params.timeUnit = this.common.timeUnitActive(
         this.starttime,
         this.endtime
       );
@@ -619,6 +1079,153 @@ export default {
         });
     },
 
+    //加速流量图标导出
+    exoprtant_pupv() {
+      let params = new Object();
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      // params.chanId = this.chanid + "";
+      if (this.value1) {
+        params.fileName = this.value1;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.value2[1]) {
+        params.region = this.value2[1];
+      } else {
+        params.region = "*";
+      }
+      if (this.value3) {
+        params.isp = this.value3;
+      } else {
+        params.isp = "*";
+      }
+      if (this.value3) {
+        params.isp = this.value3;
+      } else {
+        params.isp = "*";
+      }
+
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.valueacce !== "") {
+        params.acce = this.valueacce;
+      } else {
+        params.acce = "*";
+      }
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      export_accelerate_flow_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
+    //回源统计图表导出
+    exoprtant_backsource() {
+      let params = new Object();
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      //params.chanId = this.chanid + "";
+      if (this.valuea1) {
+        params.fileName = this.valuea1;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.valuea2[1]) {
+        params.region = this.valuea2[1];
+      } else {
+        params.region = "*";
+      }
+
+      if (this.value3) {
+        params.isp = this.value3;
+      } else {
+        params.isp = "*";
+      }
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.value1acce !== "") {
+        params.acce = this.value1acce;
+      } else {
+        params.acce = "*";
+      }
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      export_backsource_flow_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {});
+    },
+    //加速流量图标导出
+    exoprtant_pupv() {
+      let params = new Object();
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      // params.chanId = this.chanid + "";
+      if (this.value1) {
+        params.fileName = this.value1;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.value2[1]) {
+        params.region = this.value2[1];
+      } else {
+        params.region = "*";
+      }
+      if (this.value3) {
+        params.isp = this.value3;
+      } else {
+        params.isp = "*";
+      }
+      if (this.value3) {
+        params.isp = this.value3;
+      } else {
+        params.isp = "*";
+      }
+
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.valueacce !== "") {
+        params.acce = this.valueacce;
+      } else {
+        params.acce = "*";
+      }
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      export_accelerate_flow_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     //输入渠道ID查询
     onchanidChange() {
       this.options1chanid = [];
@@ -699,6 +1306,252 @@ export default {
       this.querySdkflowControl();
     },
 
+    /** 请求数据 */
+    //加速流量加载查询条件
+    getseachlabel1() {
+      this.options1 = [];
+      this.options1chanid = [];
+      //this.options2 = [];
+      this.options3 = [];
+      let params = new Object();
+      params.chanId = "*";
+      accelerate_flow_query_conditions(params)
+        .then(res => {
+          res.data.ispSet.forEach((item, index) => {
+            let obj = {};
+            obj.label = item;
+            obj.value = index;
+            this.options3.push(obj);
+          });
+          res.data.terminalSet.forEach((item, index) => {
+            let obj = {};
+            obj.label = item;
+            obj.value = item;
+            this.hashidSet.push(obj);
+          });
+
+          this.gettable1();
+        })
+        .catch(Error => {
+          console.log(Error);
+        });
+    },
+    //请求数据--加速流量条形图
+    gettable1() {
+      this.dataFlowArray = [];
+      this.timeArray = [];
+      let params = new Object();
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      // params.chanId = this.chanid + "";
+      if (this.value1) {
+        params.fileName = this.value1;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.value2[1]) {
+        params.region = this.value2[1];
+      } else {
+        params.region = "*";
+      }
+      if (this.value3) {
+        params.isp = this.value3;
+      } else {
+        params.isp = "*";
+      }
+      if (this.value3) {
+        params.isp = this.value3;
+      } else {
+        params.isp = "*";
+      }
+
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.valueacce !== "") {
+        params.acce = this.valueacce;
+      } else {
+        params.acce = "*";
+      }
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      accelerate_flow(params)
+        .then(res => {
+          var num = res.data.streamArray;
+          var max = Math.max.apply(null, num);
+          this.flowunit = this.common.formatByteActiveunit(max);
+
+          res.data.streamArray.forEach((item, index) => {
+            this.dataFlowArray.push(
+              this.common.formatByteNum(item, this.flowunit)
+            );
+          });
+          res.data.timeArray.forEach((item, index) => {
+            this.timeArray.push(getymdtime1(item));
+          });
+          this.getbot();
+          this.drawLine(this.dataFlowArray, this.timeArray);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    //请求数据--加速流量表格
+    getbot() {
+      let params = new Object();
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      params.chanId = this.chanid + "";
+      if (this.value1) {
+        params.fileName = this.value1;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.value2[1]) {
+        params.region = this.value2[1];
+      } else {
+        params.region = "*";
+      }
+      if (this.value3) {
+        params.isp = this.value3;
+      } else {
+        params.isp = "*";
+      }
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.valueacce !== "") {
+        params.acce = this.valueacce;
+      } else {
+        params.acce = "*";
+      }
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = this.pageSize;
+
+      accelerate_flow_table(params)
+        .then(res => {
+          if (res.status == 0) {
+            //this.tablecdn2 = res.data.fileList;
+            this.total_cnt = res.data.totalCnt;
+            let chanelIdArr = res.data.chanelIdArray;
+            let timeArr = res.data.timeArray;
+            let streamArr = res.data.streamArray;
+            this.tablecdn = [];
+            for (var i = 0; i < timeArr.length; i++) {
+              let obj = {
+                chanelId: chanelIdArr[i],
+                timeValue: timeArr[i],
+                streamAalue: streamArr[i],
+              };
+              this.tablecdn.push(obj);
+            }
+          } else {
+          }
+
+          // this.tablecdn = res.data.tableList;
+          // this.total_cnt = res.data.totalCnt;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //请求数据--回源查询条件
+    getseachlabel2() {
+      this.options3 = [];
+      this.optionsa1 = [];
+      this.optionsa2 = [];
+      this.optionsa3 = [];
+      this.options1Active = [];
+      let params = new Object();
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+
+      backsource_flow_query_conditions(params)
+        .then(res => {
+          res.data.ispSet.forEach((item, index) => {
+            let obj = {};
+            obj.label = item;
+            obj.value = index;
+            this.options3.push(obj);
+          });
+          res.data.terminalSet.forEach((item, index) => {
+            let obj = {};
+            obj.label = item;
+            obj.value = item;
+            this.hashidSet.push(obj);
+          });
+          this.gettable2();
+        })
+        .catch(err => {});
+    },
+    gettable2() {
+      let _this = this;
+      this.dataFlowArray2 = [];
+      this.timeArray2 = [];
+      let params = new Object();
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      //params.chanId = this.chanid + "";
+      if (this.valuea1) {
+        params.fileName = this.valuea1;
+      } else {
+        params.fileName = "*";
+      }
+      if (this.valuea2[1]) {
+        params.region = this.valuea2[1];
+      } else {
+        params.region = "*";
+      }
+
+      if (this.valuea3) {
+        params.isp = this.valuea3;
+      } else {
+        params.isp = "*";
+      }
+      if (this.value1Activechanid !== "") {
+        params.chanId = this.value1Activechanid;
+      } else {
+        params.chanId = "*";
+      }
+      if (this.value1acce !== "") {
+        params.acce = this.value1acce;
+      } else {
+        params.acce = "*";
+      }
+      params.time_unit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+
+      backsource_flow(params)
+        .then(res => {
+          var num = res.data.streamArray;
+          var max = Math.max.apply(null, num);
+          this.flowunit = this.common.formatByteActiveunit(max);
+
+          res.data.streamArray.forEach((item, index) => {
+            this.dataFlowArray2.push(
+              this.common.formatByteNum(item, this.flowunit)
+            );
+          });
+          // this.timeArray = res.data.timeArray;
+          res.data.timeArray.forEach((item, index) => {
+            this.timeArray2.push(getymdtime1(item));
+          });
+
+          this.drawLine1(this.dataFlowArray2, this.timeArray2);
+        })
+        .catch(err => {});
+    },
     seachtu(data) {
       if (this.endtime - this.starttime > 7776000) {
         this.$message({

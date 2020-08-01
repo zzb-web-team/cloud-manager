@@ -5,34 +5,44 @@
       <div class="resources_con">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="节点流量" name="first" :lazy="true">
-            <div style="display: flex;flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-input v-model="value1Activechanidactive" placeholder="请输入域名" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-select v-model="value1acce1" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;" @change="getdata2(3)">
+            <div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+              <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:10%;margin-right: 10px;"></el-input>
+              <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;"></el-input>
+              <el-input v-model="valueDomain" placeholder="请输入域名" style="width:10%;margin-right: 10px;"></el-input>
+              <el-select v-model="valueChanel" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;">
                 <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
-              <el-button-group>
-                <el-button v-show="!showzdyz" @click="today(3)">今天</el-button>
-                <el-button v-show="!showzdyz" @click="yesterday(3)">昨天</el-button>
-                <el-button v-show="!showzdyz" @click="sevendat(3)">近7天</el-button>
-                <el-button v-show="!showzdyz" @click="thirtyday(3)">近30天</el-button>
-                <el-button @click="showzdyzs">自定义
-                  <i class="el-icon-date"></i>
-                </el-button>
-              </el-button-group>
-              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-              <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button>
+              <el-radio-group
+                v-model="radio"
+                size="medium"
+                @change="select_time()"
+                v-show="!showzdy"
+              >
+                <el-radio-button size = "small" label="1">今天</el-radio-button >
+                <el-radio-button size = "small" label="2">昨天</el-radio-button >
+                <el-radio-button size = "small" label="3">近7天</el-radio-button >
+                <el-radio-button size = "small" label="4">近30天</el-radio-button >
+                <el-radio-button size = "small" label="5">自定义</el-radio-button >
+              </el-radio-group>
+              <el-button
+                type="primary"
+                v-show="showzdy"
+                 size = "small"
+                style="background:#409EFF;border:#409EFF"
+                @click="setZdy"
+                >自定义</el-button
+						  >
+              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-button style="margin-left:10px;" type="primary" @click="seachtu()">确定</el-button>
             </div>
             <div class="device_form" style="margin-top: 0px;">
               <div id="myChartMap2" :style="{ height: '607px' }"></div>
             </div>
             <div class="devide_table">
-
               <el-row type="flex" class="row_active">
                 <el-col :span="24">
-                  <el-table :data="tableZb" border style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table :data="tableZb" border style="width: 98%;margin:10px;max-height: 530px;" :cell-style="rowClass" :header-cell-style="headClass">
                     <el-table-column label="渠道ID">
                       <template slot-scope="scope">
                         <div>{{ scope.row.channelid }}</div>
@@ -44,13 +54,13 @@
                         <div>{{ scope.row.p2pflow | setbytes }}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="上行回源流量">
+                    <!-- <el-table-column label="上行回源流量">
                       <template slot-scope="scope">
                         <div style="display: flex;justify-content: center;">
                           <div>{{ scope.row.upbackflow | setbytes }}</div>
                         </div>
                       </template>
-                    </el-table-column>
+                    </el-table-column> -->
                     <el-table-column label="下行CDN回源流量">
                       <template slot-scope="scope">
                         <div style="display: flex;justify-content: center;">
@@ -72,134 +82,110 @@
                       </template>
                     </el-table-column>
                   </el-table>
-                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
+                  <!-- <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye> -->
                 </el-col>
               </el-row>
             </div>
           </el-tab-pane>
           <el-tab-pane label="TOP加速流量" name="second" :lazy="true">
-              <el-tabs v-model="activeName1" type="card" @tab-click="handleClick1">
-                <el-tab-pane label="TOP加速次数排行" name="first">
-                  <div style="display: flex;flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                    <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-                    <el-input v-model="value1Activechanidactive" placeholder="请输入域名" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-                    <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+            <div style="display: flex;align-items: center; flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+              <el-input v-model="valueChannelId1" placeholder="请输入渠道ID" style="width:10%;margin-right: 10px;"></el-input>
+              <el-input v-model="valueDomain1" placeholder="请输入域名" style="width:10%;margin-right: 10px;"></el-input>
+              <el-input v-model="valueContent1" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;"></el-input>
+              <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button>
+            </div>
+            <div class="devide_table">
+              <el-radio-group 
+                v-model="radioTop"
+                @change="handleClick1">
+                <el-radio-button label="1">TOP加速次数排行</el-radio-button>
+                <el-radio-button label="2">TOP加速流量排行</el-radio-button>
+              </el-radio-group>
+              <div style="display: flex;justify-content: flex-end;margin-right: 6px;">
+                <el-button type="primary" @click="toExportExcel">导出</el-button>
+              </div>
+              <el-row v-show="radioTop == 1" type="flex" class="row_active">
+                <el-col :span="24">
+                  <el-table :data="tableTop" border style="width: 98%;margin:10px;max-height: 530px;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table-column label="渠道ID">
+                    <template slot-scope="scope">
+                        <div>{{ scope.row.channelid }}</div>
+                    </template>
+                    </el-table-column>
 
-                    <!-- <el-button-group>
-                        <el-button v-show="!showzdyz" @click="today(4)">今天</el-button>
-                        <el-button v-show="!showzdyz" @click="yesterday(4)">昨天</el-button>
-                        <el-button v-show="!showzdyz" @click="sevendat(4)">近7天</el-button>
-                        <el-button v-show="!showzdyz" @click="thirtyday(4)">近30天</el-button>
-                        <el-button @click="showzdyzs">自定义
-                        <i class="el-icon-date"></i>
-                        </el-button>
-                    </el-button-group> -->
-                    <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-                    <el-button style="margin-left:10px;" type="primary" @click="seachtu(4)">确定</el-button>
-                  </div>
-                  <div class="devide_table">
-                    <el-row type="flex" class="row_active">
-                        <el-col :span="24">
-                        <el-table :data="tableZb" border style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
-                            <el-table-column label="渠道ID">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.chanid }}</div>
-                            </template>
-                            </el-table-column>
+                    <el-table-column label="加速内容名称">
+                    <template slot-scope="scope">
+                        <div>{{ scope.row.urlname }}</div>
+                    </template>
+                    </el-table-column>
+                    <el-table-column label="加速域名">
+                    <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
+                          <div>{{ scope.row.domain }}</div>
+                        </div>
+                    </template>
+                    </el-table-column>
+                    <el-table-column label="加速次数">
+                    <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
+                          <div>{{ scope.row.accelCnt }}</div>
+                          <div>({{ scope.row.accelCntpercent | percentss }})</div>
+                        </div>
+                    </template>
+                    </el-table-column>
+                    <el-table-column label="加速次数占比" >
+                      <template slot-scope="scope">
+                          <div style="display: flex;justify-content: center;">
+                            <div>{{ scope.row.dataflow }}</div>
+                            <div>({{ scope.row.dataflowpercent | percentss }})</div>
+                          </div>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                  <fenye style="float:right;margin:10px 0 20px 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :pagesa="total_cnt"></fenye>
+                </el-col>
+              </el-row>
+              <el-row v-show="radioTop != 1" type="flex" class="row_active">
+                <el-col :span="24">
+                  <el-table :data="tableTop1" border style="width: 98%;margin:10px;max-height: 530px;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table-column label="渠道ID">
+                    <template slot-scope="scope">
+                        <div>{{ scope.row.channelid }}</div>
+                    </template>
+                    </el-table-column>
 
-                            <el-table-column label="加速内容名称"  width="400">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.urlName }}</div>
-                            </template>
-                            </el-table-column>
-                            <el-table-column label="加速域名">
-                            <template slot-scope="scope">
-                                <div style="display: flex;justify-content: center;">
-                                  <div>{{ scope.row.domain }}</div>
-                                </div>
-                            </template>
-                            </el-table-column>
-                            <el-table-column label="加速次数">
-                            <template slot-scope="scope">
-                                <div style="display: flex;justify-content: center;">
-                                  <div>{{ scope.row.cdnflow }}</div>
-                                </div>
-                            </template>
-                            </el-table-column>
-                            <el-table-column label="加速次数占比" >
-                              <template slot-scope="scope">
-                                  <div style="display: flex;justify-content: center;">
-                                    <div>({{ scope.row.cdnactivepercent | percentss }})</div>
-                                  </div>
-                              </template>
-                            </el-table-column>
-                        </el-table>
-                        <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
-                        </el-col>
-                    </el-row>
-                  </div>
-                </el-tab-pane>
-                <el-tab-pane label="TOP加速流量排行" name="second">
-                  <div style="display: flex;flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                    <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-                    <el-input v-model="value1Activechanidactive" placeholder="请输入域名" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-                    <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-
-                    <!-- <el-button-group>
-                        <el-button v-show="!showzdyz" @click="today(4)">今天</el-button>
-                        <el-button v-show="!showzdyz" @click="yesterday(4)">昨天</el-button>
-                        <el-button v-show="!showzdyz" @click="sevendat(4)">近7天</el-button>
-                        <el-button v-show="!showzdyz" @click="thirtyday(4)">近30天</el-button>
-                        <el-button @click="showzdyzs">自定义
-                        <i class="el-icon-date"></i>
-                        </el-button>
-                    </el-button-group> -->
-                    <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-                    <el-button style="margin-left:10px;" type="primary" @click="seachtu(4)">确定</el-button>
-                  </div>
-                  <div class="devide_table">
-                    <el-row type="flex" class="row_active">
-                        <el-col :span="24">
-                        <el-table :data="tableZb" border style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
-                            <el-table-column label="渠道ID">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.chanid }}</div>
-                            </template>
-                            </el-table-column>
-
-                            <el-table-column label="加速内容名称"  width="400">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.urlName }}</div>
-                            </template>
-                            </el-table-column>
-                            <el-table-column label="加速域名">
-                            <template slot-scope="scope">
-                                <div style="display: flex;justify-content: center;">
-                                  <div>{{ scope.row.domain }}</div>
-                                </div>
-                            </template>
-                            </el-table-column>
-                            <el-table-column label="加速流量">
-                            <template slot-scope="scope">
-                                <div style="display: flex;justify-content: center;">
-                                  <div>{{ scope.row.cdnflow | setbytes }}</div>
-                                </div>
-                            </template>
-                            </el-table-column>
-                            <el-table-column label="流量占比" >
-                              <template slot-scope="scope">
-                                  <div style="display: flex;justify-content: center;">
-                                    <div>({{ scope.row.cdnactivepercent | percentss }})</div>
-                                  </div>
-                              </template>
-                            </el-table-column>
-                        </el-table>
-                        <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
-                        </el-col>
-                    </el-row>
-                  </div>
-                </el-tab-pane>
-              </el-tabs>
+                    <el-table-column label="加速内容名称">
+                    <template slot-scope="scope">
+                        <div>{{ scope.row.urlname }}</div>
+                    </template>
+                    </el-table-column>
+                    <el-table-column label="加速域名">
+                    <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
+                          <div>{{ scope.row.domain }}</div>
+                        </div>
+                    </template>
+                    </el-table-column>
+                    <el-table-column label="加速流量">
+                    <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
+                          <div>{{ scope.row.dataflow | setbytes }}</div>
+                        </div>
+                    </template>
+                    </el-table-column>
+                    <el-table-column label="流量占比" >
+                      <template slot-scope="scope">
+                          <div style="display: flex;justify-content: center;">
+                            <div>({{ scope.row.dataflowpercent | percentss }})</div>
+                          </div>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
+                </el-col>
+              </el-row>
+            </div>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -216,9 +202,12 @@ import {
   node_traffic_download,
   top_accelcnt_ranking,
   top_dataflow_ranking,
+  export_accelcnt_ranking_table_file,
+  export_dataflow_ranking_table_file
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
+import _ from "lodash";
 
 export default {
   data() {
@@ -226,65 +215,38 @@ export default {
       dataAry: [],
       dataAry1: [],
       dataAry2: [],
-      value1acce: "-1",
-      value1acce1: "-1",
-      valueacce: "-1",
       hashidSet: [],
       hashidSets: [
         {
-          value: "0",
+          value: "1",
           label: "云链",
         },
         {
-          value: "1",
+          value: "2",
           label: "西柚机",
         },
         {
-          value: "2",
+          value: "3",
           label: "其他",
         },
       ],
-      value1Activechanidactive: "",
-      value1Activechanid: "",
-      value1Activechanid1: "",
-      value1Active: "",
-      options1Active: [],
-      shoudzyx: false,
-      showzdyz: false,
-      options1: [],
-      options1chanid: [],
-
-      options3: [
-        // {
-        //   label: "电信",
-        // },
-        // {
-        //   label: "移动",
-        // },
-        // {
-        //   label: "联通",
-        // },
-        // {
-        //   label: "其他",
-        // },
-      ],
-      options4: [],
-      optionsa1: [],
-      optionsa2: [],
-      valuea2chanid: "",
-      optionsa2chanid: [],
-      optionsa3: [],
-      optionsa4: [],
-      value1: "",
-      value2: "*",
-      value3: "*",
-      value4: "",
-      valuea1: "",
-      valuea2: "*",
-      valuea3: "*",
-      valuea4: "",
+      valueDomain: "",
+      valueContent: "",
+      valueChannelId: "",
+      valueChanel: "",
+      valueDomain1: "",
+      valueContent1: "",
+      valueChannelId1: "",
+      valueChanel1: "-1",
+      valueDomain2: "",
+      valueContent2: "",
+      valueChannelId2: "",
+      valueChanel2: "-1",
+      showzdy: false,
       tablecdn: [],
       tableZb: [],
+      tableTop: [],
+      tableTop1: [],
       activeName: "first",
       activeName1: "first",
       pickerOptions: {
@@ -338,45 +300,12 @@ export default {
           return time.getTime() > Date.now();
         },
       },
-      // value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
       val2: [],
-      rowHeader: [
-        {
-          prop: "channelid",
-          label: "渠道id",
-        },
-        {
-          prop: "p2pflow",
-          label: "P2P播放流量",
-        },
-        {
-          prop: "upbackflow",
-          label: "上行回源流量",
-        },
-        {
-          prop: "downbackflow",
-          label: "下行节点回源流量",
-        },
-        {
-          prop: "upbackflow",
-          label: "上行回源流量",
-        },
-        {
-          prop: "downcdnflow",
-          label: "下行CDN回源流量",
-        },
-        {
-          prop: "stime-etime",
-          label: "统计时间",
-        },
-      ],
-      timeUnit: 60,
+      timeUnit: 120,
       starttime: "",
       endtime: "",
       dataFlowArray: [], //图1
       timeArray: [], //图1
-      dataFlowArray2: [], //图2
-      timeArray2: [], //图2
       pageSize: 10, //每页数量
       pageNo: 1, //当前页码
       pageSize1: 10, //每页数量
@@ -384,22 +313,10 @@ export default {
       total_cnt: 1, //数据总量
       total_cnt1: 1, //数据总量
       chanid: "",
-      pageActive: 0,
-      dataFlownum: 0,
-      dataFlownum1: 0,
       flowunit: "",
       timeArrayZb: [],
-      timeArrayZb1: [],
-      dataZb1: [],
-      dataZb3: [],
-      dataZb2: [],
-      totalp2p: 0,
-      totalcdn: 0,
-      timeArrayJk: [],
-      dataJk1: [],
-      dataJk2: [],
-      dataJk3: [],
-      dataJk4: [],
+      radio: 1,
+      radioTop: 1,
     };
   },
   filters: {
@@ -421,38 +338,10 @@ export default {
     fenye,
   },
   mounted() {
-    //this.today()
-    //注释
-    // this.querySdkflow()
-    //this.querySdkflowTable()
-    // if (this.$cookies.get("id")) {
-    //     this.chanid = this.$cookies.get("id") * 1;
-    // } else {
-    //     this.$router.push({
-    //         path: "/"
-    //     });
-    // }
-    // if (this.$route.query.urldata) {
-    //   console.log(this.$route.query.urldata);
-    // }
-    let monitorUrlname = this.$route.query.monitorUrlname;
-    if (monitorUrlname) {
-      this.value1 = monitorUrlname;
-    } else {
-      this.value1 = "";
-    }
-    let monitorChanId = this.$route.query.monitorChanId;
-    if (monitorChanId) {
-      this.value1Activechanid = monitorChanId;
-    } else {
-      this.value1Activechanid = "";
-    }
-
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.endtime = Date.parse(new Date()) / 1000;
-
     this.getNodeTrafficCurve();
-    // this.configure()
+    this.node_traffic_table();
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -460,8 +349,7 @@ export default {
     }
     this.chart.dispose();
     this.chart = null;
-    this.drawLine();
-    this.drawLine1();
+    this.drawLine2();
   },
   methods: {
     renderHeader(h, { column }) {
@@ -503,54 +391,94 @@ export default {
         ),
       ]);
     },
-    handleCurrentChange1(pages) {
-      this.pageNo1 = pages;
-      this.querySdkflowTable();
+    search(){
+      if(this.radioTop ==1){
+        this.pageNo = 1;
+        this.pageSize = 10;
+        this.topAccelcntRanking();
+      }else{
+        this.pageNo1 = 1;
+        this.pageSize1 = 10;
+        this.topDataflowRanking();
+      }
+      
+    },
+    //获取加速次数每页数量
+    handleSizeChange(pagetol) {
+      this.pageSize = pagetol;
+      this.topAccelcntRanking();
     },
     //获取页码
     handleCurrentChange(pages) {
       this.pageNo = pages;
-      this.getbot();
+      this.topAccelcntRanking();
     },
+    //获取加速流量每页数量
     handleSizeChange1(pagetol) {
-      //this.pagesize = pagetol;
-      // this.getuserlist();
+      this.pagesize1 = pagetol;
+      this.topDataflowRanking();
     },
-
-    //获取每页数量
-    handleSizeChange(pagetol) {
-      //this.pagesize = pagetol;
-      // this.getuserlist();
+    //获取页码
+    handleCurrentChange1(pages) {
+      this.pageNo1 = pages;
+      this.topDataflowRanking();
     },
+    //自定义时间
+    gettimes(cal) {
+      this.starttime = dateToMs(this.val2[0]);
+      this.endtime = dateToMs(this.val2[1]);
+      if (this.endtime - this.starttime <= 86400) {
+        this.timeUnit = 60 * 2;
+      } else if (this.endtime - this.starttime > 86400) {
+        this.timeUnit = 60 * 24;
+      }
+    },
+    //自定义事件组件
+    select_time() {
+			if (this.radio == 1) {
+				this.showzdy = false;
+				this.today();
+			} else if (this.radio == 2) {
+				this.showzdy = false;
+				this.yesterday();
+			} else if (this.radio == 3) {
+				this.showzdy = false;
+				this.sevendat();
+			} else if (this.radio == 4) {
+				this.showzdy = false;
+				this.thirtyday();
+			} else if (this.radio == 5) {
+				this.showzdy = true;
+			}
+		},
     //节点流量图
     getNodeTrafficCurve() {
       let params = new Object();
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      // params.chanId = this.chanid + "";
-      if (this.valuea1) {
-        params.urlName = this.valuea1;
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      if (this.valueContent) {
+        params.urlName = this.valueContent;
       } else {
         params.urlName = "*";
       }
-      if (this.value1Activechanid !== "") {
-        params.channelId = this.value1Activechanid;
+      if (this.valueChannelId !== "") {
+        params.channelid = this.valueChannelId;
       } else {
-        params.channelId = "*";
+        params.channelid = "*";
       }
-      if (this.value1acce1 !== "-1") {
-        params.ipfschanel = parseInt(this.value1acce1);
+      if (this.valueChanel !== "-1") {
+        params.ipfschanel = parseInt(this.valueChanel);
       } else {
         params.ipfschanel = -1;
       }
 
-      if (this.value1Activechanidactive !== "") {
-        params.domain = this.value1Activechanidactive;
+      if (this.valueDomain !== "") {
+        params.domain = this.valueDomain;
       } else {
         params.domain = "*";
       }
 
-      params.timeUnit = this.common.timeUnitActive2(
+      params.timeUnit = this.common.timeUnitActive(
         this.starttime,
         this.endtime
       );
@@ -558,39 +486,23 @@ export default {
       node_traffic_curve(params)
         .then(res => {
           if (res.status == 0) {
-            console.log(res.data)
-            // var num = res.data.pdataArray;
-            // var num1 = res.data.cdataArray;
-            // if (num !== 0) {
-            //   var max = Math.max.apply(null, num);
-            // } else if (num1 !== 0) {
-            //   var max = Math.max.apply(null, num);
-            // }
-            // //  max = Math.max.apply(null, num);
-            // this.flowunit = this.common.formatByteActiveunit(max);
-            // this.totalp2p = res.data.totalp2p;
-            // this.totalcdn = res.data.totalcdn;
-            // this.timeArrayZb = [];
-            // this.timeArrayZb1 = [];
-            // this.dataZb1 = [];
-            // this.dataZb2 = [];
-            // if(params.timeUnit==60){
-            //         res.data.timearray.forEach((item, index) => {
-            //   this.timeArrayZb.push(getymdtime1(item));
-            // });
-            // }else{
-            //          res.data.timearray.forEach((item, index) => {
-            //   this.timeArrayZb.push(getymdtime1(item,11));
-            // });
-            // }
-          
-            // this.dataZb1 = res.data.cdnaactivepercent;
-            // this.dataZb2 = res.data.cdnpassivepercent;
-            // this.dataZb3 = res.data.p2parray;
-            // this.dataAry = res.data.cdnaactivearray;
-            // this.dataAry1 = res.data.cdnpassivearray;
-            //  this.dataAry2 = res.data.pdataArray;
-            // this.drawLine2(this.timeArrayZb, this.dataZb1, this.dataZb2,this.dataZb3);
+            var max = _.max([...res.data.p2parray, ...res.data.downbackarray, ...res.data.downcdnarray]);
+            this.flowunit = this.common.formatByteActiveunit(max);
+            this.timeArrayZb = [];
+            if(params.timeUnit==60){
+              res.data.timearray.forEach((item, index) => {
+                this.timeArrayZb.push(getymdtime1(item));
+              });
+            }else{
+              res.data.timearray.forEach((item, index) => {
+                this.timeArrayZb.push(getymdtime1(item,11));
+              });
+            }
+
+            this.dataAry = res.data.downcdnarray.map((item)=>this.common.formatByteNum(item, this.flowunit));
+            this.dataAry1 = res.data.downbackarray.map((item)=>this.common.formatByteNum(item, this.flowunit));
+             this.dataAry2 = res.data.p2parray.map((item)=>this.common.formatByteNum(item, this.flowunit));
+            this.drawLine2(this.timeArrayZb, this.dataAry, this.dataAry1, this.dataAry2);
           }
         })
         .catch(error => {
@@ -598,36 +510,35 @@ export default {
         });
     },
 
-
     //节点流量表
     node_traffic_table() {
       let params = new Object();
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
       // params.chanId = this.chanid + "";
-      if (this.valuea1) {
-        params.urlName = this.valuea1;
+      if (this.valueContent) {
+        params.urlName = this.valueContent;
       } else {
         params.urlName = "*";
       }
-      if (this.value1Activechanid !== "") {
-        params.channelId = this.value1Activechanid;
+      if (this.valueChannelId !== "") {
+        params.channelid = this.valueChannelId;
       } else {
-        params.channelId = "*";
+        params.channelid = "*";
       }
-      if (this.value1acce1 !== "-1") {
-        params.ipfschanel = parseInt(this.value1acce1);
+      if (this.valueChanel !== "-1") {
+        params.ipfschanel = parseInt(this.valueChanel);
       } else {
         params.ipfschanel = -1;
       }
 
-      if (this.value1Activechanidactive !== "") {
-        params.domain = this.value1Activechanidactive;
+      if (this.valueDomain !== "") {
+        params.domain = this.valueDomain;
       } else {
         params.domain = "*";
       }
 
-      params.timeUnit = this.common.timeUnitActive2(
+      params.timeUnit = this.common.timeUnitActive(
         this.starttime,
         this.endtime
       );
@@ -645,26 +556,231 @@ export default {
         });
     },
     
+    //下载节点流量图表
+    exoprtNodeTraffic() {
+      let params = new Object();
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      // params.chanId = this.chanid + "";
+      if (this.valueContent) {
+        params.urlName = this.valueContent;
+      } else {
+        params.urlName = "*";
+      }
+      if (this.valueChannelId !== "") {
+        params.channelId = this.valueChannelId;
+      } else {
+        params.channelId = "*";
+      }
+      if (this.valueChanel !== "-1") {
+        params.ipfschanel = parseInt(this.valueChanel);
+      } else {
+        params.ipfschanel = -1;
+      }
+
+      if (this.valueDomain !== "") {
+        params.domain = this.valueDomain;
+      } else {
+        params.domain = "*";
+      }
+
+      params.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      node_traffic_download(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
+    //TOP加速次数排行
+    topAccelcntRanking() {
+      let params = new Object();
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = this.pageSize;
+      // params.chanId = this.chanid + "";
+      if (this.valueContent1) {
+        params.urlname = this.valueContent1;
+      } else {
+        params.urlname = "*";
+      }
+      
+      if (this.valueChannelId1 !== "") {
+        params.channelid = this.valueChannelId1;
+      } else {
+        params.channelid = "*";
+      }
+
+      if (this.valueDomain1 !== "") {
+        params.domain = this.valueDomain1;
+      } else {
+        params.domain = "*";
+      }
+
+      params.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+
+      top_accelcnt_ranking(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.tableTop = res.data.data;
+            this.total_cnt = res.data.totalCnt;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+
+    //TOP加速流量排行
+    topDataflowRanking() {
+      let params = new Object();
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      params.pageNo = this.pageNo1 - 1;
+      params.pageSize = this.pageSize1;
+      if (this.valueContent1) {
+        params.urlname = this.valueContent1;
+      } else {
+        params.urlname = "*";
+      }
+      
+      if (this.valueChannelId1 !== "") {
+        params.channelid = this.valueChannelId1;
+      } else {
+        params.channelid = "*";
+      }
+
+      if (this.valueDomain1 !== "") {
+        params.domain = this.valueDomain1;
+      } else {
+        params.domain = "*";
+      }
+
+      params.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+
+      top_dataflow_ranking(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.tableTop1 = res.data.data;
+            this.total_cnt1 = res.data.totalCnt;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+
+    toExportExcel() {
+      if(this.radioTop == 1){
+        this.toExportAccelcntExcel()
+      }else{
+        this.toExportDataflowExcel();
+      }
+    },
+
+    toExportAccelcntExcel() {
+      let params = new Object();
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      params.pageNo = this.pageNo1 - 1;
+      params.pageSize = this.pageSize1;
+      if (this.valueContent1) {
+        params.urlname = this.valueContent1;
+      } else {
+        params.urlname = "*";
+      }
+      
+      if (this.valueChannelId1 !== "") {
+        params.channelid = this.valueChannelId1;
+      } else {
+        params.channelid = "*";
+      }
+
+      if (this.valueDomain1 !== "") {
+        params.domain = this.valueDomain1;
+      } else {
+        params.domain = "*";
+      }
+
+      params.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      export_accelcnt_ranking_table_file(params).then(res => {
+          if (res.status == 0) {
+           window.open(res.msg, "_blank");
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+
+    toExportDataflowExcel() {
+      let params = new Object();
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
+      params.pageNo = this.pageNo1 - 1;
+      params.pageSize = this.pageSize1;
+      if (this.valueContent1) {
+        params.urlname = this.valueContent1;
+      } else {
+        params.urlname = "*";
+      }
+      if (this.valueChannelId1 !== "") {
+        params.channelid = this.valueChannelId1;
+      } else {
+        params.channelid = "*";
+      }
+      if (this.valueDomain1 !== "") {
+        params.domain = this.valueDomain1;
+      } else {
+        params.domain = "*";
+      }
+      params.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      export_dataflow_ranking_table_file(params).then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     
-    showzdyzs() {
-      this.showzdyz = !this.showzdyz;
+    setZdy() {
+      this.showzdy = !this.showzdy;
+      this.radio = 1;
     },
-    showzdyx() {
-      this.shoudzyx = !this.shoudzyx;
-    },
-    //获取页码
-    getpage(pages) {
-      this.pageNo = pages;
-      this.getbot();
-    },
-    //获取每页数量
-    gettol(pagetol) {
-      this.pagesize = pagetol;
-      // this.getuserlist();
-    },
-    getdata() {
+
+    seachtu(data) {
+      if (this.endtime - this.starttime > 7776000) {
+        this.$message({
+          message: "起始时间和结束时间最大跨度不能超过三个月",
+          type: "error",
+        });
+        return false;
+      }
       this.pageNo = 1;
-      this.gettable2();
+      this.getNodeTrafficCurve();
+      this.node_traffic_table();
     },
 
     //今天
@@ -673,21 +789,8 @@ export default {
       this.starttime = times;
       this.endtime = Date.parse(new Date()) / 1000;
       this.timeUnit = 60;
-      if (data == 1) {
-        this.getseachlabel1();
-      } else if (data == 2) {
-        this.getseachlabel2();
-      } else if (data == 3) {
-        this.querySdkflow();
-        this.querySdkflowTable();
-      } else if (data == 4) {
-        this.querySdkflowControl();
-      }
-      // if (!data) {
-      //   this.getseachlabel1();
-      // } else {
-      //   this.getseachlabel2();
-      // }
+      this.getNodeTrafficCurve();
+      this.node_traffic_table();
     },
     //昨天
     yesterday(data) {
@@ -695,21 +798,8 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 1;
       this.endtime = times;
       this.timeUnit = 60;
-      if (data == 1) {
-        this.getseachlabel1();
-      } else if (data == 2) {
-        this.getseachlabel2();
-      } else if (data == 3) {
-        this.querySdkflow();
-        this.querySdkflowTable();
-      } else if (data == 4) {
-        this.querySdkflowControl();
-      }
-      // if (!data) {
-      //   this.getseachlabel1();
-      // } else {
-      //   this.getseachlabel2();
-      // }
+      this.getNodeTrafficCurve();
+      this.node_traffic_table();
     },
     //七天
     sevendat(data) {
@@ -717,21 +807,8 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 6;
       this.endtime = times;
       this.timeUnit = 60 * 24;
-      if (data == 1) {
-        this.getseachlabel1();
-      } else if (data == 2) {
-        this.getseachlabel2();
-      } else if (data == 3) {
-        this.querySdkflow();
-        this.querySdkflowTable();
-      } else if (data == 4) {
-        this.querySdkflowControl();
-      }
-      // if (!data) {
-      //   this.getseachlabel1();
-      // } else {
-      //   this.getseachlabel2();
-      // }
+      this.getNodeTrafficCurve();
+      this.node_traffic_table();
     },
     //三十天
     thirtyday(data) {
@@ -739,34 +816,16 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 29;
       this.endtime = times;
       this.timeUnit = 60 * 24;
-      if (data == 1) {
-        this.getseachlabel1();
-      } else if (data == 2) {
-        this.getseachlabel2();
-      } else if (data == 3) {
-        this.querySdkflow();
-        this.querySdkflowTable();
-      } else if (data == 4) {
-        this.querySdkflowControl();
-      }
-      // if (!data) {
-      //   this.getseachlabel1();
-      // } else {
-      //   this.getseachlabel2();
-      // }
+      this.getNodeTrafficCurve();
+      this.node_traffic_table();
     },
     //自定义时间
     gettimes(cal) {
       this.starttime = dateToMs(this.val2[0]);
       this.endtime = dateToMs(this.val2[1]);
-      if (this.endtime - this.starttime < 21600) {
-        this.timeUnit = 60;
-      } else if (
-        this.endtime - this.starttime >= 21600 &&
-        this.endtime - this.starttime < 86400
-      ) {
-        this.timeUnit = 60;
-      } else if (this.endtime - this.starttime >= 86400) {
+      if (this.endtime - this.starttime <= 86400) {
+        this.timeUnit = 60 * 2;
+      } else if (this.endtime - this.starttime > 86400) {
         this.timeUnit = 60 * 24;
       }
     },
@@ -780,166 +839,35 @@ export default {
       return "text-align: center;";
     },
 
-    handleClick1(tab, event){
-
-    },
     //选项卡
-
     handleClick(tab, event) {
-      this.val2 = [];
-      this.hashidSet = [];
+      this.val2= [];
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.starttime = times;
-
       this.endtime = Date.parse(new Date()) / 1000;
-      this.options3 = [];
       if (tab.index == 0) {
-        // this.value1 = "";
-        this.value2 = "*";
-        this.value3 = "*";
-        (this.valueacce = "-1"),
-          (this.options1chanid = []);
-        let monitorUrlname = this.$route.query.monitorUrlname;
-        if (monitorUrlname) {
-          this.value1 = monitorUrlname;
-        } else {
-          this.value1 = "";
-        }
-        let monitorChanId = this.$route.query.monitorChanId;
-        if (monitorChanId) {
-          this.value1Activechanid = monitorChanId;
-        } else {
-          this.value1Activechanid = "";
-        }
-
-        this.timeUnit = 60;
-        this.getseachlabel1();
+        this.getNodeTrafficCurve();
+        this.node_traffic_table();
       } else if (tab.index == 1) {
-        this.valuea1 = "";
-        //this.value1 = "";
-        this.valuea2 = "*";
-        this.valuea3 = "*";
-        (this.value1acce = "-1"), (this.options1chanid = []);
-        //this.value1Activechanid = "";
-        let monitorUrlname = this.$route.query.monitorUrlname;
-        if (monitorUrlname) {
-          this.value1 = monitorUrlname;
-        } else {
-          this.value1 = "";
-        }
-        let monitorChanId = this.$route.query.monitorChanId;
-        if (monitorChanId) {
-          this.value1Activechanid = monitorChanId;
-        } else {
-          this.value1Activechanid = "";
-        }
-
-        this.timeUnit = 60;
-        this.getseachlabel2();
-      }
-      if (tab.index == 2) {
-        (this.value1acce1 = "-1"), this.getseachlabel1();
-        this.querySdkflow();
-        let _this = this;
-        this.$nextTick(() => {
-          _this.querySdkflow();
-          _this.querySdkflowTable();
-        });
-      } else if (tab.index == 3) {
-        let _this = this;
-        _this.querySdkflowControl();
+        this.topAccelcntRanking();
       }
     },
 
-    drawLine1(x, y) {
-      let _this = this;
-      // 基于准备好的dom，初始化echarts实例
-      let myChartMap1 = this.$echarts.init(
-        document.getElementById("myChartMap1")
-      );
-      window.onresize = myChartMap1.resize;
-      // 绘制图表
-      let options = {
-        title: {
-          text: "流量",
-        },
-        toolbox: {
-          //show: true,
-          itemSize: 20,
-          itemGap: 30,
-          right: 50,
-          feature: {
-            mydow: {
-              show: true,
-              title: "导出",
-              icon:
-                "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
-              onclick: function() {
-                _this.exoprtant_backsource();
-              },
-            },
-          },
-        },
-        grid: {
-          // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
-          left: "3%", // 默认10%，给24就挺合适的。
-          top: 60, // 默认60
-          right: 35, // 默认10%
-          bottom: 60, // 默认60
-        },
-        color: "#297AFF",
-        tooltip: {
-          trigger: "axis",
-          formatter: function(params) {
-            return (
-              params[0].name +
-              "<br>" +
-              params[0].seriesName +
-              ":" +
-              params[0].data +
-              _this.flowunit
-            );
-          },
-          axisPointer: {
-            type: "shadow",
-          },
-        },
-        xAxis: {
-          type: "category",
-          boundaryGap: false,
-          data: y,
-        },
-        yAxis: {
-          name: this.flowunit,
-        },
-        series: [
-          {
-            name: "流量",
-            data: x,
-            type: "bar",
-            showBackground: true,
-            backgroundStyle: {
-              color: "rgba(220, 220, 220, 0.8)",
-            },
-          },
-        ],
-      };
-      myChartMap1.clear();
-      myChartMap1.setOption(options);
-      pop0p;
+    handleClick1() {
+      this.valueContent1 = "";
+      this.valueDomain1 = "";
+      this.valueChannelId1 = "";
+      this.val2= [];
+      this.starttime = "";
+      this.endtime = "";
+      if (this.radioTop == 1) {
+        this.topAccelcntRanking();
+      } else {
+        this.topDataflowRanking();
+      }
     },
 
-    drawLine2(x, y, z,a) {
-      for (var i = 0; i < y.length; i++) {
-        y[i] = (y[i] * 100).toFixed(2);
-      }
-      for (var i = 0; i < z.length; i++) {
-        z[i] = (z[i] * 100).toFixed(2);
-      }
-       for (var i = 0; i < a.length; i++) {
-        a[i] = (a[i] * 100).toFixed(2);
-      }
-      
+    drawLine2(x, y, z, a) {
       let _this = this;
       // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById("myChartMap2"));
@@ -947,7 +875,7 @@ export default {
       // 绘制图表
       let options = {
         title: {
-          text: "流量占比",
+          text: "流量",
           left: "12px",
           textStyle: {
             color: "#333333",
@@ -966,7 +894,7 @@ export default {
               icon:
                 "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
               onclick: function() {
-                _this.exoprtant_Zb();
+                _this.exoprtNodeTraffic();
               },
             },
           },
@@ -976,36 +904,29 @@ export default {
           x: "center", //可设定图例在左、右、居中
           y: "bottom", //可设定图例在上、下、居中
           padding: [0, 0, 0, 0], //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
-          data: ['P2P加速流量', 'CDN无源流量','CDN有源流量'],
-          
-
+          data: ['P2P播放流量', '下行节点回源流量','下行CDN回源流量'],
         },
         tooltip: {
           trigger: "axis",
+          // backgroundColor: "#FFF",
           formatter: function(params) {
-            //  console.log(_this.flowunit)
-            //  console.log(_this.dataAry)
-            //  for(var i=0;i<_this.dataAry.length;i++){
             return (
+              params[0].axisValue + "</br>" +
+              "P2P播放流量:"+
+                _this.dataAry2[params[0].dataIndex] + _this.flowunit +
+              "</br>" +
+              "<div style='backgroundColor: rgba(0, 0, 0, 0.5); height: 20px;z-index: 99999999;'></div>"+
               params[0].axisValue +
               "</br>" +
-              "CND有源流量:" +
-              _this.common.formatByteActive(
-                _this.dataAry[params[0].dataIndex]
-              ) +"("+(_this.dataZb1[params[0].dataIndex])+"%"+")"+
+              "下行CDN回源流量:" +
+                _this.dataAry[params[0].dataIndex] + _this.flowunit
+               +
               "</br>" +
-              "CDN无源流量:" +
-              _this.common.formatByteActive(_this.dataAry1[params[0].dataIndex])+
-             
-              "("+(_this.dataZb2[params[0].dataIndex])+"%"+")"+
-
-               "<br>" +
-              "P2P加速流量:"+
-              _this.common.formatByteActive(_this.dataAry2[params[0].dataIndex])+
-            
-              "("+(_this.dataZb3[params[0].dataIndex])+"%"+")"
+              "下行节点回源流量:" +
+                _this.dataAry1[params[0].dataIndex] + _this.flowunit
+              +
+              "<br>" 
             );
-            // }
           },
         },
         grid: {
@@ -1021,72 +942,64 @@ export default {
           },
         },
         yAxis: {
-          splitLine: {
-            show: false,
-          },
+          type: 'value',
+          name: _this.flowunit,
+          axisLable: {
+            formatter:  (value, index) => {
+              return _this.common.formatByteNum(value, _this.flowunit);
+            }
+          }
         },
         series: [
-              {
-            name: "P2P加速流量",
+          {
+            name: "P2P播放流量",
             type: "bar",
-            stack: "使用情况",
             data: a,
             barMaxWidth: 30, //柱图宽度
             itemStyle: {
-              normal: {  color: '#D2E9FF' },
-            },
-            label: {
-              normal: {
-                show: true,
-                position: "inside",
-                color: "#333333",
-                fontSize: 10,
-              },
-            },
+              normal: {  color: '#8FC0FF' },
+            }
           },
           {
-            name: "CDN无源流量",
+            name: "下行节点回源流量",
             type: "bar",
             stack: "使用情况",
             data: z,
-           barMaxWidth: 30, //柱图宽度
-            itemStyle: {
-              normal: {
-                color: '#84C1FF',
-              },
-            },
-            label: {
-              normal: {
-                show: true,
-                position: "inside",
-                color: "#333333",
-                fontSize: 10,
-              },
-            },
-          },
-          {
-            name: "CDN有源流量",
-            type: "bar",
-            stack: "使用情况",
-            data: y,
              barMaxWidth: 30, //柱图宽度
             itemStyle: {
               normal: {
-                color: '#2894FF',
+                color: '#FFB430',
               },
             },
-          
             label: {
               normal: {
-                show: true,
+                show: false,
                 position: "inside",
                 color: "#ffffff",
                 fontSize: 10,
               },
             },
           },
-          
-         
+          {
+            name: "下行CDN回源流量",
+            type: "bar",
+            stack: "使用情况",
+            data: y,
+           barMaxWidth: 30, //柱图宽度
+            itemStyle: {
+              normal: {
+                color: '#FFD800',
+              },
+            },
+            label: {
+              normal: {
+                show: false,
+                position: "inside",
+                color: "#333333",
+                fontSize: 10,
+              },
+            },
+          },
         ],
       };
       myChart.setOption(options);
@@ -1123,12 +1036,6 @@ export default {
       margin-left: 10px;
     }
 
-    .row_activess {
-      margin-top: 20px;
-      display: flex;
-      justify-content: flex-start;
-    }
-
     .div_show {
       width: auto;
       display: flex;
@@ -1149,11 +1056,14 @@ export default {
     border-radius: 2px;
     box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
     border-radius: 2px;
-
     .el-table td,
     .el-table th {
       padding: 6px 0px;
     }
+    .tab_top_btn {
+			text-align: left;
+			margin-left: 10px;
+		}
   }
 
   .devide_pageNation {
@@ -1161,73 +1071,10 @@ export default {
     height: auto;
     // overflow: hidden;
     margin-top: 20px;
-
     .devide_pageNation_active {
       float: right;
     }
   }
 }
 
-.addaccout {
-  .el-form--label-left .el-form-item__label {
-    text-align: right;
-    width: 90px;
-  }
-
-  .el-form-item__error {
-    margin-left: 80px;
-  }
-}
-.user_item {
-  width: auto;
-  height: 130px;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-  border-radius: 2px;
-  margin-top: 20px;
-
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: left;
-  padding: 36px 71px;
-
-  .item_left {
-    width: 49%;
-    height: 58px;
-    border-right: 1px solid #e6e9ed;
-
-    .item_text {
-      font-size: 14px;
-      color: #333333;
-    }
-
-    .item_count {
-      line-height: 55px;
-
-      span {
-        font-size: 34px;
-      }
-    }
-  }
-
-  .item_right {
-    height: 48px;
-    width: 49%;
-    padding-left: 40px;
-
-    .item_text {
-      font-size: 14px;
-      color: #333333;
-    }
-
-    .item_count {
-      line-height: 55px;
-
-      span {
-        font-size: 34px;
-      }
-    }
-  }
-}
 </style>

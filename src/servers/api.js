@@ -257,6 +257,26 @@ export const top_dataflow_ranking = params => {
     return post(`${serverUrl}/resource_manage/query_dataflow_ranking`, params)
 };
 
+//TOP加速次数排行下载接口
+export const export_accelcnt_ranking_table_file = params => {
+    return post(`${serverUrl}/file_download/export_accelcnt_ranking_table_file`, params)
+};
+
+//TOP加速流量排行下载接口
+export const export_dataflow_ranking_table_file = params => {
+    return post(`${serverUrl}/file_download/export_dataflow_ranking_table_file`, params)
+};
+
+//播放信息统计
+export const video_info_statistics = params => {
+    return post(`${serverUrl}/resource_manage/video_info_statistics`, params)
+};
+
+//播放异常统计
+export const video_exception_statistics = params => {
+    return post(`${serverUrl}/resource_manage/video_exception_statistics`, params)
+};
+
 
 //点播数据统计
 /** PV/UV 查询条件*/
