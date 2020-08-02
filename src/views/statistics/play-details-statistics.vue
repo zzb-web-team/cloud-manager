@@ -32,7 +32,7 @@
 
                         <el-table-column label="加速内容名称">
                             <template slot-scope="scope">
-                                <div>{{ scope.row.urlName }}</div>
+                                <div>{{ scope.row.urlname }}</div>
                             </template>
                         </el-table-column>
                         <el-table-column label="渠道ID">

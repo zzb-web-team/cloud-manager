@@ -476,7 +476,7 @@ export default {
         params.acce = "-1";
       }
       params.top = 10;
-      params.time_unit = this.common.timeUnitActive(
+      params.time_unit = this.common.timeUnitActive2(
         this.starttime,
         this.endtime
       );
@@ -617,7 +617,7 @@ export default {
       this.uvArray = [];
       this.pvArray = [];
       this.timeArray = [];
-      params.time_unit = this.common.timeUnitActive(
+      params.time_unit = this.common.timeUnitActive2(
         this.starttime,
         this.endtime
       );
@@ -902,7 +902,7 @@ export default {
         this.pvArray = [];
         this.timeArray = [];
 
-        params.time_unit = this.common.timeUnitActive(
+        params.time_unit = this.common.timeUnitActive2(
           this.starttime,
           this.endtime
         );

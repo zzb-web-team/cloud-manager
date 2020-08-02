@@ -93,9 +93,9 @@
           </el-tab-pane> -->
           <el-tab-pane label="播放流量占比" name="threed" :lazy="true">
             <div style="display: flex;align-items: center; flex-flow: row; margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-input v-model="value1Activechanidactive" placeholder="请输入域名" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="valuea1" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="value1Activechanidactive" placeholder="请输入域名" style="width:160px;margin-right: 10px;"></el-input>
               <el-select v-model="value1acce1" placeholder="终端" style="width: 10%;margin-right: 10px;">
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
@@ -113,7 +113,7 @@
                   <i class="el-icon-date"></i>
                 </el-button>
               </el-button-group>
-              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button>
             </div>
             <div class="user_item">
@@ -258,6 +258,7 @@ import {
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
+import _ from "lodash";
 
 export default {
   data() {
@@ -710,7 +711,8 @@ export default {
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.endtime = Date.parse(new Date()) / 1000;
 
-    this.getseachlabel1();
+    this.querySdkflow();
+    this.querySdkflowTable();
     // this.configure()
   },
   beforeDestroy() {
@@ -969,17 +971,18 @@ export default {
             // console.log(num3);
 
             let max = "";
-            if (num != 0) {
-              max = Math.max.apply(null, num);
-            } else if (num1 != 0) {
-              max = Math.max.apply(null, num);
-            } else if (num2 != 0) {
-              max = Math.max.apply(null, num);
-            } else if (num3 != 0) {
-              max = Math.max.apply(null, num);
-            } else {
-              max = 0;
-            }
+            // if (num != 0) {
+            //   max = Math.max.apply(null, num);
+            // } else if (num1 != 0) {
+            //   max = Math.max.apply(null, num);
+            // } else if (num2 != 0) {
+            //   max = Math.max.apply(null, num);
+            // } else if (num3 != 0) {
+            //   max = Math.max.apply(null, num);
+            // } else {
+            //   max = 0;
+            // }
+            max = _.max([...num, ...num1, ...num2, num3])
            // console.log(max);
             // var max = Math.max.apply(null, num);
             
@@ -1790,7 +1793,11 @@ export default {
       //   this.getseachlabel2();
       // }
       if (tab.index == 0) {
-        (this.value1acce1 = "-1"), this.getseachlabel1();
+        this.value1Activechanid="";
+        this.valuea1="";
+        this.value1Activechanidactive="";
+        this.valueChanel="-1";
+        this.value1acce1 = "-1";
         this.querySdkflow();
         let _this = this;
         this.$nextTick(() => {
@@ -1800,6 +1807,11 @@ export default {
         });
       } else if (tab.index == 1) {
         // this.getseachlabel1();
+        this.value1Activechanid="";
+        this.valuea1="";
+        this.value1Activechanidactive="";
+        this.valueChanel="-1";
+        this.value1acce1 = "-1";
         let _this = this;
         _this.querySdkflowControl();
         //   this.$nextTick(() => {
