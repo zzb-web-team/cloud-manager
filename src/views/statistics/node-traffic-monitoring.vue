@@ -42,7 +42,7 @@
             <div class="devide_table">
               <el-row type="flex" class="row_active">
                 <el-col :span="24">
-                  <el-table :data="tableZb" border style="width: 98%;margin:10px;max-height: 530px;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table :data="tableZb" border style="width: 98%;margin:10px;max-height: 560px;overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
                     <el-table-column label="渠道ID">
                       <template slot-scope="scope">
                         <div>{{ scope.row.channelid }}</div>
@@ -82,7 +82,7 @@
                       </template>
                     </el-table-column>
                   </el-table>
-                  <!-- <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye> -->
+                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange2" @handleSizeChange="handleSizeChange2" :pagesa="total_cnt2"></fenye>
                 </el-col>
               </el-row>
             </div>
@@ -107,7 +107,7 @@
               </div>
               <el-row v-show="radioTop == 1" type="flex" class="row_active">
                 <el-col :span="24">
-                  <el-table :data="tableTop" border style="width: 98%;margin:10px;max-height: 530px;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table :data="tableTop" border style="width: 98%;margin:10px;max-height: 530px;overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
                     <el-table-column label="渠道ID">
                     <template slot-scope="scope">
                         <div>{{ scope.row.channelid }}</div>
@@ -130,15 +130,13 @@
                     <template slot-scope="scope">
                         <div style="display: flex;justify-content: center;">
                           <div>{{ scope.row.accelCnt }}</div>
-                          <div>({{ scope.row.accelCntpercent | percentss }})</div>
                         </div>
                     </template>
                     </el-table-column>
                     <el-table-column label="加速次数占比" >
                       <template slot-scope="scope">
                           <div style="display: flex;justify-content: center;">
-                            <div>{{ scope.row.dataflow }}</div>
-                            <div>({{ scope.row.dataflowpercent | percentss }})</div>
+                            <div>({{ scope.row.accelCntpercent | percentss }})</div>
                           </div>
                       </template>
                     </el-table-column>
@@ -148,7 +146,7 @@
               </el-row>
               <el-row v-show="radioTop != 1" type="flex" class="row_active">
                 <el-col :span="24">
-                  <el-table :data="tableTop1" border style="width: 98%;margin:10px;max-height: 530px;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table :data="tableTop1" border style="width: 98%;margin:10px;max-height: 530px;overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
                     <el-table-column label="渠道ID">
                     <template slot-scope="scope">
                         <div>{{ scope.row.channelid }}</div>
@@ -310,8 +308,11 @@ export default {
       pageNo: 1, //当前页码
       pageSize1: 10, //每页数量
       pageNo1: 1, //当前页码
+      pageSize2: 10, //每页数量
+      pageNo2: 1, //当前页码
       total_cnt: 1, //数据总量
       total_cnt1: 1, //数据总量
+      total_cnt2: 1, //数据总量
       chanid: "",
       flowunit: "",
       timeArrayZb: [],
@@ -400,8 +401,7 @@ export default {
         this.pageNo1 = 1;
         this.pageSize1 = 10;
         this.topDataflowRanking();
-      }
-      
+      } 
     },
     //获取加速次数每页数量
     handleSizeChange(pagetol) {
@@ -422,6 +422,16 @@ export default {
     handleCurrentChange1(pages) {
       this.pageNo1 = pages;
       this.topDataflowRanking();
+    },
+    //获取节点流量表每页数量
+    handleSizeChange2(pagetol) {
+      this.pagesize2 = pagetol;
+      this.node_traffic_table();
+    },
+    //获取页码
+    handleCurrentChange2(pages) {
+      this.pageNo2 = pages;
+      this.node_traffic_table();
     },
     //自定义时间
     gettimes(cal) {
@@ -466,7 +476,7 @@ export default {
       } else {
         params.channelid = "*";
       }
-      if (this.valueChanel !== "-1") {
+      if (this.valueChanel != "") {
         params.ipfschanel = parseInt(this.valueChanel);
       } else {
         params.ipfschanel = -1;
@@ -515,7 +525,8 @@ export default {
       let params = new Object();
       params.start_ts = this.starttime;
       params.end_ts = this.endtime;
-      // params.chanId = this.chanid + "";
+      params.pageNo = this.pageNo2 - 1;
+      params.pageSize = this.pageSize2;
       if (this.valueContent) {
         params.urlName = this.valueContent;
       } else {
@@ -548,7 +559,7 @@ export default {
           if (res.status == 0) {
             this.tableZb = [];
             this.tableZb = res.data.list;
-            this.total_cnt1 = res.data.totalCnt;
+            this.total_cnt2 = res.data.totalCnt;
           }
         })
         .catch(error => {
@@ -559,20 +570,20 @@ export default {
     //下载节点流量图表
     exoprtNodeTraffic() {
       let params = new Object();
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
+      params.start_ts = this.starttime;
+      params.end_ts = this.endtime;
       // params.chanId = this.chanid + "";
       if (this.valueContent) {
-        params.urlName = this.valueContent;
+        params.urlname = this.valueContent;
       } else {
-        params.urlName = "*";
+        params.urlname = "*";
       }
       if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
+        params.channelid = this.valueChannelId;
       } else {
-        params.channelId = "*";
+        params.channelid = "*";
       }
-      if (this.valueChanel !== "-1") {
+      if (this.valueChanel != "") {
         params.ipfschanel = parseInt(this.valueChanel);
       } else {
         params.ipfschanel = -1;
@@ -789,6 +800,7 @@ export default {
       this.starttime = times;
       this.endtime = Date.parse(new Date()) / 1000;
       this.timeUnit = 60;
+      this.pageNo2 = 1;
       this.getNodeTrafficCurve();
       this.node_traffic_table();
     },
@@ -798,6 +810,7 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 1;
       this.endtime = times;
       this.timeUnit = 60;
+      this.pageNo2 = 1;
       this.getNodeTrafficCurve();
       this.node_traffic_table();
     },
@@ -807,6 +820,7 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 6;
       this.endtime = times;
       this.timeUnit = 60 * 24;
+      this.pageNo2 = 1;
       this.getNodeTrafficCurve();
       this.node_traffic_table();
     },
@@ -816,6 +830,7 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 29;
       this.endtime = times;
       this.timeUnit = 60 * 24;
+      this.pageNo2 = 1;
       this.getNodeTrafficCurve();
       this.node_traffic_table();
     },
@@ -846,6 +861,7 @@ export default {
       this.starttime = times;
       this.endtime = Date.parse(new Date()) / 1000;
       if (tab.index == 0) {
+        this.pageNo2 = 1;
         this.getNodeTrafficCurve();
         this.node_traffic_table();
       } else if (tab.index == 1) {
@@ -858,8 +874,9 @@ export default {
       this.valueDomain1 = "";
       this.valueChannelId1 = "";
       this.val2= [];
-      this.starttime = "";
-      this.endtime = "";
+      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.starttime = times;
+      this.endtime = Date.parse(new Date()) / 1000;
       if (this.radioTop == 1) {
         this.topAccelcntRanking();
       } else {
@@ -1056,6 +1073,9 @@ export default {
     border-radius: 2px;
     box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
     border-radius: 2px;
+    .el-table::before {
+      z-index: inherit;
+    }
     .el-table td,
     .el-table th {
       padding: 6px 0px;

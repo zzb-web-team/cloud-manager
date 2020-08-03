@@ -175,7 +175,7 @@ export default {
       size ="TB"
     }
      else {
-      //其他转化成GB
+      //其他转化成PB
       size = "PB";
     }
 
@@ -197,11 +197,11 @@ export default {
      }else if(unit=="MB"){
       return (num/1024/1024).toFixed(2)
      }else if(unit=="GB"){
-      return (num/1024/1024/1024).toFixed(6)
+      return (num/1024/1024/1024).toFixed(2)
      }else if(unit=="TB"){
-      return (num/1024/1024/1024/1024).toFixed(6)
+      return (num/1024/1024/1024/1024).toFixed(4)
      }else if(unit=="PB"){
-      return (num/1024/1024/1024/1024/1024).toFixed(6)
+      return (num/1024/1024/1024/1024/1024).toFixed(4)
      }
    
   },
@@ -246,13 +246,14 @@ export default {
     } else if (num >= 60000 && num < 3600000) {
       num = Number(num / 60000).toFixed(2) + "m";
       return num;
-    } else if (num >= 3600000 && num < 86400000) {
+    } else {
       num = Number(num / 3600000).toFixed(2) + "h";
       return num;
-    } else if (num > 86400000) {
-      num = Number(num / 86400000).toFixed(2) + "d";
-      return num;
-    }
+    } 
+    // else if (num > 86400000) {
+    //   num = Number(num / 86400000).toFixed(2) + "d";
+    //   return num;
+    // }
   },
 
   getTimess: function(b) {

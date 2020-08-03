@@ -145,7 +145,7 @@
                       </template>
                     </el-table-column>
 
-                    <el-table-column label="播放URL"  width="400">
+                    <el-table-column label="播放URL">
                       <template slot-scope="scope">
                         <div>{{ scope.row.playurl }}</div>
                       </template>
@@ -2090,6 +2090,13 @@ export default {
                 position: "inside",
                 color: "#333333",
                 fontSize: 10,
+                formatter: function(params) {
+                  if (params.value > 0) {
+                      return params.value;
+                  } else {
+                      return ' ';
+                  }
+                }
               },
             },
           },
@@ -2110,6 +2117,13 @@ export default {
                 position: "inside",
                 color: "#333333",
                 fontSize: 10,
+                formatter: function(params) {
+                  if (params.value > 0) {
+                      return params.value;
+                  } else {
+                      return ' ';
+                  }
+                }
               },
             },
           },
@@ -2118,7 +2132,7 @@ export default {
             type: "bar",
             stack: "使用情况",
             data: y,
-             barMaxWidth: 30, //柱图宽度
+            barMaxWidth: 30, //柱图宽度
             itemStyle: {
               normal: {
                 color: '#2894FF',
@@ -2129,8 +2143,15 @@ export default {
               normal: {
                 show: true,
                 position: "inside",
-                color: "#ffffff",
+                color: "#333333",
                 fontSize: 10,
+                formatter: function(params) {
+                  if (params.value > 0) {
+                      return params.value;
+                  } else {
+                      return ' ';
+                  }
+                }
               },
             },
           },

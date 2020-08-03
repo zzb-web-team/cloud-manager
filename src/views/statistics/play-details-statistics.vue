@@ -88,7 +88,7 @@
                         </el-table-column>
                         <el-table-column label="实际播放时间">
                             <template slot-scope="scope">
-                                <div>{{ scope.row.Playtime }}</div>
+                                <div>{{ common.formatDays(scope.row.Playtime*1000) }}</div>
                             </template>
                         </el-table-column>
                         <el-table-column label="播放开始-结束时间">
@@ -320,6 +320,9 @@ export default {
     fenye,
   },
   mounted() {
+    let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+    this.starttime = times;
+    this.endtime = Date.parse(new Date()) / 1000;
     this.videoInfoStatistics();
   },
   beforeDestroy() {
@@ -417,7 +420,11 @@ export default {
       this.exceptionStatus = "";
       this.exceptionType = "";
       this.val2=[];
-      this.pageSize1 = 1
+      this.pageSize1 = 10;
+      this.pageNo1 = 1;
+      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.starttime = times;
+      this.endtime = Date.parse(new Date()) / 1000;
       this.videoExceptionStatistics();
     },
     //播放信息统计
