@@ -121,13 +121,13 @@
                 <div class="item_count" style="text-align:center;">
                   <span>{{totalp2p |setbytes}}</span>
                 </div>
-                <div class="item_text" style="text-align:center;">P2P流量</div>
+                <div class="item_text" style="text-align:center;">P2P播放流量</div>
               </div>
               <div class="item_right">
                 <div class="item_count" style="text-align:center;">
                   <span>{{totalcdn |setbytes}}</span>
                 </div>
-                <div class="item_text" style="text-align:center;">CDN流量</div>
+                <div class="item_text" style="text-align:center;">CDN播放流量</div>
 
               </div>
             </div>
@@ -150,7 +150,7 @@
                         <div>{{ scope.row.playurl }}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="P2P加速流量（%）">
+                    <el-table-column label="P2P播放流量（%）">
                       <template slot-scope="scope">
                         <div style="display: flex;justify-content: center;">
                           <div>{{ scope.row.p2pflow | setbytes }}</div>
@@ -159,7 +159,7 @@
 
                       </template>
                     </el-table-column>
-                    <el-table-column label="CDN加速流量（%）">
+                    <el-table-column label="CDN播放流量（%）">
                       <template slot-scope="scope">
                         <div style="display: flex;justify-content: center;">
                           <div>{{ scope.row.cdnflow | setbytes }}</div>
@@ -167,18 +167,7 @@
                         </div>
                       </template>
                     </el-table-column>
-                    <el-table-column :render-header="renderHeader" label="节点有资源时CDN加速流量（%）" >
-                      <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-
-                          <div>{{ scope.row.cdnactiveflow | setbytes }}</div>
-                          <div>({{ scope.row.cdnactivepercent | percentss }})</div>
-
-                        </div>
-
-                      </template>
-                    </el-table-column>
-                    <el-table-column :render-header="renderHeader" label="节点无资源时CDN加速流量（%）">
+                    <el-table-column :render-header="renderHeader" label="节点无资源时CDN播放流量（%）">
                       <template slot-scope="scope">
                         <div style="display: flex;justify-content: center;">
 
@@ -189,7 +178,17 @@
 
                       </template>
                     </el-table-column>
+                    <el-table-column :render-header="renderHeader" label="节点有资源时CDN播放流量（%）" >
+                      <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
 
+                          <div>{{ scope.row.cdnactiveflow | setbytes }}</div>
+                          <div>({{ scope.row.cdnactivepercent | percentss }})</div>
+
+                        </div>
+
+                      </template>
+                    </el-table-column>
                     <el-table-column label="统计时间">
                       <template slot-scope="scope">
                         <div>{{ scope.row.stime | settimes }}</div>
@@ -839,12 +838,12 @@ export default {
             this.timeArrayZb1 = [];
             this.dataZb1 = [];
             this.dataZb2 = [];
-            if(params.timeUnit==60){
-                    res.data.timearray.forEach((item, index) => {
+            if(params.timeUnit== 120){
+              res.data.timearray.forEach((item, index) => {
               this.timeArrayZb.push(getymdtime1(item));
             });
             }else{
-                     res.data.timearray.forEach((item, index) => {
+              res.data.timearray.forEach((item, index) => {
               this.timeArrayZb.push(getymdtime1(item,11));
             });
             }
@@ -2025,7 +2024,7 @@ export default {
           x: "center", //可设定图例在左、右、居中
           y: "bottom", //可设定图例在上、下、居中
           padding: [0, 0, 0, 0], //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
-          data: ['P2P加速流量', 'CDN无源流量','CDN有源流量'],
+          data: ['P2P播放流量', 'CDN播放无源流量','CDN播放有源流量'],
           
 
         },
@@ -2038,21 +2037,19 @@ export default {
             return (
               params[0].axisValue +
               "</br>" +
-              "CND有源流量:" +
-              _this.common.formatByteActive(
-                _this.dataAry[params[0].dataIndex]
-              ) +"("+(_this.dataZb1[params[0].dataIndex])+"%"+")"+
+               "P2P播放流量:"+
+              _this.common.formatByteActive(_this.dataAry2[params[0].dataIndex])+
+              "("+(_this.dataZb3[params[0].dataIndex])+"%"+")" +
               "</br>" +
-              "CDN无源流量:" +
+              "CDN播放无源流量:" +
               _this.common.formatByteActive(_this.dataAry1[params[0].dataIndex])+
              
               "("+(_this.dataZb2[params[0].dataIndex])+"%"+")"+
-
-               "<br>" +
-              "P2P加速流量:"+
-              _this.common.formatByteActive(_this.dataAry2[params[0].dataIndex])+
-            
-              "("+(_this.dataZb3[params[0].dataIndex])+"%"+")"
+              "<br>" +
+              "CDN播放有源流量:" +
+              _this.common.formatByteActive(
+                _this.dataAry[params[0].dataIndex]
+              ) +"("+(_this.dataZb1[params[0].dataIndex])+"%"+")"
             );
             // }
           },
@@ -2075,8 +2072,8 @@ export default {
           },
         },
         series: [
-              {
-            name: "P2P加速流量",
+          {
+            name: "P2P播放流量",
             type: "bar",
             stack: "使用情况",
             data: a,
@@ -2101,7 +2098,7 @@ export default {
             },
           },
           {
-            name: "CDN无源流量",
+            name: "CDN播放无源流量",
             type: "bar",
             stack: "使用情况",
             data: z,
@@ -2128,7 +2125,7 @@ export default {
             },
           },
           {
-            name: "CDN有源流量",
+            name: "CDN播放有源流量",
             type: "bar",
             stack: "使用情况",
             data: y,
@@ -2155,8 +2152,6 @@ export default {
               },
             },
           },
-          
-         
         ],
       };
       myChart.setOption(options);

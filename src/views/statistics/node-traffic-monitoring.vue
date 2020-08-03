@@ -499,7 +499,7 @@ export default {
             var max = _.max([...res.data.p2parray, ...res.data.downbackarray, ...res.data.downcdnarray]);
             this.flowunit = this.common.formatByteActiveunit(max);
             this.timeArrayZb = [];
-            if(params.timeUnit==60){
+            if(params.timeUnit==120){
               res.data.timearray.forEach((item, index) => {
                 this.timeArrayZb.push(getymdtime1(item));
               });

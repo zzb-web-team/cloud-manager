@@ -52,7 +52,7 @@
                         <el-table-column label="CDN加速流量">
                             <template slot-scope="scope">
                                 <div style="display: flex;justify-content: center;">
-                                <div>({{ scope.row.Cdnflow | setbytes }})</div>
+                                <div>{{ scope.row.Cdnflow | setbytes }}</div>
                                 </div>
                             </template>
                         </el-table-column>
@@ -406,13 +406,21 @@ export default {
     },
     //自定义时间
     gettimes(cal) {
-      this.starttime = dateToMs(this.val2[0]);
-      this.endtime = dateToMs(this.val2[1]);
-      if (this.endtime - this.starttime <= 86400) {
-        this.timeUnit = 60 * 2;
-      } else if (this.endtime - this.starttime > 86400) {
-        this.timeUnit = 60 * 24;
+      // alert(cal)
+      if(cal){
+        this.starttime = dateToMs(this.val2[0]);
+        this.endtime = dateToMs(this.val2[1]);
+        if (this.endtime - this.starttime <= 86400) {
+          this.timeUnit = 60 * 2;
+        } else if (this.endtime - this.starttime > 86400) {
+          this.timeUnit = 60 * 24;
+        }
+      }else{
+        let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+        this.starttime = times;
+        this.endtime = Date.parse(new Date()) / 1000;
       }
+      
     },
     //重置
     reset() {
