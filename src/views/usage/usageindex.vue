@@ -4,11 +4,11 @@
 		<div class="user-title" style="display: flex;flex-flow: column;">
 			<div class="resources_con">
 				<div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-					<el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-					<el-input v-model="value1" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+					<el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;"></el-input>
+					<el-input v-model="value1" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;"></el-input>
 
-					<el-input v-model="valuedomian" placeholder="请输入加速域名" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-					<el-select v-model="value1acce1" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;" @change="getdata2">
+					<el-input v-model="valuedomian" placeholder="请输入加速域名" style="width:160px;margin-right: 10px;"></el-input>
+					<el-select v-model="value1acce1" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;">
 						<el-option label="全部" value="-1"></el-option>
 						<el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
 					</el-select>
@@ -135,6 +135,7 @@ import {
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
+import _ from 'lodash';
 
 export default {
   data() {
@@ -347,12 +348,15 @@ export default {
       let arrlist = [];
       if (val.length > 0) {
         val.forEach(item => {
-          arrlist.push(item.value);
+          arrlist.push(String(item.value));
         });
+        alert(456)
         this.chanIds = arrlist;
         this.gettable1(arrlist);
         this.gettable2(arrlist);
       } else {
+        alert(123)
+        this.chanIds = [];
         this.gettable1(val);
         this.gettable2(val);
       }
@@ -363,22 +367,15 @@ export default {
         return "disabledCheck";
       }
     },
-    //终端查询信息
-    getdata2(val) {
-      console.log(val);
-      this.value1acce1 = val;
-      this.gettable1();
-      this.gettable2();
-    },
     //失去焦点事件
-    onblurs(event) {
-      this.chanIds = event;
-    },
-    querychanIds() {
-      console.log(this.valuess);
-      this.gettable1(this.valuess);
-      this.gettable2(this.valuess);
-    },
+    // onblurs(event) {
+    //   this.chanIds = event;
+    // },
+    // querychanIds() {
+    //   console.log(this.valuess);
+    //   this.gettable1(this.valuess);
+    //   this.gettable2(this.valuess);
+    // },
     //获取页码
     handleCurrentChange(pages) {
       this.pageNo = pages;
@@ -387,8 +384,8 @@ export default {
 
     //获取每页数量
     handleSizeChange(pagetol) {
-      //this.pagesize = pagetol;
-      // this.getuserlist();
+      this.pageSize = pagetol;
+      this.gettable2();
     },
     //图表导出
     exoprtant_Yl() {
@@ -449,47 +446,47 @@ export default {
           .catch(err => {});
     },
 
-    //输入渠道ID查询
-    onchanidChange() {
-      this.options1chanid = [];
-      this.pageActive = 0;
-      if (this.value1Activechanid.length != 12) {
-        return false;
-      }
-      this.pageNo = 1;
-      this.queryInfoVideo();
-    },
-    //查询视频名称
-    queryInfoVideo() {
-      let param = new Object();
+    // //输入渠道ID查询
+    // onchanidChange() {
+    //   this.options1chanid = [];
+    //   this.pageActive = 0;
+    //   if (this.value1Activechanid.length != 12) {
+    //     return false;
+    //   }
+    //   this.pageNo = 1;
+    //   this.queryInfoVideo();
+    // },
+    // //查询视频名称
+    // queryInfoVideo() {
+    //   let param = new Object();
 
-      param.chanid = this.value1Activechanid;
+    //   param.chanid = this.value1Activechanid;
 
-      param.page = this.pageActive;
-      getterminal(param)
-        .then(res => {
-          if (res.status == 0) {
-            this.hashidSet = [];
-            res.result.cols.forEach((item, index) => {
-              let obj = {};
-              obj.value = item.name;
-              obj.label = item.name;
-              this.hashidSet.push(obj);
-            });
-            this.options1chanid = this.options1chanid.concat(this.labelData);
-            if (res.result.les_count == 0) {
-              return false;
-            } else {
-              this.pageActive++;
-              this.queryInfoVideo();
-            }
-          } else {
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
+    //   param.page = this.pageActive;
+    //   getterminal(param)
+    //     .then(res => {
+    //       if (res.status == 0) {
+    //         this.hashidSet = [];
+    //         res.result.cols.forEach((item, index) => {
+    //           let obj = {};
+    //           obj.value = item.name;
+    //           obj.label = item.name;
+    //           this.hashidSet.push(obj);
+    //         });
+    //         this.options1chanid = this.options1chanid.concat(this.labelData);
+    //         if (res.result.les_count == 0) {
+    //           return false;
+    //         } else {
+    //           this.pageActive++;
+    //           this.queryInfoVideo();
+    //         }
+    //       } else {
+    //       }
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // },
     //查询用户id
     querychanId(data) {
       let param = new Object();
@@ -535,30 +532,30 @@ export default {
           console.log(error);
         });
     },
-    getdataActive() {},
+    // getdataActive() {},
     showzdyzs() {
       this.showzdyz = !this.showzdyz;
     },
     showzdyx() {
       this.shoudzyx = !this.shoudzyx;
     },
-    //获取页码
-    getpage(pages) {
-      this.pageNo = pages;
-      this.getbot();
-    },
-    //获取每页数量
-    gettol(pagetol) {
-      this.pagesize = pagetol;
-      // this.getuserlist();
-    },
-    getdata() {
-      this.pageNo = 1;
-      this.gettable1();
-    },
-    getdata1() {
-      this.gettable2();
-    },
+    // //获取页码
+    // getpage(pages) {
+    //   this.pageNo = pages;
+    //   this.getbot();
+    // },
+    // //获取每页数量
+    // gettol(pagetol) {
+    //   this.pagesize = pagetol;
+    //   // this.getuserlist();
+    // },
+    // getdata() {
+    //   this.pageNo = 1;
+    //   this.gettable1();
+    // },
+    // getdata1() {
+    //   this.gettable2();
+    // },
 
     /** 请求数据 */
 
@@ -575,11 +572,11 @@ export default {
       } else {
         params.urlName = "*";
       }
-      if (data) {
+      if (this.chanIds.length > 0) {
         // let temparr1 = [];
         // temparr1 = data;
         // temparr1.push(parseInt(this.value1Activechanid));
-        params.channelId = data;
+        params.channelId = this.chanIds;
       } else {
         if (this.value1Activechanid !== "") {
           params.channelId = [];
@@ -613,16 +610,16 @@ export default {
             let nowarr = [];
             let childlist = [];
 
-              var num = res.data.data[0].dataflowArray;
-          var max = Math.max.apply(null, num);
-          this.flowunit = this.common.formatByteActiveunit(max);
+            var num = res.data.data[0].dataflowArray;
+            var max = _.max(num);
+            this.flowunit = this.common.formatByteActiveunit(max);
 
             for (var i = 0; i < nowlengh; i++) {
               childlist.push(res.data.data[i].channelid);
               let obj = {};
               obj.type = "bar";
-			  obj.barGap = "6%";
-			  obj.barMaxWidth=30,
+              obj.barGap = "6%";
+              obj.barMaxWidth=30,
               obj.name = res.data.data[i].channelid;
               let nowarr1 = [];
               nowtemp[i].dataflowArray.forEach((item, index) => {
@@ -635,7 +632,7 @@ export default {
             res.data.data[0].timeArray.forEach((item, index) => {
               this.timeArray.push(getymdtime1(item));
             });
-            // this.getbot();
+            
             this.drawLine(nowarr, this.timeArray, childlist);
           })
           .catch(err => {
@@ -650,6 +647,8 @@ export default {
       let params = new Object();
       params.startTs = this.starttime;
       params.endTs = this.endtime;
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = 10;
       // params.chanId = this.chanid + "";
       if (this.value1) {
         params.urlName = this.value1;
@@ -657,8 +656,8 @@ export default {
         params.urlName = "*";
       }
 
-      if (data) {
-        params.channelId = data;
+      if (this.chanIds.length > 0) {
+        params.channelId = this.chanIds;
       } else {
         if (this.value1Activechanid !== "") {
           params.channelId = [];
@@ -681,18 +680,16 @@ export default {
         this.starttime,
         this.endtime
       );
-      (params.pageNo = this.pageNo - 1),
-        (params.pageSize = 10),
-        manage_dataflow_table(params)
-          .then(res => {
-            if (res.status == 0) {
-              this.tablecdn = res.data.list;
-              this.total_cnt = res.data.totalCnt;
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          });
+      manage_dataflow_table(params)
+        .then(res => {
+          if (res.status == 0) {
+            this.tablecdn = res.data.list;
+            this.total_cnt = res.data.totalCnt;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
 
     seachtu(data) {
@@ -706,35 +703,16 @@ export default {
       this.pageNo = 1;
       this.gettable1();
       this.gettable2();
-      //   if (data == 1) {
-      //     this.getseachlabel1();
-      //   } else {
-      //     this.getseachlabel2();
-      //   }
     },
     //今天
-    onchangeTab(val) {
-      if (val == "one") {
-        this.today();
-      } else if (val == "two") {
-        this.yesterday();
-      } else if (val == "three") {
-        this.sevendat();
-      } else if (val == "four") {
-        this.thirtyday();
-      } else if (val == "five") {
-        this.gettimes();
-      }
-    },
-
     today(data) {
       this.plain = "plain";
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.starttime = times;
       this.endtime = Date.parse(new Date()) / 1000;
       this.timeUnit = 60;
-      this.gettable1();
-      this.gettable2();
+      // this.gettable1();
+      // this.gettable2();
       this.$refs.multipleTable.clearSelection();
     },
     //昨天
@@ -744,8 +722,8 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 1;
       this.endtime = times;
       this.timeUnit = 60;
-      this.gettable1();
-      this.gettable2();
+      // this.gettable1();
+      // this.gettable2();
       this.$refs.multipleTable.clearSelection();
     },
     //七天
@@ -755,8 +733,8 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 6;
       this.endtime = times;
       this.timeUnit = 60 * 24;
-      this.gettable1();
-      this.gettable2();
+      // this.gettable1();
+      // this.gettable2();
       this.$refs.multipleTable.clearSelection();
     },
     //三十天
@@ -766,8 +744,8 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 29;
       this.endtime = times;
       this.timeUnit = 60 * 24;
-      this.gettable1();
-      this.gettable2();
+      // this.gettable1();
+      // this.gettable2();
       this.$refs.multipleTable.clearSelection();
     },
     //自定义时间
@@ -988,8 +966,6 @@ export default {
       myChart.clear();
       myChart.setOption(options);
     },
-
-    //选项卡
   },
 };
 </script>

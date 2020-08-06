@@ -23,7 +23,7 @@
                 <div class="devide_table">
                 <el-row type="flex" class="row_active">
                     <el-col :span="24">
-                    <el-table :data="tableZb" border style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table :data="tableZb" border max-height="550" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
                         <el-table-column label="播放URL">
                         <template slot-scope="scope">
                             <div>{{ scope.row.playurl }}</div>
@@ -66,32 +66,37 @@
                                 <div>{{ scope.row.CDNSwitchCount }}</div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="播放终端IP列表" width="300">
+                        <!-- <el-table-column label="播放终端IP列表" width="300">
                             <template slot-scope="scope">
                                 <div>{{ scope.row.SDKIPList }}</div>
                             </template>
+                        </el-table-column> -->
+                        <el-table-column label="播放区域（省市）" >
+                            <template slot-scope="scope">
+                                <div></div>
+                            </template>
                         </el-table-column>
-                        <el-table-column label="播放终端类型" prop="terminalname" :formatter="ternimalFormatter">
-                            <!-- <template slot-scope="scope">
+                        <!-- <el-table-column label="播放终端类型" prop="terminalname" :formatter="ternimalFormatter">
+                            <template slot-scope="scope">
                                 <div>{{ scope.row.terminalname }}</div>
-                            </template> -->
-                        </el-table-column>
-                        <el-table-column label="播放终端网络" prop="SDKNetType" :formatter="netTypeFormatter">
+                            </template>
+                        </el-table-column> -->
+                        <el-table-column label="播放运营商网络" prop="SDKNetType" :formatter="netTypeFormatter">
                             <!-- <template slot-scope="scope">
                                 <div>{{ scope.row.SDKNetType }}</div>
                             </template> -->
                         </el-table-column>
-                        <el-table-column label="当前加速通道" prop="curAccelState" :formatter="curAccelFormatter">
-                            <!-- <template slot-scope="scope">
+                        <!-- <el-table-column label="当前加速通道" prop="curAccelState" :formatter="curAccelFormatter">
+                            <template slot-scope="scope">
                                 <div>{{ scope.row.curAccelState }}</div>
-                            </template> -->
-                        </el-table-column>
+                            </template>
+                        </el-table-column> -->
                         <el-table-column label="实际播放时间">
                             <template slot-scope="scope">
                                 <div>{{ common.formatDays(scope.row.Playtime*1000) }}</div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="播放开始-结束时间">
+                        <!-- <el-table-column label="播放开始-结束时间">
                             <template slot-scope="scope">
                                 <div>{{ scope.row.playstartTime | settimes }}</div>
                                 <div>{{ scope.row.playendTime | settimes }}</div>
@@ -102,7 +107,7 @@
                                 <div>{{ scope.row.startTime | settimes }}</div>
                                 <div>{{ scope.row.endTime | settimes }}</div>
                             </template>
-                        </el-table-column>
+                        </el-table-column> -->
                     </el-table>
                     <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :pagesa="total_cnt"></fenye>
                     </el-col>
@@ -149,7 +154,7 @@
                 <div class="devide_table">
                 <el-row type="flex" class="row_active">
                     <el-col :span="24">
-                    <el-table :data="tableZb1" border style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table :data="tableZb1" border max-height = "530px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
                         <el-table-column label="播放异常类型" prop="exceptionType" :formatter="typeFormat">
                         <!-- <template slot-scope="scope">
                             <div>{{ scope.row.exceptionType }}</div>

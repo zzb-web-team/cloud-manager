@@ -8,13 +8,13 @@
           <el-tab-pane label="PV/UV" name="first">
             <div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
 
-              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;"></el-input>
               <!-- <el-select v-model="valueacce" placeholder="全部终端" style="width: 10%;margin-right: 10px;" @change="getdata()">
                 <el-option label="全部终端" value="*"></el-option>
                 <el-option v-for="(item, index) in options3" :key="item + index" :label="item.label" :value="item.label"></el-option>
               </el-select> -->
-                <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata2(3)">
+                <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;">
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -55,9 +55,9 @@
           <el-tab-pane label="访问用户分布" name="second">
             <div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
 
-              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" @change="onchanidChange" style="width:160px;margin-right: 10px;"></el-input>
-                <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="getdata2(3)">
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;"></el-input>
+              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;"></el-input>
+                <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;">
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -88,7 +88,7 @@
               </el-row>
               <el-row type="flex" class="row_active">
                 <el-col :span="24">
-                  <el-table :data="tablecdn" border stripe style="width: 100%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table :data="tablecdn" border stripe max-height="530" style="width: 100%; margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
                     <el-table-column :label="exportTitleTable">
                       <template slot-scope="scope">
                         <div v-if="scope.row.region">
@@ -99,7 +99,7 @@
                     </el-table-column>
                     <el-table-column label="渠道ID">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.chanId }}</div>
+                        <div>{{ scope.row.channelid }}</div>
                       </template>
                     </el-table-column>
 
@@ -629,47 +629,47 @@ export default {
         })
         .catch(err => {});
     },
-    //输入渠道ID查询
-    onchanidChange() {
-      this.options1chanid = [];
-      this.pageActive = 0;
-      if (this.value1Activechanid.length != 12) {
-        return false;
-      }
-      this.queryInfoVideo();
-    },
-    //查询视频名称
-    queryInfoVideo() {
-      let param = new Object();
+    // //输入渠道ID查询
+    // onchanidChange() {
+    //   this.options1chanid = [];
+    //   this.pageActive = 0;
+    //   if (this.value1Activechanid.length != 12) {
+    //     return false;
+    //   }
+    //   this.queryInfoVideo();
+    // },
+    // //查询视频名称
+    // queryInfoVideo() {
+    //   let param = new Object();
 
-      param.chanid = this.value1Activechanid;
+    //   param.chanid = this.value1Activechanid;
 
-      param.page = this.pageActive;
-      getterminal(param)
-        .then(res => {
-          if (res.status == 0) {
-            this.ableStatus = false;
-            this.options3 = [];
-            res.result.cols.forEach((item, index) => {
-              let obj = {};
-              obj.value = item.name;
-              obj.label = item.name;
-              this.options3.push(obj);
-            });
-            this.options1chanid = this.options1chanid.concat(this.labelData);
-            if (res.result.les_count == 0) {
-              return false;
-            } else {
-              this.pageActive++;
-              this.queryInfoVideo();
-            }
-          } else {
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
+    //   param.page = this.pageActive;
+    //   getterminal(param)
+    //     .then(res => {
+    //       if (res.status == 0) {
+    //         this.ableStatus = false;
+    //         this.options3 = [];
+    //         res.result.cols.forEach((item, index) => {
+    //           let obj = {};
+    //           obj.value = item.name;
+    //           obj.label = item.name;
+    //           this.options3.push(obj);
+    //         });
+    //         this.options1chanid = this.options1chanid.concat(this.labelData);
+    //         if (res.result.les_count == 0) {
+    //           return false;
+    //         } else {
+    //           this.pageActive++;
+    //           this.queryInfoVideo();
+    //         }
+    //       } else {
+    //       }
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // },
     //获取页码
     handleCurrentChange(pages) {
       this.pageNo = pages;
@@ -970,7 +970,7 @@ export default {
             .then(res => {
               this.playTimesArray1 = res.data.accessCntArray;
               this.timeArray1 = res.data.regionArray;
-              this.drawLine1(this.playTimesArray1, this.timeArray1);
+              this.drawLine1(this.playTimesArray1, this.timeArray1, data);
               this.tablecdn = res.data.accessCntTable;
               this.total_cnt1 = res.data.totalCnt;
             })
@@ -986,7 +986,7 @@ export default {
             .then(res => {
               this.playTimesArray1 = res.data.accessCntArray;
               this.timeArray1 = res.data.ispArray;
-              this.drawLine1(this.playTimesArray1, this.timeArray1);
+              this.drawLine1(this.playTimesArray1, this.timeArray1, data);
               this.tablecdn = res.data.accessCntTable;
               this.total_cnt1 = res.data.totalCnt;
             })
@@ -1368,7 +1368,7 @@ export default {
       };
       myChart.setOption(options);
     },
-    drawLine1(a, b) {
+    drawLine1(a, b, data) {
       let _this = this;
       // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById("myChart1"));
@@ -1433,7 +1433,7 @@ export default {
         yAxis: {},
         series: [
           {
-            name: "流量",
+            name: data == 1 ? "流量" : "次",
             type: "bar",
             barWidth: 30, //柱图宽度
             data: a,

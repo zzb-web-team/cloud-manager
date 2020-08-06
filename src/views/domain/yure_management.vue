@@ -1,7 +1,7 @@
 <template>
     <div class="content">
         <el-breadcrumb separator="/">
-            <el-breadcrumb-item>域名管理</el-breadcrumb-item>
+            <el-breadcrumb-item>刷新预热管理</el-breadcrumb-item>
         </el-breadcrumb>
         <div>
             <!-- 搜索 -->
