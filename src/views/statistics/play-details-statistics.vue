@@ -6,19 +6,15 @@
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="播放信息统计" name="first">
                 <div style="display: flex;flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;"></el-input>
-                <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;"></el-input>
-                <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;"></el-input>
-                <el-select v-model="valueChanel" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;">
-                    <el-option label="全部" value="-1"></el-option>
+                <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
+                <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
+                <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
+                <el-select v-model="valueIsp" placeholder="请选择运营商网络" style="width: 10%;margin-right: 10px;" @change="onChanges">
                     <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
-                <el-select v-model="valueTerminal" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;">
-                    <el-option label="全部" value="-1"></el-option>
-                    <el-option v-for="(item, index) in hashidSet" :key="index" :label="item.label" :value="item.value"></el-option>
-                </el-select>
+                <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="hashidSet" ref="cascaderAddr" :show-all-levels="false" v-model="valueRegion" @change="onChanges"></el-cascader>
                 <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-                <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button>
+                <!-- <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button> -->
                 </div>
                 <div class="devide_table">
                 <el-row type="flex" class="row_active">
@@ -73,7 +69,7 @@
                         </el-table-column> -->
                         <el-table-column label="播放区域（省市）" >
                             <template slot-scope="scope">
-                                <div></div>
+                                <div>{{ scope.row.region }}</div>
                             </template>
                         </el-table-column>
                         <!-- <el-table-column label="播放终端类型" prop="terminalname" :formatter="ternimalFormatter">
@@ -81,10 +77,10 @@
                                 <div>{{ scope.row.terminalname }}</div>
                             </template>
                         </el-table-column> -->
-                        <el-table-column label="播放运营商网络" prop="SDKNetType" :formatter="netTypeFormatter">
-                            <!-- <template slot-scope="scope">
-                                <div>{{ scope.row.SDKNetType }}</div>
-                            </template> -->
+                        <el-table-column label="播放运营商网络">
+                            <template slot-scope="scope">
+                                <div>{{ scope.row.isp }}</div>
+                            </template>
                         </el-table-column>
                         <!-- <el-table-column label="当前加速通道" prop="curAccelState" :formatter="curAccelFormatter">
                             <template slot-scope="scope">
@@ -93,7 +89,7 @@
                         </el-table-column> -->
                         <el-table-column label="实际播放时间">
                             <template slot-scope="scope">
-                                <div>{{ common.formatDays(scope.row.Playtime*1000) }}</div>
+                                <div>{{ common.formatDays(scope.row.playtime*1000) }}</div>
                             </template>
                         </el-table-column>
                         <!-- <el-table-column label="播放开始-结束时间">
@@ -118,7 +114,7 @@
                 <div class="device_form">
                     <el-form ref="form">
                         <el-row type="flex">
-                            <el-input placeholder="请输入渠道ID、加速内容名称、播放URL" style="width:300px" v-model="searchText" class="input-with-select" @keyup.enter.native="searchInfo" maxlength="70">
+                            <el-input placeholder="请输入渠道ID、加速内容名称、播放URL" style="width:300px" v-model="searchText" class="input-with-select"  @change="onChanges" maxlength="70">
                                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
                             </el-input>
                             <div @click="getShow()" class="div_show" style="color:#606266">
@@ -128,23 +124,23 @@
                         </el-row>
                         <el-row type="flex" class="row_activess" v-show="showState">
                             <el-form-item label="播放异常类型：" style="display: flex;">
-                                <el-select v-model="exceptionType" placeholder="请选择" >
-                                  <el-option label="全部" value="-1"></el-option>
-                                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                                </el-select>
+                              <el-select v-model="exceptionType" placeholder="请选择" @change="onChanges">
+                                <el-option label="全部" value="-1"></el-option>
+                                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                              </el-select>
                             </el-form-item>
                             <el-form-item label="播放异常原因：" style="display: flex;">
-                                <el-select v-model="exceptionStatus" placeholder="请选择">
-                                  <el-option label="全部" value="-1"></el-option>
-                                  <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                                </el-select>
+                              <el-select v-model="exceptionStatus" placeholder="请选择" @change="onChanges">
+                                <el-option label="全部" value="-1"></el-option>
+                                <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                              </el-select>
                             </el-form-item>
                             <el-form-item label="时间：" style="display: flex;">
-                                 <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+                              <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
                             </el-form-item>
-                            <el-form-item>
+                            <!-- <el-form-item>
                                 <el-button type="primary" @click="search1">确定</el-button>
-                            </el-form-item>
+                            </el-form-item> -->
                             <el-form-item>
                                 <el-button type="primary" @click="reset()">重置</el-button>
                             </el-form-item>
@@ -189,7 +185,7 @@
                         </el-table-column>
                         <el-table-column label="统计时间">
                             <template slot-scope="scope">
-                              <div>{{ scope.row.startTim | settimes }}</div>
+                              <div>{{ scope.row.timereport | settimes }}</div>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -220,32 +216,216 @@ export default {
       showState: false,
       rotate: false,
       searchText: '',
-      hashidSet: [
+      hashidSets: [
         {
-          value: "1",
-          label: "iOS",
+          value: "全部",
+          label: "全部",
         },
         {
-          value: "0",
-          label: "android",
+          value: "联通",
+          label: "联通",
         },
         {
-          value: "2",
+          value: "移动",
+          label: "移动",
+        },
+        {
+          value: "电信",
+          label: "电信",
+        },
+        {
+          value: "其他",
           label: "其他",
         },
       ],
-      hashidSets: [
+      hashidSet: [
         {
-          value: "1",
-          label: "云链",
+          value: "*",
+          label: "全部地区",
         },
         {
-          value: "2",
-          label: "西柚机",
+          value: "华北",
+          label: "华北",
+          children: [
+            {
+              value: "北京",
+              label: "北京",
+            },
+            {
+              value: "内蒙古",
+              label: "内蒙古",
+            },
+            {
+              value: "山西",
+              label: "山西",
+            },
+            {
+              value: "河北",
+              label: "河北",
+            },
+            {
+              value: "天津",
+              label: "天津",
+            },
+          ],
         },
         {
-          value: "3",
+          value: "西北",
+          label: "西北",
+          children: [
+            {
+              value: "宁夏",
+              label: "宁夏",
+            },
+            {
+              value: "陕西",
+              label: "陕西",
+            },
+            {
+              value: "甘肃",
+              label: "甘肃",
+            },
+            {
+              value: "青海",
+              label: "青海",
+            },
+            {
+              value: "新疆",
+              label: "新疆",
+            },
+          ],
+        },
+        {
+          value: "东北",
+          label: "东北",
+          children: [
+            {
+              value: "黑龙江",
+              label: "黑龙江",
+            },
+            {
+              value: "吉林",
+              label: "吉林",
+            },
+            {
+              value: "辽宁",
+              label: "辽宁",
+            },
+          ],
+        },
+        {
+          value: "华东",
+          label: "华东",
+          children: [
+            {
+              value: "福建",
+              label: "福建",
+            },
+            {
+              value: "江苏",
+              label: "江苏",
+            },
+            {
+              value: "安徽",
+              label: "安徽",
+            },
+            {
+              value: "山东",
+              label: "山东",
+            },
+            {
+              value: "上海",
+              label: "上海",
+            },
+            {
+              value: "浙江",
+              label: "浙江",
+            },
+          ],
+        },
+        {
+          value: "华中",
+          label: "华中",
+          children: [
+            {
+              value: "河南",
+              label: "河南",
+            },
+            {
+              value: "湖北",
+              label: "湖北",
+            },
+            {
+              value: "江西",
+              label: "江西",
+            },
+            {
+              value: "湖南",
+              label: "湖南",
+            },
+          ],
+        },
+        {
+          value: "西南",
+          label: "西南",
+          children: [
+            {
+              value: "贵州",
+              label: "贵州",
+            },
+            {
+              value: "云南",
+              label: "云南",
+            },
+            {
+              value: "重庆",
+              label: "重庆",
+            },
+            {
+              value: "四川",
+              label: "四川",
+            },
+            {
+              value: "西藏",
+              label: "西藏",
+            },
+          ],
+        },
+        {
+          value: "华南",
+          label: "华南",
+          children: [
+            {
+              value: "广东",
+              label: "广东",
+            },
+            {
+              value: "广西",
+              label: "广西",
+            },
+            {
+              value: "海南",
+              label: "海南",
+            },
+          ],
+        },
+        {
+          value: "其他",
           label: "其他",
+          children: [
+            {
+              value: "香港",
+              label: "香港",
+            },
+            {
+              value: "澳门",
+              label: "澳门",
+            },
+            {
+              value: "台湾",
+              label: "台湾",
+            },
+          ],
         },
       ],
       options: [
@@ -275,11 +455,21 @@ export default {
           value: "3",
           label: "无可用节点",
         },
+        {
+          value: "4",
+          label: "请求异常",
+        },
+        {
+          value: "5",
+          label: " P2P播放超时",
+        },
       ],
       valueDomain: "",
       valueContent: "",
       valueChannelId: "",
       valueChanel: "",
+      valueRegion: "",
+      valueIsp: "",
       valueTerminal: "",
       exceptionStatus: "",
       exceptionType: "",
@@ -372,6 +562,10 @@ export default {
         return 'P2P加速禁用';
       }else if(row.exceptionStatus == 3){
         return '无可用节点';
+      }else if(row.exceptionStatus == 4){
+        return '请求异常';
+      }else if(row.exceptionStatus == 5){
+        return 'P2P播放超时';
       }
     },
     getShow() {
@@ -425,7 +619,24 @@ export default {
         this.starttime = times;
         this.endtime = Date.parse(new Date()) / 1000;
       }
+      if(this.activeName == 'first'){
+        this.pageNo = 1;
+        this.videoInfoStatistics();
+      }else{
+        this.pageNo = 1;
+        this.videoExceptionStatistics();
+      }
       
+    },
+    onChanges() {
+
+      if(this.activeName == 'first'){
+        this.pageNo = 1;
+        this.videoInfoStatistics();
+      }else{
+        this.pageNo = 1;
+        this.videoExceptionStatistics();
+      }
     },
     //重置
     reset() {
@@ -445,27 +656,28 @@ export default {
       let params = new Object();
       params.pageNo = this.pageNo - 1;
       params.pageSize = this.pageSize;
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
       if (this.valueContent) {
-        params.urlname = this.valueContent;
+        params.urlName = this.valueContent;
       } else {
-        params.urlname = "*";
+        params.urlName = "*";
       }
       if (this.valueChannelId !== "") {
-        params.channelid = this.valueChannelId;
+        params.channelId = this.valueChannelId;
       } else {
-        params.channelid = "*";
+        params.channelId = "*";
       }
-      if (this.valueChanel != "") {
-        params.ipfschanel = parseInt(this.valueChanel);
+      if (this.valueRegion[1]) {
+        params.region = this.valueRegion[1];
       } else {
-        params.ipfschanel = -1;
+        params.region = "*";
       }
-      if (this.valueTerminal != "") {
-        params.terminalname = parseInt(this.valueTerminal);
+
+      if (this.valueIsp != "" && this.valueIsp != "全部") {
+        params.isp = this.valueIsp;
       } else {
-        params.terminalname = -1;
+        params.isp = "*";
       }
       if (this.valueDomain !== "") {
         params.domain = this.valueDomain;
@@ -493,27 +705,27 @@ export default {
       let params = new Object();
       params.pageNo = this.pageNo1 - 1;
       params.pageSize = this.pageSize1;
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
       var reg = /^\d{12}$/;
       if(this.searchText != ""){
         if(reg.test(this.searchText)){
-          params.urlname = "*";
-          params.channelid = this.searchText;
-          params.playurl = "*";
+          params.urlName = "*";
+          params.channelId = this.searchText;
+          params.playUrl = "*";
         }else if(this.searchText.startsWith('http')){
-          params.urlname = "*";
-          params.channelid = "*";
-          params.playurl = this.searchText;
+          params.urlName = "*";
+          params.channelId = "*";
+          params.playUrl = this.searchText;
         }else{
-          params.urlname = this.searchText;
-          params.channelid = "*";
-          params.playurl = "*";
+          params.urlName = this.searchText;
+          params.channelId = "*";
+          params.playUrl = "*";
         }
       }else{
-        params.urlname = "*";
-        params.channelid = "*";
-        params.playurl = "*";
+        params.urlName = "*";
+        params.channelId = "*";
+        params.playUrl = "*";
       }
       if (this.exceptionType != "") {
         params.exceptionType = parseInt(this.exceptionType);

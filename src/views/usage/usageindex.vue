@@ -1,49 +1,93 @@
 <template>
-	<section class="myself-container content" @click="closeSel">
-		<div class="top_title">节点流量用量</div>
-		<div class="user-title" style="display: flex;flex-flow: column;">
-			<div class="resources_con">
-				<div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-					<el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;"></el-input>
-					<el-input v-model="value1" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;"></el-input>
+  <section class="myself-container content" @click="closeSel">
+    <div class="top_title">节点流量用量</div>
+    <div class="user-title" style="display: flex;flex-flow: column;">
+      <div class="resources_con">
+        <div
+          style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;"
+        >
+          <el-input
+            v-model="value1Activechanid"
+            placeholder="请输入渠道ID"
+            style="width:160px;margin-right: 10px;"
+            @keyup.enter.native="onChanges"
+          >
+            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+          </el-input>
+          <el-input
+            v-model="value1"
+            placeholder="请输入加速内容名称"
+            style="width:160px;margin-right: 10px;"
+            @keyup.enter.native="onChanges"
+          >
+            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+          </el-input>
 
-					<el-input v-model="valuedomian" placeholder="请输入加速域名" style="width:160px;margin-right: 10px;"></el-input>
-					<el-select v-model="value1acce1" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;">
-						<el-option label="全部" value="-1"></el-option>
-						<el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-					</el-select>
+          <el-input
+            v-model="valuedomian"
+            placeholder="请输入域名"
+            style="width:160px;margin-right: 10px;"
+            @keyup.enter.native="onChanges"
+          >
+            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+          </el-input>
+          <el-select
+            v-model="value1acce1"
+            placeholder="全部节点渠道"
+            style="width: 10%;margin-right: 10px;"
+            @change="onChanges"
+          >
+            <el-option label="全部" value="-1"></el-option>
+            <el-option
+              v-for="(item, index) in hashidSets"
+              :key="index"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
 
-
-					<el-button-group>
-						<el-button v-show="!shoudzyx" @click="today()" label="one">今天</el-button>
-						<el-button v-show="!shoudzyx" @click="yesterday()" label="two">昨天</el-button>
-						<el-button v-show="!shoudzyx" @click="sevendat()" label="three">近7天</el-button>
-						<el-button v-show="!shoudzyx" @click="thirtyday()" label="four">近30天</el-button>
-						<el-button @click="showzdyx">自定义
-							<i class="el-icon-date"></i>
-						</el-button>
-					</el-button-group>
-					<el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-					<el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
-				</div>
-				<div class="user_item">
-					<div class="item_left" style="width:100%;border:none;">
-						<div class="item_text" style="text-align:center;">
-							总流量
-						</div>
-						<div class="item_count" style="text-align:center;">
-							<span>{{ totalYl | setbytes }}</span>
-						</div>
-					</div>
-				</div>
-				<div class="device_form">
-					<div id="myChartMap" :style="{ height: '607px' }"></div>
-				</div>
-				<div class="device_form" style="display: flex;justify-content: flex-start;position:relative;overflow:initial;">
-					<div style="width: 150px;height: 40px;border: 1px solid #C0C4CC;color: #000;text-align:center;line-height:40px;margin-right:30px;border-radius: 2px;">
-						用户对比
-					</div>
-					<!-- <el-select
+          <el-button-group>
+            <el-button v-show="!shoudzyx" @click="today()" label="one">今天</el-button>
+            <el-button v-show="!shoudzyx" @click="yesterday()" label="two">昨天</el-button>
+            <el-button v-show="!shoudzyx" @click="sevendat()" label="three">近7天</el-button>
+            <el-button v-show="!shoudzyx" @click="thirtyday()" label="four">近30天</el-button>
+            <el-button @click="showzdyx">
+              自定义
+              <i class="el-icon-date"></i>
+            </el-button>
+          </el-button-group>
+          <el-date-picker
+            v-show="shoudzyx"
+            style="margin-left:10px;"
+            v-model="val2"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            align="left"
+            @change="gettimes"
+          ></el-date-picker>
+          <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button> -->
+        </div>
+        <div class="user_item">
+          <div class="item_left" style="width:100%;border:none;">
+            <div class="item_text" style="text-align:center;">总流量</div>
+            <div class="item_count" style="text-align:center;">
+              <span>{{ totalYl | setbytes }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="device_form">
+          <div id="myChartMap" :style="{ height: '607px' }"></div>
+        </div>
+        <div
+          class="device_form"
+          style="display: flex;justify-content: flex-start;position:relative;overflow:initial;"
+        >
+          <div
+            style="width: 150px;height: 40px;border: 1px solid #C0C4CC;color: #000;text-align:center;line-height:40px;margin-right:30px;border-radius: 2px;"
+          >用户对比</div>
+          <!-- <el-select
 						v-model="valuess"
 						filterable
 						placeholder="请选择对比用户"
@@ -58,60 +102,83 @@
 							:value="item.value"
 						>
 						</el-option>
-					</el-select> -->
-					<!-- <el-button
+          </el-select>-->
+          <!-- <el-button
 						style="margin-left:10px;"
 						type="primary"
 						@click="querychanIds()"
 						>确定</el-button
 					>
-                     -->
-					<div v-show="duibi" style="width: 234px;position:absolute;top: -340px;left: 211px;z-index: 100;height: 350px;border-radius: 5px;box-shadow: -1px 5px 10px -3px;" class="shopw" id="shopw">
-						<el-table ref="multipleTable" :data="optionssearch" tooltip-effect="dark" :header-cell-class-name="cellClass" style="width:234px;" height="350" @selection-change="handleSelectionChange">
-							<el-table-column type="selection" width="30">
-							</el-table-column>
-							<el-table-column align="right" width="200">
-								<template slot="header" slot-scope="scope">
-									<el-input v-model="search" size="mini" placeholder="输入用户id" @keyup.enter.native="searchid" />
-								</template>
-								<template slot-scope="scope">{{ scope.row.label }}
-								</template>
-							</el-table-column>
-						</el-table>
-					</div>
+          -->
+          <div
+            v-show="duibi"
+            style="width: 234px;position:absolute;top: -340px;left: 211px;z-index: 100;height: 350px;border-radius: 5px;box-shadow: -1px 5px 10px -3px;"
+            class="shopw"
+            id="shopw"
+          >
+            <el-table
+              ref="multipleTable"
+              :data="optionssearch"
+              tooltip-effect="dark"
+              :header-cell-class-name="cellClass"
+              style="width:234px;"
+              height="350"
+              @selection-change="handleSelectionChange"
+            >
+              <el-table-column type="selection" width="30"></el-table-column>
+              <el-table-column align="right" width="200">
+                <template slot="header" slot-scope="scope">
+                  <el-input
+                    v-model="search"
+                    size="mini"
+                    placeholder="输入用户id"
+                    @keyup.enter.native="searchid"
+                  />
+                </template>
+                <template slot-scope="scope">{{ scope.row.label }}</template>
+              </el-table-column>
+            </el-table>
+          </div>
 
-					<el-button type="primary" icon="el-icon-plus" id="sellineName" @click="showduibi">添加对比</el-button>
-				</div>
+          <el-button type="primary" icon="el-icon-plus" id="sellineName" @click="showduibi">添加对比</el-button>
+        </div>
 
-				<div class="devide_table">
-					<el-row type="flex" class="row_active">
-						<el-col :span="24" style="text-align:left;font-weight: bold;padding-left: 10px;">资源用量表</el-col>
-					</el-row>
-					<el-row type="flex" class="row_active">
-						<el-col :span="24">
-							<el-table :data="tablecdn" border style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
-								<el-table-column label="总流量">
-									<template slot-scope="scope">
-										<div>
-											{{ scope.row.dataFlow | setbytes }}
-										</div>
-									</template>
-								</el-table-column>
-								<el-table-column label="时间">
-									<template slot-scope="scope">
-										<div>
-											{{ scope.row.time | settimes }}
-										</div>
-									</template>
-								</el-table-column>
-							</el-table>
-							<fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :pagesa="total_cnt"></fenye>
-						</el-col>
-					</el-row>
-				</div>
-			</div>
-		</div>
-	</section>
+        <div class="devide_table">
+          <el-row type="flex" class="row_active">
+            <el-col :span="24" style="text-align:left;font-weight: bold;padding-left: 10px;">资源用量表</el-col>
+          </el-row>
+          <el-row type="flex" class="row_active">
+            <el-col :span="24">
+              <el-table
+                :data="tablecdn"
+                border
+                style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;"
+                :cell-style="rowClass"
+                :header-cell-style="headClass"
+              >
+                <el-table-column label="总流量">
+                  <template slot-scope="scope">
+                    <div>{{ scope.row.dataFlow | setbytes }}</div>
+                  </template>
+                </el-table-column>
+                <el-table-column label="时间">
+                  <template slot-scope="scope">
+                    <div>{{ scope.row.time | settimes }}</div>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <fenye
+                style="float:right;margin:10px 0 0 0;"
+                @handleCurrentChange="handleCurrentChange"
+                @handleSizeChange="handleSizeChange"
+                :pagesa="total_cnt"
+              ></fenye>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -135,7 +202,7 @@ import {
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
-import _ from 'lodash';
+import _ from "lodash";
 
 export default {
   data() {
@@ -347,15 +414,15 @@ export default {
       console.log(val);
       let arrlist = [];
       if (val.length > 0) {
-        val.forEach(item => {
+        val.forEach((item) => {
           arrlist.push(String(item.value));
         });
-        alert(456)
+        alert(456);
         this.chanIds = arrlist;
         this.gettable1(arrlist);
         this.gettable2(arrlist);
       } else {
-        alert(123)
+        alert(123);
         this.chanIds = [];
         this.gettable1(val);
         this.gettable2(val);
@@ -427,9 +494,9 @@ export default {
         params.domain = "*";
       }
       if (this.value1acce1 != "") {
-        params.ipfschanel = parseInt(this.value1acce1);
+        params.ipfsChanel = parseInt(this.value1acce1);
       } else {
-        params.ipfschanel = -1;
+        params.ipfsChanel = -1;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -438,55 +505,21 @@ export default {
       (params.pageNo = 0),
         (params.pageSize = 10),
         export_manage_dataflow_table_file(params)
-          .then(res => {
+          .then((res) => {
             if (res.status == 0) {
               window.open(res.msg, "_blank");
             }
           })
-          .catch(err => {});
+          .catch((err) => {});
     },
 
-    // //输入渠道ID查询
-    // onchanidChange() {
-    //   this.options1chanid = [];
-    //   this.pageActive = 0;
-    //   if (this.value1Activechanid.length != 12) {
-    //     return false;
-    //   }
-    //   this.pageNo = 1;
-    //   this.queryInfoVideo();
-    // },
-    // //查询视频名称
-    // queryInfoVideo() {
-    //   let param = new Object();
+    //输入渠道ID查询
+    onChanges() {
+      this.pageNo = 1;
+      this.gettable1();
+      this.gettable2();
+    },
 
-    //   param.chanid = this.value1Activechanid;
-
-    //   param.page = this.pageActive;
-    //   getterminal(param)
-    //     .then(res => {
-    //       if (res.status == 0) {
-    //         this.hashidSet = [];
-    //         res.result.cols.forEach((item, index) => {
-    //           let obj = {};
-    //           obj.value = item.name;
-    //           obj.label = item.name;
-    //           this.hashidSet.push(obj);
-    //         });
-    //         this.options1chanid = this.options1chanid.concat(this.labelData);
-    //         if (res.result.les_count == 0) {
-    //           return false;
-    //         } else {
-    //           this.pageActive++;
-    //           this.queryInfoVideo();
-    //         }
-    //       } else {
-    //       }
-    //     })
-    //     .catch(error => {
-    //       console.log(error);
-    //     });
-    // },
     //查询用户id
     querychanId(data) {
       let param = new Object();
@@ -501,7 +534,7 @@ export default {
       param.order = "time_create desc";
       param.page = this.pageActive1;
       cloudUserList(param)
-        .then(res => {
+        .then((res) => {
           if (res.status == 0) {
             if (data) {
               let obj = {};
@@ -528,7 +561,7 @@ export default {
           } else {
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -592,9 +625,9 @@ export default {
         params.domain = "*";
       }
       if (this.value1acce1 != "") {
-        params.ipfschanel = parseInt(this.value1acce1);
+        params.ipfsChanel = parseInt(this.value1acce1);
       } else {
-        params.ipfschanel = -1;
+        params.ipfsChanel = -1;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -603,7 +636,7 @@ export default {
       (params.pageNo = 0),
         (params.pageSize = 10),
         manage_dataflow_curve(params)
-          .then(res => {
+          .then((res) => {
             this.totalYl = res.data.total;
             let nowlengh = res.data.data.length;
             let nowtemp = res.data.data;
@@ -619,8 +652,7 @@ export default {
               let obj = {};
               obj.type = "bar";
               obj.barGap = "6%";
-              obj.barMaxWidth=30,
-              obj.name = res.data.data[i].channelid;
+              (obj.barMaxWidth = 30), (obj.name = res.data.data[i].channelid);
               let nowarr1 = [];
               nowtemp[i].dataflowArray.forEach((item, index) => {
                 nowarr1.push(this.common.formatByteNum(item, this.flowunit));
@@ -632,10 +664,10 @@ export default {
             res.data.data[0].timeArray.forEach((item, index) => {
               this.timeArray.push(getymdtime1(item));
             });
-            
+
             this.drawLine(nowarr, this.timeArray, childlist);
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           });
     },
@@ -672,22 +704,22 @@ export default {
         params.domain = "*";
       }
       if (this.value1acce1 != "") {
-        params.ipfschanel = parseInt(this.value1acce1);
+        params.ipfsChanel = parseInt(this.value1acce1);
       } else {
-        params.ipfschanel = -1;
+        params.ipfsChanel = -1;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
         this.endtime
       );
       manage_dataflow_table(params)
-        .then(res => {
+        .then((res) => {
           if (res.status == 0) {
             this.tablecdn = res.data.list;
             this.total_cnt = res.data.totalCnt;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -711,8 +743,9 @@ export default {
       this.starttime = times;
       this.endtime = Date.parse(new Date()) / 1000;
       this.timeUnit = 60;
-      // this.gettable1();
-      // this.gettable2();
+      this.pageNo = 1;
+      this.gettable1();
+      this.gettable2();
       this.$refs.multipleTable.clearSelection();
     },
     //昨天
@@ -722,8 +755,9 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 1;
       this.endtime = times;
       this.timeUnit = 60;
-      // this.gettable1();
-      // this.gettable2();
+      this.pageNo = 1;
+      this.gettable1();
+      this.gettable2();
       this.$refs.multipleTable.clearSelection();
     },
     //七天
@@ -733,8 +767,9 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 6;
       this.endtime = times;
       this.timeUnit = 60 * 24;
-      // this.gettable1();
-      // this.gettable2();
+      this.pageNo = 1;
+      this.gettable1();
+      this.gettable2();
       this.$refs.multipleTable.clearSelection();
     },
     //三十天
@@ -744,8 +779,9 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 29;
       this.endtime = times;
       this.timeUnit = 60 * 24;
-      // this.gettable1();
-      // this.gettable2();
+      this.pageNo = 1;
+      this.gettable1();
+      this.gettable2();
       this.$refs.multipleTable.clearSelection();
     },
     //自定义时间
@@ -763,6 +799,9 @@ export default {
         this.timeUnit = 60 * 24;
       }
       this.$refs.multipleTable.clearSelection();
+      this.pageNo = 1;
+      this.gettable1();
+      this.gettable2()
     },
 
     // 表头样式设置
@@ -816,7 +855,7 @@ export default {
         position: {
           options: echarts.util.reduce(
             posList,
-            function(map, pos) {
+            function (map, pos) {
               map[pos] = pos;
               return map;
             },
@@ -835,7 +874,7 @@ export default {
         verticalAlign: "middle",
         position: "insideBottom",
         distance: 15,
-        onChange: function() {
+        onChange: function () {
           var labelOption = {
             normal: {
               rotate: app.config.rotate,
@@ -914,7 +953,7 @@ export default {
               title: "导出",
               icon:
                 "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
-              onclick: function() {
+              onclick: function () {
                 _this.exoprtant_Yl();
               },
             },
@@ -934,8 +973,7 @@ export default {
           {
             type: "category",
             axisTick: { show: false },
-			      data: y,
-			
+            data: y,
           },
         ],
         yAxis: [
@@ -952,16 +990,16 @@ export default {
             end: 50,
             throttle: 10,
             zoomLock: false,
-            show: false
+            show: false,
           },
           {
-            type: 'inside',
+            type: "inside",
             realtime: true,
             start: 0,
-            end: 50
-          }
+            end: 50,
+          },
         ],
-        series: x
+        series: x,
       };
       myChart.clear();
       myChart.setOption(options);

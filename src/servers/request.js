@@ -39,7 +39,7 @@ var toHideLoading = _.debounce(() => {
         loading = null;
     }
 }, 300);
-axios.defaults.timeout = 10000
+axios.defaults.timeout = 15000
 // axios.defaults.baseURL = ''
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 

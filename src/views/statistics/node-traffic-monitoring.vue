@@ -6,10 +6,16 @@
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="节点流量" name="first" :lazy="true">
             <div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-              <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:10%;margin-right: 10px;"></el-input>
-              <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;"></el-input>
-              <el-input v-model="valueDomain" placeholder="请输入域名" style="width:10%;margin-right: 10px;"></el-input>
-              <el-select v-model="valueChanel" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;">
+              <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-input v-model="valueDomain" placeholder="请输入域名" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-select v-model="valueChanel" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;" @change="onChanges">
                 <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -34,7 +40,7 @@
                 >自定义</el-button
 						  >
               <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-              <el-button style="margin-left:10px;" type="primary" @click="seachtu()">确定</el-button>
+              <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu()">确定</el-button> -->
             </div>
             <div class="device_form" style="margin-top: 0px;">
               <div id="myChartMap2" :style="{ height: '607px' }"></div>
@@ -89,11 +95,17 @@
           </el-tab-pane>
           <el-tab-pane label="TOP加速流量" name="second" :lazy="true">
             <div style="display: flex;align-items: center; flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-              <el-input v-model="valueChannelId1" placeholder="请输入渠道ID" style="width:10%;margin-right: 10px;"></el-input>
-              <el-input v-model="valueDomain1" placeholder="请输入域名" style="width:10%;margin-right: 10px;"></el-input>
-              <el-input v-model="valueContent1" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;"></el-input>
+              <el-input v-model="valueChannelId1" placeholder="请输入渠道ID" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-input v-model="valueDomain1" placeholder="请输入域名" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-input v-model="valueContent1" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
               <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-              <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button>
+              <!-- <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button> -->
             </div>
             <div class="devide_table">
               <el-radio-group 
@@ -107,7 +119,7 @@
               </div>
               <el-row v-show="radioTop == 1" type="flex" class="row_active">
                 <el-col :span="24">
-                  <el-table :data="tableTop" border style="width: 98%;margin:10px;max-height: 530px;overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table :data="tableTop" border max-height = "530px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
                     <el-table-column label="渠道ID">
                     <template slot-scope="scope">
                         <div>{{ scope.row.channelid }}</div>
@@ -146,7 +158,7 @@
               </el-row>
               <el-row v-show="radioTop != 1" type="flex" class="row_active">
                 <el-col :span="24">
-                  <el-table :data="tableTop1" border style="width: 98%;margin:10px;max-height: 530px;overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table :data="tableTop1" border max-height = "530px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
                     <el-table-column label="渠道ID">
                     <template slot-scope="scope">
                         <div>{{ scope.row.channelid }}</div>
@@ -235,11 +247,11 @@ export default {
       valueDomain1: "",
       valueContent1: "",
       valueChannelId1: "",
-      valueChanel1: "-1",
+      valueChanel1: "",
       valueDomain2: "",
       valueContent2: "",
       valueChannelId2: "",
-      valueChanel2: "-1",
+      valueChanel2: "",
       showzdy: false,
       tablecdn: [],
       tableZb: [],
@@ -433,16 +445,6 @@ export default {
       this.pageNo2 = pages;
       this.node_traffic_table();
     },
-    //自定义时间
-    gettimes(cal) {
-      this.starttime = dateToMs(this.val2[0]);
-      this.endtime = dateToMs(this.val2[1]);
-      if (this.endtime - this.starttime <= 86400) {
-        this.timeUnit = 60 * 2;
-      } else if (this.endtime - this.starttime > 86400) {
-        this.timeUnit = 60 * 24;
-      }
-    },
     //自定义事件组件
     select_time() {
 			if (this.radio == 1) {
@@ -460,26 +462,41 @@ export default {
 			} else if (this.radio == 5) {
 				this.showzdy = true;
 			}
-		},
+    },
+    onChanges() {
+      if(this.activeName == 'first'){
+        this.pageNo = 1;
+        this.getNodeTrafficCurve();
+        this.node_traffic_table();
+      }else{
+        if(this.activeName1 = 'first'){
+          this.pageNo = 1;
+          this.topAccelcntRanking();
+        }else{
+          this.pageNo = 1;
+          this.topDataflowRanking();
+        }
+      }
+    },
     //节点流量图
     getNodeTrafficCurve() {
       let params = new Object();
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
       if (this.valueContent) {
         params.urlName = this.valueContent;
       } else {
         params.urlName = "*";
       }
       if (this.valueChannelId !== "") {
-        params.channelid = this.valueChannelId;
+        params.channelId = this.valueChannelId;
       } else {
-        params.channelid = "*";
+        params.channelId = "*";
       }
       if (this.valueChanel != "") {
-        params.ipfschanel = parseInt(this.valueChanel);
+        params.ipfsChanel = parseInt(this.valueChanel);
       } else {
-        params.ipfschanel = -1;
+        params.ipfsChanel = -1;
       }
 
       if (this.valueDomain !== "") {
@@ -523,8 +540,8 @@ export default {
     //节点流量表
     node_traffic_table() {
       let params = new Object();
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
       params.pageNo = this.pageNo2 - 1;
       params.pageSize = this.pageSize2;
       if (this.valueContent) {
@@ -533,14 +550,14 @@ export default {
         params.urlName = "*";
       }
       if (this.valueChannelId !== "") {
-        params.channelid = this.valueChannelId;
+        params.channelId = this.valueChannelId;
       } else {
-        params.channelid = "*";
+        params.channelId = "*";
       }
-      if (this.valueChanel !== "-1") {
-        params.ipfschanel = parseInt(this.valueChanel);
+      if (this.valueChanel !== "") {
+        params.ipfsChanel = parseInt(this.valueChanel);
       } else {
-        params.ipfschanel = -1;
+        params.ipfsChanel = -1;
       }
 
       if (this.valueDomain !== "") {
@@ -570,23 +587,23 @@ export default {
     //下载节点流量图表
     exoprtNodeTraffic() {
       let params = new Object();
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
       // params.chanId = this.chanid + "";
       if (this.valueContent) {
-        params.urlname = this.valueContent;
+        params.urlName = this.valueContent;
       } else {
-        params.urlname = "*";
+        params.urlName = "*";
       }
       if (this.valueChannelId !== "") {
-        params.channelid = this.valueChannelId;
+        params.channelId = this.valueChannelId;
       } else {
-        params.channelid = "*";
+        params.channelId = "*";
       }
       if (this.valueChanel != "") {
-        params.ipfschanel = parseInt(this.valueChanel);
+        params.ipfsChanel = parseInt(this.valueChanel);
       } else {
-        params.ipfschanel = -1;
+        params.ipfsChanel = -1;
       }
 
       if (this.valueDomain !== "") {
@@ -613,21 +630,21 @@ export default {
     //TOP加速次数排行
     topAccelcntRanking() {
       let params = new Object();
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
       params.pageNo = this.pageNo - 1;
       params.pageSize = this.pageSize;
       // params.chanId = this.chanid + "";
       if (this.valueContent1) {
-        params.urlname = this.valueContent1;
+        params.urlName = this.valueContent1;
       } else {
-        params.urlname = "*";
+        params.urlName = "*";
       }
       
       if (this.valueChannelId1 !== "") {
-        params.channelid = this.valueChannelId1;
+        params.channelId = this.valueChannelId1;
       } else {
-        params.channelid = "*";
+        params.channelId = "*";
       }
 
       if (this.valueDomain1 !== "") {
@@ -656,20 +673,20 @@ export default {
     //TOP加速流量排行
     topDataflowRanking() {
       let params = new Object();
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
       params.pageNo = this.pageNo1 - 1;
       params.pageSize = this.pageSize1;
       if (this.valueContent1) {
-        params.urlname = this.valueContent1;
+        params.urlName = this.valueContent1;
       } else {
-        params.urlname = "*";
+        params.urlName = "*";
       }
       
       if (this.valueChannelId1 !== "") {
-        params.channelid = this.valueChannelId1;
+        params.channelId = this.valueChannelId1;
       } else {
-        params.channelid = "*";
+        params.channelId = "*";
       }
 
       if (this.valueDomain1 !== "") {
@@ -705,20 +722,20 @@ export default {
 
     toExportAccelcntExcel() {
       let params = new Object();
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
       params.pageNo = this.pageNo1 - 1;
       params.pageSize = this.pageSize1;
       if (this.valueContent1) {
-        params.urlname = this.valueContent1;
+        params.urlName = this.valueContent1;
       } else {
-        params.urlname = "*";
+        params.urlName = "*";
       }
       
       if (this.valueChannelId1 !== "") {
-        params.channelid = this.valueChannelId1;
+        params.channelId = this.valueChannelId1;
       } else {
-        params.channelid = "*";
+        params.channelId = "*";
       }
 
       if (this.valueDomain1 !== "") {
@@ -743,19 +760,19 @@ export default {
 
     toExportDataflowExcel() {
       let params = new Object();
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
       params.pageNo = this.pageNo1 - 1;
       params.pageSize = this.pageSize1;
       if (this.valueContent1) {
-        params.urlname = this.valueContent1;
+        params.urlName = this.valueContent1;
       } else {
-        params.urlname = "*";
+        params.urlName = "*";
       }
       if (this.valueChannelId1 !== "") {
-        params.channelid = this.valueChannelId1;
+        params.channelId = this.valueChannelId1;
       } else {
-        params.channelid = "*";
+        params.channelId = "*";
       }
       if (this.valueDomain1 !== "") {
         params.domain = this.valueDomain1;
@@ -836,12 +853,26 @@ export default {
     },
     //自定义时间
     gettimes(cal) {
-      this.starttime = dateToMs(this.val2[0]);
-      this.endtime = dateToMs(this.val2[1]);
+      let times = parseInt(new Date(new Date()).getTime() / 1000);
+      this.starttime = this.val2 ? dateToMs(this.val2[0]) : times - 24 * 60 * 60 * 29;;
+      this.endtime = this.val2 ? dateToMs(this.val2[1]) : times;
       if (this.endtime - this.starttime <= 86400) {
         this.timeUnit = 60 * 2;
       } else if (this.endtime - this.starttime > 86400) {
         this.timeUnit = 60 * 24;
+      }
+      if(this.activeName == 'first'){
+        this.pageNo = 1;
+        this.getNodeTrafficCurve();
+        this.node_traffic_table();
+      }else{
+        if(this.activeName1 = 'first'){
+          this.pageNo = 1;
+          this.topAccelcntRanking();
+        }else{
+          this.pageNo = 1;
+          this.topDataflowRanking();
+        }
       }
     },
     
