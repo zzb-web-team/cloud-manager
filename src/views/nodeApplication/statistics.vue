@@ -355,9 +355,9 @@ export default {
     exoprtant_topisp() {
       let params = new Object();
       params.chanId = this.chanid + "";
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
-      params.time_unit = this.timeUnit;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      params.timeUnit = this.timeUnit;
       if (this.value1fileName) {
         params.fileName = this.value1fileName;
       } else {
@@ -383,8 +383,7 @@ export default {
       } else {
         params.acce = "-1";
       }
-      params.top = 10;
-      params.time_unit = this.common.timeUnitActive2(
+      params.timeUnit = this.common.timeUnitActive2(
         this.starttime,
         this.endtime
       );
@@ -401,9 +400,9 @@ export default {
     exoprtant_topregion() {
       let params = new Object();
       params.chanId = this.chanid + "";
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
-      params.time_unit = this.timeUnit;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      params.timeUnit = this.timeUnit;
       if (this.value1fileName) {
         params.fileName = this.value1fileName;
       } else {
@@ -429,8 +428,7 @@ export default {
       } else {
         params.acce = "-1";
       }
-      params.top = 10;
-      params.time_unit = this.common.timeUnitActive(
+      params.timeUnit = this.common.timeUnitActive(
         this.starttime,
         this.endtime
       );
@@ -446,9 +444,9 @@ export default {
     exoprtant_content() {
       let params = new Object();
       params.chanId = this.chanid + "";
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
-      params.time_unit = this.timeUnit;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      params.timeUnit = this.timeUnit;
       if (this.value1fileName) {
         params.fileName = this.value1fileName;
       } else {
@@ -474,8 +472,7 @@ export default {
       } else {
         params.acce = "-1";
       }
-      params.top = 10;
-      params.time_unit = this.common.timeUnitActive(
+      params.timeUnit = this.common.timeUnitActive(
         this.starttime,
         this.endtime
       );
@@ -525,7 +522,7 @@ export default {
       this.uvArray = [];
       this.pvArray = [];
       this.timeArray = [];
-      params.time_unit = this.common.timeUnitActive2(
+      params.timeUnit = this.common.timeUnitActive2(
         this.starttime,
         this.endtime
       );
@@ -581,10 +578,10 @@ export default {
      
       let params = new Object();
       params.chanId = this.chanid + "";
-      params.time_unit = this.timeUnit;
+      params.timeUnit = this.timeUnit;
       if (data == 0) {
-        params.start_ts = this.starttime;
-        params.end_ts = this.endtime;
+        params.startTs = this.starttime;
+        params.endTs = this.endtime;
         if (this.value1fileName) {
           params.fileName = this.value1fileName;
         } else {
@@ -616,13 +613,10 @@ export default {
         this.pvArray = [];
         this.timeArray = [];
 
-        params.time_unit = this.common.timeUnitActive2(
+        params.timeUnit = this.common.timeUnitActive2(
           this.starttime,
           this.endtime
         );
-
-        params.top = 10;
-
         pv_uv_curve(params)
           .then(res => {
             this.totalPV = res.data.totalPV;
@@ -678,7 +672,7 @@ export default {
           params.acce = "-1";
         }
         params.top = 10;
-        params.time_unit = this.common.timeUnitActive(
+        params.timeUnit = this.common.timeUnitActive(
           this.starttime,
           this.endtime
         );

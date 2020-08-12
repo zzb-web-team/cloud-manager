@@ -13,7 +13,7 @@
                     <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
                 <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="hashidSet" ref="cascaderAddr" :show-all-levels="false" v-model="valueRegion" @change="onChanges"></el-cascader>
-                <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+                <el-date-picker style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
                 <!-- <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button> -->
                 </div>
                 <div class="devide_table">
@@ -136,7 +136,7 @@
                               </el-select>
                             </el-form-item>
                             <el-form-item label="时间：" style="display: flex;">
-                              <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+                              <el-date-picker style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
                             </el-form-item>
                             <!-- <el-form-item>
                                 <el-button type="primary" @click="search1">确定</el-button>
@@ -183,7 +183,12 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="统计时间">
+                        <el-table-column label="异常次数">
+                            <template slot-scope="scope">
+                              <div>{{ scope.row.times }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="时间">
                             <template slot-scope="scope">
                               <div>{{ scope.row.timereport | settimes }}</div>
                             </template>

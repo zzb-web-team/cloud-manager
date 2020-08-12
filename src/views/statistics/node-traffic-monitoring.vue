@@ -48,7 +48,7 @@
             <div class="devide_table">
               <el-row type="flex" class="row_active">
                 <el-col :span="24">
-                  <el-table :data="tableZb" border style="width: 98%;margin:10px;max-height: 560px;overflow-y: auto;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table :data="tableZb" border max-height="560px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
                     <el-table-column label="渠道ID">
                       <template slot-scope="scope">
                         <div>{{ scope.row.channelid }}</div>
@@ -148,7 +148,7 @@
                     <el-table-column label="加速次数占比" >
                       <template slot-scope="scope">
                           <div style="display: flex;justify-content: center;">
-                            <div>({{ scope.row.accelCntpercent | percentss }})</div>
+                            <div>{{ scope.row.accelCntpercent | percentss }}</div>
                           </div>
                       </template>
                     </el-table-column>
@@ -187,7 +187,7 @@
                     <el-table-column label="流量占比" >
                       <template slot-scope="scope">
                           <div style="display: flex;justify-content: center;">
-                            <div>({{ scope.row.dataflowpercent | percentss }})</div>
+                            <div>{{ scope.row.dataflowpercent | percentss }}</div>
                           </div>
                       </template>
                     </el-table-column>
@@ -469,7 +469,7 @@ export default {
         this.getNodeTrafficCurve();
         this.node_traffic_table();
       }else{
-        if(this.activeName1 = 'first'){
+        if(this.radioTop ==1){
           this.pageNo = 1;
           this.topAccelcntRanking();
         }else{
@@ -866,7 +866,7 @@ export default {
         this.getNodeTrafficCurve();
         this.node_traffic_table();
       }else{
-        if(this.activeName1 = 'first'){
+        if(this.radioTop ==1){
           this.pageNo = 1;
           this.topAccelcntRanking();
         }else{
