@@ -9,13 +9,13 @@
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
               </el-input>
-              <el-input v-model="valuea1" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
               <el-input v-model="value1Activechanidactive" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
               </el-input>
-              <el-select v-model="value1acce1" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="onChanges">
+              <el-input v-model="valuea1" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-select v-model="value1acce1" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -122,9 +122,13 @@
           </el-tab-pane>
           <el-tab-pane label="播放流量终端" name="four" :lazy="true">
             <div style="display: flex;align-items: center; flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onChanges" style="width:160px;margin-right: 10px;"></el-input>
-              <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onChanges" style="width:160px;margin-right: 10px;"></el-input>
-              <el-select v-model="value1acce1" placeholder="终端" @change="onChanges" style="width: 10%;margin-right: 10px;">
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onChanges" style="width:160px;margin-right: 10px;">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onChanges" style="width:160px;margin-right: 10px;">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-select v-model="value1acce1" placeholder="全部终端类型" @change="onChanges" style="width: 10%;margin-right: 10px;">
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -185,7 +189,7 @@ export default {
       dataAry1: [],
       dataAry2: [],
       value1acce: "-1",
-      value1acce1: "-1",
+      value1acce1: "",
       valueacce: "-1",
       valueChanel: "",
       valueChanel1: "",
@@ -705,9 +709,9 @@ export default {
         params.terminalName = -1;
       }
       if (this.valueChanel !== "") {
-        params.ipfsChanel = parseInt(this.valueChanel);
+        params.ipfsChannel = parseInt(this.valueChanel);
       } else {
-        params.ipfsChanel = -1;
+        params.ipfsChannel = -1;
       }
 
       if (this.value1Activechanidactive !== "") {
@@ -784,9 +788,9 @@ export default {
         params.terminalName = -1;
       }
       if (this.valueChanel !== "") {
-        params.ipfsChanel = parseInt(this.valueChanel);
+        params.ipfsChannel = parseInt(this.valueChanel);
       } else {
-        params.ipfsChanel = -1;
+        params.ipfsChannel = -1;
       }
       if (this.value1Activechanidactive !== "") {
         params.domain = this.value1Activechanidactive;
@@ -837,9 +841,9 @@ export default {
         params.terminalName = -1;
       }
       if (this.valueChanel1 !== "") {
-        params.ipfschanel1 = parseInt(this.valueChanel1);
+        params.ipfsChannel = parseInt(this.valueChanel1);
       } else {
-        params.ipfschanel = -1;
+        params.ipfsChannel = -1;
       }
       if (this.value1Activechanidactive !== "") {
         params.domain = this.value1Activechanidactive;
@@ -957,9 +961,9 @@ export default {
       }
 
       if (this.valueChanel1 !== "") {
-        params.ipfschanel1 = parseInt(this.valueChanel1);
+        params.ipfsChannel = parseInt(this.valueChanel1);
       } else {
-        params.ipfschanel = -1;
+        params.ipfsChannel = -1;
       }
 
       if (this.value1Activechanidactive !== "") {
@@ -1007,9 +1011,9 @@ export default {
         params.terminalName = -1;
       }
       if (this.valueChanel !== "") {
-        params.ipfschanel = parseInt(this.valueChanel);
+        params.ipfsChannel = parseInt(this.valueChanel);
       } else {
-        params.ipfschanel = -1;
+        params.ipfsChannel = -1;
       }
       if (this.value1Activechanidactive !== "") {
         params.domain = this.value1Activechanidactive;
@@ -1157,8 +1161,8 @@ export default {
         this.value1Activechanid="";
         this.valuea1="";
         this.value1Activechanidactive="";
-        this.valueChanel="-1";
-        this.value1acce1 = "-1";
+        this.valueChanel="";
+        this.value1acce1 = "";
         this.querySdkflow();
         let _this = this;
         this.$nextTick(() => {
@@ -1171,8 +1175,8 @@ export default {
         this.value1Activechanid="";
         this.valuea1="";
         this.value1Activechanidactive="";
-        this.valueChanel="-1";
-        this.value1acce1 = "-1";
+        this.valueChanel="";
+        this.value1acce1 = "";
         let _this = this;
         _this.querySdkflowControl();
       }

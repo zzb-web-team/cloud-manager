@@ -9,10 +9,11 @@
                 <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
                 <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
                 <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
+                <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="请选择播放区域" :options="hashidSet" ref="cascaderAddr" :show-all-levels="false" v-model="valueRegion" @change="onChanges"></el-cascader>
                 <el-select v-model="valueIsp" placeholder="请选择运营商网络" style="width: 10%;margin-right: 10px;" @change="onChanges">
-                    <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+                  <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
-                <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="区域" :options="hashidSet" ref="cascaderAddr" :show-all-levels="false" v-model="valueRegion" @change="onChanges"></el-cascader>
+                
                 <el-date-picker style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
                 <!-- <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button> -->
                 </div>
@@ -90,6 +91,11 @@
                         <el-table-column label="实际播放时间">
                             <template slot-scope="scope">
                                 <div>{{ common.formatDays(scope.row.playtime*1000) }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="时间">
+                            <template slot-scope="scope">
+                              <div>{{ scope.row.fdate | settimes }}</div>
                             </template>
                         </el-table-column>
                         <!-- <el-table-column label="播放开始-结束时间">

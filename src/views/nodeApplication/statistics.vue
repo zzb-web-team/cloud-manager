@@ -8,10 +8,16 @@
           <el-tab-pane label="PV/UV" name="first">
             <div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
 
-              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
-              <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
-              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
-              <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="onChanges">
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-select v-model="valueacce" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -52,10 +58,16 @@
           <el-tab-pane label="访问用户分布" name="second">
             <div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
 
-              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
-              <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
-              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
-                <el-select v-model="valueacce" placeholder="终端" style="width: 10%;margin-right: 10px;" @change="onChanges">
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-select v-model="valueacce" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
@@ -178,7 +190,7 @@ export default {
       pagesize: 10,
       total_cnt: 0,
       value1fileName: "",
-      valueacce: "-1",
+      valueacce: "",
       options3: [
         {
           value: "1",
@@ -378,10 +390,15 @@ export default {
       } else {
         params.chanId = "*";
       }
+      // if (this.valueacce !== "") {
+      //   params.acce = this.valueacce;
+      // } else {
+      //   params.acce = "-1";
+      // }
       if (this.valueacce !== "") {
-        params.acce = this.valueacce;
+        params.terminalName = this.valueacce;
       } else {
-        params.acce = "-1";
+        params.terminalName = "-1";
       }
       params.timeUnit = this.common.timeUnitActive2(
         this.starttime,
@@ -423,10 +440,15 @@ export default {
       } else {
         params.chanId = "*";
       }
+      // if (this.valueacce !== "") {
+      //   params.acce = this.valueacce;
+      // } else {
+      //   params.acce = "-1";
+      // }
       if (this.valueacce !== "") {
-        params.acce = this.valueacce;
+        params.terminalName = this.valueacce;
       } else {
-        params.acce = "-1";
+        params.terminalName = "-1";
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -488,9 +510,9 @@ export default {
     exoprtant_pupv() {
       let params = new Object();
       params.chanId = this.chanid + "";
-      params.start_ts = this.starttime;
-      params.end_ts = this.endtime;
-      params.time_unit = this.timeUnit;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      params.timeUnit = this.timeUnit;
 
       if (this.value1fileName) {
         params.fileName = this.value1fileName;
@@ -513,10 +535,16 @@ export default {
       } else {
         params.chanId = "*";
       }
+      // if (this.valueacce !== "") {
+      //   params.acce = this.valueacce;
+      // } else {
+      //   params.acce = "-1";
+      // }
+
       if (this.valueacce !== "") {
-        params.acce = this.valueacce;
+        params.terminalName = this.valueacce;
       } else {
-        params.acce = "-1";
+        params.terminalName = "-1";
       }
 
       this.uvArray = [];
@@ -666,10 +694,15 @@ export default {
         } else {
           params.chanId = "*";
         }
+        // if (this.valueacce !== "") {
+        //   params.acce = this.valueacce;
+        // } else {
+        //   params.acce = "-1";
+        // }
         if (this.valueacce !== "") {
-          params.acce = this.valueacce;
+          params.terminalName = this.valueacce;
         } else {
-          params.acce = "-1";
+          params.terminalName = "-1";
         }
         params.top = 10;
         params.timeUnit = this.common.timeUnitActive(
@@ -856,7 +889,8 @@ export default {
       this.ableStatus = true;
       this.value1fileName = "";
       this.value1Activechanid = "";
-      this.valueacce = "-1";
+      this.valueacce = "";
+      this.valueDomain = "";
       //切换时重置时间为当前时间
       this.val2 = [];
       this.starttime =

@@ -15,17 +15,16 @@
             <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
           </el-input>
           <el-input
-            v-model="value1"
-            placeholder="请输入加速内容名称"
+            v-model="valuedomian"
+            placeholder="请输入域名"
             style="width:160px;margin-right: 10px;"
             @keyup.enter.native="onChanges"
           >
             <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
           </el-input>
-
           <el-input
-            v-model="valuedomian"
-            placeholder="请输入域名"
+            v-model="value1"
+            placeholder="请输入加速内容名称"
             style="width:160px;margin-right: 10px;"
             @keyup.enter.native="onChanges"
           >
@@ -494,9 +493,9 @@ export default {
         params.domain = "*";
       }
       if (this.value1acce1 != "") {
-        params.ipfsChanel = parseInt(this.value1acce1);
+        params.ipfsChannel = parseInt(this.value1acce1);
       } else {
-        params.ipfsChanel = -1;
+        params.ipfsChannel = -1;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -625,9 +624,9 @@ export default {
         params.domain = "*";
       }
       if (this.value1acce1 != "") {
-        params.ipfsChanel = parseInt(this.value1acce1);
+        params.ipfsChannel = parseInt(this.value1acce1);
       } else {
-        params.ipfsChanel = -1;
+        params.ipfsChannel = -1;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -704,9 +703,9 @@ export default {
         params.domain = "*";
       }
       if (this.value1acce1 != "") {
-        params.ipfsChanel = parseInt(this.value1acce1);
+        params.ipfsChannel = parseInt(this.value1acce1);
       } else {
-        params.ipfsChanel = -1;
+        params.ipfsChannel = -1;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,

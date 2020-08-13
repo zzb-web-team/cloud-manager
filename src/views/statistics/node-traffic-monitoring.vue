@@ -9,10 +9,10 @@
               <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
               </el-input>
-              <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <el-input v-model="valueDomain" placeholder="请输入域名" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
               </el-input>
-              <el-input v-model="valueDomain" placeholder="请输入域名" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
               </el-input>
               <el-select v-model="valueChanel" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;" @change="onChanges">
