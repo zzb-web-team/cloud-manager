@@ -105,25 +105,27 @@
                         <div v-else>{{ scope.row.isp }}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="P2P播放总流量（%）">
+                    <el-table-column label="访问用户总数">
                       <template slot-scope="scope">
                         <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.dataFlow | formatDataFlow}}</div>
-                          <div>({{ scope.row.dataFlowPercnt }})</div>
+                          <div>{{ scope.row.sumCnt }}</div>
                         </div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="访问用户（%）">
+                    <el-table-column label="有效访问用户数（%）">
                       <template slot-scope="scope">
                         <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.accessCnt }}</div>
-                          <div>({{ scope.row.accessPercent }})</div>
+                          <div>{{ scope.row.validCnt }}</div>
+                          <div>({{ scope.row.validPercent | percentss }})</div>
                         </div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="平均响应时间(/s)">
+                    <el-table-column label="无效访问用户数（%）">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.avgTime | formatAvgTime }}</div>
+                        <div style="display: flex;justify-content: center;">
+                          <div>{{ scope.row.invalidCnt }}</div>
+                          <div>({{ scope.row.invalidPercent | percentss }})</div>
+                        </div>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -342,6 +344,12 @@ export default {
       } else {
         return data;
       }
+    },
+    percentss(data) {
+      if (data == 0) {
+        return 0 + "%";
+      }
+      return (data * 100).toFixed(2) + "%";
     },
   },
   components: {

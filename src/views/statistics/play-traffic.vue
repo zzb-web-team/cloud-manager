@@ -108,7 +108,7 @@
 
                       </template>
                     </el-table-column>
-                    <el-table-column label="统计时间">
+                    <el-table-column label="时间">
                       <template slot-scope="scope">
                         <div>{{ scope.row.stime | settimes }}</div>
                         <div>{{ scope.row.etime | settimes }}</div>
@@ -703,7 +703,7 @@ export default {
       } else {
         params.channelId = "*";
       }
-      if (this.value1acce1 !== "-1") {
+      if (this.value1acce1 !== "") {
         params.terminalName = parseInt(this.value1acce1);
       } else {
         params.terminalName = -1;
@@ -782,7 +782,7 @@ export default {
       } else {
         params.channelId = "*";
       }
-      if (this.value1acce1 !== "-1") {
+      if (this.value1acce1 !== "") {
         params.terminalName = parseInt(this.value1acce1);
       } else {
         params.terminalName = -1;
