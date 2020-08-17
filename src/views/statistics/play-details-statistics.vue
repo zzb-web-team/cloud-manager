@@ -14,13 +14,13 @@
                   <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
                 
-                <el-date-picker style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+                <el-date-picker style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
                 <!-- <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button> -->
                 </div>
                 <div class="devide_table">
                 <el-row type="flex" class="row_active">
                     <el-col :span="24">
-                    <el-table :data="tableZb" border max-height="550" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table :data="tableZb" border max-height="600" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
                         <el-table-column label="播放URL">
                         <template slot-scope="scope">
                             <div>{{ scope.row.playurl }}</div>
@@ -95,7 +95,7 @@
                         </el-table-column>
                         <el-table-column label="时间">
                             <template slot-scope="scope">
-                              <div>{{ scope.row.fdate | settimes }}</div>
+                              <div>{{ common.getTimess(scope.row.fdate * 1000) }}</div>
                             </template>
                         </el-table-column>
                         <!-- <el-table-column label="播放开始-结束时间">
@@ -111,7 +111,7 @@
                             </template>
                         </el-table-column> -->
                     </el-table>
-                    <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :pagesa="total_cnt"></fenye>
+                    <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
                     </el-col>
                 </el-row>
                 </div>
@@ -142,7 +142,7 @@
                               </el-select>
                             </el-form-item>
                             <el-form-item label="时间：" style="display: flex;">
-                              <el-date-picker style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+                              <el-date-picker style="margin-left:10px;" v-model="val3" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
                             </el-form-item>
                             <!-- <el-form-item>
                                 <el-button type="primary" @click="search1">确定</el-button>
@@ -156,7 +156,7 @@
                 <div class="devide_table">
                 <el-row type="flex" class="row_active">
                     <el-col :span="24">
-                    <el-table :data="tableZb1" border max-height = "530px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table :data="tableZb1" border max-height = "600px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
                         <el-table-column label="播放异常类型" prop="exceptionType" :formatter="typeFormat">
                         <!-- <template slot-scope="scope">
                             <div>{{ scope.row.exceptionType }}</div>
@@ -196,11 +196,11 @@
                         </el-table-column>
                         <el-table-column label="时间">
                             <template slot-scope="scope">
-                              <div>{{ scope.row.timereport | settimes }}</div>
+                              <div>{{ common.getTimess(scope.row.timereport*1000) }}</div>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
+                    <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :currentPage = "pageNo1" :pagesa="total_cnt1"></fenye>
                     </el-col>
                 </el-row>
                 </div>
@@ -491,6 +491,7 @@ export default {
       activeName: "first",
       activeName1: "first",
       val2: [],
+      val3: [],
       timeUnit: 120,
       starttime: "",
       endtime: "",
@@ -525,10 +526,15 @@ export default {
   components: {
     fenye,
   },
-  mounted() {
+  created() {
     let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.starttime = times;
     this.endtime = Date.parse(new Date()) / 1000;
+    this.val2[0] = this.common.getTimess(this.starttime*1000);
+    this.val2[1] = this.common.getTimess(this.endtime*1000);
+    this.val3[0] = this.common.getTimess(this.starttime*1000);
+    this.val3[1] = this.common.getTimess(this.endtime*1000);
+    console.log(this.val2)
     this.videoInfoStatistics();
   },
   beforeDestroy() {
@@ -616,19 +622,17 @@ export default {
     },
     //自定义时间
     gettimes(cal) {
-      // alert(cal)
-      if(cal){
-        this.starttime = dateToMs(this.val2[0]);
-        this.endtime = dateToMs(this.val2[1]);
-        if (this.endtime - this.starttime <= 86400) {
-          this.timeUnit = 60 * 2;
-        } else if (this.endtime - this.starttime > 86400) {
-          this.timeUnit = 60 * 24;
-        }
+      if(cal == 0){
+        this.starttime = this.val2 ? dateToMs(this.val2[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
+        this.endtime = this.val2 ? dateToMs(this.val2[1]) : Date.parse(new Date()) / 1000;
       }else{
-        let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-        this.starttime = times;
-        this.endtime = Date.parse(new Date()) / 1000;
+        this.starttime = this.val3 ? dateToMs(this.val3[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
+        this.endtime = this.val3 ? dateToMs(this.val3[1]) : Date.parse(new Date()) / 1000;
+      }
+      if (this.endtime - this.starttime <= 86400) {
+        this.timeUnit = 60 * 2;
+      } else if (this.endtime - this.starttime > 86400) {
+        this.timeUnit = 60 * 24;
       }
       if(this.activeName == 'first'){
         this.pageNo = 1;
@@ -640,7 +644,6 @@ export default {
       
     },
     onChanges() {
-
       if(this.activeName == 'first'){
         this.pageNo = 1;
         this.videoInfoStatistics();
@@ -654,7 +657,7 @@ export default {
       this.searchText = "";
       this.exceptionStatus = "";
       this.exceptionType = "";
-      this.val2=[];
+      this.val3=[];
       this.pageSize1 = 10;
       this.pageNo1 = 1;
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
@@ -768,12 +771,18 @@ export default {
     //选项卡
     handleClick(tab, event) {
       this.val2= [];
+      this.val3= [];
+      this.pageNo = 1;
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.starttime = times;
       this.endtime = Date.parse(new Date()) / 1000;
       if (tab.index == 0) {
+        this.val2[0] = this.common.getTimess(this.starttime*1000);
+        this.val2[1] = this.common.getTimess(this.endtime*1000);
         this.videoInfoStatistics();
       } else if (tab.index == 1) {
+        this.val3[0] = this.common.getTimess(this.starttime*1000);
+        this.val3[1] = this.common.getTimess(this.endtime*1000);
         this.videoExceptionStatistics();
       }
     },

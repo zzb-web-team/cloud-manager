@@ -319,14 +319,15 @@ export default {
   },
   timeUnitActive2: function(startTime,endTime) {
     
-    let tempTime = endTime - startTime;
-    if (tempTime <= 24 * 60 * 60) {
-      return 5;
-    } else if (24 * 60 * 60 < tempTime && tempTime <= 24 * 60 * 60 * 31) {
-      return 60;
-    } else if (tempTime > 24 * 60 * 60 * 31) {
-      return 24 * 60;
-    }
+    // let tempTime = endTime - startTime;
+    // if (tempTime <= 24 * 60 * 60) {
+    //   return 5;
+    // } else if (24 * 60 * 60 < tempTime && tempTime <= 24 * 60 * 60 * 31) {
+    //   return 60;
+    // } else if (tempTime > 24 * 60 * 60 * 31) {
+    //   return 24 * 60;
+    // }
+    return 60;
   },
   //操作日志公共方法
   monitoringLogs: function(

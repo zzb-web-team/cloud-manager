@@ -22,16 +22,27 @@
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
 
-              <el-button-group>
-                <el-button v-show="!shoudzy" @click="today(0)">今天</el-button>
-                <el-button v-show="!shoudzy" @click="yesterday(0)">昨天</el-button>
-                <el-button v-show="!shoudzy" @click="sevendat(0)">近7天</el-button>
-                <el-button v-show="!shoudzy" @click="thirtyday(0)">近30天</el-button>
-                <el-button @click="showzdy">自定义
-                  <i class="el-icon-date"></i>
-                </el-button>
-              </el-button-group>
-              <el-date-picker v-show="shoudzy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-radio-group
+                v-model="radio"
+                size="medium"
+                @change="select_time()"
+                v-show="!showzdy"
+              >
+                <el-radio-button size = "small" label="1">今天</el-radio-button >
+                <el-radio-button size = "small" label="2">昨天</el-radio-button >
+                <el-radio-button size = "small" label="3">近7天</el-radio-button >
+                <el-radio-button size = "small" label="4">近30天</el-radio-button >
+                <el-radio-button size = "small" label="5">自定义</el-radio-button >
+              </el-radio-group>
+              <el-button
+                type="primary"
+                v-show="showzdy"
+                 size = "small"
+                style="background:#409EFF;border:#409EFF"
+                @click="setZdy"
+                >自定义</el-button
+						  >
+              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(0)">确定</el-button> -->
             </div>
 
@@ -71,23 +82,43 @@
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
-              <el-button-group>
-                <el-button v-show="!shoudzyx" @click="today(1)">今天</el-button>
-                <el-button v-show="!shoudzyx" @click="yesterday(1)">昨天</el-button>
-                <el-button v-show="!shoudzyx" @click="sevendat(1)">近7天</el-button>
-                <el-button v-show="!shoudzyx" @click="thirtyday(1)">近30天</el-button>
-                <el-button @click="showzdyx">自定义
-                  <i class="el-icon-date"></i>
-                </el-button>
-              </el-button-group>
-              <el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-radio-group
+                v-model="radio"
+                size="medium"
+                @change="select_time()"
+                v-show="!showzdy"
+              >
+                <el-radio-button size = "small" label="1">今天</el-radio-button >
+                <el-radio-button size = "small" label="2">昨天</el-radio-button >
+                <el-radio-button size = "small" label="3">近7天</el-radio-button >
+                <el-radio-button size = "small" label="4">近30天</el-radio-button >
+                <el-radio-button size = "small" label="5">自定义</el-radio-button >
+              </el-radio-group>
+              <el-button
+                type="primary"
+                v-show="showzdy"
+                 size = "small"
+                style="background:#409EFF;border:#409EFF"
+                @click="setZdy"
+                >自定义</el-button
+						  >
+              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button> -->
             </div>
             <div class="device_form" style>
-              <el-button-group style="display: flex;justify-content: center;">
+              <!-- <el-button-group style="display: flex;justify-content: center;">
                 <el-button plain @click="goarea()">地区</el-button>
                 <el-button plain @click="gosupplier()">运营商</el-button>
-              </el-button-group>
+              </el-button-group> -->
+              <el-radio-group
+                v-model="radios"
+                size="medium"
+                @change="select()"
+                style="display: flex;justify-content: center;"
+              >
+                <el-radio-button label="1">地区</el-radio-button >
+                <el-radio-button label="2">运营商</el-radio-button >
+              </el-radio-group>
               <div id="myChart1" :style="{ height: '607px' }"></div>
             </div>
             <div class="devide_table">
@@ -215,6 +246,7 @@ export default {
       shoudzy: false,
       shoudzyx: false,
       shoudzyz: false,
+      showzdy: false,
       value1Active: "",
       value1Activechanid: "",
       valueDomain: "",
@@ -313,6 +345,8 @@ export default {
       options1chanid: [],
       value1Activechanid: "",
       pagesActive: true,
+      radio: 1,
+      radios: 1,
     };
   },
   filters: {
@@ -404,9 +438,9 @@ export default {
       //   params.acce = "-1";
       // }
       if (this.valueacce !== "") {
-        params.terminalName = this.valueacce;
+        params.terminalName = parseInt(this.valueacce);
       } else {
-        params.terminalName = "-1";
+        params.terminalName = -1;
       }
       params.timeUnit = this.common.timeUnitActive2(
         this.starttime,
@@ -454,9 +488,9 @@ export default {
       //   params.acce = "-1";
       // }
       if (this.valueacce !== "") {
-        params.terminalName = this.valueacce;
+        params.terminalName = parseInt(this.valueacce);
       } else {
-        params.terminalName = "-1";
+        params.terminalName = -1;
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -550,9 +584,9 @@ export default {
       // }
 
       if (this.valueacce !== "") {
-        params.terminalName = this.valueacce;
+        params.terminalName = parseInt(this.valueacce);
       } else {
-        params.terminalName = "-1";
+        params.terminalName = -1;
       }
 
       this.uvArray = [];
@@ -570,6 +604,37 @@ export default {
         })
         .catch(err => {});
     },
+    //地区运营商选择
+    select(){
+      if (this.radios == 1) {
+        this.goarea();
+      }else{
+        this.gosupplier();
+      }
+    },
+    //自定义事件组件
+    select_time() {
+			if (this.radio == 1) {
+        this.showzdy = false;
+        this.activeName == 'first' ? this.today(0) : this.today(1);
+			} else if (this.radio == 2) {
+        this.showzdy = false;
+        this.activeName == 'first' ? this.yesterday(0) : this.yesterday(1);
+			} else if (this.radio == 3) {
+        this.showzdy = false;
+        this.activeName == 'first' ? this.sevendat(0) : this.sevendat(1);
+			} else if (this.radio == 4) {
+        this.showzdy = false;
+        this.activeName == 'first' ? this.thirtyday(0) : this.thirtyday(1);
+			} else if (this.radio == 5) {
+				this.showzdy = true;
+			}
+    },
+    setZdy() {
+      this.showzdy = !this.showzdy;
+      this.radio = 1;
+      this.activeName == 'first' ? this.today(0) : this.today(1);
+    },
     //
     onChanges() {
       if(this.activeName == 'first'){
@@ -577,7 +642,7 @@ export default {
         this.getcure(0)
       }else{
         this.currentPage1 = 1;
-        this.getcure(1)
+        // this.getcure(1)
         if(this.pagesActive){
           this.getcure(1)
         }else{
@@ -640,9 +705,9 @@ export default {
           params.chanId = "*";
         }
         if (this.valueacce !== "") {
-          params.terminalName = this.valueacce;
+          params.terminalName = parseInt(this.valueacce);
         } else {
-          params.terminalName = "-1";
+          params.terminalName = -1;
         }
 
         this.uvArray = [];
@@ -708,9 +773,9 @@ export default {
         //   params.acce = "-1";
         // }
         if (this.valueacce !== "") {
-          params.terminalName = this.valueacce;
+          params.terminalName = parseInt(this.valueacce);
         } else {
-          params.terminalName = "-1";
+          params.terminalName = -1;
         }
         params.top = 10;
         params.timeUnit = this.common.timeUnitActive(
@@ -766,9 +831,6 @@ export default {
     //   }
     // },
     //自定义时间显示
-    showzdy() {
-      this.shoudzy = !this.shoudzy;
-    },
     showzdyx() {
       this.shoudzyx = !this.shoudzyx;
     },
@@ -893,6 +955,7 @@ export default {
       this.shoudzyx = false;
 
       this.shoudzyz = false;
+      this.radio = 1;
 
       this.ableStatus = true;
       this.value1fileName = "";
@@ -1111,7 +1174,7 @@ export default {
         yAxis: {},
         series: [
           {
-            name: data == 1 ? "流量" : "次",
+            name: "次数",
             type: "bar",
             barWidth: 30, //柱图宽度
             data: a,

@@ -45,7 +45,7 @@
             ></el-option>
           </el-select>
 
-          <el-button-group>
+          <!-- <el-button-group>
             <el-button v-show="!shoudzyx" @click="today()" label="one">今天</el-button>
             <el-button v-show="!shoudzyx" @click="yesterday()" label="two">昨天</el-button>
             <el-button v-show="!shoudzyx" @click="sevendat()" label="three">近7天</el-button>
@@ -54,9 +54,29 @@
               自定义
               <i class="el-icon-date"></i>
             </el-button>
-          </el-button-group>
+          </el-button-group> -->
+          <el-radio-group
+            v-model="radio"
+            size="medium"
+            @change="select_time()"
+            v-show="!showzdy"
+          >
+            <el-radio-button size = "small" label="1">今天</el-radio-button >
+            <el-radio-button size = "small" label="2">昨天</el-radio-button >
+            <el-radio-button size = "small" label="3">近7天</el-radio-button >
+            <el-radio-button size = "small" label="4">近30天</el-radio-button >
+            <el-radio-button size = "small" label="5">自定义</el-radio-button >
+          </el-radio-group>
+          <el-button
+            type="primary"
+            v-show="showzdy"
+              size = "small"
+            style="background:#409EFF;border:#409EFF"
+            @click="setZdy"
+            >自定义</el-button
+          >
           <el-date-picker
-            v-show="shoudzyx"
+            v-show="showzdy"
             style="margin-left:10px;"
             v-model="val2"
             type="datetimerange"
@@ -171,6 +191,7 @@
                 @handleCurrentChange="handleCurrentChange"
                 @handleSizeChange="handleSizeChange"
                 :pagesa="total_cnt"
+                :currentPage="pageNo"
               ></fenye>
             </el-col>
           </el-row>
@@ -239,6 +260,7 @@ export default {
       options1Active: [],
       shoudzyx: false,
       showzdyz: false,
+      showzdy: false,
       options1: [],
       options1chanid: [],
 
@@ -331,6 +353,7 @@ export default {
       dataFlownum1: 0,
       flowunit: "",
       totalYl: 0,
+      radio: 1,
     };
   },
   filters: {
@@ -416,12 +439,10 @@ export default {
         val.forEach((item) => {
           arrlist.push(String(item.value));
         });
-        alert(456);
         this.chanIds = arrlist;
         this.gettable1(arrlist);
         this.gettable2(arrlist);
       } else {
-        alert(123);
         this.chanIds = [];
         this.gettable1(val);
         this.gettable2(val);
@@ -571,6 +592,35 @@ export default {
     showzdyx() {
       this.shoudzyx = !this.shoudzyx;
     },
+    setZdy() {
+      this.showzdy = !this.showzdy;
+      this.radio = 1;
+      this.today();
+    },
+    select_time() {
+			if (this.radio == 1) {
+				this.showzdy = false;
+				this.today();
+			} else if (this.radio == 2) {
+				this.showzdy = false;
+				this.yesterday();
+			} else if (this.radio == 3) {
+				this.showzdy = false;
+				this.sevendat();
+			} else if (this.radio == 4) {
+				this.showzdy = false;
+				this.thirtyday();
+			} else if (this.radio == 5) {
+				this.showzdy = true;
+			}
+    },
+    // getdataActive() {},
+    // showzdyzs() {
+    //   this.showzdyz = !this.showzdyz;
+    // },
+    // showzdyx() {
+    //   this.shoudzyx = !this.shoudzyx;
+    // },
     // //获取页码
     // getpage(pages) {
     //   this.pageNo = pages;

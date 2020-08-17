@@ -39,7 +39,7 @@
                 @click="setZdy"
                 >自定义</el-button
 						  >
-              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
               <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu()">确定</el-button> -->
             </div>
             <div class="device_form" style="margin-top: 0px;">
@@ -88,7 +88,7 @@
                       </template>
                     </el-table-column>
                   </el-table>
-                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange2" @handleSizeChange="handleSizeChange2" :pagesa="total_cnt2"></fenye>
+                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange2" @handleSizeChange="handleSizeChange2" :currentPage = "pageNo2" :pagesa="total_cnt2"></fenye>
                 </el-col>
               </el-row>
             </div>
@@ -104,7 +104,7 @@
               <el-input v-model="valueContent1" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
               </el-input>
-              <el-date-picker style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker style="margin-left:10px;" v-model="val3" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
               <!-- <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button> -->
             </div>
             <div class="devide_table">
@@ -153,7 +153,7 @@
                       </template>
                     </el-table-column>
                   </el-table>
-                  <fenye style="float:right;margin:10px 0 20px 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :pagesa="total_cnt"></fenye>
+                  <fenye style="float:right;margin:10px 0 20px 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
                 </el-col>
               </el-row>
               <el-row v-show="radioTop != 1" type="flex" class="row_active">
@@ -192,7 +192,7 @@
                       </template>
                     </el-table-column>
                   </el-table>
-                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
+                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :currentPage = "pageNo1" :pagesa="total_cnt1"></fenye>
                 </el-col>
               </el-row>
             </div>
@@ -311,6 +311,7 @@ export default {
         },
       },
       val2: [],
+      val3: [],
       timeUnit: 120,
       starttime: "",
       endtime: "",
@@ -465,7 +466,7 @@ export default {
     },
     onChanges() {
       if(this.activeName == 'first'){
-        this.pageNo = 1;
+        this.pageNo2 = 1;
         this.getNodeTrafficCurve();
         this.node_traffic_table();
       }else{
@@ -473,7 +474,7 @@ export default {
           this.pageNo = 1;
           this.topAccelcntRanking();
         }else{
-          this.pageNo = 1;
+          this.pageNo1 = 1;
           this.topDataflowRanking();
         }
       }
@@ -853,16 +854,22 @@ export default {
     },
     //自定义时间
     gettimes(cal) {
-      let times = parseInt(new Date(new Date()).getTime() / 1000);
-      this.starttime = this.val2 ? dateToMs(this.val2[0]) : times - 24 * 60 * 60 * 29;;
-      this.endtime = this.val2 ? dateToMs(this.val2[1]) : times;
+      // let times = parseInt(new Date(new Date()).getTime() / 1000);
+      if(cal == 0){
+        this.starttime = this.val2 ? dateToMs(this.val2[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
+        this.endtime = this.val2 ? dateToMs(this.val2[1]) : Date.parse(new Date()) / 1000;
+      }else{
+        this.starttime = this.val3 ? dateToMs(this.val3[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
+        this.endtime = this.val3 ? dateToMs(this.val3[1]) : Date.parse(new Date()) / 1000;
+      }
+      
       if (this.endtime - this.starttime <= 86400) {
         this.timeUnit = 60 * 2;
       } else if (this.endtime - this.starttime > 86400) {
         this.timeUnit = 60 * 24;
       }
       if(this.activeName == 'first'){
-        this.pageNo = 1;
+        this.pageNo2 = 1;
         this.getNodeTrafficCurve();
         this.node_traffic_table();
       }else{
@@ -870,7 +877,7 @@ export default {
           this.pageNo = 1;
           this.topAccelcntRanking();
         }else{
-          this.pageNo = 1;
+          this.pageNo1 = 1;
           this.topDataflowRanking();
         }
       }
@@ -887,15 +894,21 @@ export default {
 
     //选项卡
     handleClick(tab, event) {
-      this.val2= [];
-      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-      this.starttime = times;
-      this.endtime = Date.parse(new Date()) / 1000;
       if (tab.index == 0) {
+        this.val2= [];
+        let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+        this.starttime = times;
+        this.endtime = Date.parse(new Date()) / 1000;
         this.pageNo2 = 1;
         this.getNodeTrafficCurve();
         this.node_traffic_table();
       } else if (tab.index == 1) {
+        this.val3 = [];
+        let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+        this.starttime = times;
+        this.endtime = Date.parse(new Date()) / 1000;
+        this.val3[0] = this.common.getTimes(this.starttime * 1000);
+        this.val3[1] = this.common.getTimes(this.endtime * 1000);
         this.topAccelcntRanking();
       }
     },
@@ -904,10 +917,11 @@ export default {
       this.valueContent1 = "";
       this.valueDomain1 = "";
       this.valueChannelId1 = "";
-      this.val2= [];
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.starttime = times;
       this.endtime = Date.parse(new Date()) / 1000;
+      this.val3[0] = this.common.getTimes(this.starttime * 1000);
+      this.val3[1] = this.common.getTimes(this.endtime * 1000);
       if (this.radioTop == 1) {
         this.topAccelcntRanking();
       } else {

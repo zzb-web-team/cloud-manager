@@ -23,16 +23,27 @@
                 <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets1" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
-              <el-button-group>
-                <el-button v-show="!showzdyz" @click="today(3)">今天</el-button>
-                <el-button v-show="!showzdyz" @click="yesterday(3)">昨天</el-button>
-                <el-button v-show="!showzdyz" @click="sevendat(3)">近7天</el-button>
-                <el-button v-show="!showzdyz" @click="thirtyday(3)">近30天</el-button>
-                <el-button @click="showzdyzs">自定义
-                  <i class="el-icon-date"></i>
-                </el-button>
-              </el-button-group>
-              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-radio-group
+                v-model="radio"
+                size="medium"
+                @change="select_time()"
+                v-show="!showzdy"
+              >
+                <el-radio-button size = "small" label="1">今天</el-radio-button >
+                <el-radio-button size = "small" label="2">昨天</el-radio-button >
+                <el-radio-button size = "small" label="3">近7天</el-radio-button >
+                <el-radio-button size = "small" label="4">近30天</el-radio-button >
+                <el-radio-button size = "small" label="5">自定义</el-radio-button >
+              </el-radio-group>
+              <el-button
+                type="primary"
+                v-show="showzdy"
+                 size = "small"
+                style="background:#409EFF;border:#409EFF"
+                @click="setZdy"
+                >自定义</el-button
+						  >
+              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button> -->
             </div>
             <div class="user_item">
@@ -115,7 +126,7 @@
                       </template>
                     </el-table-column>
                   </el-table>
-                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
+                  <fenye style="float:right;margin:10px 0 0 0;" :currentPage="pageNo1" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
                 </el-col>
               </el-row>
             </div>
@@ -136,16 +147,27 @@
                 <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets1" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
-              <el-button-group>
-                <el-button v-show="!showzdyz" @click="today(4)">今天</el-button>
-                <el-button v-show="!showzdyz" @click="yesterday(4)">昨天</el-button>
-                <el-button v-show="!showzdyz" @click="sevendat(4)">近7天</el-button>
-                <el-button v-show="!showzdyz" @click="thirtyday(4)">近30天</el-button>
-                <el-button @click="showzdyzs">自定义
-                  <i class="el-icon-date"></i>
-                </el-button>
-              </el-button-group>
-              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-radio-group
+                v-model="radio"
+                size="medium"
+                @change="select_time()"
+                v-show="!showzdy"
+              >
+                <el-radio-button size = "small" label="1">今天</el-radio-button >
+                <el-radio-button size = "small" label="2">昨天</el-radio-button >
+                <el-radio-button size = "small" label="3">近7天</el-radio-button >
+                <el-radio-button size = "small" label="4">近30天</el-radio-button >
+                <el-radio-button size = "small" label="5">自定义</el-radio-button >
+              </el-radio-group>
+              <el-button
+                type="primary"
+                v-show="showzdy"
+                 size = "small"
+                style="background:#409EFF;border:#409EFF"
+                @click="setZdy"
+                >自定义</el-button
+						  >
+              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(4)">确定</el-button> -->
             </div>
             <div class="device_form" style>
@@ -419,6 +441,7 @@ export default {
       options1Active: [],
       shoudzyx: false,
       showzdyz: false,
+      showzdy: false,
       options1: [],
       options1chanid: [],
 
@@ -582,6 +605,7 @@ export default {
       dataJk2: [],
       dataJk3: [],
       dataJk4: [],
+      radio: 1,
     };
   },
   filters: {
@@ -674,12 +698,37 @@ export default {
 
     onChanges() {
       if(this.activeName == 'threed'){
-        this.pageNo = 1;
+        this.pageNo1 = 1;
         this.querySdkflow();
         this.querySdkflowTable();
       }else{
         this.querySdkflowControl();
       }
+    },
+
+    select_time() {
+			if (this.radio == 1) {
+        this.showzdy = false;
+				this.activeName == 'threed' ? this.today(3) : this.today(4);
+			} else if (this.radio == 2) {
+        this.showzdy = false;
+        this.activeName == 'threed' ? this.yesterday(3) : this.yesterday(4);
+			} else if (this.radio == 3) {
+        this.showzdy = false;
+        this.activeName == 'threed' ? this.sevendat(3) : this.sevendat(4);
+			} else if (this.radio == 4) {
+        this.showzdy = false;
+        this.activeName == 'threed' ? this.thirtyday(3) : this.thirtyday(4);
+			} else if (this.radio == 5) {
+        this.showzdy = true;
+        
+			}
+    },
+
+    setZdy() {
+      this.showzdy = !this.showzdy;
+      this.radio = 1;
+      this.activeName == 'threed' ? this.today(3) : this.today(4);
     },
 
     //获取每页数量
@@ -835,7 +884,7 @@ export default {
       } else {
         params.channelId = "*";
       }
-      if (this.value1acce1 !== "-1") {
+      if (this.value1acce1 !== "") {
         params.terminalName = parseInt(this.value1acce1);
       } else {
         params.terminalName = -1;
@@ -1151,10 +1200,11 @@ export default {
 
     handleClick(tab, event) {
       this.val2 = [];
+      this.radio = 1;
       this.hashidSet = [];
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.starttime = times;
-
+      this.showzdy = false;
       this.endtime = Date.parse(new Date()) / 1000;
       this.options3 = [];
       if (tab.index == 0) {
