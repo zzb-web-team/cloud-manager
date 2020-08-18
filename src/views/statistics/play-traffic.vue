@@ -136,13 +136,16 @@
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onChanges" style="width:160px;margin-right: 10px;">
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
               </el-input>
+              <el-input v-model="value1Activechanidactive" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
               <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onChanges" style="width:160px;margin-right: 10px;">
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
               </el-input>
-              <el-select v-model="value1acce1" placeholder="全部终端类型" @change="onChanges" style="width: 10%;margin-right: 10px;">
+              <!-- <el-select v-model="value1acce1" placeholder="全部终端类型" @change="onChanges" style="width: 10%;margin-right: 10px;">
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-              </el-select>
+              </el-select> -->
               <el-select v-model="valueChanel1" placeholder="全部节点渠道" @change="onChanges" style="width: 10%;margin-right: 10px;">
                 <el-option label="全部" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets1" :key="index" :label="item.label" :value="item.value"></el-option>
@@ -884,11 +887,11 @@ export default {
       } else {
         params.channelId = "*";
       }
-      if (this.value1acce1 !== "") {
-        params.terminalName = parseInt(this.value1acce1);
-      } else {
-        params.terminalName = -1;
-      }
+      // if (this.value1acce1 !== "") {
+      //   params.terminalName = parseInt(this.value1acce1);
+      // } else {
+      //   params.terminalName = -1;
+      // }
       if (this.valueChanel1 !== "") {
         params.ipfsChannel = parseInt(this.valueChanel1);
       } else {
@@ -1054,7 +1057,7 @@ export default {
       } else {
         params.channelId = "*";
       }
-      if (this.value1acce1 !== "-1") {
+      if (this.value1acce1 !== "") {
         params.terminalName = parseInt(this.value1acce1);
       } else {
         params.terminalName = -1;

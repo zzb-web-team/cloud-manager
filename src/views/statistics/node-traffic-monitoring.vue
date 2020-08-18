@@ -120,15 +120,14 @@
               <el-row v-show="radioTop == 1" type="flex" class="row_active">
                 <el-col :span="24">
                   <el-table :data="tableTop" border max-height = "530px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table-column label="加速内容名称">
+                      <template slot-scope="scope">
+                          <div>{{ scope.row.urlname }}</div>
+                      </template>
+                    </el-table-column>
                     <el-table-column label="渠道ID">
                     <template slot-scope="scope">
                         <div>{{ scope.row.channelid }}</div>
-                    </template>
-                    </el-table-column>
-
-                    <el-table-column label="加速内容名称">
-                    <template slot-scope="scope">
-                        <div>{{ scope.row.urlname }}</div>
                     </template>
                     </el-table-column>
                     <el-table-column label="加速域名">
@@ -159,16 +158,15 @@
               <el-row v-show="radioTop != 1" type="flex" class="row_active">
                 <el-col :span="24">
                   <el-table :data="tableTop1" border max-height = "530px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                    <el-table-column label="渠道ID">
-                    <template slot-scope="scope">
-                        <div>{{ scope.row.channelid }}</div>
-                    </template>
-                    </el-table-column>
-
                     <el-table-column label="加速内容名称">
-                    <template slot-scope="scope">
+                      <template slot-scope="scope">
                         <div>{{ scope.row.urlname }}</div>
-                    </template>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="渠道ID">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.channelid }}</div>
+                      </template>
                     </el-table-column>
                     <el-table-column label="加速域名">
                     <template slot-scope="scope">

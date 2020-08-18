@@ -437,6 +437,11 @@ export default {
       // } else {
       //   params.acce = "-1";
       // }
+      if(this.valueDomain){
+        params.domain = this.valueDomain;
+      }else{
+        params.domain = "*"
+      }
       if (this.valueacce !== "") {
         params.terminalName = parseInt(this.valueacce);
       } else {
@@ -487,6 +492,11 @@ export default {
       // } else {
       //   params.acce = "-1";
       // }
+      if(this.valueDomain){
+        params.domain = this.valueDomain;
+      }else{
+        params.domain = "*"
+      }
       if (this.valueacce !== "") {
         params.terminalName = parseInt(this.valueacce);
       } else {
@@ -531,6 +541,11 @@ export default {
       } else {
         params.chanId = "*";
       }
+      if(this.valueDomain){
+        params.domain = this.valueDomain;
+      }else{
+        params.domain = "*"
+      }
       if (this.valueacce !== "") {
         params.acce = this.valueacce;
       } else {
@@ -571,7 +586,11 @@ export default {
       } else {
         params.isp = "*";
       }
-
+      if(this.valueDomain){
+          params.domain = this.valueDomain;
+        }else{
+          params.domain = "*"
+        }
       if (this.value1Activechanid !== "") {
         params.chanId = this.value1Activechanid;
       } else {
@@ -698,7 +717,11 @@ export default {
         // } else {
           params.isp = "*";
         // }
-
+        if(this.valueDomain){
+          params.domain = this.valueDomain;
+        }else{
+          params.domain = "*"
+        }
         if (this.value1Activechanid !== "") {
           params.chanId = this.value1Activechanid;
         } else {
