@@ -802,7 +802,7 @@ export default {
       this.plain = "plain";
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.starttime = times - 24 * 60 * 60 * 1;
-      this.endtime = times;
+      this.endtime = times - 1;
       this.timeUnit = 60;
       this.pageNo = 1;
       this.gettable1();

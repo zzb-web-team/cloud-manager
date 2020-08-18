@@ -824,7 +824,7 @@ export default {
     yesterday(data) {
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.starttime = times - 24 * 60 * 60 * 1;
-      this.endtime = times;
+      this.endtime = times - 1;
       this.timeUnit = 60;
       this.pageNo2 = 1;
       this.getNodeTrafficCurve();
