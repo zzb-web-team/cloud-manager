@@ -624,10 +624,10 @@ export default {
     gettimes(cal) {
       if(cal == 0){
         this.starttime = this.val2 ? dateToMs(this.val2[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
-        this.endtime = this.val2 ? dateToMs(this.val2[1]) : Date.parse(new Date()) / 1000;
+        this.endtime = this.val2 ? dateToMs(this.val2[1]) + (24*60*60-1) : Date.parse(new Date()) / 1000;
       }else{
         this.starttime = this.val3 ? dateToMs(this.val3[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
-        this.endtime = this.val3 ? dateToMs(this.val3[1]) : Date.parse(new Date()) / 1000;
+        this.endtime = this.val3 ? dateToMs(this.val3[1]) + (24*60*60-1) : Date.parse(new Date()) / 1000;
       }
       if (this.endtime - this.starttime <= 86400) {
         this.timeUnit = 60 * 2;

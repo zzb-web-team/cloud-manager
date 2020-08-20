@@ -110,7 +110,7 @@ export default {
   mounted() {
     if (this.$cookies.get("adminid")) {
       this.$router.push({
-        path: "/user"
+        path: "/operating_user"
       });
     }
   },
@@ -132,7 +132,7 @@ export default {
               this.$cookies.set("adminuser", data.usermsg.username, 7 * 24 * 60 * 60);
               this.$cookies.set("adminid", data.usermsg.id, 7 * 24 * 60 * 60);
               this.$router.push({
-                path: "/user"
+                path: "/operating_user"
               });
 
         }
@@ -177,7 +177,7 @@ export default {
               this.$cookies.set("adminuser", data.msg.username, 7 * 24 * 60 * 60);
               this.$cookies.set("adminid", data.msg.id, 7 * 24 * 60 * 60);
               this.$router.push({
-                path: "/user"
+                path: "/operating_user"
               });
             }
             else if(data.status==1){

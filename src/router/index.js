@@ -72,6 +72,7 @@ export default new Router({
       path: "/home_two",
       name: "后台管理",
       component: index,
+      hidden: true,
       icon: "iconfont icon-guanxiaobaotubiao09",
       children: [
         {
@@ -98,7 +99,7 @@ export default new Router({
       path: "/a",
       name: "用户管理",
       component: index,
-      icon: "iconfont icon-jiankong",
+      icon: "iconfont icon-guanxiaobaotubiao09",
       children: [
         {
           path: "/operating_user",
@@ -117,7 +118,7 @@ export default new Router({
       path: "/b",
       name: "加速配置管理",
       component: index,
-      icon: "iconfont icon-shebeijiankong",
+      icon: "iconfont icon-jiankong",
       children: [
         {
           path: "/accelerate_management",
@@ -271,7 +272,7 @@ export default new Router({
     },
     {
       path: "/f",
-      name: "后台操作",
+      name: "后台管理",
       component: index,
       icon: "iconfont icon-guanli",
       children: [
@@ -279,6 +280,11 @@ export default new Router({
           path: "/operation_management",
           name: "操作日志",
           component: operation_management,
+        },
+        {
+          path: "/user",
+          name: "后台账户",
+          component: user,
         },
       ],
     },

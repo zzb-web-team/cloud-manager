@@ -104,7 +104,7 @@
               <el-input v-model="valueContent1" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
               </el-input>
-              <el-date-picker style="margin-left:10px;" v-model="val3" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
+              <el-date-picker style="margin-left:10px;" v-model="val3" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
               <!-- <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button> -->
             </div>
             <div class="devide_table">
@@ -858,7 +858,7 @@ export default {
         this.endtime = this.val2 ? dateToMs(this.val2[1]) : Date.parse(new Date()) / 1000;
       }else{
         this.starttime = this.val3 ? dateToMs(this.val3[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
-        this.endtime = this.val3 ? dateToMs(this.val3[1]) : Date.parse(new Date()) / 1000;
+        this.endtime = this.val3 ? dateToMs(this.val3[1]) + (24*60*60-1) : Date.parse(new Date()) / 1000;
       }
       
       if (this.endtime - this.starttime <= 86400) {

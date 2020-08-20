@@ -43,7 +43,7 @@
                 @click="setZdy"
                 >自定义</el-button
 						  >
-              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
               <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button> -->
             </div>
             <div class="user_item">
@@ -111,18 +111,20 @@
                     <el-table-column :render-header="renderHeader" label="节点有资源时CDN播放流量（%）" >
                       <template slot-scope="scope">
                         <div style="display: flex;justify-content: center;">
-
                           <div>{{ scope.row.cdnactiveflow | setbytes }}</div>
                           <div>({{ scope.row.cdnactivepercent | percentss }})</div>
-
                         </div>
-
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="加速播放次数">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.times }}</div>
                       </template>
                     </el-table-column>
                     <el-table-column label="时间">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.stime | settimes }}</div>
-                        <div>{{ scope.row.etime | settimes }}</div>
+                        <!-- <div>{{ scope.row.stime | settimes }}</div> -->
+                        <div>{{ common.getTimess(scope.row.etime * 1000) }}</div>
                       </template>
                     </el-table-column>
                   </el-table>
@@ -170,7 +172,7 @@
                 @click="setZdy"
                 >自定义</el-button
 						  >
-              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
               <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(4)">确定</el-button> -->
             </div>
             <div class="device_form" style>
@@ -1170,8 +1172,14 @@ export default {
     //自定义时间
     gettimes(cal) {
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-      this.starttime = this.val2 ? dateToMs(this.val2[0]) : times;
-      this.endtime = this.val2 ? dateToMs(this.val2[1]) : Date.parse(new Date()) / 1000;
+      if(cal == 0){
+        this.starttime = this.val2 ? dateToMs(this.val2[0]) : times;
+        this.endtime = this.val2 ? dateToMs(this.val2[1]) + (24*60*60-1) : Date.parse(new Date()) / 1000;
+      }else{
+        this.starttime = this.val2 ? dateToMs(this.val2[0]) : times;
+        this.endtime = this.val2 ? dateToMs(this.val2[1]) : Date.parse(new Date()) / 1000;
+      }
+      
       this.pageNo = 1;
       if (this.endtime - this.starttime < 21600) {
         this.timeUnit = 60;
