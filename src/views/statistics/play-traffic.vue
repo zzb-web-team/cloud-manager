@@ -121,11 +121,11 @@
                         <div>{{ scope.row.times }}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="时间">
-                      <template slot-scope="scope">
+                    <el-table-column label="时间" prop="stime" :formatter="timeFormatter">
+                      <!-- <template slot-scope="scope"> -->
                         <!-- <div>{{ scope.row.stime | settimes }}</div> -->
-                        <div>{{ common.getTimess(scope.row.etime * 1000) }}</div>
-                      </template>
+                        <!-- <div>{{ common.getTimess(scope.row.etime * 1000) }}</div>
+                      </template> -->
                     </el-table-column>
                   </el-table>
                   <fenye style="float:right;margin:10px 0 0 0;" :currentPage="pageNo1" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
@@ -648,6 +648,14 @@ export default {
     this.drawLine1();
   },
   methods: {
+    timeFormatter(row){
+      console.log(row)
+      if(this.timeUnit == 120){
+        return this.common.getTimess(row.stime * 1000)
+      }else{
+        return this.common.getTimess(row.stime * 1000) + '~' + this.common.getTimess(row.etime * 1000)
+      }
+    },
     renderHeader(h, { column }) {
       const serviceContent = [
         h(
@@ -779,6 +787,11 @@ export default {
         this.endtime
       );
 
+      this.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+
       sdk_flow(params)
         .then(res => {
           if (res.status == 0) {
@@ -853,12 +866,17 @@ export default {
       }
 
       (params.pageNo = this.pageNo1 - 1),
-        (params.pageSize = this.pageSize1),
-        // params.domain="*"
-        (params.timeUnit = this.common.timeUnitActive(
-          this.starttime,
-          this.endtime
-        ));
+      (params.pageSize = this.pageSize1),
+      // params.domain="*"
+      (params.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      ));
+      
+      this.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
 
       sdk_flow_table(params)
         .then(res => {
@@ -909,6 +927,11 @@ export default {
       // params.pageSize= 10,
       // params.domain="*"
       params.timeUnit = this.common.timeUnitActive1(
+        this.starttime,
+        this.endtime
+      );
+
+      this.timeUnit = this.common.timeUnitActive(
         this.starttime,
         this.endtime
       );

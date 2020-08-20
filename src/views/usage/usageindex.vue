@@ -79,7 +79,7 @@
             v-show="showzdy"
             style="margin-left:10px;"
             v-model="val2"
-            type="datetimerange"
+            type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -180,10 +180,11 @@
                     <div>{{ scope.row.dataFlow | setbytes }}</div>
                   </template>
                 </el-table-column>
-                <el-table-column label="时间">
-                  <template slot-scope="scope">
+                <el-table-column label="时间" prop="time" :formatter="timeFormatter">
+                  <!-- <template slot-scope="scope">
                     <div>{{ scope.row.time | settimes }}</div>
-                  </template>
+                    <div>{{ scope.row.time | settimes }}</div>
+                  </template> -->
                 </el-table-column>
               </el-table>
               <fenye
@@ -336,7 +337,7 @@ export default {
       // value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
       val2: [],
 
-      timeUnit: 60,
+      timeUnit: 120,
       starttime: "",
       endtime: "",
       dataFlowArray: [], //图1
@@ -411,6 +412,17 @@ export default {
     this.drawLine1();
   },
   methods: {
+    //  统计时间段
+    timeFormatter(row, column){
+      if(this.timeUnit == 120){
+        let startTime = row.time * 1000;
+        let endTime = (row.time + 2*60*60 -1) * 1000
+        return this.common.getTimes(startTime) + '-' + this.common.getTimes(endTime)
+      }else{
+        return this.common.getTimess(row.time * 1000)
+      }
+    },
+
     closeSel(event) {
       var currentCli = document.getElementById("sellineName");
       var shopw = document.getElementById("shopw");
@@ -433,7 +445,6 @@ export default {
       this.querychanId(this.search);
     },
     handleSelectionChange(val) {
-      console.log(val);
       let arrlist = [];
       if (val.length > 0) {
         val.forEach((item) => {
@@ -682,6 +693,10 @@ export default {
         this.starttime,
         this.endtime
       );
+      this.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
       (params.pageNo = 0),
         (params.pageSize = 10),
         manage_dataflow_curve(params)
@@ -761,6 +776,10 @@ export default {
         this.starttime,
         this.endtime
       );
+      this.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
       manage_dataflow_table(params)
         .then((res) => {
           if (res.status == 0) {
@@ -835,14 +854,11 @@ export default {
     },
     //自定义时间
     gettimes(cal) {
-      this.starttime = dateToMs(this.val2[0]);
-      this.endtime = dateToMs(this.val2[1]);
-      if (this.endtime - this.starttime < 21600) {
-        this.timeUnit = 60;
-      } else if (
-        this.endtime - this.starttime >= 21600 &&
-        this.endtime - this.starttime < 86400
-      ) {
+      this.starttime = this.val2 ? dateToMs(this.val2[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.endtime = this.val2 ? dateToMs(this.val2[1]) + (24*60*60-1) : Date.parse(new Date()) / 1000;
+      // this.starttime = dateToMs(this.val2[0]);
+      // this.endtime = dateToMs(this.val2[1]);
+      if (this.endtime - this.starttime < 86400) {
         this.timeUnit = 60;
       } else if (this.endtime - this.starttime >= 86400) {
         this.timeUnit = 60 * 24;

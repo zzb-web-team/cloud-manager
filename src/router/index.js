@@ -277,14 +277,14 @@ export default new Router({
       icon: "iconfont icon-guanli",
       children: [
         {
-          path: "/operation_management",
-          name: "操作日志",
-          component: operation_management,
-        },
-        {
           path: "/user",
           name: "后台账户",
           component: user,
+        },
+        {
+          path: "/operation_management",
+          name: "操作日志",
+          component: operation_management,
         },
       ],
     },
