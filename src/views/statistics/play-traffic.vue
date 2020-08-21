@@ -20,7 +20,7 @@
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
               <el-select v-model="valueChanel" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;" @change="onChanges">
-                <el-option label="全部" value="-1"></el-option>
+                <el-option label="全部" value="*"></el-option>
                 <el-option v-for="(item, index) in hashidSets1" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
               <el-radio-group
@@ -149,7 +149,7 @@
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select> -->
               <el-select v-model="valueChanel1" placeholder="全部节点渠道" @change="onChanges" style="width: 10%;margin-right: 10px;">
-                <el-option label="全部" value="-1"></el-option>
+                <el-option label="全部" value="*"></el-option>
                 <el-option v-for="(item, index) in hashidSets1" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
               <el-radio-group
@@ -204,6 +204,7 @@ import {
   sdk_flow_control,
   export_sdk_flow_table_file,
   export_sdk_flow_control_file,
+  get_nodetype_enum
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -235,20 +236,7 @@ export default {
           label: "其他",
         },
       ],
-      hashidSets1: [
-        {
-          value: "1",
-          label: "云链",
-        },
-        {
-          value: "2",
-          label: "西柚机",
-        },
-        {
-          value: "3",
-          label: "其他",
-        },
-      ],
+      hashidSets1: [],
       value1Activechanidactive: "",
       options2: [
         {
@@ -632,9 +620,9 @@ export default {
     fenye,
   },
   mounted() {
+    this.getNodeType();
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.endtime = Date.parse(new Date()) / 1000;
-
     this.querySdkflow();
     this.querySdkflowTable();
   },
@@ -749,6 +737,25 @@ export default {
       //this.pagesize = pagetol;
       // this.getuserlist();
     },
+
+    //获取节点渠道
+    getNodeType(){
+      let param = {}
+      get_nodetype_enum(param).then(
+        (res) => {
+          let data = res.data.firstchan;
+          let list = data.map((item)=>{
+            let obj = {};
+            obj.label = item.name;
+            obj.value = item.value;
+            return obj
+          })
+          this.hashidSets1 = list;
+        })
+        .catch((err)=>{
+          console.log(err)
+        })
+    },
     //流量占比图标
     querySdkflow() {
       let params = new Object();
@@ -771,9 +778,9 @@ export default {
         params.terminalName = -1;
       }
       if (this.valueChanel !== "") {
-        params.ipfsChannel = parseInt(this.valueChanel);
+        params.ipfsChannel = this.valueChanel;
       } else {
-        params.ipfsChannel = -1;
+        params.ipfsChannel = "*";
       }
 
       if (this.value1Activechanidactive !== "") {
@@ -855,9 +862,9 @@ export default {
         params.terminalName = -1;
       }
       if (this.valueChanel !== "") {
-        params.ipfsChannel = parseInt(this.valueChanel);
+        params.ipfsChannel = this.valueChanel;
       } else {
-        params.ipfsChannel = -1;
+        params.ipfsChannel = "*";
       }
       if (this.value1Activechanidactive !== "") {
         params.domain = this.value1Activechanidactive;
@@ -913,9 +920,9 @@ export default {
       //   params.terminalName = -1;
       // }
       if (this.valueChanel1 !== "") {
-        params.ipfsChannel = parseInt(this.valueChanel1);
+        params.ipfsChannel = this.valueChanel1;
       } else {
-        params.ipfsChannel = -1;
+        params.ipfsChannel = "*";
       }
       if (this.value1Activechanidactive !== "") {
         params.domain = this.value1Activechanidactive;
@@ -1038,9 +1045,9 @@ export default {
       }
 
       if (this.valueChanel1 !== "") {
-        params.ipfsChannel = parseInt(this.valueChanel1);
+        params.ipfsChannel = this.valueChanel1;
       } else {
-        params.ipfsChannel = -1;
+        params.ipfsChannel = "*";
       }
 
       if (this.value1Activechanidactive !== "") {
@@ -1088,9 +1095,9 @@ export default {
         params.terminalName = -1;
       }
       if (this.valueChanel !== "") {
-        params.ipfsChannel = parseInt(this.valueChanel);
+        params.ipfsChannel = this.valueChanel;
       } else {
-        params.ipfsChannel = -1;
+        params.ipfsChannel = "*";
       }
       if (this.value1Activechanidactive !== "") {
         params.domain = this.value1Activechanidactive;

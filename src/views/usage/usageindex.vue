@@ -36,7 +36,7 @@
             style="width: 10%;margin-right: 10px;"
             @change="onChanges"
           >
-            <el-option label="全部" value="-1"></el-option>
+            <el-option label="全部" value="*"></el-option>
             <el-option
               v-for="(item, index) in hashidSets"
               :key="index"
@@ -220,6 +220,7 @@ import {
   manage_dataflow_curve,
   manage_dataflow_table,
   export_manage_dataflow_table_file,
+  get_nodetype_enum
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -234,20 +235,7 @@ export default {
       valuedomian: "",
       value1acce1: "",
       duibi: false,
-      hashidSets: [
-        {
-          value: "1",
-          label: "云链",
-        },
-        {
-          value: "2",
-          label: "西柚机",
-        },
-        {
-          value: "3",
-          label: "其他",
-        },
-      ],
+      hashidSets: [],
       chanIds: [],
       optionssearch1: [],
       optionssearch: [],
@@ -371,6 +359,7 @@ export default {
   },
   mounted() {
     this.querychanId();
+    this.getNodeType();
 
     let monitorUrlname = this.$route.query.monitorUrlname;
     if (monitorUrlname) {
@@ -525,9 +514,9 @@ export default {
         params.domain = "*";
       }
       if (this.value1acce1 != "") {
-        params.ipfsChannel = parseInt(this.value1acce1);
+        params.ipfsChannel = this.value1acce1;
       } else {
-        params.ipfsChannel = -1;
+        params.ipfsChannel = "*";
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -549,6 +538,25 @@ export default {
       this.pageNo = 1;
       this.gettable1();
       this.gettable2();
+    },
+
+    //获取节点渠道
+    getNodeType(){
+      let param = {}
+      get_nodetype_enum(param).then(
+        (res) => {
+          let data = res.data.firstchan;
+          let list = data.map((item)=>{
+            let obj = {};
+            obj.label = item.name;
+            obj.value = item.value;
+            return obj
+          })
+          this.hashidSets = list;
+        })
+        .catch((err)=>{
+          console.log(err)
+        })
     },
 
     //查询用户id
@@ -685,9 +693,9 @@ export default {
         params.domain = "*";
       }
       if (this.value1acce1 != "") {
-        params.ipfsChannel = parseInt(this.value1acce1);
+        params.ipfsChannel = this.value1acce1;
       } else {
-        params.ipfsChannel = -1;
+        params.ipfsChannel = "*";
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -768,9 +776,9 @@ export default {
         params.domain = "*";
       }
       if (this.value1acce1 != "") {
-        params.ipfsChannel = parseInt(this.value1acce1);
+        params.ipfsChannel = this.value1acce1;
       } else {
-        params.ipfsChannel = -1;
+        params.ipfsChannel = "*";
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,

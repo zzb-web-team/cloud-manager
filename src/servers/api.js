@@ -278,6 +278,10 @@ export const video_exception_statistics = params => {
     return post(`${serverUrl}/resource_manage/video_exception_statistics`, params)
 };
 
+//获取节点渠道node_mgmt/get_nodetype_enum
+export const get_nodetype_enum = params => {
+    return post(`${serverUrl}/node_mgmt/get_nodetype_enum`, params)
+};
 
 //点播数据统计
 /** PV/UV 查询条件*/

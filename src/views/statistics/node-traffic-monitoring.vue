@@ -16,7 +16,7 @@
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
               </el-input>
               <el-select v-model="valueChanel" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;" @change="onChanges">
-                <el-option label="全部" value="-1"></el-option>
+                <el-option label="全部" value="*"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
               <el-radio-group
@@ -211,7 +211,8 @@ import {
   top_accelcnt_ranking,
   top_dataflow_ranking,
   export_accelcnt_ranking_table_file,
-  export_dataflow_ranking_table_file
+  export_dataflow_ranking_table_file,
+  get_nodetype_enum
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -224,20 +225,7 @@ export default {
       dataAry1: [],
       dataAry2: [],
       hashidSet: [],
-      hashidSets: [
-        {
-          value: "1",
-          label: "云链",
-        },
-        {
-          value: "2",
-          label: "西柚机",
-        },
-        {
-          value: "3",
-          label: "其他",
-        },
-      ],
+      hashidSets: [],
       valueDomain: "",
       valueContent: "",
       valueChannelId: "",
@@ -350,6 +338,7 @@ export default {
     fenye,
   },
   mounted() {
+    this.getNodeType();
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.endtime = Date.parse(new Date()) / 1000;
     this.getNodeTrafficCurve();
@@ -477,6 +466,24 @@ export default {
         }
       }
     },
+    //获取节点渠道
+    getNodeType(){
+      let param = {}
+      get_nodetype_enum(param).then(
+        (res) => {
+          let data = res.data.firstchan;
+          let list = data.map((item)=>{
+            let obj = {};
+            obj.label = item.name;
+            obj.value = item.value;
+            return obj
+          })
+          this.hashidSets = list;
+        })
+        .catch((err)=>{
+          console.log(err)
+        })
+    },
     //节点流量图
     getNodeTrafficCurve() {
       let params = new Object();
@@ -493,9 +500,9 @@ export default {
         params.channelId = "*";
       }
       if (this.valueChanel != "") {
-        params.ipfsChanel = parseInt(this.valueChanel);
+        params.ipfsChanel = this.valueChanel;
       } else {
-        params.ipfsChanel = -1;
+        params.ipfsChanel = "*";
       }
 
       if (this.valueDomain !== "") {
@@ -554,9 +561,9 @@ export default {
         params.channelId = "*";
       }
       if (this.valueChanel !== "") {
-        params.ipfsChanel = parseInt(this.valueChanel);
+        params.ipfsChanel = this.valueChanel;
       } else {
-        params.ipfsChanel = -1;
+        params.ipfsChanel = "*";
       }
 
       if (this.valueDomain !== "") {
@@ -600,9 +607,9 @@ export default {
         params.channelId = "*";
       }
       if (this.valueChanel != "") {
-        params.ipfsChanel = parseInt(this.valueChanel);
+        params.ipfsChanel = this.valueChanel;
       } else {
-        params.ipfsChanel = -1;
+        params.ipfsChanel = "*";
       }
 
       if (this.valueDomain !== "") {
