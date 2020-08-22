@@ -114,9 +114,12 @@ export default {
     } else if (limit < 0.1 * 1024 * 1024 * 1024) {
       //小于0.1GB，则转化成MB
       size = (limit / (1024 * 1024)).toFixed(2) + "MB";
-    } else {
-      //其他转化成GB
+    } else if (limit < 0.1 * 1024 * 1024 * 1024 * 1024){
+      //小于0.1GB，则转化成GB
       size = (limit / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+    }else{
+      //其他转化成TB
+      size = (limit / (1024 * 1024 * 1024 * 1024)).toFixed(2) + "TB";
     }
 
     var sizeStr = size + ""; //转成字符串
@@ -142,9 +145,12 @@ export default {
     } else if (limit < 1024 * 1024 * 1024) {
       //小于0.1GB，则转化成MB
       size = (limit / (1024 * 1024)).toFixed(2) + "MB";
-    } else {
-      //其他转化成GB
+    } else if (limit < 1024 * 1024 * 1024 * 1024){
+      //小于0.1GB，则转化成GB
       size = (limit / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+    }else{
+      //其他转化成TB
+      size = (limit / (1024 * 1024 * 1024 * 1024)).toFixed(2) + "TB";
     }
 
     var sizeStr = size + ""; //转成字符串
