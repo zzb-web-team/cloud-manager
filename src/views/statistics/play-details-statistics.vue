@@ -18,6 +18,9 @@
                 <!-- <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button> -->
                 </div>
                 <div class="devide_table">
+                  <div style="display: flex;justify-content: flex-end;margin-right: 6px;">
+                    <el-button type="primary" @click="toExportVideoInfoExcel">导出</el-button>
+                  </div>
                 <el-row type="flex" class="row_active">
                     <el-col :span="24">
                     <el-table :data="tableZb" border max-height="600" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
@@ -154,6 +157,9 @@
                     </el-form>
                 </div>
                 <div class="devide_table">
+                <div style="display: flex;justify-content: flex-end;margin-right: 6px;">
+                  <el-button type="primary" @click="toExportVideoExceptionExcel">导出</el-button>
+                </div>
                 <el-row type="flex" class="row_active">
                     <el-col :span="24">
                     <el-table :data="tableZb1" border max-height = "600px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
@@ -216,7 +222,9 @@ import { dateToMs, getymdtime, getymdtime1 } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
 import {
   video_info_statistics,
-  video_exception_statistics
+  video_exception_statistics,
+  export_video_info_statistics_file,
+  export_video_exception_statistics_file
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -648,7 +656,7 @@ export default {
         this.pageNo = 1;
         this.videoInfoStatistics();
       }else{
-        this.pageNo = 1;
+        this.pageNo1 = 1;
         this.videoExceptionStatistics();
       }
     },
@@ -768,6 +776,112 @@ export default {
         });
     },
 
+    //导出播放信息统计
+    toExportVideoInfoExcel(){
+      let params = new Object();
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = this.pageSize;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      if (this.valueContent) {
+        params.urlName = this.valueContent;
+      } else {
+        params.urlName = "*";
+      }
+      if (this.valueChannelId !== "") {
+        params.channelId = this.valueChannelId;
+      } else {
+        params.channelId = "*";
+      }
+      if (this.valueRegion[1]) {
+        params.region = this.valueRegion[1];
+      } else {
+        params.region = "*";
+      }
+
+      if (this.valueIsp != "" && this.valueIsp != "全部") {
+        params.isp = this.valueIsp;
+      } else {
+        params.isp = "*";
+      }
+      if (this.valueDomain !== "") {
+        params.domain = this.valueDomain;
+      } else {
+        params.domain = "*";
+      }
+
+      params.timeUnit = 60;
+      this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      export_video_info_statistics_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+
+    },
+
+    //导出播放异常统计
+    toExportVideoExceptionExcel(){
+      let params = new Object();
+      params.pageNo = this.pageNo1 - 1;
+      params.pageSize = this.pageSize1;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      var reg = /^\d{12}$/;
+      if(this.searchText != ""){
+        if(reg.test(this.searchText)){
+          params.urlName = "*";
+          params.channelId = this.searchText;
+          params.playUrl = "*";
+        }else if(this.searchText.startsWith('http')){
+          params.urlName = "*";
+          params.channelId = "*";
+          params.playUrl = this.searchText;
+        }else{
+          params.urlName = this.searchText;
+          params.channelId = "*";
+          params.playUrl = "*";
+        }
+      }else{
+        params.urlName = "*";
+        params.channelId = "*";
+        params.playUrl = "*";
+      }
+      if (this.exceptionType != "") {
+        params.exceptionType = parseInt(this.exceptionType);
+      } else {
+        params.exceptionType = -1;
+      }
+      if (this.exceptionStatus != "") {
+        params.exceptionStatus = parseInt(this.exceptionStatus);
+      } else {
+        params.exceptionStatus = -1;
+      }
+
+      params.timeUnit = 60;
+      this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+
+      export_video_exception_statistics_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+
+    },
     //选项卡
     handleClick(tab, event) {
       this.val2= [];

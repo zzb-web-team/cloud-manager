@@ -1248,6 +1248,8 @@ export default {
       this.showzdy = false;
       this.endtime = Date.parse(new Date()) / 1000;
       this.options3 = [];
+      this.totalp2p = 0;
+      this.totalcdn = 0;
       if (tab.index == 0) {
         this.value1Activechanid="";
         this.valuea1="";

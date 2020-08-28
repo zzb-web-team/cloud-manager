@@ -278,6 +278,17 @@ export const video_exception_statistics = params => {
     return post(`${serverUrl}/resource_manage/video_exception_statistics`, params)
 };
 
+
+//播放信息统计导出
+export const export_video_info_statistics_file = params => {
+    return post(`${serverUrl}/file_download/export_video_info_statistics_file`, params)
+};
+
+//播放异常统计导出
+export const export_video_exception_statistics_file = params => {
+    return post(`${serverUrl}/file_download/export_video_exception_statistics_file`, params)
+};
+
 //获取节点渠道node_mgmt/get_nodetype_enum
 export const get_nodetype_enum = params => {
     return post(`${serverUrl}/node_mgmt/get_nodetype_enum`, params)

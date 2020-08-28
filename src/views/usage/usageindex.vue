@@ -889,7 +889,8 @@ export default {
       let _this = this;
       let myChart = echarts.init(document.getElementById("myChartMap")); //这里是为了获得容器所在位置
       window.onresize = myChart.resize;
-
+      console.log(idlist)
+      let list = idlist.map(v => {return v+''})
       var posList = [
         "left",
         "right",
@@ -1002,17 +1003,28 @@ export default {
         ],
         tooltip: {
           trigger: "axis",
-          //     formatter: function(params) {
-          // 		console.log(params[0])
-          //     return (
-          //     //   params[0].name +
-          //     //   "<br>" +
-          //     //   params[0].seriesName +
-          //     //   ":" +
-          //     //   params[0].data +
-          //     //   _this.flowunit
-          //     );
-          //   },
+              formatter: function(params) {
+              console.log(params)
+              let str =params[0].name;
+              for(var i = 0; i < params.length; i++){
+                console.log(params[i].seriesName)
+                if(params[i].seriesName.includes("series")){
+                  str += "<br>" + params[i].data + _this.flowunit
+                }else{
+                  str += "<br>" + params[i].seriesName + ": " + params[i].data + _this.flowunit
+                }
+                
+              }
+              return str;
+              // return (
+              //   params[0].name +
+              //   "<br>" +
+              //   params[0].seriesName +
+              //   ":" +
+              //   params[0].data +
+              //   _this.flowunit
+              // );
+            },
           axisPointer: {
             type: "shadow",
           },
@@ -1033,7 +1045,7 @@ export default {
           },
         },
         legend: {
-          data: idlist,
+          data: list,
           bottom: 50,
         },
         grid: {
