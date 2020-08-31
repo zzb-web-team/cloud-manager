@@ -6,16 +6,21 @@
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="播放信息统计" name="first">
                 <div style="display: flex;flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
-                <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
-                <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges"></el-input>
+                <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                </el-input>
+                <el-input v-model="valuePlayUrl" placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" @change="onChanges">
+                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                </el-input>
+                <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                </el-input>
                 <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="请选择播放区域" :options="hashidSet" ref="cascaderAddr" :show-all-levels="false" v-model="valueRegion" @change="onChanges"></el-cascader>
                 <el-select v-model="valueIsp" placeholder="请选择运营商网络" style="width: 10%;margin-right: 10px;" @change="onChanges">
                   <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-                
-                <el-date-picker style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
-                <!-- <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button> -->
+                </el-select>                
+                <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
+                <el-button type="primary" @click="reset(0)">重置</el-button>
                 </div>
                 <div class="devide_table">
                   <div style="display: flex;justify-content: flex-end;margin-right: 6px;">
@@ -123,36 +128,25 @@
                 <div class="device_form">
                     <el-form ref="form">
                         <el-row type="flex">
-                            <el-input placeholder="请输入渠道ID、加速内容名称、播放URL" style="width:300px" v-model="searchText" class="input-with-select"  @change="onChanges" maxlength="70">
-                                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                            </el-input>
-                            <div @click="getShow()" class="div_show" style="color:#606266">
-                                筛选
-                                <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
-                            </div>
-                        </el-row>
-                        <el-row type="flex" class="row_activess" v-show="showState">
-                            <el-form-item label="播放异常类型：" style="display: flex;">
-                              <el-select v-model="exceptionType" placeholder="请选择" @change="onChanges">
-                                <el-option label="全部" value="-1"></el-option>
-                                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                              </el-select>
-                            </el-form-item>
-                            <el-form-item label="播放异常原因：" style="display: flex;">
-                              <el-select v-model="exceptionStatus" placeholder="请选择" @change="onChanges">
-                                <el-option label="全部" value="-1"></el-option>
-                                <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                              </el-select>
-                            </el-form-item>
-                            <el-form-item label="时间：" style="display: flex;">
-                              <el-date-picker style="margin-left:10px;" v-model="val3" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
-                            </el-form-item>
-                            <!-- <el-form-item>
-                                <el-button type="primary" @click="search1">确定</el-button>
-                            </el-form-item> -->
-                            <el-form-item>
-                                <el-button type="primary" @click="reset()">重置</el-button>
-                            </el-form-item>
+                          <el-input placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" v-model="valueChannelId" @change="onChanges">
+                              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                          </el-input>
+                          <el-input placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" v-model="valueContent" @change="onChanges">
+                              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                          </el-input>
+                          <el-input placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" v-model="valuePlayUrl" @change="onChanges">
+                              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                          </el-input>
+                          <el-select v-model="exceptionType" style="margin-right: 10px;" placeholder="请选择播放异常类型" @change="onChanges">
+                            <el-option label="全部" value="-1"></el-option>
+                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                          </el-select>
+                          <el-select v-model="exceptionStatus" style="margin-right: 10px;" placeholder="请选择播放异常原因" @change="onChanges">
+                            <el-option label="全部" value="-1"></el-option>
+                            <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                          </el-select>
+                          <el-date-picker style="margin-right:10px;" v-model="val3" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
+                          <el-button type="primary" @click="reset(1)">重置</el-button>
                         </el-row>
                     </el-form>
                 </div>
@@ -483,6 +477,7 @@ export default {
           label: " P2P播放超时",
         },
       ],
+      valuePlayUrl: "",
       valueDomain: "",
       valueContent: "",
       valueChannelId: "",
@@ -661,17 +656,28 @@ export default {
       }
     },
     //重置
-    reset() {
-      this.searchText = "";
-      this.exceptionStatus = "";
-      this.exceptionType = "";
-      this.val3=[];
-      this.pageSize1 = 10;
-      this.pageNo1 = 1;
+    reset(param) {
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.starttime = times;
       this.endtime = Date.parse(new Date()) / 1000;
-      this.videoExceptionStatistics();
+      this.valuePlayUrl = "";
+      this.valueChannelId = "";
+      this.valueContent = "";
+      if(param == 0){
+        this.val2 = [];
+        this.valueIsp = "";
+        this.valueRegion = "";
+        this.pageSize = 10;
+        this.pageNo = 1;
+        this.videoInfoStatistics();
+      }else{
+        this.exceptionStatus = "";
+        this.exceptionType = "";
+        this.val3=[];
+        this.pageSize1 = 10;
+        this.pageNo1 = 1;
+        this.videoExceptionStatistics();
+      }
     },
     //播放信息统计
     videoInfoStatistics() {
@@ -701,10 +707,10 @@ export default {
       } else {
         params.isp = "*";
       }
-      if (this.valueDomain !== "") {
-        params.domain = this.valueDomain;
+      if (this.valuePlayUrl !== "") {
+        params.playUrl = this.valuePlayUrl;
       } else {
-        params.domain = "*";
+        params.playUrl = "*";
       }
 
       params.timeUnit = 60;
@@ -729,24 +735,19 @@ export default {
       params.pageSize = this.pageSize1;
       params.startTs = this.starttime;
       params.endTs = this.endtime;
-      var reg = /^\d{12}$/;
-      if(this.searchText != ""){
-        if(reg.test(this.searchText)){
-          params.urlName = "*";
-          params.channelId = this.searchText;
-          params.playUrl = "*";
-        }else if(this.searchText.startsWith('http')){
-          params.urlName = "*";
-          params.channelId = "*";
-          params.playUrl = this.searchText;
-        }else{
-          params.urlName = this.searchText;
-          params.channelId = "*";
-          params.playUrl = "*";
-        }
-      }else{
+      if (this.valueContent) {
+        params.urlName = this.valueContent;
+      } else {
         params.urlName = "*";
+      }
+      if (this.valueChannelId !== "") {
+        params.channelId = this.valueChannelId;
+      } else {
         params.channelId = "*";
+      }
+      if (this.valuePlayUrl) {
+        params.playUrl = this.valuePlayUrl;
+      } else {
         params.playUrl = "*";
       }
       if (this.exceptionType != "") {
@@ -804,10 +805,10 @@ export default {
       } else {
         params.isp = "*";
       }
-      if (this.valueDomain !== "") {
-        params.domain = this.valueDomain;
+      if (this.valuePlayUrl !== "") {
+        params.playUrl = this.valuePlayUrl;
       } else {
-        params.domain = "*";
+        params.playUrl = "*";
       }
 
       params.timeUnit = 60;
@@ -834,24 +835,19 @@ export default {
       params.pageSize = this.pageSize1;
       params.startTs = this.starttime;
       params.endTs = this.endtime;
-      var reg = /^\d{12}$/;
-      if(this.searchText != ""){
-        if(reg.test(this.searchText)){
-          params.urlName = "*";
-          params.channelId = this.searchText;
-          params.playUrl = "*";
-        }else if(this.searchText.startsWith('http')){
-          params.urlName = "*";
-          params.channelId = "*";
-          params.playUrl = this.searchText;
-        }else{
-          params.urlName = this.searchText;
-          params.channelId = "*";
-          params.playUrl = "*";
-        }
-      }else{
+      if (this.valueContent) {
+        params.urlName = this.valueContent;
+      } else {
         params.urlName = "*";
+      }
+      if (this.valueChannelId !== "") {
+        params.channelId = this.valueChannelId;
+      } else {
         params.channelId = "*";
+      }
+      if (this.valuePlayUrl) {
+        params.playUrl = this.valuePlayUrl;
+      } else {
         params.playUrl = "*";
       }
       if (this.exceptionType != "") {
@@ -884,6 +880,10 @@ export default {
     },
     //选项卡
     handleClick(tab, event) {
+      this.valuePlayUrl = "";
+      this.valueDomain = "";
+      this.valueContent = "";
+      this.valueChannelId = "";
       this.val2= [];
       this.val3= [];
       this.pageNo = 1;

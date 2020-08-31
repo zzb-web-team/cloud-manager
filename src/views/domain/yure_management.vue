@@ -7,27 +7,27 @@
             <!-- 搜索 -->
             <div class="seach">
                 <div class="seach_top">
-                    <el-input placeholder="操作内容、渠道ID" v-model="input" class="input-with-select" @keyup.enter.native="onSubmit">
+                    <el-input placeholder="操作内容、渠道ID" v-model="input" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmit">
                         <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
                     </el-input>
-                    <div class="seach_top_right" @click="option_display()">
+                    <!-- <div class="seach_top_right" @click="option_display()">
                         筛选
                         <i class="el-icon-caret-bottom" :class="[rotate ? 'fa fa-arrow-down go' : 'fa fa-arrow-down aa']"></i>
                     </div>
                 </div>
                 <div v-if="optiondisplay" class="seach_bottom">
-                    <span>操作类型：</span>
-                    <el-select v-model="value" placeholder="请选择" @change="onchangeTab1">
+                    <span>操作类型：</span> -->
+                    <el-select v-model="value" placeholder="请选择操作类型" @change="onchangeTab1" style="width:160px;margin-right: 10px;">
                         <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
                     </el-select>
-                    <span>状态：</span>
-                    <el-select v-model="valueStatus" placeholder="请选择" @change="onchangeTab">
+                    <!-- <span>状态：</span> -->
+                    <el-select v-model="valueStatus" placeholder="请选择状态" @change="onchangeTab" style="width:160px;margin-right: 10px;">
                         <el-option v-for="(item, index) in optionsStatus" :key="index" :label="item.label" :value="item.value"></el-option>
                     </el-select>
-                    <span>注册时间：</span>
+                    <!-- <span>注册时间：</span> -->
                     <el-date-picker v-model="value1" type="datetimerange" range-separator="至" :picker-options="pickerOptions" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
-                    <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button>
-                    <el-button type="primary" @click="reset()">重置</el-button>
+                    <!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
+                    <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
 
                 </div>
             </div>
@@ -69,7 +69,7 @@ import { refresh_state_admin } from "../../servers/api";
 export default {
   data() {
     return {
-      valueStatus: -1,
+      valueStatus: "",
       input: "", //搜索输入框
       value1: "",
       dialog: false,
@@ -100,7 +100,7 @@ export default {
 
       tolpage: 1,
 
-      value: -1,
+      value: "",
       options: [
         {
           value: -1,
@@ -188,7 +188,8 @@ export default {
     reset() {
       this.input = "";
       this.value1 = "";
-      this.value = -1;
+      this.value = "";
+      this.valueStatus = "";
       this.queryInfo();
     },
     //跳转
@@ -379,6 +380,40 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.seach {
+  width: 100%;
+  margin: 30px 0 30px 0;
+  background: #ffffff;
+  border-radius: 2px;
+  padding: 21px 37px;
+  box-shadow: 0px 0px 7px 0px rgba(41, 108, 171, 0.1);
+  .seach_top {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .input-with-select {
+      width: 15%;
+    }
+    .seach_top_right {
+      width: 80px;
+      text-align: center;
+      height: 36px;
+      line-height: 36px;
+      margin-left: 10px;
+    }
+  }
+  .seach_bottom {
+    height: 72px;
+    background: rgba(242, 246, 250, 1);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    padding-left: 27px;
+  }
+}
 .refresh {
   width: 100%;
   display: flex;

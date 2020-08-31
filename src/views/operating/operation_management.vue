@@ -12,35 +12,35 @@
                         <i class="el-icon-search" @click="searchInfo" style="color:#606266"></i>
                         <el-input class="search-input" v-model="searchText" placeholder="请输入操作人" @keyup.enter.native="searchInfo" maxlength="70"></el-input>
                     </div> -->
-                        <el-input placeholder="请输入操作人" style="width:230px" v-model="searchText" class="input-with-select" @keyup.enter.native="searchInfo" maxlength="70">
+                        <el-input placeholder="请输入操作人" style="width:200px;margin-right: 10px;" v-model="searchText" class="input-with-select" @keyup.enter.native="searchInfo" maxlength="70">
                             <i slot="prefix" class="el-input__icon el-icon-search"></i>
                         </el-input>
-                        <div @click="getShow()" class="div_show" style="color:#606266">
+                        <!-- <div @click="getShow()" class="div_show" style="color:#606266">
                             筛选
                             <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
                         </div>
                     </el-row>
-                    <el-row type="flex" class="row_activess" v-show="showState">
-                        <el-form-item label="状态" style="display: flex;">
-                            <el-select v-model="value" placeholder="请选择" @change="onChangeTab">
+                    <el-row type="flex" class="row_activess" v-show="showState"> -->
+                        <!-- <el-form-item label="状态" style="display: flex;"> -->
+                            <el-select v-model="value" placeholder="请选择状态" @change="onChangeTab" style="width:200px;margin-right: 10px;">
                                 <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
-                        </el-form-item>
-                        <el-form-item label="操作类型" style="display: flex;">
-                            <el-select v-model="value1" placeholder="请选择" @change="onChangeTab1">
+                        <!-- </el-form-item> -->
+                        <!-- <el-form-item label="操作类型" style="display: flex;"> -->
+                            <el-select v-model="value1" placeholder="请选择操作类型" @change="onChangeTab1" style="width:200px;margin-right: 10px;">
                                 <el-option v-for="item in options2active" :key="item" :label="item" :value="item"></el-option>
                             </el-select>
-                        </el-form-item>
-                        <el-form-item label="注册时间" style="display: flex;">
-                            <el-date-picker v-model="valueTime" type="daterange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+                        <!-- </el-form-item> -->
+                        <!-- <el-form-item label="注册时间" style="display: flex;"> -->
+                            <el-date-picker style="margin-right: 10px;" v-model="valueTime" type="daterange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
                             </el-date-picker>
-                        </el-form-item>
-                        <el-form-item>
+                        <!-- </el-form-item> -->
+                        <!-- <el-form-item>
                             <el-button type="primary" @click="searchInfo">确定</el-button>
                         </el-form-item>
-                        <el-form-item>
+                        <el-form-item> -->
                             <el-button type="primary" @click="reset()">重置</el-button>
-                        </el-form-item>
+                        <!-- </el-form-item> -->
                     </el-row>
                 </el-form>
             </div>
@@ -217,11 +217,11 @@ export default {
 
     //重置
     reset() {
-      this.value1 = "全部";
+      this.value1 = "";
       this.searchText = "";
       this.pager.page = 1;
       this.search = " ";
-      this.value = "-1";
+      this.value = "";
 
       this.valueTime = "";
       this.queryUserList();

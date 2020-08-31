@@ -2,27 +2,27 @@
   <div class="content accelerate">
     <!-- title -->
     <div class="top_title">域名管理</div>
-    <div style="margin: auto;margin-left: 45px;margin-right: 45px;" class="acceleerate_con">
+    <div style="margin: auto;" class="acceleerate_con">
       <!-- 搜索栏 -->
       <div class="seach">
         <div class="seach_top">
-          <el-input placeholder="请输入渠道ID丶域名" v-model="input_text" class="input-with-select" maxlength="70" @keyup.enter.native="onSubmit">
+          <el-input placeholder="请输入渠道ID丶域名" v-model="input_text" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmit">
             <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
           </el-input>
 
-          <div class="seach_top_right" @click="option_display()">
+          <!-- <div class="seach_top_right" @click="option_display()">
             筛选
             <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
           </div>
         </div>
         <div v-if="optiondisplay" class="seach_bottom">
-          <span>状态：</span>
-          <el-select v-model="value" placeholder="请选择" @change="getdata()">
+          <span>状态：</span> -->
+          <el-select v-model="value" placeholder="请选择状态" @change="getdata()" style="width:200px;margin-right: 10px;">
             <el-option v-for="(item, index) in options" :key="index + 'reat'" :label="item.label" :value="item.value"></el-option>
           </el-select>
-          <span style="margin-left: 10px;">日期：</span>
+          <!-- <span style="margin-left: 10px;">日期：</span> -->
           <el-date-picker v-model="value1" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="gettimes" :picker-options="pickerOptions0"></el-date-picker>
-          <el-button type="primary" @click="seachuser()" style="margin-left: 10px;">确定</el-button>
+          <!-- <el-button type="primary" @click="seachuser()" style="margin-left: 10px;">确定</el-button> -->
           <el-button type="primary" @click="reset()" style="margin-left: 10px;">重置</el-button>
         </div>
       </div>
@@ -43,7 +43,7 @@
           <el-table-column prop="buser_id" label="渠道ID"></el-table-column>
           <el-table-column prop="domain" label="源站域名">
             <template slot-scope="scope">
-              <div style="width: 300px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-break:keep-all;margin:0 auto;">{{scope.row.domain}}</div>
+              <div>{{scope.row.domain}}</div>
             </template>
           </el-table-column>
           <el-table-column label="状态">
@@ -141,7 +141,7 @@ export default {
       total_cnt: 1,
       order: 0,
       input: "", //搜索输入框
-      value: -1,
+      value: "",
       value1: "",
       options: [
         {
@@ -259,7 +259,7 @@ export default {
     },
     //搜索重置
     reset() {
-      this.value = -1;
+      this.value = "";
       this.value1 = "";
       this.input = "";
       this.pager.page = 1;
@@ -286,7 +286,12 @@ export default {
       params.buser_id = this.buser_id;
       params.domain = this.input_domain;
       params.order = this.order;
-      params.state = this.value;
+      console.log(this.value)
+      if(this.value != "" || this.value === 0){
+        params.state = this.value;
+      }else{
+        params.state = -1;
+      }
       if (this.value1) {
         params.end_time = this.value1[1].getTime() / 1000;
         params.start_time = this.value1[0].getTime() / 1000;

@@ -10,23 +10,23 @@
             <!-- 搜索 -->
             <div class="seach">
                 <div class="seach_top">
-                    <el-input placeholder="包名、版本" v-model="input" class="input-with-select" @keyup.enter.native="onSubmitInput" maxlength="70">
+                    <el-input placeholder="包名、版本" v-model="input" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmitInput">
                         <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
                     </el-input>
-                    <div class="seach_top_right" @click="option_display()">
+                    <!-- <div class="seach_top_right" @click="option_display()">
                         筛选
                         <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
-                    </div>
-                </div>
-                <div v-if="optiondisplay" class="seach_bottom">
-                    <span>应用类型：</span>
-                    <el-select v-model="valueActive" placeholder="请选择" @change="onchangeTab">
+                    </div> -->
+                <!-- </div>
+                <div v-if="optiondisplay" class="seach_bottom"> -->
+                    <!-- <span>应用类型：</span> -->
+                    <el-select v-model="valueActive" placeholder="请选择应用类型" @change="onchangeTab" style="width:200px;margin-right: 10px;">
                         <el-option v-for="(item, index) in options" :key="index" :label="item" :value="item"></el-option>
                     </el-select>
-                    <span>日期：</span>
+                    <!-- <span>日期：</span> -->
                     <el-date-picker v-model="valueTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
-                    <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button>
-                    <el-button type="primary" @click="reset()">重置</el-button>
+                    <!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
+                    <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
 
                 </div>
             </div>
@@ -225,7 +225,7 @@ export default {
         page: 1,
         rows: 100,
       },
-      valueActive: "全部",
+      valueActive: "",
       valueActive2: "andriod",
       tableData: [],
       options: ["全部", "andriod", "ios"],
@@ -271,7 +271,7 @@ export default {
       this.value = "";
       this.input = "";
       this.currentPage = 1;
-      this.valueActive = "全部";
+      this.valueActive = "";
       this.valueTime = "";
       this.querySdkList();
     },
@@ -760,6 +760,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.seach {
+  width: 100%;
+  margin: 30px 0 30px 0;
+  background: #ffffff;
+  border-radius: 2px;
+  padding: 21px 37px;
+  box-shadow: 0px 0px 7px 0px rgba(41, 108, 171, 0.1);
+  .seach_top {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .input-with-select {
+      width: 15%;
+    }
+    .seach_top_right {
+      width: 80px;
+      text-align: center;
+      height: 36px;
+      line-height: 36px;
+      margin-left: 10px;
+    }
+  }
+  .seach_bottom {
+    height: 72px;
+    background: rgba(242, 246, 250, 1);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    padding-left: 27px;
+  }
+}
+
 .customWidth {
   width: 30% !important;
 }
