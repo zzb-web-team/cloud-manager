@@ -661,8 +661,8 @@ export default {
   align-items: center;
   border-bottom: 1px solid #999999;
 
-  i {
-  }
+  // i {
+  // }
 
   .search-input {
     .el-input__inner {
