@@ -47,14 +47,14 @@
                             </div>
                         </template>
                         </el-table-column>
-                        <el-table-column label="P2P加速流量">
+                        <el-table-column label="P2P播放流量">
                         <template slot-scope="scope">
                             <div style="display: flex;justify-content: center;">
                                 <div>{{ scope.row.p2pflow | setbytes }}</div>
                             </div>
                         </template>
                         </el-table-column>
-                        <el-table-column label="CDN加速流量">
+                        <el-table-column label="CDN播放流量">
                             <template slot-scope="scope">
                                 <div style="display: flex;justify-content: center;">
                                 <div>{{ scope.row.Cdnflow | setbytes }}</div>
