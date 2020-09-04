@@ -715,8 +715,14 @@ export default {
             let nowarr = [];
             let childlist = [];
 
-            var num = res.data.data[0].dataflowArray;
-            var max = _.max(num);
+            
+            let arrs = [];
+            _(res.data.data).forEach(item=>{
+              arrs.push(item.dataflowArray)
+            });
+            let max = _.max(_.flatten(arrs));
+            // var num = res.data.data[0].dataflowArray;
+            // var max = _.max(num);
             this.flowunit = this.common.formatByteActiveunit(max);
 
             for (var i = 0; i < nowlengh; i++) {
@@ -889,7 +895,6 @@ export default {
       let _this = this;
       let myChart = echarts.init(document.getElementById("myChartMap")); //这里是为了获得容器所在位置
       window.onresize = myChart.resize;
-      console.log(idlist)
       let list = idlist.map(v => {return v+''})
       var posList = [
         "left",
@@ -1004,10 +1009,8 @@ export default {
         tooltip: {
           trigger: "axis",
               formatter: function(params) {
-              console.log(params)
               let str =params[0].name;
               for(var i = 0; i < params.length; i++){
-                console.log(params[i].seriesName)
                 if(params[i].seriesName.includes("series")){
                   str += "<br>" + params[i].data + _this.flowunit
                 }else{
