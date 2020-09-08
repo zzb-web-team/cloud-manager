@@ -67,8 +67,19 @@
 
             </template>
           </el-table-column>
-          <el-table-column prop="state" label="状态" :formatter="formatState">
-        
+          <el-table-column prop="state" label="状态">
+            <template slot-scope="scope">
+              <span
+              style="color:#0ABF5B;"
+              v-if="scope.row.state == 1"
+              >正常运行</span>
+              <span
+              style="color:#E54545;"
+              v-else-if="scope.row.state == 0"
+              >已停止</span>
+              <span style="color:#E54545;" v-else
+              >回源失败</span>
+            </template>
           </el-table-column>
           <el-table-column prop="create_time" label="创建时间" sortable="custom"></el-table-column>
           <el-table-column label="操作" width="350">
