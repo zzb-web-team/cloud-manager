@@ -44,10 +44,9 @@
                     <el-table-column prop="version" label="版本"></el-table-column>
                     <el-table-column prop="time_create" label="发布时间"></el-table-column>
                     <el-table-column label="操作">
-                        <template slot-scope="scope">
-                            <div>
-                                <el-button @click="handleEdit(scope.row)" type="text" size="small">修改</el-button>
-                            </div>
+                        <template slot-scope="scope">                          
+                          <el-button @click="handleEdit(scope.row)" type="text" size="small">修改</el-button>
+                          <el-button @click="handleDel(scope.row)" type="text" size="small" style="color:red;">删除</el-button>                           
                         </template>
                     </el-table-column>
                 </el-table>
@@ -175,6 +174,7 @@ import {
   savesdk,
   editsdk,
   hostUrl,
+  delsdk,
 } from "../../servers/api";
 export default {
   data() {
@@ -397,6 +397,38 @@ export default {
           }
         })
         .catch(error => {});
+    },
+    handleDel(rows) {
+      this.$confirm('是否删除SDK?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let param = {
+            id: rows.id
+          }
+          delsdk(param).then(
+            res => {
+              if (res.status == 0) {
+                this.$message({
+                  message: "删除成功",
+                  type: "success",
+                });
+                this.querySdkList();
+              } else {
+                this.$message({
+                  message: "删除失败",
+                  type: "error",
+                });
+              }
+            }
+          )
+        }).catch(() => {
+          // this.$message({
+          //   type: 'info',
+          //   message: '已取消删除'
+          // });          
+        });
     },
 
     //获取页码

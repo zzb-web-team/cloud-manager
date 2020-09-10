@@ -346,6 +346,10 @@ export const savesdk = params => {
 export const editsdk = params => {
     return post(`${serverUrl}/cloud/editsdk`, params)
 };
+/** 删除SDK*/
+export const delsdk = params => {
+    return post(`${serverUrl}/cloud/deletesdk`, params)
+};
 
 //用户管理
 /**用户列表 */
