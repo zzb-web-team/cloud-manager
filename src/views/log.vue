@@ -124,10 +124,11 @@ export default {
       param.code=this.yzmcode
       check_login(param).then(data=>{
         if(data.status==0){
-                  sessionStorage.setItem("id", JSON.stringify(data.usermsg.id));
+              sessionStorage.setItem("id", JSON.stringify(data.usermsg.id));
               sessionStorage.setItem("id", JSON.stringify(data.usermsg.username));
-               data.usermsg.google=data.google
-               data.usermsg.lvmsg=data.lvmsg
+              data.usermsg.google=data.google
+              data.usermsg.lvmsg=data.lvmsg
+              localStorage.setItem("adminuser", data.usermsg.username)
               this.$cookies.set("clouduser", JSON.stringify(data.usermsg), 7 * 24 * 60 * 60);
               this.$cookies.set("adminuser", data.usermsg.username, 7 * 24 * 60 * 60);
               this.$cookies.set("adminid", data.usermsg.id, 7 * 24 * 60 * 60);
@@ -175,6 +176,7 @@ export default {
               data.msg.lvmsg=data.lvmsg
               this.$cookies.set("clouduser", JSON.stringify(data.msg), 7 * 24 * 60 * 60);
               this.$cookies.set("adminuser", data.msg.username, 7 * 24 * 60 * 60);
+              localStorage.setItem("adminuser", data.msg.username);
               this.$cookies.set("adminid", data.msg.id, 7 * 24 * 60 * 60);
               this.$router.push({
                 path: "/operating_user"

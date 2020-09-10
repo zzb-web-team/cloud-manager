@@ -69,3 +69,15 @@ export function dateToMs(date) {
     let result = new Date(date).getTime() / 1000;
     return result;
 }
+
+//时间段分割
+export function splitTimes(startTime, endTime, unit){
+    let diff = endTime - startTime;
+    let arr = [];
+    let split = Math.ceil(diff / (unit*60));
+    for(var i = 0; i < split; i++){
+        arr.push(startTime + 60 * unit * i)
+    }
+    console.log(arr)
+    return arr
+};

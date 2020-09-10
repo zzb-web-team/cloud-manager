@@ -202,7 +202,7 @@
 </template>
 
 <script>
-import { dateToMs, getymdtime, getymdtime1 } from "../../servers/sevdate";
+import { dateToMs, getymdtime, getymdtime1, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
 import {
   node_traffic_curve,
@@ -519,22 +519,53 @@ export default {
       node_traffic_curve(params)
         .then(res => {
           if (res.status == 0) {
-            var max = _.max([...res.data.p2parray, ...res.data.downbackarray, ...res.data.downcdnarray]);
-            this.flowunit = this.common.formatByteActiveunit(max);
-            this.timeArrayZb = [];
-            if(params.timeUnit==120){
-              res.data.timearray.forEach((item, index) => {
-                this.timeArrayZb.push(getymdtime1(item));
-              });
+            if([
+              ...res.data.p2parray,
+              ...res.data.downbackarray,
+              ...res.data.downcdnarray,
+            ].length == 0){
+              this.flowunit = 'B'
             }else{
-              res.data.timearray.forEach((item, index) => {
-                this.timeArrayZb.push(getymdtime1(item,11));
-              });
+              var max = _.max([
+                ...res.data.p2parray,
+                ...res.data.downbackarray,
+                ...res.data.downcdnarray,
+              ]);
+              this.flowunit = this.common.formatByteActiveunit(max);
             }
+            this.timeArrayZb = [];
 
-            this.dataAry = res.data.downcdnarray.map((item)=>this.common.formatByteNum(item, this.flowunit));
-            this.dataAry1 = res.data.downbackarray.map((item)=>this.common.formatByteNum(item, this.flowunit));
-             this.dataAry2 = res.data.p2parray.map((item)=>this.common.formatByteNum(item, this.flowunit));
+            if(res.data.p2parray.length == 0 && res.data.downbackarray.length ==0 && res.data.downcdnarray.length == 0){
+              let arr = splitTimes(this.starttime, this.endtime, params.timeUnit);
+              console.log(arr)
+              if (params.timeUnit == 120) {
+                arr.forEach((item, index) => {
+                  this.timeArrayZb.push(getymdtime1(item));
+                });
+              } else {
+                arr.forEach((item, index) => {
+                  this.timeArrayZb.push(getymdtime1(item, 11));
+                });
+              }
+
+              this.dataAry = _.fill(Array(arr.length), 0);
+              this.dataAry1 = _.fill(Array(arr.length), 0);
+              this.dataAry2 = _.fill(Array(arr.length), 0);
+            }else{
+              if(params.timeUnit==120){
+                res.data.timearray.forEach((item, index) => {
+                  this.timeArrayZb.push(getymdtime1(item));
+                });
+              }else{
+                res.data.timearray.forEach((item, index) => {
+                  this.timeArrayZb.push(getymdtime1(item,11));
+                });
+              }
+
+              this.dataAry = res.data.downcdnarray.map((item)=>this.common.formatByteNum(item, this.flowunit));
+              this.dataAry1 = res.data.downbackarray.map((item)=>this.common.formatByteNum(item, this.flowunit));
+              this.dataAry2 = res.data.p2parray.map((item)=>this.common.formatByteNum(item, this.flowunit));
+            };
             this.drawLine2(this.timeArrayZb, this.dataAry, this.dataAry1, this.dataAry2);
           }
         })

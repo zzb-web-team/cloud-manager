@@ -173,7 +173,7 @@
 </template>
 
 <script>
-import { dateToMs, getymdtime } from "../../servers/sevdate";
+import { dateToMs, getymdtime, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
 import {
   pv_uv_query_conditions,
@@ -745,19 +745,28 @@ export default {
           .then(res => {
             this.totalPV = res.data.totalPV;
             this.totalUV = res.data.totalUV;
-            if (res.data.uvArray) {
-              res.data.uvArray.forEach((item, index) => {
-                this.uvArray.push(Math.floor(item));
+            if(res.data.uvArray.length == 0 && res.data.pvArray.length == 0){
+              let arr = splitTimes(this.starttime, this.endtime, 60);
+              arr.forEach((item, index) => {
+                this.timeArray.push(getymdtime(item));
+              });
+              this.uvArray = _.fill(Array(arr.length), 0);
+              this.pvArray = _.fill(Array(arr.length), 0);
+            }else{
+              if (res.data.uvArray) {
+                res.data.uvArray.forEach((item, index) => {
+                  this.uvArray.push(Math.floor(item));
+                });
+              }
+              if (res.data.pvArray) {
+                res.data.pvArray.forEach((item, index) => {
+                  this.pvArray.push(Math.floor(item));
+                });
+              }
+              res.data.timeArray.forEach((item, index) => {
+                this.timeArray.push(getymdtime(item));
               });
             }
-            if (res.data.pvArray) {
-              res.data.pvArray.forEach((item, index) => {
-                this.pvArray.push(Math.floor(item));
-              });
-            }
-            res.data.timeArray.forEach((item, index) => {
-              this.timeArray.push(getymdtime(item));
-            });
             this.drawLine();
           })
           .catch(err => {});

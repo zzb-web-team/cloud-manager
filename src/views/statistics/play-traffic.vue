@@ -186,7 +186,7 @@
 </template>
 
 <script>
-import { dateToMs, getymdtime, getymdtime1 } from "../../servers/sevdate";
+import { dateToMs, getymdtime, getymdtime1, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
 import {
   accelerate_flow_query_conditions,
@@ -802,37 +802,71 @@ export default {
       sdk_flow(params)
         .then(res => {
           if (res.status == 0) {
-            var num = res.data.pdataArray;
-            var num1 = res.data.cdataArray;
-            if (num !== 0) {
-              var max = Math.max.apply(null, num);
-            } else if (num1 !== 0) {
-              var max = Math.max.apply(null, num);
-            }
-            //  max = Math.max.apply(null, num);
-            this.flowunit = this.common.formatByteActiveunit(max);
+            // var num = res.data.pdataArray;
+            // var num1 = res.data.cdataArray;
+            // if (num !== 0) {
+            //   var max = Math.max.apply(null, num);
+            // } else if (num1 !== 0) {
+            //   var max = Math.max.apply(null, num);
+            // }
+            // //  max = Math.max.apply(null, num);
+            // this.flowunit = this.common.formatByteActiveunit(max);
             this.totalp2p = res.data.totalp2p;
             this.totalcdn = res.data.totalcdn;
+            if([
+							...res.data.pdataArray,
+							...res.data.cdnpassivearray,
+							...res.data.cdnaactivearray,
+							].length == 0){
+							this.flowunit = 'B'
+						}else{
+							var max = _.max([
+								...res.data.pdataArray,
+								...res.data.cdnpassivearray,
+								...res.data.cdnaactivearray,
+							]);
+							this.flowunit = this.common.formatByteActiveunit(max);
+						};
             this.timeArrayZb = [];
             this.timeArrayZb1 = [];
             this.dataZb1 = [];
             this.dataZb2 = [];
-            if(params.timeUnit== 120){
-              res.data.timearray.forEach((item, index) => {
-              this.timeArrayZb.push(getymdtime1(item));
-            });
-            }else{
-              res.data.timearray.forEach((item, index) => {
-              this.timeArrayZb.push(getymdtime1(item,11));
-            });
+            this.dataZb3 = [];
+            if(res.data.pdataArray.length == 0&&res.data.cdnpassivearray.length == 0&&res.data.cdnaactivearray.length == 0){
+							let arr = splitTimes(this.starttime, this.endtime, params.timeUnit);
+							if (params.timeUnit == 120) {
+								arr.forEach((item, index) => {
+									this.timeArrayZb.push(getymdtime1(item));
+								});
+							} else {
+								arr.forEach((item, index) => {
+									this.timeArrayZb.push(getymdtime1(item, 1));
+								});
+							}
+							this.dataZb1 = _.fill(Array(arr.length), 0);
+							this.dataZb2 = _.fill(Array(arr.length), 0);
+							this.dataZb3 = _.fill(Array(arr.length), 0);
+							this.dataAry = _.fill(Array(arr.length), 0);
+							this.dataAry1 = _.fill(Array(arr.length), 0);
+							this.dataAry2 = _.fill(Array(arr.length), 0);
+						}else{
+              if(params.timeUnit== 120){
+                res.data.timearray.forEach((item, index) => {
+                  this.timeArrayZb.push(getymdtime1(item));
+                });
+              }else{
+                res.data.timearray.forEach((item, index) => {
+                  this.timeArrayZb.push(getymdtime1(item,11));
+                });
+              }
+            
+              this.dataZb1 = res.data.cdnaactivepercent;
+              this.dataZb2 = res.data.cdnpassivepercent;
+              this.dataZb3 = res.data.p2parray;
+              this.dataAry = res.data.cdnaactivearray;
+              this.dataAry1 = res.data.cdnpassivearray;
+              this.dataAry2 = res.data.pdataArray;
             }
-          
-            this.dataZb1 = res.data.cdnaactivepercent;
-            this.dataZb2 = res.data.cdnpassivepercent;
-            this.dataZb3 = res.data.p2parray;
-            this.dataAry = res.data.cdnaactivearray;
-            this.dataAry1 = res.data.cdnpassivearray;
-             this.dataAry2 = res.data.pdataArray;
             this.drawLine2(this.timeArrayZb, this.dataZb1, this.dataZb2,this.dataZb3);
           }
         })
@@ -938,7 +972,7 @@ export default {
         this.endtime
       );
 
-      this.timeUnit = this.common.timeUnitActive(
+      this.timeUnit = this.common.timeUnitActive1(
         this.starttime,
         this.endtime
       );
@@ -946,64 +980,63 @@ export default {
       sdk_flow_control(params)
         .then(res => {
           if (res.status == 0) {
-            this.totalp2p = res.data.totalp2p;
-            this.totalcdn = res.data.totalcdn;
+            if([
+							...res.data.iospstreamarray,
+							...res.data.ioscstreamarray,
+							...res.data.andriodpstreamarray,
+							...res.data.andriodcstreamarray
+							].length == 0){
+							this.flowunit = 'B'
+						}else{
+							var max = _.max([
+								...res.data.iospstreamarray,
+								...res.data.ioscstreamarray,
+								...res.data.andriodpstreamarray,
+								...res.data.andriodcstreamarray
+							]);
+							this.flowunit = this.common.formatByteActiveunit(max);
+						}
 
-            var num = res.data.iospstreamarray;
-            var num1 = res.data.ioscstreamarray;
-            var num2 = res.data.andriodpstreamarray;
-            var num3 = res.data.andriodcstreamarray;
-            // console.log(num);
-            // console.log(num1);
-            // console.log(num2);
-            // console.log(num3);
-
-            let max = "";
-            // if (num != 0) {
-            //   max = Math.max.apply(null, num);
-            // } else if (num1 != 0) {
-            //   max = Math.max.apply(null, num);
-            // } else if (num2 != 0) {
-            //   max = Math.max.apply(null, num);
-            // } else if (num3 != 0) {
-            //   max = Math.max.apply(null, num);
-            // } else {
-            //   max = 0;
-            // }
-            max = _.max([...num, ...num1, ...num2, num3])
-           // console.log(max);
-            // var max = Math.max.apply(null, num);
-            
-            this.flowunit = this.common.formatByteActiveunit(max);
-          console.log(this.flowunit )
-
-            //   res.data.streamArray.forEach((item, index) => {
-            //     this.dataFlowArray.push(
-            //       this.common.formatByteNum(item, this.flowunit)
-            //     );
-            //   });
             this.timeArrayJk = [];
             this.dataJk1 = [];
             this.dataJk2 = [];
             this.dataJk3 = [];
             this.dataJk4 = [];
 
-            res.data.iospstreamarray.forEach((item, index) => {
-              this.dataJk1.push(this.common.formatByteNum(item*1, this.flowunit));
-            });
-            res.data.ioscstreamarray.forEach((item, index) => {
-              this.dataJk2.push(this.common.formatByteNum(item*1, this.flowunit));
-            });
-            res.data.andriodpstreamarray.forEach((item, index) => {
-              this.dataJk3.push(this.common.formatByteNum(item*1, this.flowunit));
-            });
-            res.data.andriodcstreamarray.forEach((item, index) => {
-              this.dataJk4.push(this.common.formatByteNum(item*1, this.flowunit));
-            });
+            if(res.data.iospstreamarray.length == 0 && res.data.ioscstreamarray.length == 0 && res.data.andriodpstreamarray.length == 0 && res.data.andriodcstreamarray.length == 0){
+							let arr = splitTimes(this.starttime, this.endtime, params.timeUnit);
+							if (params.timeUnit == 60) {
+								arr.forEach((item, index) => {
+									this.timeArrayJk.push(getymdtime1(item));
+								});
+							} else {
+								arr.forEach((item, index) => {
+									this.timeArrayJk.push(getymdtime1(item, 1));
+								});
+							}
+							this.dataJk1 = _.fill(Array(arr.length), 0);
+							this.dataJk2 = _.fill(Array(arr.length), 0);
+							this.dataJk3 = _.fill(Array(arr.length), 0);
+							this.dataJk4 = _.fill(Array(arr.length), 0);
+						}else{
 
-            res.data.timeArray.forEach((item, index) => {
-              this.timeArrayJk.push(getymdtime1(item));
-            });
+              res.data.iospstreamarray.forEach((item, index) => {
+                this.dataJk1.push(this.common.formatByteNum(item*1, this.flowunit));
+              });
+              res.data.ioscstreamarray.forEach((item, index) => {
+                this.dataJk2.push(this.common.formatByteNum(item*1, this.flowunit));
+              });
+              res.data.andriodpstreamarray.forEach((item, index) => {
+                this.dataJk3.push(this.common.formatByteNum(item*1, this.flowunit));
+              });
+              res.data.andriodcstreamarray.forEach((item, index) => {
+                this.dataJk4.push(this.common.formatByteNum(item*1, this.flowunit));
+              });
+
+              res.data.timeArray.forEach((item, index) => {
+                this.timeArrayJk.push(getymdtime1(item));
+              });
+            }
             // this.dataJk1 = res.data.iospstreamarray;
             // this.dataJk2 = res.data.ioscstreamarray;
             // this.dataJk3 = res.data.andriodpstreamarray;

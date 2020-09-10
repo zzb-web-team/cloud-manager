@@ -203,7 +203,7 @@
 </template>
 
 <script>
-import { dateToMs, getymdtime, getymdtime1 } from "../../servers/sevdate";
+import { dateToMs, getymdtime, getymdtime1, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
 import {
   accelerate_flow_query_conditions,
@@ -725,23 +725,37 @@ export default {
             // var max = _.max(num);
             this.flowunit = this.common.formatByteActiveunit(max);
 
-            for (var i = 0; i < nowlengh; i++) {
-              childlist.push(res.data.data[i].channelid);
+            if(res.data.data[0].dataflowArray.length == 0){
+							let arr = splitTimes(this.starttime, this.endtime, this.timeUnit);							
+							arr.forEach((item, index) => {
+								this.timeArray.push(getymdtime1(item));
+							});;
               let obj = {};
               obj.type = "bar";
               obj.barGap = "6%";
-              (obj.barMaxWidth = 30), (obj.name = res.data.data[i].channelid);
-              let nowarr1 = [];
-              nowtemp[i].dataflowArray.forEach((item, index) => {
-                nowarr1.push(this.common.formatByteNum(item, this.flowunit));
-              });
-              obj.data = nowarr1;
+              obj.barMaxWidth = 30;
+              obj.data = _.fill(Array(arr.length), 0);
               nowarr.push(obj);
-            }
+						}else{
 
-            res.data.data[0].timeArray.forEach((item, index) => {
-              this.timeArray.push(getymdtime1(item));
-            });
+              for (var i = 0; i < nowlengh; i++) {
+                childlist.push(res.data.data[i].channelid);
+                let obj = {};
+                obj.type = "bar";
+                obj.barGap = "6%";
+                (obj.barMaxWidth = 30), (obj.name = res.data.data[i].channelid);
+                let nowarr1 = [];
+                nowtemp[i].dataflowArray.forEach((item, index) => {
+                  nowarr1.push(this.common.formatByteNum(item, this.flowunit));
+                });
+                obj.data = nowarr1;
+                nowarr.push(obj);
+              }
+
+              res.data.data[0].timeArray.forEach((item, index) => {
+                this.timeArray.push(getymdtime1(item));
+              });
+            }
 
             this.drawLine(nowarr, this.timeArray, childlist);
           })

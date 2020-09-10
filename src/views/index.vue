@@ -115,7 +115,7 @@ export default {
     };
   },
   mounted() {
-    var user = this.$cookies.get("adminuser");
+    var user = localStorage.getItem("adminuser");
     if (user) {
       // user = JSON.parse(user);
       this.sysUserName = user || "";
