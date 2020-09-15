@@ -68,14 +68,14 @@
 
               <el-row type="flex" class="row_active">
                 <el-col :span="24">
-                  <el-table :data="tableZb" border max-height="530" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table :data="tableZb" border max-height="750" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
                     <el-table-column label="加速内容名称">
                       <template slot-scope="scope">
                         <div>{{ scope.row.urlname }}</div>
                       </template>
                     </el-table-column>
 
-                    <el-table-column label="播放URL">
+                    <el-table-column label="播放URL" width="250">
                       <template slot-scope="scope">
                         <div>{{ scope.row.playurl }}</div>
                       </template>

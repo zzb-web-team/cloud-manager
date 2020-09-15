@@ -28,8 +28,8 @@
                   </div>
                 <el-row type="flex" class="row_active">
                     <el-col :span="24">
-                    <el-table :data="tableZb" border max-height="600" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                        <el-table-column label="播放URL">
+                    <el-table :data="tableZb" border max-height="800" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                        <el-table-column label="播放URL" width="250">
                         <template slot-scope="scope">
                             <div>{{ scope.row.playurl }}</div>
                         </template>
@@ -156,7 +156,7 @@
                 </div>
                 <el-row type="flex" class="row_active">
                     <el-col :span="24">
-                    <el-table :data="tableZb1" border max-height = "600px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table :data="tableZb1" border max-height = "800" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
                         <el-table-column label="播放异常类型" prop="exceptionType" :formatter="typeFormat">
                         <!-- <template slot-scope="scope">
                             <div>{{ scope.row.exceptionType }}</div>
@@ -168,14 +168,14 @@
                             <div>{{ scope.row.exceptionStatus }}</div>
                         </template> -->
                         </el-table-column>
-                        <el-table-column label="加速内容名称">
+                        <el-table-column label="加速内容名称" width="250">
                         <template slot-scope="scope">
                             <div style="display: flex;justify-content: center;">
                                 <div>{{ scope.row.urlname }}</div>
                             </div>
                         </template>
                         </el-table-column>
-                        <el-table-column label="播放URL">
+                        <el-table-column label="播放URL" width="300">
                         <template slot-scope="scope">
                             <div style="display: flex;justify-content: center;">
                                 <div>{{ scope.row.playurl }}</div>
