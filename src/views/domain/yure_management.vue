@@ -214,13 +214,13 @@ export default {
       //this.getdata();
     },
     queryInfo() {
-      var rx = /^http?:\/\//i;
+      var rx = /^\d{12}$/;
       if (rx.test(this.input)) {
-        this.url = this.input;
-        this.buser_id = "";
-      } else {
         this.buser_id = this.input;
         this.url = "";
+      } else {
+        this.url = this.input;
+        this.buser_id = "";
       }
       let startTime = 0;
       let endTime = 0;
@@ -238,7 +238,7 @@ export default {
       }
 
       let param = {
-        url: this.url,
+        url_name: this.url,
         buser_id: this.buser_id,
         refresh_type: this.value,
         state: this.valueStatus,
@@ -292,7 +292,9 @@ export default {
       //this.getdata();
     },
     //回车事件
-    onSubmit() {},
+    onSubmit() {
+      this.queryInfo();
+    },
     //筛选按钮
     option_display() {
       this.optiondisplay = !this.optiondisplay;
