@@ -712,6 +712,7 @@ export default {
             this.totalYl = res.data.total;
             let nowlengh = res.data.data.length;
             let nowtemp = res.data.data;
+            this.curveData = res.data.data;
             let nowarr = [];
             let childlist = [];
 
@@ -720,10 +721,12 @@ export default {
             _(res.data.data).forEach(item=>{
               arrs.push(item.dataflowArray)
             });
-            let max = _.max(_.flatten(arrs));
-            // var num = res.data.data[0].dataflowArray;
-            // var max = _.max(num);
-            this.flowunit = this.common.formatByteActiveunit(max);
+            if(_.flatten(arrs).length == 0){
+              this.flowunit = "B";
+            }else{
+              let max = _.max(_.flatten(arrs));
+              this.flowunit = this.common.formatByteActiveunit(max);
+            }
 
             if(res.data.data[0].dataflowArray.length == 0){
 							let arr = splitTimes(this.starttime, this.endtime, this.timeUnit);							
@@ -735,6 +738,7 @@ export default {
               obj.barGap = "6%";
               obj.barMaxWidth = 30;
               obj.data = _.fill(Array(arr.length), 0);
+              this.curveData[0].dataflowArray = _.fill(Array(arr.length), 0);
               nowarr.push(obj);
 						}else{
 
@@ -1023,12 +1027,17 @@ export default {
         tooltip: {
           trigger: "axis",
               formatter: function(params) {
+                console.log(_this.curveData)
               let str =params[0].name;
               for(var i = 0; i < params.length; i++){
                 if(params[i].seriesName.includes("series")){
-                  str += "<br>" + params[i].data + _this.flowunit
+                  console.log(params[i])
+                  console.log(_this.curveData[i], '=========', _this.curveData[i].dataflowArray[params[i].dataIndex])
+                  str += "<br>" + common.formatByteActive(Number(_this.curveData[0].dataflowArray[params[i].dataIndex])); // + _this.flowunit;
                 }else{
-                  str += "<br>" + params[i].seriesName + ": " + params[i].data + _this.flowunit
+                  // console.log(_this.curveData[i].dataflowArray[i])
+                  console.log(_this.curveData[i], '=========', _this.curveData[i].dataflowArray[params[i].dataIndex])
+                  str += "<br>" + params[i].seriesName + ": " + common.formatByteActive(Number(_this.curveData[0].dataflowArray[params[i].dataIndex]));
                 }
                 
               }

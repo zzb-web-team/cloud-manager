@@ -534,6 +534,7 @@ export default {
               this.flowunit = this.common.formatByteActiveunit(max);
             }
             this.timeArrayZb = [];
+            this.curveData = res.data;
 
             if(res.data.p2parray.length == 0 && res.data.downbackarray.length ==0 && res.data.downcdnarray.length == 0){
               let arr = splitTimes(this.starttime, this.endtime, params.timeUnit);
@@ -551,6 +552,9 @@ export default {
               this.dataAry = _.fill(Array(arr.length), 0);
               this.dataAry1 = _.fill(Array(arr.length), 0);
               this.dataAry2 = _.fill(Array(arr.length), 0);
+              this.curveData.p2parray =  _.fill(Array(arr.length), 0);
+              this.curveData.downbackarray =  _.fill(Array(arr.length), 0);
+              this.curveData.downcdnarray =  _.fill(Array(arr.length), 0);
             }else{
               if(params.timeUnit==120){
                 res.data.timearray.forEach((item, index) => {
@@ -1011,17 +1015,17 @@ export default {
             return (
               params[0].axisValue + "</br>" +
               "P2P播放流量:"+
-                _this.dataAry2[params[0].dataIndex] + _this.flowunit +
+                common.formatByteActive(Number(_this.curveData.p2parray[params[0].dataIndex])) +
               "</br>" +
               "<div style='backgroundColor: rgba(0, 0, 0, 0.5); height: 20px;z-index: 99999999;'></div>"+
               params[0].axisValue +
               "</br>" +
               "下行CDN回源流量:" +
-                _this.dataAry[params[0].dataIndex] + _this.flowunit
+                common.formatByteActive(Number(_this.curveData.downcdnarray[params[0].dataIndex])) 
                +
               "</br>" +
               "下行节点回源流量:" +
-                _this.dataAry1[params[0].dataIndex] + _this.flowunit
+                common.formatByteActive(Number(_this.curveData.downbackarray[params[0].dataIndex])) 
               +
               "<br>" 
             );
