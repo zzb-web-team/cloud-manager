@@ -65,43 +65,33 @@
         </div>
         <el-dialog :visible.sync="dialogVisible" width="25%" @close="handleClose1">
             <div class="addaccout">
-                <el-form :model="ruleForm2" ref="ruleForm2" label-position="left" class="demo-ruleForm">
+                <el-form :model="ruleForm2" :rules="rules1" ref="ruleForm2" label-position="left" class="demo-ruleForm">
                     <h3 class="title">新建用户</h3>
                     <el-form-item label="使用状态:">
                         <el-radio v-model="ruleForm2.radio" label="0">启用</el-radio>
                         <el-radio v-model="ruleForm2.radio" label="1">禁用</el-radio>
                     </el-form-item>
-                    <el-form-item prop="username" :rules="[
-      {validator: jiousername, trigger: 'blur' }
-    ]">
+                    <el-form-item prop="username">
                         <el-form-item label="账号:">
-                            <el-input v-model="ruleForm2.username" placeholder="4-20位英文加数字组合"></el-input>
+                            <el-input v-model="ruleForm2.username" placeholder="4-20位字母加数字组合"></el-input>
                         </el-form-item>
                     </el-form-item>
-                    <el-form-item prop="password" :rules="[
-      {validator: jiopwd, trigger: 'blur' }
-    ]">
+                    <el-form-item prop="password">
                         <el-form-item label="密码:" placeholder="密码">
-                            <el-input v-model="ruleForm2.password" type="password" placeholder="6-20位数字字母_组成"></el-input>
+                            <el-input v-model="ruleForm2.password" type="password" placeholder="6-20位数字字母下划线组成"></el-input>
                         </el-form-item>
                     </el-form-item>
-                    <el-form-item prop="password2" :rules="[
-      {validator: jioqpwd, trigger: 'blur' }
-    ]">
+                    <el-form-item prop="password2">
                         <el-form-item label="确认密码:">
                             <el-input v-model="ruleForm2.password2" placeholder="两次密码须一致" type="password"></el-input>
                         </el-form-item>
                     </el-form-item>
-                    <el-form-item prop="name" :rules="[
-      {validator: jioname, trigger: 'blur' }
-    ]">
+                    <el-form-item prop="name">
                         <el-form-item label="真实姓名:">
-                            <el-input v-model="ruleForm2.name" placeholder="4-20位汉字数字字母组合"></el-input>
+                            <el-input v-model="ruleForm2.name" placeholder="4-20位汉字数字字母下划线组合"></el-input>
                         </el-form-item>
                     </el-form-item>
-                    <el-form-item prop="phone" :rules="[
-      {validator: jiophone, trigger: 'blur' }
-    ]">
+                    <el-form-item prop="phone">
                         <el-form-item label="联系方式:">
                             <el-input v-model="ruleForm2.phone" placeholder="11位有效手机号"></el-input>
                         </el-form-item>
@@ -261,6 +251,58 @@ export default {
         callback();
       }
     };
+    var checkUserName = (rule, value, callback) => {
+      var reg = /^([a-zA-Z0-9]){4,20}$/;
+      if (value === "") {
+        callback(new Error("请输入账号"));
+      } else if (!reg.test(value)) {
+        callback(new Error("请输入正确的账号"));
+      } else {
+        callback();
+      }
+    };
+    var checkName = (rule, value, callback) => {
+      var reg = /^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]|[a-zA-Z0-9_]){4,20}$/;
+      if (value === "") {
+        callback(new Error("请输入真实姓名"));
+      } else if (!reg.test(value)) {
+        callback(new Error("请输入正确的真实姓名"));
+      } else {
+        callback();
+      }
+    };
+    var checkPwd = (rule, value, callback) => {
+      var reg = /^([a-zA-Z0-9_]){6,20}$/;
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else if (!reg.test(value)) {
+        callback(new Error("密码格式错误"));
+      } else {
+         callback();
+      }
+    };
+    var checkPwd1 = (rule, value, callback) => {
+      var reg = /^([a-zA-Z0-9_]){6,20}$/;
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.ruleForm2.password) {
+        callback(new Error("两次输入密码不一致!"));
+      } else if (!reg.test(value)) {
+        callback(new Error("密码格式错误"));
+      } else {
+         callback();
+      }
+    };
+    var checkPhone = (rule, value, callback) => {
+      var reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+      if (value === "") {
+        callback(new Error("请输入手机号"));
+      } else if (!reg.test(value)) {
+        callback(new Error("请输入正确的手机号"));
+      } else {
+        callback();
+      }
+    };
     return {
       order: "time_create desc",
       form: {},
@@ -330,6 +372,42 @@ export default {
             trigger: "blur"
           }
         ]
+      },
+      //新增用户校验
+      rules1: {
+        username: [
+          {
+            required: true,
+            validator: checkUserName,
+            trigger: "blur"
+          }
+        ],
+        password: [
+          {
+            validator: checkPwd,
+            trigger: "blur"
+          }
+        ],
+        password2: [
+          {
+            validator: checkPwd1,
+            trigger: "blur"
+          }
+        ],
+        name: [
+          {
+            required: true,
+            validator: checkName,
+            trigger: "blur"
+          }
+        ],
+        phone: [
+          {
+            required: true,
+            validator: checkPhone,
+            trigger: "blur"
+          }
+        ],
       },
       rowHeader: [
         {

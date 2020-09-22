@@ -338,6 +338,24 @@ export default {
     fenye,
   },
   mounted() {
+    let monitorUrlname = this.$route.query.monitorUrlname;
+    if (monitorUrlname) {
+      this.valueContent = monitorUrlname;
+    } else {
+      this.valueContent = "";
+    }
+    let monitorChanId = this.$route.query.monitorChanId;
+    if (monitorChanId) {
+      this.valueChannelId = monitorChanId;
+    } else {
+      this.valueChannelId = "";
+    }
+    let monitorDomain = this.$route.query.monitorDomain;
+    if (monitorDomain) {
+      this.valueDomain = monitorDomain;
+    } else {
+      this.valueDomain = "";
+    }
     this.getNodeType();
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.endtime = Date.parse(new Date()) / 1000;

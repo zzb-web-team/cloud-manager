@@ -6,6 +6,8 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     var serverUrl = 'http://xyj.grapefruitcloud.com'; //PHP服务URL
 } else if (href.indexOf('service.kclgames.com') >= 0) {
     var serverUrl = 'http://service.kclgames.com'; //PHP服务URL
+} else if (href.indexOf('zzb.onezen.net') >= 0) {
+    var serverUrl = 'http://zzb.onezen.net'; //阿里云服务URL
 } else {
     // var serverUrl = 'http://zzb.onezen.net';
     var serverUrl = 'http://service.kclgames.com';

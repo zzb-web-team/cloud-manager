@@ -88,7 +88,7 @@
               <el-button type="text" size="small" @click="updatauser(scope.row)">复制配置</el-button>
               <el-button type="text" size="small" @click="monitor(scope.row)">监控</el-button>
               <el-button type="text" size="small" @click="onDisable(scope.row)">{{ scope.row.state == 1 ? "停用" : "启用" }}</el-button>
-              <el-button type="text" size="small" @click="handleClick(scope.row)">详情</el-button>
+              <!-- <el-button type="text" size="small" @click="handleClick(scope.row)">详情</el-button> -->
               <el-button type="text" size="small" @click="deleateuser1(scope.row)" style="color:red;">删除</el-button>
             </template>
           </el-table-column>
@@ -488,13 +488,15 @@ export default {
       console.log(row)
       let monitorUrlname = row.url_name;
       let monitorChanId = row.buser_id;
+      let monitorDomain = row.domain
       //localStorage.setItem("monitorUrlname", monitorUrlname);
       // localStorage.setItem("monitorChanId", monitorChanId);
       this.$router.push({
-        path: "/nodeMap1",
+        path: "/trafficMonitor",
         query: {
           monitorUrlname: monitorUrlname,
           monitorChanId: monitorChanId,
+          monitorDomain,
         },
       });
     },

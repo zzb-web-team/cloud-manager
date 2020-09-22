@@ -6,7 +6,7 @@
         {{urlLinks}}</span>
     </div>
     <div class="bath" style="margin: auto;background: #ffffff;margin-top: 25px;border-radius: 2px;padding: 15px;box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);">
-      <el-tabs v-model="oneName" @tab-click="handleClick" v-loading="loading">
+      <el-tabs v-model="oneName" @tab-click="handleClick" v-loading="loading" ref="tabs">
         <div class="tala_title" style="display:flex;justify-content:flex-end;">
           <!-- <span style="max-width: 230px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ datalist.url }}</span> -->
           <div>
@@ -79,7 +79,53 @@
         </el-tab-pane>
 
         <el-tab-pane label="缓存配置" name="there">
-          <el-tabs v-model="activeName">
+          <div class="talb_title_tio">
+            <div style="display: flex;"><p class="talb_title_p"></p>缓存自动刷新</div>
+            <div style="display: flex">
+              <p style="margin-left: 25px;margin-top: 10px;">{{valueh ? '开启' : '未开启'}}</p>
+              <div style="margin-left: 25px;margin-top: 10px;">
+                <el-switch v-model="valueh" active-color="#13ce66" inactive-color="#EEEEEE" @change="changeSwitch2"></el-switch>
+                <p style="margin-top: 12px;">开启后，能够自动发现加速节点的同名缓存刷新，并自动同步最新缓存</p>
+              </div>
+            </div>
+          </div>
+          <div class="talb_title_tio" style="margin-top: 28px;">
+            <div style="display: flex;"><p class="talb_title_p"></p>缓存过期时间</div>
+            <div style="display: flex; align-items: center;">
+              <p style="margin-left: 25px;">过期时间</p>
+              <div style="margin-left: 25px;display: flex; align-items: center;">
+                <p style="margin-right: 25px;" v-if="expireTime&&!valueh">{{expireTime | settimes}}</p>
+                <p style="margin-right: 25px;" v-else>默认自动过期</p>
+                <el-button type="text" :disabled="valueh" @click="huanVisible = true;">设置</el-button>
+              </div>
+            </div>
+          </div>
+          <el-dialog title="配置缓存过期时间" :visible.sync="huanVisible">
+            <el-form :model="huanform">
+              <el-form-item label="过期类型:" style="text-align:left;" :label-width="formLabelWidth">
+                <el-radio-group v-model="radio1" @change="selecttime()" class="huandan">
+                  <el-radio-button label="自动过期"></el-radio-button>
+                  <el-radio-button label="自定义时间"></el-radio-button>
+                </el-radio-group>
+
+                <p v-if="automatic_time == true" style="font-size: 12px;color: #676767;height: 18px;">
+                  当加速内容失去热度时缓存将自动过期
+                </p>
+              </el-form-item>
+              <el-form-item class="huancuntime" label="过期时间:" :label-width="formLabelWidth" style="text-align:left;" v-if="automatic_time == false">
+                <el-date-picker v-model="huanfo" type="datetime" style="width:100%;" align="right" placeholder="选择日期时间" :picker-options="pickerOptions0">
+                </el-date-picker>
+                <p style="font-size: 12px;color: #676767;height: 18px;">
+                  最长过期时间为三年
+                </p>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="huanno">取 消</el-button>
+              <el-button type="primary" @click="huanVisib()">确 定</el-button>
+            </div>
+          </el-dialog>
+          <!-- <el-tabs v-model="activeName">
             <el-tab-pane label="缓存设置" name="first">
               <div class="talb_title_tio">
                 <span>缓存自动刷新</span>
@@ -92,7 +138,6 @@
               </div>
             </el-tab-pane>
             <el-tab-pane label="缓存过期时间" name="second">
-              <!--  -->
               <div class="batch_huan">
                 <div style="text-align:left;padding: 10px 0">
                   <el-button type="primary" style="width:100px;" @click="
@@ -105,7 +150,6 @@
                     ">
                     <span class="el-icon-plus"></span>配置</el-button>
                 </div>
-                <!-- 缓存添加弹窗 -->
                 <el-dialog title="配置缓存过期时间" :visible.sync="huanVisible">
                   <el-form :model="huanform">
                     <el-form-item label="过期类型:" style="text-align:left;" :label-width="formLabelWidth">
@@ -154,19 +198,12 @@
                   <el-table-column label="操作">
                     <template slot-scope="scope">
                       <el-button @click="xhuanVisib(scope.row, scope.$index)" type="text" size="small">修改</el-button>
-                      <!-- <el-button
-                        type="text"
-                        size="small"
-                        style="color:#000000"
-                        @click="delhc(scope.row, scope.$index)"
-                        >删除</el-button
-                      > -->
                     </template>
                   </el-table-column>
                 </el-table>
               </div>
             </el-tab-pane>
-          </el-tabs>
+          </el-tabs> -->
         </el-tab-pane>
         <el-tab-pane label="自定义页面" name="four">
           <div style="text-align: left;margin: 15px 0;" class="customize">
@@ -285,186 +322,34 @@ export default {
         {
           value: "华北",
           label: "华北",
-          children: [
-            {
-              value: "北京",
-              label: "北京",
-            },
-            {
-              value: "内蒙古",
-              label: "内蒙古",
-            },
-            {
-              value: "山西",
-              label: "山西",
-            },
-            {
-              value: "河北",
-              label: "河北",
-            },
-            {
-              value: "天津",
-              label: "天津",
-            },
-          ],
         },
         {
           value: "西北",
           label: "西北",
-          children: [
-            {
-              value: "宁夏",
-              label: "宁夏",
-            },
-            {
-              value: "陕西",
-              label: "陕西",
-            },
-            {
-              value: "甘肃",
-              label: "甘肃",
-            },
-            {
-              value: "青海",
-              label: "青海",
-            },
-            {
-              value: "新疆",
-              label: "新疆",
-            },
-          ],
         },
         {
           value: "东北",
           label: "东北",
-          children: [
-            {
-              value: "黑龙江",
-              label: "黑龙江",
-            },
-            {
-              value: "吉林",
-              label: "吉林",
-            },
-            {
-              value: "辽宁",
-              label: "辽宁",
-            },
-          ],
         },
         {
           value: "华东",
           label: "华东",
-          children: [
-            {
-              value: "福建",
-              label: "福建",
-            },
-            {
-              value: "江苏",
-              label: "江苏",
-            },
-            {
-              value: "安徽",
-              label: "安徽",
-            },
-            {
-              value: "山东",
-              label: "山东",
-            },
-            {
-              value: "上海",
-              label: "上海",
-            },
-            {
-              value: "浙江",
-              label: "浙江",
-            },
-          ],
         },
         {
           value: "华中",
           label: "华中",
-          children: [
-            {
-              value: "河南",
-              label: "河南",
-            },
-            {
-              value: "湖北",
-              label: "湖北",
-            },
-            {
-              value: "江西",
-              label: "江西",
-            },
-            {
-              value: "湖南",
-              label: "湖南",
-            },
-          ],
         },
         {
           value: "西南",
           label: "西南",
-          children: [
-            {
-              value: "贵州",
-              label: "贵州",
-            },
-            {
-              value: "云南",
-              label: "云南",
-            },
-            {
-              value: "重庆",
-              label: "重庆",
-            },
-            {
-              value: "四川",
-              label: "四川",
-            },
-            {
-              value: "西藏",
-              label: "西藏",
-            },
-          ],
         },
         {
           value: "华南",
           label: "华南",
-          children: [
-            {
-              value: "广东",
-              label: "广东",
-            },
-            {
-              value: "广西",
-              label: "广西",
-            },
-            {
-              value: "海南",
-              label: "海南",
-            },
-          ],
         },
         {
           value: "其他",
           label: "其他",
-          children: [
-            {
-              value: "香港",
-              label: "香港",
-            },
-            {
-              value: "澳门",
-              label: "澳门",
-            },
-            {
-              value: "台湾",
-              label: "台湾",
-            },
-          ],
         },
       ],
       dynamicValidateForm: {
@@ -529,6 +414,7 @@ export default {
       huanfo: "",
       automatic_time: true,
       updatadate:false,
+      expireTime: '',
       pickerOptions0: {
         shortcuts: [
           {
@@ -592,7 +478,7 @@ export default {
   filters: {
     settimes(data) {
       if (data) {
-        var stat = getymdtime(data);
+        var stat = String(data).length == 10 ? getymdtime(data) : getymdtime(data/1000);
         return stat;
       } else {
         return data;
@@ -600,6 +486,9 @@ export default {
     },
   },
   mounted() {
+    this.$nextTick(function () {
+			this.$refs.tabs.$children[0].$refs.tabs[2].style.display="none";
+		})
     let tempUrl = localStorage.getItem("tempUrl");
     if (tempUrl) {
       this.urlLinks = tempUrl;
@@ -768,7 +657,7 @@ export default {
     //视频格式
     onchangeType(val){
       this.datalist.url_type=val
- this.updateurl(3)
+      this.updateurl(3)
     },
     //请求数据--获取配置信息
     geturlconfig() {
@@ -787,6 +676,7 @@ export default {
           this.datalist.label2s = res.data.data.base_config.url;
           this.datalist.domainId = res.data.data.base_config.domain_id;
           this.datalist.state=res.data.data.base_config.state;
+          this.expireTime = res.data.data.cache_config.data[0].expire;
           // //回源参数
           // this.datalist.host_url.url = res.data.data.host_url.url;
           // if (res.data.data.host_url.valid == 0) {
@@ -1378,8 +1268,15 @@ export default {
 
   .talb_title_tio {
     text-align: left;
-    display: flex;
-
+    margin-left: 40px;
+    margin-top: 20px;
+    // display: flex;
+    .talb_title_p{
+      width: 4px;
+      height:20px;
+      background-color:#297aff;
+      margin-right: 8px
+    }
     span {
       margin-right: 45px;
     }

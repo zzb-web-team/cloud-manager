@@ -90,7 +90,7 @@ export default {
       operatingStatus: false,
       clomnSelection: false,
       reserveselection: true,
-      options2active: ["全部", "新增", "修改", "删除", "导出"],
+      options2active: ["全部", "新增", "修改", "删除", "导出", "登录"],
       value1: "",
       value2: "",
       value: "",

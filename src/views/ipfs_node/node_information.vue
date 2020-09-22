@@ -123,9 +123,10 @@
                         <div class="item">
                             <div class="item_l">应用类型：</div>
                             <div class="item-r">
-                                <el-select v-model="value11" placeholder="请选择">
+                                <el-input v-model="value11" disabled></el-input>
+                                <!-- <el-select v-model="value11" placeholder="请选择">
                                     <el-option v-for="(item, index) in options1" :key="index" :label="item" :value="item"></el-option>
-                                </el-select>
+                                </el-select> -->
                             </div>
                         </div>
                         <div class="item">

@@ -10,16 +10,16 @@
         </p>
         <div class="copy_con">
             <div>
-                <el-steps :active="actives" finish-status="success" simple style="margin-top: 20px;width:600px;">
-                    <el-step title="选择配置项" description="这是一段很长很长很长的描述性文字"></el-step>
+                <el-steps :active="actives" finish-status="success" simple style="margin-top: 20px;">
+                    <el-step title="确认配置项" description="这是一段很长很长很长的描述性文字"></el-step>
                     <el-step title="选择加速内容" description="这是一段很长很长很长的描述性文字"></el-step>
                     <el-step title="完成" description="这是一段很长很长很长的描述性文字"></el-step>
                 </el-steps>
             </div>
 
             <div v-show="actives === 1">
-                <el-table ref="multipleTable" :data="futableData" tooltip-effect="dark" stripe style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="55"></el-table-column>
+                <el-table ref="multipleTable" :data="futableData" tooltip-effect="dark" stripe style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
+                    <!-- <el-table-column type="selection" width="55"></el-table-column> -->
                     <el-table-column prop="configuration" label="配置项"></el-table-column>
                     <el-table-column prop="nowconfiguration" label="当前配置" show-overflow-tooltip>
                         <template slot-scope="scope">
@@ -76,21 +76,20 @@
                 </div>
                 <!--  -->
                 <div>
-                    <el-table ref="multipleTable" :row-key="getRowKey" :data="urllist" tooltip-effect="dark" stripe style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handlistChange">
-                        <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
-                        <el-table-column label="加速内容">
-                            <template slot-scope="scope">
-                                <div style="width: 700px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin:0 auto;">{{scope.row.url}}1</div>
-
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <fenye style="text-align:right;margin:20px 0 10px 0;" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" :pagesa="total_cnt"></fenye>
+                  <el-table ref="multipleTable" :row-key="getRowKey" :data="urllist" tooltip-effect="dark" stripe style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handlistChange">
+                    <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
+                    <el-table-column label="加速内容">
+                      <template slot-scope="scope">
+                        <div style="width: 700px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin:0 auto;">{{scope.row.url}}</div>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                  <fenye style="text-align:right;margin:20px 0 10px 0;" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" :pagesa="total_cnt"></fenye>
                 </div>
                 <el-button style="margin-top: 2px;" type="primary" @click="last">上一步</el-button>
                 <el-button style="margin-top: 2px;" type="primary" @click="next">下一步</el-button>
                 <!-- <el-button style="margin-top: 2px;" @click="fureset">取消</el-button> -->
-                <el-button style="margin-top: 2px;" @click="fureset(2)">取消</el-button>
+                <!-- <el-button style="margin-top: 2px;" @click="fureset()">取消</el-button> -->
 
             </div>
         </div>
@@ -133,18 +132,18 @@ export default {
           pname: "cache_config",
           tabnum: "there",
         },
-        {
-          configuration: "缓存过期时间",
-          nowconfiguration: "已配置",
-          pname: "expire_time",
-          tabnum: "second",
-        },
-        {
-          configuration: "自定义页面",
-          nowconfiguration: "",
-          pname: "custom_page",
-          tabnum: "four",
-        },
+        // {
+        //   configuration: "缓存过期时间",
+        //   nowconfiguration: "已配置",
+        //   pname: "expire_time",
+        //   tabnum: "second",
+        // },
+        // {
+        //   configuration: "自定义页面",
+        //   nowconfiguration: "",
+        //   pname: "custom_page",
+        //   tabnum: "four",
+        // },
       ],
       //配置信息
       datalist: {
@@ -315,7 +314,7 @@ export default {
       let params = new Object();
       params.page = this.tolpage - 1;
       params.buser_id = this.buser_ids;
-      params.url = this.fuinput;
+      params.url_name = this.fuinput;
       params.state = -1;
       params.start_time = 0;
       params.end_time = 0;
@@ -341,27 +340,27 @@ export default {
     },
     //配置项
     seturlconfig() {
-      this.multipleSelection.forEach((item, index) => {
-        if (item == "host_url") {
-          this.configuration[item] = JSON.parse(
-            JSON.stringify(this.copydatalist[item])
-          );
-        } else if (item == "cache_config") {
+      // this.multipleSelection.forEach((item, index) => {
+      //   if (item == "host_url") {
+      //     this.configuration[item] = JSON.parse(
+      //       JSON.stringify(this.copydatalist[item])
+      //     );
+      //   } else if (item == "cache_config") {
           let dataarr = {};
           dataarr.cache_config = {};
           dataarr.cache_config.data = this.copydatalist.cache_config.data;
           dataarr.cache_config.valid = this.copydatalist.cache_config.valid;
           this.configuration.cache_config = dataarr;
-        } else if (item == "expire_time") {
-          this.configuration.cache_config = JSON.parse(
-            JSON.stringify(this.copydatalist.cache_config)
-          );
-        } else if (item == "custom_page") {
-          this.configuration[item] = JSON.parse(
-            JSON.stringify(this.copydatalist[item])
-          );
-        }
-      });
+      //   } else if (item == "expire_time") {
+      //     this.configuration.cache_config = JSON.parse(
+      //       JSON.stringify(this.copydatalist.cache_config)
+      //     );
+      //   } else if (item == "custom_page") {
+      //     this.configuration[item] = JSON.parse(
+      //       JSON.stringify(this.copydatalist[item])
+      //     );
+      //   }
+      // });
     },
     //复制配置
     copyconfig() {
@@ -432,12 +431,12 @@ export default {
     //下一步按钮
     next() {
       if (this.actives == 1) {
-        if (this.multipleSelection.length <= 0) {
-          this.$message.error("请至少勾选一个配置项");
-          return false;
-        } else {
+        // if (this.multipleSelection.length <= 0) {
+        //   this.$message.error("请至少勾选一个配置项");
+        //   return false;
+        // } else {
           this.seturlconfig();
-        }
+        // }
       }
       if (this.actives == 2) {
         if (this.urldisable.length <= 0) {
@@ -534,21 +533,14 @@ export default {
     //     this.actives = 1;
     //     this.dialupdata = false;
     // },
-    fureset(num) {
-      console.log(num);
-      if (num == 1) {
-        this.$nextTick(function() {
-          this.multipleSelection.forEach(item => {
-            this.$refs.multipleTable_pei.toggleRowSelection(
-              this.futableData[item.index],
-              false
-            );
+    fureset(rows) {
+      if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row);
           });
-        });
-      } else {
-        this.$refs.multipleTable.clearSelection();
-      }
-      this.dialupdata = false;
+        } else {
+          this.$refs.multipleTable.clearSelection();
+        }
     },
     //返回
     goback() {
@@ -569,7 +561,7 @@ export default {
 <style lang="scss" scoped>
 .copy_configuration {
   .copy_title {
-    width: 1240px;
+    // width: 1240px;
     height: 40px;
     background: rgba(224, 240, 255, 1);
     border: 1px solid rgba(97, 157, 255, 1);
@@ -584,7 +576,7 @@ export default {
   }
 
   .copy_con {
-    width: 1240px;
+    // width: 1240px;
     min-height: 675px;
     background: rgba(255, 255, 255, 1);
     box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
@@ -594,7 +586,7 @@ export default {
 
     .copy_prompt {
       text-align: left;
-      width: 632px;
+      // width: 632px;
       height: 50px;
       line-height: 50px;
       background: #f0f0ff;
