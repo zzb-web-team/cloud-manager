@@ -369,7 +369,9 @@ export default {
       this.urldisable.forEach((item, index) => {
         this.copydatalist.base_config.url_name = item.url;
         let jsonobj = new Object();
-        jsonobj = Object.assign({}, this.configuration);
+        console.log(this.configuration)
+        jsonobj = Object.assign({}, this.configuration.cache_config);
+        console.log(jsonobj)
         jsonobj.url_name = item;
         // jsonobj.base_config = new Object();
 

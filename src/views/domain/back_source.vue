@@ -676,7 +676,6 @@ export default {
           this.datalist.label2s = res.data.data.base_config.url;
           this.datalist.domainId = res.data.data.base_config.domain_id;
           this.datalist.state=res.data.data.base_config.state;
-          this.expireTime = res.data.data.cache_config.data[0].expire;
           // //回源参数
           // this.datalist.host_url.url = res.data.data.host_url.url;
           // if (res.data.data.host_url.valid == 0) {
@@ -693,6 +692,7 @@ export default {
           let concash = {};
           if (res.data.data.cache_config.valid == 0) {
             //缓存状态
+            this.expireTime = res.data.data.cache_config.data[0]&&res.data.data.cache_config.data[0].expire;
             concash.valid = false;
             this.valueh = false;
           } else {
@@ -1070,13 +1070,13 @@ export default {
     },
     //添加缓存--确定
     huanVisib() {
-      if (this.citylabel.length == 0) {
-        this.$message({
-          type: "error",
-          message: "请选择地区",
-        });
-        return false;
-      }
+      // if (this.citylabel.length == 0) {
+      //   this.$message({
+      //     type: "error",
+      //     message: "请选择地区",
+      //   });
+      //   return false;
+      // }
       this.loading = true;
       if (this.huanform.type == 0) {
         this.huanform.expire = 0;
