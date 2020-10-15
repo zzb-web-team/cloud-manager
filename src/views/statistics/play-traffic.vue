@@ -176,11 +176,11 @@
             
             <div class="devide_table">
               <el-row type="flex" class="row_active">
-                <el-col :span="24" style="text-align:left;font-weight: bold;margin-bottom:30px;">省/市流量统计</el-col>
+                <el-col :span="24" style="text-align:left;font-weight: bold;margin-bottom:20px;">省/市流量统计</el-col>
               </el-row>
               <div style="display: flex;flex-direction: row; justify-content: space-between">
-                <div style="width: 30%">
-                  <div v-for="(item, index) in locationCurveList" :key="index" style="display: flex;flex-direction: row;align-items: center;">
+                <div style="width: 30%;">
+                  <div v-for="(item, index) in locationCurveList" :key="index" style="display: flex;flex-direction: row;align-items: center;margin-top:8px;">
                     <span style="width: 15%">{{item.region}}</span>
                     <p :style="{height:16 + 'px',width: ((radioPlayFlow == 1 ? item.p2p_flow : item.cdn_flow) / locationMax)*70 +'%', backgroundColor: '#297aff', marginRight: '6px'}"></p>
                     <span style="width: 15%" v-if="radioPlayFlow == 1">{{ item.p2p_flow | setbytes }}</span>
@@ -296,7 +296,7 @@ import {
   export_dataflow_location_file
 } from "../../servers/api";
 import echarts from "echarts";
-import 'echarts/map/js/china.js' 
+import 'echarts/map/js/china.js';
 import common from "../../comm/js/util";
 import _ from "lodash";
 
@@ -1441,14 +1441,10 @@ export default {
 
     handleClick1() {
       if (this.radioPlayFlow == 1) {
-        console.log(this.locationCurveList)
         this.locationMax = _.max(this.locationCurveList.map(v=>v.p2p_flow));
-        console.log(this.locationMax)
         this.drawLine()
       } else {
-        console.log(this.locationCurveList)
         this.locationMax = _.max(this.locationCurveList.map(v=>v.cdn_flow));
-        console.log(this.locationMax)
         this.drawLine()
       }
     },
@@ -1917,7 +1913,7 @@ export default {
   .devide_table {
     padding: 35px;
     height: auto;
-    margin-top: 20px;
+    margin: 20px 0;
     background: #ffffff;
     border-radius: 2px;
     box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);

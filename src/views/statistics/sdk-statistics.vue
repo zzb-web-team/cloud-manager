@@ -375,7 +375,7 @@ export default {
   .devide_table {
     padding: 35px;
     height: auto;
-    margin-top: 20px;
+    margin: 20px 0;
     background: #ffffff;
     border-radius: 2px;
     box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
