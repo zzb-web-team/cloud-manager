@@ -187,7 +187,7 @@
                     <span style="width: 15%" v-else>{{ item.cdn_flow | setbytes }}</span>
                   </div>
                 </div>
-                <el-row type="flex" class="row_active" style="width: 63%">
+                <el-row type="flex" class="row_active" style="width: 63%;margin-top: 0;">
                   <el-col :span="24">
                     <el-table :data="locationTableList" border max-height="750" style="margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
                       <el-table-column label="序号">
