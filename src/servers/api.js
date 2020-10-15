@@ -9,8 +9,8 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
 } else if (href.indexOf('zzb.onezen.net') >= 0) {
     var serverUrl = 'http://zzb.onezen.net'; //阿里云服务URL
 } else {
-    // var serverUrl = 'http://zzb.onezen.net';
-    var serverUrl = 'http://service.kclgames.com';
+    var serverUrl = 'http://zzb.onezen.net';
+    // var serverUrl = 'http://service.kclgames.com';
     // var serverUrl = 'http://xyj.grapefruitcloud.com';
 }
 
@@ -334,6 +334,30 @@ export const query_playdata_table = params => {
     return post(`${serverUrl}/videoplay_statistic/query_playdata_table`, params)
 };
 
+/**SDK版本统计 */
+export const query_sdk_version_curve = params => {
+    return post(`${serverUrl}/resource_manage/query_sdk_version_curve`, params)
+};
+
+/**版本用户清单 */
+export const query_sdk_version_userList = params => {
+    return post(`${serverUrl}/resource_manage/query_sdk_version_userList`, params)
+};
+
+/**播放流量地区分布表*/
+export const query_dataflow_location_table = params => {
+    return post(`${serverUrl}/resource_manage/query_dataflow_location_table`, params)
+};
+
+/**播放流量地区分布表*/
+export const query_dataflow_location_curve = params => {
+    return post(`${serverUrl}/resource_manage/query_dataflow_location_curve`, params)
+};
+
+/**导出播放流量地区分布*/
+export const export_dataflow_location_file = params => {
+    return post(`${serverUrl}/file_download/export_dataflow_location_file`, params)
+};
 
 //SDK管理
 /**SDK列表 */

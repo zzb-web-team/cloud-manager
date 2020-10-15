@@ -133,6 +133,92 @@
               </el-row>
             </div>
           </el-tab-pane>
+          <el-tab-pane label="播放流量分布" name="second" :lazy="true">
+            <div style="display: flex;align-items: center; flex-flow: row; margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              </el-input>
+              <el-radio-group
+                v-model="radio"
+                size="medium"
+                @change="select_time()"
+                v-show="!showzdy"
+              >
+                <el-radio-button size = "small" label="1">今天</el-radio-button >
+                <el-radio-button size = "small" label="2">昨天</el-radio-button >
+                <el-radio-button size = "small" label="3">近7天</el-radio-button >
+                <el-radio-button size = "small" label="4">近30天</el-radio-button >
+                <el-radio-button size = "small" label="5">自定义</el-radio-button >
+              </el-radio-group>
+              <el-button
+                type="primary"
+                v-show="showzdy"
+                 size = "small"
+                style="background:#409EFF;border:#409EFF"
+                @click="setZdy"
+                >自定义</el-button
+						  >
+              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
+              <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button> -->
+            </div>
+            <div class="device_form">
+              <el-row type="flex" class="row_active">
+                <el-col :span="24" style="text-align:left;font-weight: bold;margin-bottom:30px;">播放流量地域分布</el-col>
+              </el-row>
+              <el-radio-group 
+                v-model="radioPlayFlow"
+                @change="handleClick1">
+                <el-radio-button label="1">P2P播放流量</el-radio-button>
+                <el-radio-button label="2">CDN播放流量</el-radio-button>
+              </el-radio-group>
+              <div id="myChartMap1" :style="{ height: '607px' }"></div>
+            </div>
+            
+            <div class="devide_table">
+              <el-row type="flex" class="row_active">
+                <el-col :span="24" style="text-align:left;font-weight: bold;margin-bottom:30px;">省/市流量统计</el-col>
+              </el-row>
+              <div style="display: flex;flex-direction: row; justify-content: space-between">
+                <div style="width: 30%">
+                  <div v-for="(item, index) in locationCurveList" :key="index" style="display: flex;flex-direction: row;align-items: center;">
+                    <span style="width: 15%">{{item.region}}</span>
+                    <p :style="{height:16 + 'px',width: ((radioPlayFlow == 1 ? item.p2p_flow : item.cdn_flow) / locationMax)*70 +'%', backgroundColor: '#297aff', marginRight: '6px'}"></p>
+                    <span style="width: 15%" v-if="radioPlayFlow == 1">{{ item.p2p_flow | setbytes }}</span>
+                    <span style="width: 15%" v-else>{{ item.cdn_flow | setbytes }}</span>
+                  </div>
+                </div>
+                <el-row type="flex" class="row_active" style="width: 63%">
+                  <el-col :span="24">
+                    <el-table :data="locationTableList" border max-height="750" style="margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                      <el-table-column label="序号">
+                        <template slot-scope="scope">
+                          <div>{{ scope.row.index }}</div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="省市">
+                        <template slot-scope="scope">
+                          <div>{{ scope.row.region }}</div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column :label="radioPlayFlow == 1 ? 'P2P播放流量' : 'CDN播放流量'">
+                        <template slot-scope="scope">
+                          <div v-if="radioPlayFlow == 1">{{scope.row.p2p_flow | setbytes}}</div>
+                          <div v-else>{{scope.row.cdn_flow | setbytes}}</div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="流量占比">
+                        <template slot-scope="scope">
+                          <div v-if="radioPlayFlow == 1">{{scope.row.p2pPercent | percentss}}</div>
+                          <div v-else>{{scope.row.cdnPercent | percentss}}</div>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                    <!-- <fenye style="float:right;margin:10px 0 0 0;" :currentPage="pageNo1" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye> -->
+                  </el-col>
+                </el-row>
+              </div>
+            </div>
+          </el-tab-pane>
           <el-tab-pane label="播放流量终端" name="four" :lazy="true">
             <div style="display: flex;align-items: center; flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onChanges" style="width:160px;margin-right: 10px;">
@@ -204,9 +290,13 @@ import {
   sdk_flow_control,
   export_sdk_flow_table_file,
   export_sdk_flow_control_file,
-  get_nodetype_enum
+  get_nodetype_enum,
+  query_dataflow_location_table,
+  query_dataflow_location_curve,
+  export_dataflow_location_file
 } from "../../servers/api";
 import echarts from "echarts";
+import 'echarts/map/js/china.js' 
 import common from "../../comm/js/util";
 import _ from "lodash";
 
@@ -437,21 +527,7 @@ export default {
       showzdy: false,
       options1: [],
       options1chanid: [],
-
-      options3: [
-        // {
-        //   label: "电信",
-        // },
-        // {
-        //   label: "移动",
-        // },
-        // {
-        //   label: "联通",
-        // },
-        // {
-        //   label: "其他",
-        // },
-      ],
+      options3: [],
       options4: [],
       optionsa1: [],
       optionsa2: [],
@@ -521,7 +597,6 @@ export default {
           return time.getTime() > Date.now();
         },
       },
-      // value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
       val2: [],
       rowHeader: [
         {
@@ -599,6 +674,10 @@ export default {
       dataJk3: [],
       dataJk4: [],
       radio: 1,
+      radioPlayFlow: 1,
+      locationCurveList: [],
+      locationTableList: [],
+      locationMax: '',
     };
   },
   filters: {
@@ -632,8 +711,8 @@ export default {
     }
     this.chart.dispose();
     this.chart = null;
-    this.drawLine();
-    this.drawLine1();
+    // this.drawLine();
+    // this.drawLine1();
   },
   methods: {
     timeFormatter(row){
@@ -698,7 +777,9 @@ export default {
     },
 
     onChanges() {
-      if(this.activeName == 'threed'){
+      if(this.activeName == 'second'){
+        this.queryDataFlowLocation();
+      }else if(this.activeName == 'threed'){
         this.pageNo1 = 1;
         this.querySdkflow();
         this.querySdkflowTable();
@@ -710,19 +791,18 @@ export default {
     select_time() {
 			if (this.radio == 1) {
         this.showzdy = false;
-				this.activeName == 'threed' ? this.today(3) : this.today(4);
+				this.activeName == 'second' ? this.today(2) : this.activeName == 'threed' ? this.today(3) : this.today(4);
 			} else if (this.radio == 2) {
         this.showzdy = false;
-        this.activeName == 'threed' ? this.yesterday(3) : this.yesterday(4);
+        this.activeName == 'second' ? this.yesterday(2) : this.activeName == 'threed' ? this.yesterday(3) : this.yesterday(4);
 			} else if (this.radio == 3) {
         this.showzdy = false;
-        this.activeName == 'threed' ? this.sevendat(3) : this.sevendat(4);
+        this.activeName == 'second' ? this.sevendat(2) : this.activeName == 'threed' ? this.sevendat(3) : this.sevendat(4);
 			} else if (this.radio == 4) {
         this.showzdy = false;
-        this.activeName == 'threed' ? this.thirtyday(3) : this.thirtyday(4);
+        this.activeName == 'second' ? this.thirtyday(2) : this.activeName == 'threed' ? this.thirtyday(3) : this.thirtyday(4);
 			} else if (this.radio == 5) {
         this.showzdy = true;
-        
 			}
     },
 
@@ -1054,8 +1134,41 @@ export default {
           console.log(error);
         });
     },
-    //流量监控导出
+    
+    //播放流量分布图
+    queryDataFlowLocation() {
+      let params = new Object();
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
 
+      if (this.value1Activechanid !== "") {
+        params.channelId = this.value1Activechanid;
+      } else {
+        params.channelId = "*";
+      }
+
+      query_dataflow_location_curve(params).then(res=>{
+        if (res.status == 0) {
+          this.locationCurveList = res.data.curveList // res.data.curveList;
+          this.locationMax = this.radioPlayFlow == 1 ? _.max(res.data.curveList.map(v=>v.p2p_flow)) 
+          : _.max(res.data.curveList.map(v=>v.cdn_flow));
+          this.drawLine();
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+      query_dataflow_location_table(params).then(res=>{
+        if (res.status == 0) {
+          this.locationTableList = res.data.tableList.map((v, i)=>{v.index = i+1; return v});;
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    },
+    //流量监控导出
     exoprtant_Ll() {
       let params = new Object();
       params.startTs = this.starttime;
@@ -1071,11 +1184,11 @@ export default {
       } else {
         params.channelId = "*";
       }
-      if (this.value1acce1 !== "-1") {
-        params.terminalName = parseInt(this.value1acce1);
-      } else {
-        params.terminalName = -1;
-      }
+      // if (this.value1acce1 !== "-1") {
+      //   params.terminalName = parseInt(this.value1acce1);
+      // } else {
+      //   params.terminalName = -1;
+      // }
 
       if (this.valueChanel1 !== "") {
         params.ipfsChannel = this.valueChanel1;
@@ -1169,7 +1282,9 @@ export default {
         return false;
       }
       this.pageNo = 1;
-      if (data == 3) {
+      if(data == 2){
+        this.queryDataFlowLocation();
+      }else if (data == 3) {
         this.querySdkflow();
         this.querySdkflowTable();
       } else if (data == 4) {
@@ -1183,7 +1298,9 @@ export default {
       this.endtime = Date.parse(new Date()) / 1000;
       this.timeUnit = 60;
       this.pageNo = 1;
-      if (data == 3) {
+      if(data == 2){
+        this.queryDataFlowLocation();
+      }else if (data == 3) {
         this.querySdkflow();
         this.querySdkflowTable();
       } else if (data == 4) {
@@ -1197,7 +1314,9 @@ export default {
       this.endtime = times - 1;
       this.timeUnit = 60;
       this.pageNo = 1;
-      if (data == 3) {
+      if(data == 2){
+        this.queryDataFlowLocation();
+      }else if (data == 3) {
         this.querySdkflow();
         this.querySdkflowTable();
       } else if (data == 4) {
@@ -1211,7 +1330,9 @@ export default {
       this.endtime = times;
       this.timeUnit = 60 * 24;
       this.pageNo = 1;
-      if (data == 3) {
+      if(data == 2){
+        this.queryDataFlowLocation();
+      }else if (data == 3) {
         this.querySdkflow();
         this.querySdkflowTable();
       } else if (data == 4) {
@@ -1225,7 +1346,9 @@ export default {
       this.endtime = times;
       this.timeUnit = 60 * 24;
       this.pageNo = 1;
-      if (data == 3) {
+      if(data == 2){
+        this.queryDataFlowLocation();
+      }else if (data == 3) {
         this.querySdkflow();
         this.querySdkflowTable();
       } else if (data == 4) {
@@ -1254,7 +1377,9 @@ export default {
       } else if (this.endtime - this.starttime >= 86400) {
         this.timeUnit = 60 * 24;
       }
-      if(this.activeName == 'threed'){
+      if(this.activeName == 'second'){
+        this.queryDataFlowLocation();
+      }else if(this.activeName == 'threed'){
         this.querySdkflow();
         this.querySdkflowTable();
       }else{
@@ -1296,7 +1421,13 @@ export default {
           _this.querySdkflowTable();
           // console.log(this.$refs['hello']);
         });
-      } else if (tab.index == 1) {
+      } else if(tab.index == 1){
+        this.queryDataFlowLocation();
+        this.$nextTick(() => {
+          this.drawLine();
+        });
+        
+      } else if (tab.index == 2) {
         // this.getseachlabel1();
         this.value1Activechanid="";
         this.valuea1="";
@@ -1306,6 +1437,87 @@ export default {
         let _this = this;
         _this.querySdkflowControl();
       }
+    },
+
+    handleClick1() {
+      if (this.radioPlayFlow == 1) {
+        console.log(this.locationCurveList)
+        this.locationMax = _.max(this.locationCurveList.map(v=>v.p2p_flow));
+        console.log(this.locationMax)
+        this.drawLine()
+      } else {
+        console.log(this.locationCurveList)
+        this.locationMax = _.max(this.locationCurveList.map(v=>v.cdn_flow));
+        console.log(this.locationMax)
+        this.drawLine()
+      }
+    },
+
+    drawLine() {
+      let data = [];
+      let curveList = this.locationCurveList.sort((a,b)=>{return this.radioPlayFlow == 1 ? b.p2p_flow - a.p2p_flow : b.cdn_flow - a.cdn_flow})
+      curveList.forEach(v=>{
+        let obj = {};
+        obj.name = v.region;
+        obj.value = this.radioPlayFlow == 1 ? v.p2p_flow : v.cdn_flow;
+        data.push(obj)
+      })
+      let myChart = this.$echarts.init(document.getElementById("myChartMap1"));
+      window.onresize = myChart.resize;
+      console.log(this.locationMax);
+      let options =  {
+            tooltip: {
+              formatter:function(params,ticket, callback){
+                let value = params.value ? common.formatByteActive(params.value) : 0;
+                return params.name+'<br />'+params.seriesName+'：'+ value;
+              }
+            },
+            visualMap: {
+                min: 0,
+                max: 1024*1024*500,
+                left: 'left',
+                top: 'bottom',
+                text: ['高','低'],
+                inRange: {
+                    color: ['#e0ffff', '#006edd']
+                },
+                show:true
+            },
+            geo: {
+                map: 'china',
+                roam: false,
+                zoom:1.23,
+                label: {
+                    normal: {
+                        show: true,
+                        fontSize:'10',
+                        color: 'rgba(0,0,0,0.7)'
+                    }
+                },
+                itemStyle: {
+                    normal:{
+                        borderColor: 'rgba(0, 0, 0, 0.2)'
+                    },
+                    emphasis:{
+                        areaColor: '#F3B329',
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                        shadowBlur: 20,
+                        borderWidth: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            },
+            series : [
+                {
+                    name: '播放流量',
+                    type: 'map',
+                    geoIndex: 0,
+                    data: data
+                }
+            ]
+        };
+      myChart.setOption(options);
     },
 
     drawLine2(x, y, z,a) {

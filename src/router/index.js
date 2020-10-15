@@ -55,6 +55,9 @@ import visitStatistics from "@/views/statistics/visit-statistics";
 import playTraffic from "@/views/statistics/play-traffic";
 import playDetails from "@/views/statistics/play-details-statistics";
 
+//sdk统计
+import sdkStatistics from "@/views/statistics/sdk-statistics";
+
 
 
 
@@ -267,7 +270,12 @@ export default new Router({
                   component: fs_storage,
               },
           ],
-        }
+        },
+        {
+          path: "/sdkStatistics",
+          name: "SDK统计",
+          component: sdkStatistics,
+        },
       ],
     },
     {
