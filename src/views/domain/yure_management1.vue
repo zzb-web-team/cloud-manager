@@ -286,12 +286,12 @@ export default {
     },
     handleChange() {
       var thsAreaCode = this.$refs.cascaderAddr.getCheckedNodes()[0].pathLabels;
-      this.area = thsAreaCode[1];
+      this.area = thsAreaCode[0];
     },
     handleChange1() {
       var thsAreaCode = this.$refs.cascaderAddr1.getCheckedNodes()[0]
         .pathLabels;
-      this.area = thsAreaCode[1];
+      this.area = thsAreaCode[0];
     },
     handleClick(tab, event) {
       this.citylabel = "";

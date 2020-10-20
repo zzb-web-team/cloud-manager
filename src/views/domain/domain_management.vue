@@ -22,7 +22,7 @@
           </el-select>
 
           <!-- <span>创建日期：</span> -->
-          <el-date-picker v-model="value1" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+          <el-date-picker v-model="value1" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="gettimes"></el-date-picker>
           <!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
           <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
         </div>
@@ -841,6 +841,9 @@ export default {
       this.queryUrlList();
       //this.value1 = "";
     },
+    gettimes() {
+      this.queryUrlList();
+    },
     //重置
     reset() {
       this.value = "";
@@ -1092,6 +1095,14 @@ export default {
     },
     //禁用
     disableuser() {
+      console.log(this.multipleSelection)
+      if(this.multipleSelection.length == 0){
+        this.$message({
+          type: 'error',
+          message: '请至少选择一项！'
+        });
+        return
+      }
       this.$confirm(
         "停用后该渠道ID的此加速内容将关闭加速服务，是否继续？",
         "提示",
