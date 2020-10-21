@@ -274,6 +274,7 @@ export default new Router({
         {
           path: "/sdkStatistics",
           name: "SDK统计",
+          hidden: true,
           component: sdkStatistics,
         },
       ],

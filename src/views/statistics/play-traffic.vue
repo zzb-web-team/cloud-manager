@@ -3,7 +3,7 @@
     <div class="top_title">播放流量</div>
     <div class="user-title" style="display: flex;flex-flow: column;">
       <div class="resources_con">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tabs v-model="activeName" @tab-click="handleClick" ref="tabs">
           <el-tab-pane label="播放流量占比" name="threed" :lazy="true">
             <div style="display: flex;align-items: center; flex-flow: row; margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
               <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
@@ -699,6 +699,9 @@ export default {
     fenye,
   },
   mounted() {
+    this.$nextTick(function () {
+			this.$refs.tabs.$children[0].$refs.tabs[1].style.display="none";
+		})
     this.getNodeType();
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.endtime = Date.parse(new Date()) / 1000;

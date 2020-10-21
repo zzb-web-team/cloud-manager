@@ -96,7 +96,7 @@
               <div style="margin-left: 25px;display: flex; align-items: center;">
                 <p style="margin-right: 25px;" v-if="expireTime&&!valueh">{{expireTime | settimes}}</p>
                 <p style="margin-right: 25px;" v-else>默认自动过期</p>
-                <el-button type="text" :disabled="valueh" @click="huanVisible = true;">设置</el-button>
+                <el-button type="text" :disabled="valueh" @click="huanVisible = true;radio1='自动过期';automatic_time=true;automatic()">设置</el-button>
               </div>
             </div>
           </div>
@@ -744,6 +744,7 @@ export default {
       let parmas = new Object();
       let natobj = {};
       natobj.url_name = this.urlLinks;
+      console.log(this.datalist)
       natobj.base_config = {
         domain_id: this.datalist.domainId,
         // url: this.datalist.label2s, //待配置url
@@ -803,6 +804,7 @@ export default {
       // }
       natobj.cache_config.data = this.datalist.cache_con;
       natobj.custom_page = this.datalist.custom_page;
+      console.log(natobj)
       parmas.data_array = [];
       parmas.data_array.push(natobj);
       parmas.data_count = 1;
@@ -810,12 +812,12 @@ export default {
 
       config_url(parmas)
         .then(res => {
-          this.geturlconfig();
           if (res.status == 0) {
             this.$message.success("配置成功");
             // setTimeout(() => {
             //   this.$router.push({ path: "/domain_management" });
             // }, 1000);
+            this.geturlconfig();
           }
         })
         .catch(err => {
@@ -1069,7 +1071,7 @@ export default {
       this.huanform.expire = dateToMs(this.huanfo);
     },
     //添加缓存--确定
-    huanVisib() {
+    huanVisib() { 
       // if (this.citylabel.length == 0) {
       //   this.$message({
       //     type: "error",
@@ -1090,15 +1092,17 @@ export default {
           return false;
         }
       }
-      this.huanform.area = this.citylabel[0];
-      this.huanform.province = this.citylabel[1];
+      this.huanform.area = this.datalist.cache_con[0].area;
+      this.huanform.province = this.datalist.cache_con[0].province;
 
       if (this.edit == 1) {
         let temp = Object.assign({}, this.huanform);
         this.datalist.cache_con[this.editnum] = temp;
       } else {
         let temp = Object.assign({}, this.huanform);
+        console.log('temp---->', temp)
         this.datalist.cache_con.push(temp);
+        console.log('datalist--->', this.datalist.cache_con)
       }
 
       this.huanVisible = false;

@@ -9,8 +9,8 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
 } else if (href.indexOf('zzb.onezen.net') >= 0) {
     var serverUrl = 'http://zzb.onezen.net'; //阿里云服务URL
 } else {
-    var serverUrl = 'http://zzb.onezen.net';
-    // var serverUrl = 'http://service.kclgames.com';
+    // var serverUrl = 'http://zzb.onezen.net';
+    var serverUrl = 'http://service.kclgames.com';
     // var serverUrl = 'http://xyj.grapefruitcloud.com';
 }
 
