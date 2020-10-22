@@ -270,7 +270,18 @@ export default {
                 tempArr[i].state = "等待中";
               } else if(tempArr[i].state == 3) {
                 tempArr[i].state = "失败";
+              } else if(tempArr[i].state == 4) {
+                tempArr[i].state = "失败";
+              } else if(tempArr[i].state == 5) {
+                tempArr[i].state = "网络错误 ";
+              } else if(tempArr[i].state == 6) {
+                tempArr[i].state = "资源url不存在";
+              } else if(tempArr[i].state == 7) {
+                tempArr[i].state = "资源服务器错误 ";
+              } else if(tempArr[i].state == 8) {
+                tempArr[i].state = "资源下载失败";
               }
+
             }
 
             this.tableData = tempArr;
