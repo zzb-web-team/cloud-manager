@@ -50,14 +50,18 @@
         //    #5874d8,
         //    #5874d8);
         background-blend-mode: normal, normal;
-        box-shadow: 3px 0px 7px 0px rgba(0, 0, 0, 0.12);
-        color: #ffffff;
+        // box-shadow: 3px 0px 7px 0px rgba(0, 0, 0, 0.12);
+        color: #644CF7;
         &:hover {
-            background: #0b3968;
+            background: #644CF7;
+        }
+        &:focus {
+            background: #644CF7;
         }
     }
     .el-submenu .el-menu-item.is-active {
-        color: #20a0ff;
+        color: #fff;
+        background: #644CF7;
     }
 }
 

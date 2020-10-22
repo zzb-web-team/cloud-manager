@@ -413,6 +413,24 @@ body {
 // .el-menu-vertical-demo .el-menu {
 //   box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
 // }
+.el-submenu__title:focus, .el-submenu__title:hover {
+    outline: 0;
+    background-color: #5035F6;
+}
+.el-submenu:hover {
+    background: #5035F6;
+}
+.el-submenu .el-menu-item{
+    background: #5035F6;
+}
+.el-submenu .el-menu-item:hover {
+    background: #5035F6;
+}
+.el-submenu .el-menu-item.is-active {
+    color: #fff;
+    background: #5035F6;
+}
+
 .el-table {
     color: #666666;
     font-size: 14px;

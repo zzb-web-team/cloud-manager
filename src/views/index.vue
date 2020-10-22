@@ -1,55 +1,42 @@
 <template>
   <div class="myownStyle">
     <el-row class="container">
-      <el-col :span="24" class="header">
-        <el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
-          <div style="fontSize:20px;color:#000;color:#ffffff;background: #297aff;">云点播管理平台</div>
-        </el-col>
-        <el-col :span="4" class="userinfo">
-          <el-dropdown trigger="hover">
-            <span class="el-dropdown-link userinfo-inner">
-              <img src="../assets/download.jpg" /> {{sysUserName}}
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <!-- <el-dropdown-item @click.native="goLinkCenter">个人中心</el-dropdown-item> -->
-              <!-- <el-dropdown-item>设置</el-dropdown-item> -->
-              <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </el-col>
-      </el-col>
+      
       <el-col :span="24" class="main">
-        <aside :class="collapsed?'menu-collapsed':'menu-expanded'">
-          <el-menu :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect" unique-opened router>
+        <aside style="background: #644CF7;">
+          <el-menu style="background: #644CF7;" :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect" unique-opened router>
+            <div style="fontSize:20px;color:#ffffff;height: 56px;line-height: 56px;">云点播管理平台</div>
             <!-- 一级菜单 -->
             <template v-for="item in  $router.options.routes" v-if="!item.hidden">
               <el-submenu v-if="item.children && item.children.length" :index="item.path" :key="item.path" style="text-align: left;">
                 <template slot="title">
                   <i :class="item.icon" style="margin-right: 10px;margin-left: 10px;"></i>
-                  <span>{{item.name}}</span>
+                  <span style="color: #fff;">{{item.name}}</span>
                 </template>
 
                 <!-- 二级菜单 -->
                 <template v-for="itemChild in item.children" v-if="!itemChild.hidden">
-                  <el-submenu v-if="itemChild.children && itemChild.children.length" :index="itemChild.path" :key="itemChild.path">
+                  <el-submenu v-if="itemChild.children && itemChild.children.length" :index="itemChild.path" :key="itemChild.path" style="background: #5035F6;">
                     <template slot="title">
                       <i :class="itemChild.icon"></i>
                       <div style="margin-left:20px;">
-                        <div style="display:inline-block;width:4px;height:4px;backgroundColor:rgba(102,102,102,1);border-radius:50%;margin-right: 5px;"></div>{{itemChild.name}}
+                        <div style="display:inline-block;width:4px;height:4px;backgroundColor:#fff;border-radius:50%;margin-right: 5px;"></div>
+                        <span style="color: #fff;">{{itemChild.name}}</span>
                       </div>
                     </template>
 
                     <!-- 三级菜单 -->
-                    <el-menu-item v-for="itemChild_Child in itemChild.children" :index="itemChild_Child.path" :key="itemChild_Child.path" v-if="!itemChild_Child.hidden">
+                    <el-menu-item v-for="itemChild_Child in itemChild.children" :index="itemChild_Child.path" :key="itemChild_Child.path" v-if="!itemChild_Child.hidden" style="background: #5035F6;">
                       <i :class="itemChild_Child.icon"></i>
-                      <span style="margin-left:20px;" slot="title">{{itemChild_Child.name}}</span>
+                      <span style="margin-left:20px;color: #fff;" slot="title">{{itemChild_Child.name}}</span>
                     </el-menu-item>
                   </el-submenu>
 
                   <el-menu-item v-else :index="itemChild.path" :key="itemChild.path">
                     <i :class="itemChild.icon"></i>
                    <div slot="title" style="margin-left:20px;">
-                      <div style="display: inline-block;width:4px;height:4px;backgroundColor:rgba(102,102,102,1);border-radius:50%;margin-right: 5px;"></div>{{itemChild.name}}
+                      <div style="display: inline-block;width:4px;height:4px;backgroundColor:#fff;border-radius:50%;margin-right: 5px;"></div>
+                      <span style="color: #fff;">{{itemChild.name}}</span>
                     </div>
                   </el-menu-item>
                 </template>
@@ -74,6 +61,20 @@
           </el-menu>-->
         </aside>
         <section class="content-container">
+          <el-col :span="24" class="header">
+            <el-col :span="4" class="userinfo">
+              <el-dropdown trigger="hover">
+                <span class="el-dropdown-link userinfo-inner">
+                  <img src="../assets/download.jpg" /> {{sysUserName}}
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <!-- <el-dropdown-item @click.native="goLinkCenter">个人中心</el-dropdown-item> -->
+                  <!-- <el-dropdown-item>设置</el-dropdown-item> -->
+                  <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </el-col>
+          </el-col>
           <div class="grid-content bg-purple-light" style="width: 95%;margin: 0 auto;">
             <!-- <el-col :span="24" class="breadcrumb-container">
               <strong class="title">{{$route.name}}</strong>
@@ -311,15 +312,15 @@ export default {
     height: 60px;
     line-height: 60px;
     //	background: $color-primary;
-    color: #000;
-    background: #297aff;
+    color: #333333;
+    background: white;
     .userinfo {
       text-align: right;
       padding-right: 35px;
       float: right;
       .userinfo-inner {
         cursor: pointer;
-        color: #fff;
+        color: #333333;
         img {
           width: 40px;
           height: 40px;
@@ -367,7 +368,7 @@ export default {
     display: flex;
     // background: #324057;
     position: absolute;
-    top: 60px;
+    top: 0px;
     bottom: 0px;
     // overflow: hidden;
     aside {

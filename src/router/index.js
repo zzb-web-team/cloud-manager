@@ -48,10 +48,8 @@ import usageindex from "@/views/usage/usageindex";
 
 //节点统计
 import trafficMonitor from "@/views/statistics/node-traffic-monitoring";
-import trafficUsage from "@/views/statistics/node-traffic-usage";
 
 //播放统计
-import visitStatistics from "@/views/statistics/visit-statistics";
 import playTraffic from "@/views/statistics/play-traffic";
 import playDetails from "@/views/statistics/play-details-statistics";
 
