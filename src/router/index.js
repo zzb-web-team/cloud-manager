@@ -56,7 +56,9 @@ import playDetails from "@/views/statistics/play-details-statistics";
 //sdk统计
 import sdkStatistics from "@/views/statistics/sdk-statistics";
 
-
+//直播加速
+import dibbleContent from "@/views/domain/dibble_content";
+import dibbleInfo from "@/views/domain/dibble_info";
 
 
 Vue.use(Router);
@@ -122,59 +124,86 @@ export default new Router({
       icon: "iconfont icon-jiankong",
       children: [
         {
-          path: "/accelerate_management",
-          name: "域名管理",
-          component: accelerate_management,
-          // hidden: true
+          path: "/gew",
+          name: "点播加速",
+          component: home_two,
+          // hidden: true,
+          children: [
+            {
+              path: "/accelerate_management",
+              name: "域名管理",
+              component: accelerate_management,
+              // hidden: true
+            },
+            {
+              path: "/domain_management",
+              name: "点播加速管理",
+              component: domain_management,
+              // hidden: true
+            },
+            {
+              path: "/batch_management",
+              name: "批量管理",
+              component: batch_management,
+              hidden: true,
+            },
+            {
+              path: "/back_source",
+              name: "URL配置",
+              component: back_source,
+              hidden: true,
+            },
+            {
+              path: "/add_url",
+              name: "添加URL",
+              component: add_url,
+              hidden: true,
+            },
+            {
+              path: "/copy",
+              name: "复制配置",
+    
+              component: copy,
+              hidden: true,
+            },
+            {
+              path: "/upload",
+              name: "文件上传",
+              component: upload,
+              hidden: true,
+            },
+            {
+              path: "/yure_management",
+              name: "刷新预热管理",
+              component: yure_management,
+            },
+            {
+              path: "/yure_management1",
+              name: "预热/管理",
+              component: yure_management1,
+              hidden: true,
+            }, 
+          ],
         },
         {
-          path: "/domain_management",
-          name: "点播加速管理",
-          component: domain_management,
-          // hidden: true
-        },
-
-        {
-          path: "/batch_management",
-          name: "批量管理",
-          component: batch_management,
-          hidden: true,
-        },
-        {
-          path: "/back_source",
-          name: "URL配置",
-          component: back_source,
-          hidden: true,
-        },
-        {
-          path: "/add_url",
-          name: "添加URL",
-          component: add_url,
-          hidden: true,
-        },
-        {
-          path: "/copy",
-          name: "复制配置",
-
-          component: copy,
-          hidden: true,
-        },
-        {
-          path: "/upload",
-          name: "文件上传",
-          component: upload,
-          hidden: true,
-        },
-        {
-          path: "/yure_management",
-          name: "刷新预热管理",
-          component: yure_management,
-        },
-        {
-          path: "/yure_management1",
-          name: "预热/管理",
-          component: yure_management1,
-          hidden: true,
+          path: "/gew1",
+          name: "直播加速",
+          component: home_two,
+          // hidden: true,
+          children: [
+            {
+              path: "/dibble_content",
+              name: "直播加速内容",
+              component: dibbleContent,
+              // hidden: true
+            },
+            {
+              path: "/dibble_info",
+              name: "直播流信息",
+              component: dibbleInfo,
+              // hidden: true
+            },
+          ],
         },
       ],
     },
