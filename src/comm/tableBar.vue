@@ -76,7 +76,7 @@ export default {
     },
     // 表头样式设置
     headClass() {
-      return "text-align: center;background:#eef1f6;";
+      return "text-align: center; background: #FDFBFB; font-weight: 500; color: #333";
     },
     // 表格样式设置
     rowClass() {

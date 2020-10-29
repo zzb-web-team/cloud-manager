@@ -23,7 +23,7 @@
                 <el-option label="全部" value="*"></el-option>
                 <el-option v-for="(item, index) in hashidSets1" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
-              <el-radio-group
+              <!-- <el-radio-group
                 v-model="radio"
                 size="medium"
                 @change="select_time()"
@@ -43,7 +43,8 @@
                 @click="setZdy"
                 >自定义</el-button
 						  >
-              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
+              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker> -->
+              <SelectTime @selectTime="selectTime" :type="'daterange'" />
               <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button> -->
             </div>
             <div class="user_item">
@@ -274,6 +275,7 @@
 <script>
 import { dateToMs, getymdtime, getymdtime1, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
+import SelectTime from "@/components/SelectTime";
 import {
   accelerate_flow_query_conditions,
   accelerate_flow,
@@ -696,7 +698,7 @@ export default {
     },
   },
   components: {
-    fenye,
+    fenye, SelectTime
   },
   mounted() {
     this.$nextTick(function () {
@@ -718,6 +720,12 @@ export default {
     // this.drawLine1();
   },
   methods: {
+    selectTime(val){
+      this.starttime = val.starttime;
+      this.endtime = val.endtime;
+      this.querySdkflow();
+      this.querySdkflowTable();
+    },
     timeFormatter(row){
       console.log(row)
       if(this.timeUnit == 120){
@@ -1392,7 +1400,7 @@ export default {
 
     // 表头样式设置
     headClass() {
-      return "text-align: center;background:#F3F6FB;";
+      return "text-align: center; background: #FDFBFB; font-weight: 500; color: #333";
     },
     // 表格样式设置
     rowClass() {

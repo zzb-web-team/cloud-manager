@@ -1227,7 +1227,7 @@ export default {
     gettimes() {},
     // 表头样式设置
     headClass() {
-      return "text-align: center;background:#eef1f6;";
+      return "text-align: center; background: #FDFBFB; font-weight: 500; color: #333";
     },
     // 表格样式设置
     rowClass() {
@@ -1320,18 +1320,10 @@ export default {
 .seach {
   width: 100%;
   background: #ffffff;
-
-  // margin: 30px 0 30px 0;
-  // border-radius: 2px;
-  // padding: 21px 37px;
-  // box-shadow: 0px 0px 7px 0px rgba(41, 108, 171, 0.1);
   .seach_top {
     width: 100%;
     height: 60px;
     line-height: 60px;
-
-    // display: flex;
-    // align-items: center;
     .input-with-select {
       width: 20%;
       float: left;

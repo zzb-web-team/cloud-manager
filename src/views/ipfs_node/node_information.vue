@@ -1,169 +1,153 @@
 <template>
     <div class="content">
-        <el-breadcrumb separator="/">
-            <el-breadcrumb-item>点播 SDK发布</el-breadcrumb-item>
-            <!-- <el-breadcrumb-item>
-        <a href="/">注册用户</a>
-      </el-breadcrumb-item> -->
-        </el-breadcrumb>
-        <div>
-            <!-- 搜索 -->
-            <div class="seach">
-                <div class="seach_top">
-                    <el-input placeholder="包名、版本" v-model="input" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmitInput">
-                        <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
-                    </el-input>
-                    <!-- <div class="seach_top_right" @click="option_display()">
-                        筛选
-                        <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
-                    </div> -->
-                <!-- </div>
-                <div v-if="optiondisplay" class="seach_bottom"> -->
-                    <!-- <span>应用类型：</span> -->
-                    <el-select v-model="valueActive" placeholder="请选择应用类型" @change="onchangeTab" style="width:200px;margin-right: 10px;">
-                        <el-option v-for="(item, index) in options" :key="index" :label="item" :value="item"></el-option>
-                    </el-select>
-                    <!-- <span>日期：</span> -->
-                    <el-date-picker v-model="valueTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
-                    <!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
-                    <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
+      <div class="top_title">点播SDK发布</div>
+      <!-- 搜索 -->
+      <div class="seach">
+        <el-input placeholder="包名、版本" v-model="input" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmitInput">
+            <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
+        </el-input>
+        <!-- <span>应用类型：</span> -->
+        <el-select v-model="valueActive" placeholder="请选择应用类型" @change="onchangeTab" style="width:200px;margin-right: 10px;">
+            <el-option v-for="(item, index) in options" :key="index" :label="item" :value="item"></el-option>
+        </el-select>
+        <!-- <span>日期：</span> -->
+        <el-date-picker v-model="valueTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+        <!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
+        <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
+      </div>
+      <!-- 表格 -->
+      <div class="device_table">
+          <div style="text-align: left;margin-bottom:20px;margin-top:20px;">
+              <el-button type="primary" @click="addSdk()">新增发布</el-button>
+          </div>
 
-                </div>
-            </div>
-            <!-- 表格 -->
-            <div class="con_lable">
-                <div style="text-align: left;margin-bottom:20px;margin-top:20px;">
-                    <el-button type="primary" @click="addSdk()">新增发布</el-button>
-                </div>
+          <!-- 表格 -->
+          <el-table stripe ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" :default-sort="{prop: 'date', order: 'descending'}" @selection-change="handleSelectionChange">
+              <el-table-column prop="url" label="发布包名"></el-table-column>
+              <el-table-column prop="type" label="应用类型"></el-table-column>
+              <el-table-column prop="content" label="支持业务类型"></el-table-column>
+              <el-table-column prop="version" label="版本"></el-table-column>
+              <el-table-column prop="time_create" label="发布时间"></el-table-column>
+              <el-table-column label="操作">
+                  <template slot-scope="scope">                          
+                    <el-button @click="handleEdit(scope.row)" type="text" size="small">修改</el-button>
+                    <el-button @click="handleDel(scope.row)" type="text" size="small" style="color:red;">删除</el-button>                           
+                  </template>
+              </el-table-column>
+          </el-table>
+          <!-- 详情弹窗 -->
+          <el-dialog title="新增发布" :visible.sync="dialog" custom-class="customWidth" width="50%">
+              <div class="add-sdk">
+                  <div class="item" style="align-items: flex-start;">
+                      <div class="item_l">应用包：</div>
+                      <div class="item-r" style="position: relative;">
+                          <el-button class="choose-file" size="mini">请选择要上传的文件</el-button>
+                          <input id="f" class="choose-input" type="file" name="file">
+                          <el-button type="primary" class="onchoose-file" @click="upFile()" :disabled="disableStatus">确定</el-button>
+                          进度条
+                          <span id="per">{{perNum}}</span>%
+                          <div style="width: 400px;height: 16px;background-color: #999;margin-top:10px;">
+                              <div style="height: 16px;background-color: #67c23a" id="loading" v-bind:style="{'width': widthData+'%'}"></div>
+                          </div>
+                          <div id="result" style="margin-top:10px;"></div>
+                      </div>
+                  </div>
+                  <div class="item">
+                      <div class="item_l">应用类型：</div>
+                      <div class="item-r">
+                          <el-select v-model="valueActive2" placeholder="请选择" style="width:250px;">
+                              <el-option v-for="(item, index) in optionsActive2" :key="index" :label="item" :value="item"></el-option>
+                          </el-select>
+                      </div>
+                  </div>
+                  <div class="item">
+                      <div class="item_l">包含功能：</div>
+                      <div class="item-r">
+                          <el-checkbox-group v-model="checkList">
+                              <el-checkbox label="mp4"></el-checkbox>
+                              <el-checkbox label="hls"></el-checkbox>
+                              <el-checkbox label="flv"></el-checkbox>
+                          </el-checkbox-group>
+                      </div>
+                  </div>
+                  <div class="item">
+                      <div class="item_l">版本号：</div>
+                      <div class="item-r">
+                          <el-input placeholder="请输入版本号" v-model="versionInput" style="width:250px;"></el-input>
+                      </div>
+                  </div>
+                  <div class="item">
+                      <div class="item_l">说明：</div>
+                      <div class="item-r">
+                          <el-input placeholder="请输入说明地址" v-model="versionInputActive" style="width:250px;"></el-input>
+                      </div>
+                  </div>
+              </div>
+              <div slot="footer" class="dialog-footer" style="text-align: center;">
+                  <el-button type="primary" @click="onSubmitUpload">发布</el-button>
+                  <el-button type="primary" @click="dialog=false">取消</el-button>
+              </div>
+          </el-dialog>
+          <!-- 修改 -->
+          <el-dialog title="修改SDK" :visible.sync="editDialog" custom-class="customWidth" width="50%">
+              <div class="add-sdk">
+                  <div class="item">
+                      <div class="item_l">应用包：</div>
+                      <div class="item-r" style="position: relative;">
+                          <el-button class="choose-file" size="mini">请选择要上传的文件</el-button>
+                          <input id="f1" class="choose-input" type="file" name="file">
+                          <el-button type="primary" class="onchoose-file" @click="upFile1()" :disabled="disableStatus1">确定</el-button>
+                          进度条
+                          <span id="per1">{{perNum1}}</span>%
+                          <div style="width: 400px;height: 16px;background-color: #999;margin-top:10px;">
+                              <div style="width: 0%;height: 16px;background-color: #67c23a" id="loading1" v-bind:style="{'width': widthData1+'%'}"></div>
+                          </div>
+                          <div id="result" style="margin-top:10px;"></div>
+                      </div>
+                  </div>
+                  <div class="item">
+                      <div class="item_l">应用类型：</div>
+                      <div class="item-r">
+                          <el-input v-model="value11" disabled></el-input>
+                          <!-- <el-select v-model="value11" placeholder="请选择">
+                              <el-option v-for="(item, index) in options1" :key="index" :label="item" :value="item"></el-option>
+                          </el-select> -->
+                      </div>
+                  </div>
+                  <div class="item">
+                      <div class="item_l">包含功能：</div>
+                      <div class="item-r">
+                          <el-checkbox-group v-model="checkList11">
+                              <el-checkbox label="mp4"></el-checkbox>
+                              <el-checkbox label="hls"></el-checkbox>
+                              <el-checkbox label="flv"></el-checkbox>
+                          </el-checkbox-group>
+                      </div>
+                  </div>
+                  <div class="item">
+                      <div class="item_l">版本号：</div>
+                      <div class="item-r">
+                          <el-input v-model="versionInput1" placeholder="请输入内容"></el-input>
+                      </div>
+                  </div>
+                  <div class="item">
+                      <div class="item_l">说明：</div>
+                      <div class="item-r">
+                          <el-input v-model="versionInput1Active" placeholder="请输入说明地址"></el-input>
+                      </div>
+                  </div>
+              </div>
+              <div slot="footer" class="dialog-footer" style="text-align: center;">
+                  <el-button type="primary" @click="onEdit">发布</el-button>
+                  <el-button type="primary" @click="editDialog=false">取消</el-button>
+              </div>
+          </el-dialog>
 
-                <!-- 表格 -->
-                <el-table stripe ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" :default-sort="{prop: 'date', order: 'descending'}" @selection-change="handleSelectionChange">
-                    <el-table-column prop="url" label="发布包名"></el-table-column>
-                    <el-table-column prop="type" label="应用类型"></el-table-column>
-                    <el-table-column prop="content" label="支持业务类型"></el-table-column>
-                    <el-table-column prop="version" label="版本"></el-table-column>
-                    <el-table-column prop="time_create" label="发布时间"></el-table-column>
-                    <el-table-column label="操作">
-                        <template slot-scope="scope">                          
-                          <el-button @click="handleEdit(scope.row)" type="text" size="small">修改</el-button>
-                          <el-button @click="handleDel(scope.row)" type="text" size="small" style="color:red;">删除</el-button>                           
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <!-- 详情弹窗 -->
-                <el-dialog title="新增发布" :visible.sync="dialog" custom-class="customWidth" width="50%">
-                    <div class="add-sdk">
-                        <div class="item" style="align-items: flex-start;">
-                            <div class="item_l">应用包：</div>
-                            <div class="item-r" style="position: relative;">
-                                <el-button class="choose-file" size="mini">请选择要上传的文件</el-button>
-                                <input id="f" class="choose-input" type="file" name="file">
-                                <el-button type="primary" class="onchoose-file" @click="upFile()" :disabled="disableStatus">确定</el-button>
-                                进度条
-                                <span id="per">{{perNum}}</span>%
-                                <div style="width: 400px;height: 16px;background-color: #999;margin-top:10px;">
-                                    <div style="height: 16px;background-color: #67c23a" id="loading" v-bind:style="{'width': widthData+'%'}"></div>
-                                </div>
-                                <div id="result" style="margin-top:10px;"></div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item_l">应用类型：</div>
-                            <div class="item-r">
-                                <el-select v-model="valueActive2" placeholder="请选择" style="width:250px;">
-                                    <el-option v-for="(item, index) in optionsActive2" :key="index" :label="item" :value="item"></el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item_l">包含功能：</div>
-                            <div class="item-r">
-                                <el-checkbox-group v-model="checkList">
-                                    <el-checkbox label="mp4"></el-checkbox>
-                                    <el-checkbox label="hls"></el-checkbox>
-                                    <el-checkbox label="flv"></el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item_l">版本号：</div>
-                            <div class="item-r">
-                                <el-input placeholder="请输入版本号" v-model="versionInput" style="width:250px;"></el-input>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item_l">说明：</div>
-                            <div class="item-r">
-                                <el-input placeholder="请输入说明地址" v-model="versionInputActive" style="width:250px;"></el-input>
-                            </div>
-                        </div>
-                    </div>
-                    <div slot="footer" class="dialog-footer" style="text-align: center;">
-                        <el-button type="primary" @click="onSubmitUpload">发布</el-button>
-                        <el-button type="primary" @click="dialog=false">取消</el-button>
-                    </div>
-                </el-dialog>
-                <!-- 修改 -->
-                <el-dialog title="修改SDK" :visible.sync="editDialog" custom-class="customWidth" width="50%">
-                    <div class="add-sdk">
-                        <div class="item">
-                            <div class="item_l">应用包：</div>
-                            <div class="item-r" style="position: relative;">
-                                <el-button class="choose-file" size="mini">请选择要上传的文件</el-button>
-                                <input id="f1" class="choose-input" type="file" name="file">
-                                <el-button type="primary" class="onchoose-file" @click="upFile1()" :disabled="disableStatus1">确定</el-button>
-                                进度条
-                                <span id="per1">{{perNum1}}</span>%
-                                <div style="width: 400px;height: 16px;background-color: #999;margin-top:10px;">
-                                    <div style="width: 0%;height: 16px;background-color: #67c23a" id="loading1" v-bind:style="{'width': widthData1+'%'}"></div>
-                                </div>
-                                <div id="result" style="margin-top:10px;"></div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item_l">应用类型：</div>
-                            <div class="item-r">
-                                <el-input v-model="value11" disabled></el-input>
-                                <!-- <el-select v-model="value11" placeholder="请选择">
-                                    <el-option v-for="(item, index) in options1" :key="index" :label="item" :value="item"></el-option>
-                                </el-select> -->
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item_l">包含功能：</div>
-                            <div class="item-r">
-                                <el-checkbox-group v-model="checkList11">
-                                    <el-checkbox label="mp4"></el-checkbox>
-                                    <el-checkbox label="hls"></el-checkbox>
-                                    <el-checkbox label="flv"></el-checkbox>
-                                </el-checkbox-group>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item_l">版本号：</div>
-                            <div class="item-r">
-                                <el-input v-model="versionInput1" placeholder="请输入内容"></el-input>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item_l">说明：</div>
-                            <div class="item-r">
-                                <el-input v-model="versionInput1Active" placeholder="请输入说明地址"></el-input>
-                            </div>
-                        </div>
-                    </div>
-                    <div slot="footer" class="dialog-footer" style="text-align: center;">
-                        <el-button type="primary" @click="onEdit">发布</el-button>
-                        <el-button type="primary" @click="editDialog=false">取消</el-button>
-                    </div>
-                </el-dialog>
-
-                <!-- 按钮 -->
-                <div style="margin-top: 20px;display: flex;justify-content: flex-end;align-items: center;">
-                    <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
-                </div>
-            </div>
-        </div>
+          <!-- 按钮 -->
+          <div style="margin-top: 20px;display: flex;justify-content: flex-end;align-items: center;">
+              <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
+          </div>
+      </div>
     </div>
 </template>
 
@@ -543,7 +527,7 @@ export default {
 
     // 表头样式设置
     headClass() {
-      return "text-align: center;background:#eef1f6;";
+      return "text-align: center; background: #FDFBFB; font-weight: 500; color: #333";
     },
     // 表格样式设置
     rowClass() {
@@ -793,41 +777,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.seach {
-  width: 100%;
-  margin: 30px 0 30px 0;
-  background: #ffffff;
-  border-radius: 2px;
-  padding: 21px 37px;
-  box-shadow: 0px 0px 7px 0px rgba(41, 108, 171, 0.1);
-  .seach_top {
-    width: 100%;
-    height: 60px;
-    line-height: 60px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    .input-with-select {
-      width: 15%;
-    }
-    .seach_top_right {
-      width: 80px;
-      text-align: center;
-      height: 36px;
-      line-height: 36px;
-      margin-left: 10px;
-    }
-  }
-  .seach_bottom {
-    height: 72px;
-    background: rgba(242, 246, 250, 1);
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    padding-left: 27px;
-  }
-}
-
 .customWidth {
   width: 30% !important;
 }

@@ -1,66 +1,52 @@
 <template>
-    <div class="content">
-        <el-breadcrumb separator="/">
-            <el-breadcrumb-item>刷新预热管理</el-breadcrumb-item>
-        </el-breadcrumb>
-        <div>
-            <!-- 搜索 -->
-            <div class="seach">
-                <div class="seach_top">
-                    <el-input placeholder="操作内容、渠道ID" v-model="input" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmit">
-                        <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
-                    </el-input>
-                    <!-- <div class="seach_top_right" @click="option_display()">
-                        筛选
-                        <i class="el-icon-caret-bottom" :class="[rotate ? 'fa fa-arrow-down go' : 'fa fa-arrow-down aa']"></i>
-                    </div>
-                </div>
-                <div v-if="optiondisplay" class="seach_bottom">
-                    <span>操作类型：</span> -->
-                    <el-select v-model="value" placeholder="请选择操作类型" @change="onchangeTab1" style="width:160px;margin-right: 10px;">
-                        <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
-                    </el-select>
-                    <!-- <span>状态：</span> -->
-                    <el-select v-model="valueStatus" placeholder="请选择状态" @change="onchangeTab" style="width:160px;margin-right: 10px;">
-                        <el-option v-for="(item, index) in optionsStatus" :key="index" :label="item.label" :value="item.value"></el-option>
-                    </el-select>
-                    <!-- <span>注册时间：</span> -->
-                    <el-date-picker v-model="value1" type="datetimerange" range-separator="至" :picker-options="pickerOptions" start-placeholder="开始日期" end-placeholder="结束日期" @change="gettimes"></el-date-picker>
-                    <!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
-                    <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
+  <div class="content">
+    <div>
+      <div class="top_title">刷新预热管理</div>
+      <div class="seach">
+        <el-input placeholder="操作内容、渠道ID" v-model="input" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmit">
+            <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
+        </el-input>
+        <el-select v-model="value" placeholder="请选择操作类型" @change="onchangeTab1" style="width:160px;margin-right: 10px;">
+            <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+        <!-- <span>状态：</span> -->
+        <el-select v-model="valueStatus" placeholder="请选择状态" @change="onchangeTab" style="width:160px;margin-right: 10px;">
+            <el-option v-for="(item, index) in optionsStatus" :key="index" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+        <!-- <span>注册时间：</span> -->
+        <el-date-picker v-model="value1" type="datetimerange" range-separator="至" :picker-options="pickerOptions" start-placeholder="开始日期" end-placeholder="结束日期" @change="gettimes"></el-date-picker>
+        <!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
+        <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
+      </div>
+      <!-- 表格 -->
+      <div class="device_table">
+          <div class="operating">
+              <el-button type="primary" @click="toLink('first')">刷新</el-button>
+              <el-button type="primary" @click="toLink('second')">预热</el-button>
+          </div>
 
-                </div>
-            </div>
-            <!-- 表格 -->
-            <div class="con_lable">
-                <div style="padding:10px;text-align: left;">
-                    <el-button type="primary" @click="toLink('first')">刷新</el-button>
-                    <el-button type="primary" @click="toLink('second')">预热</el-button>
-                </div>
+          <!-- 表格 -->
+          <el-table stripe border ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" :default-sort="{ prop: 'date', order: 'descending' }" @sort-change="changeTableSort" @selection-change="handleSelectionChange">
+              <el-table-column label="操作内容" prop="url_name"> </el-table-column>
+              <el-table-column prop="refresh_type" label="操作类型"></el-table-column>
+              <el-table-column prop="are" label="区域"></el-table-column>
+              <el-table-column prop="buser_id" label="渠道ID"></el-table-column>
+              <el-table-column prop="opt_time" :sortable="'custom'" label="操作时间"></el-table-column>
+              <el-table-column prop="state" label="状态"></el-table-column>
+              <el-table-column label="进度">
+                  <template slot-scope="scope">
+                      <el-progress :percentage="scope.row.progress"></el-progress>
+                  </template>
+              </el-table-column>
+          </el-table>
 
-                <!-- 表格 -->
-                <el-table stripe border ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" :default-sort="{ prop: 'date', order: 'descending' }" @sort-change="changeTableSort" @selection-change="handleSelectionChange">
-                    <el-table-column label="操作内容" prop="url_name"> </el-table-column>
-                    <el-table-column prop="refresh_type" label="操作类型"></el-table-column>
-                    <el-table-column prop="are" label="区域"></el-table-column>
-                    <el-table-column prop="buser_id" label="渠道ID"></el-table-column>
-                    <el-table-column prop="opt_time" :sortable="'custom'" label="操作时间"></el-table-column>
-                    <el-table-column prop="state" label="状态"></el-table-column>
-                    <el-table-column label="进度">
-                        <template slot-scope="scope">
-                            <el-progress :percentage="scope.row.progress"></el-progress>
-                        </template>
-                    </el-table-column>
-                </el-table>
-
-                <!-- 按钮 -->
-                <div style="margin-top: 20px;display: flex;justify-content:  flex-end;align-items: center;">
-                    <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
-
-                </div>
-            </div>
-        </div>
+          <!-- 按钮 -->
+          <div style="margin-top: 20px;display: flex;justify-content:  flex-end;align-items: center;">
+              <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
+          </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -269,11 +255,11 @@ export default {
               } else if(tempArr[i].state == 2) {
                 tempArr[i].state = "等待中";
               } else if(tempArr[i].state == 3) {
-                tempArr[i].state = "失败";
+                tempArr[i].state = tempArr[i].desc;
               } else if(tempArr[i].state == 4) {
-                tempArr[i].state = "失败";
+                tempArr[i].state =  tempArr[i].desc;
               } else if(tempArr[i].state == 5) {
-                tempArr[i].state = "网络错误 ";
+                tempArr[i].state = tempArr[i].desc;
               } else if(tempArr[i].state == 6) {
                 tempArr[i].state = "资源url不存在";
               } else if(tempArr[i].state == 7) {
@@ -384,7 +370,7 @@ export default {
 
     // 表头样式设置
     headClass() {
-      return "text-align: center;background:#eef1f6;";
+      return "text-align: center; background: #FDFBFB; font-weight: 500; color: #333";
     },
     // 表格样式设置
     rowClass() {
@@ -395,40 +381,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.seach {
-  width: 100%;
-  margin: 30px 0 30px 0;
-  background: #ffffff;
-  border-radius: 2px;
-  padding: 21px 37px;
-  box-shadow: 0px 0px 7px 0px rgba(41, 108, 171, 0.1);
-  .seach_top {
-    width: 100%;
-    height: 60px;
-    line-height: 60px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    .input-with-select {
-      width: 15%;
-    }
-    .seach_top_right {
-      width: 80px;
-      text-align: center;
-      height: 36px;
-      line-height: 36px;
-      margin-left: 10px;
-    }
-  }
-  .seach_bottom {
-    height: 72px;
-    background: rgba(242, 246, 250, 1);
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    padding-left: 27px;
-  }
-}
 .refresh {
   width: 100%;
   display: flex;

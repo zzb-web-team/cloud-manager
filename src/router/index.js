@@ -102,7 +102,7 @@ export default new Router({
       path: "/a",
       name: "用户管理",
       component: index,
-      icon: "iconfont icon-guanxiaobaotubiao09",
+      icon: "iconfont icon-yonghuguanli",
       children: [
         {
           path: "/operating_user",
@@ -119,9 +119,9 @@ export default new Router({
     },
     {
       path: "/b",
-      name: "加速配置管理",
+      name: "配置管理",
       component: index,
-      icon: "iconfont icon-jiankong",
+      icon: "iconfont icon-peizhiguanli",
       children: [
         {
           path: "/gew",
@@ -209,13 +209,13 @@ export default new Router({
     },
     {
       path: "/c",
-      name: "点播 SDK管理",
-      icon: "iconfont icon-jiedian1",
+      name: "终端管理",
+      icon: "iconfont icon-zhongduanguanli",
       component: index,
       children: [
         {
           path: "/node_information",
-          name: "点播SDK发布",
+          name: "SDK发布",
           component: node_information,
         },
       ],
@@ -225,7 +225,7 @@ export default new Router({
       path: "/home_fosdr",
       name: "数据中心",
       component: index,
-      icon: "iconfont icon-tongji",
+      icon: "iconfont icon-shujuzhongxin",
       children: [
         {
           path: "/gewsrg",
@@ -310,7 +310,7 @@ export default new Router({
       path: "/f",
       name: "后台管理",
       component: index,
-      icon: "iconfont icon-guanli",
+      icon: "iconfont icon-houtaiguanli1",
       children: [
         {
           path: "/user",

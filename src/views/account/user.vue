@@ -1,216 +1,187 @@
 <template>
 <div class="content">
-    <el-breadcrumb separator="/">
-        <el-breadcrumb-item>后台账户</el-breadcrumb-item>
-    </el-breadcrumb>
-    <section class="myself-container">
-        <div class="device_form">
-            <el-form ref="form" :model="form">
-                <el-row type="flex">
-                    <!-- <div class="search-con">
-                        <i class="el-icon-search" @click="searchInfo" style="color:#606266"></i>
-                        <el-input class="search-input" v-model="searchText" placeholder="账号" maxlength="70" @keyup.enter.native="searchInfo"></el-input>
-                    </div> -->
-                    <el-input placeholder="账号" style="width:200px;margin-right: 10px;" v-model="searchText" @keyup.enter.native="searchInfo" maxlength="70">
-                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                    </el-input>
-                    <!-- <div @click="getShow()" class="div_show" style="color:#606266">
-                        筛选
-                        <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
-                    </div>
-                </el-row>
-                <el-row type="flex" class="row_activess" v-show="showState"> -->
-                    <!-- <el-form-item label="状态" style="display: flex;"> -->
-                        <el-select v-model="value" placeholder="请选择状态" @change="onChangeTab" style="width:200px;margin-right: 10px;">
-                            <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                        </el-select>
-                    <!-- </el-form-item> -->
-                    <!-- <el-form-item>
-                        <el-button type="primary" @click="searchInfo">确定</el-button>
+    <div class="top_title">后台账户</div>
+    <div class="seach">
+      <el-form ref="form" :model="form">
+        <el-row type="flex">
+          <el-input placeholder="账号" style="width:200px;margin-right: 10px;" v-model="searchText" @keyup.enter.native="searchInfo" maxlength="70">
+            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+          </el-input>
+          <el-select v-model="value" placeholder="请选择状态" @change="onChangeTab" style="width:200px;margin-right: 10px;">
+            <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+          <el-button type="primary" @click="reset()">重置</el-button>
+        </el-row>
+      </el-form>
+    </div>
+    <div class="device_table">
+      <div class="operating">
+        <el-button type="primary" @click="addAccout">
+          新建
+          <span class="el-icon-plus"></span>
+        </el-button>
+      </div>
+      <el-row type="flex" class="row_active">
+          <el-col :span="24">
+              <tableBarActiveAccount id="rebateSetTable" ref="table1" tooltip-effect="dark" @tableSortChange='tableSortChange' :tableData="tableData" @handleSelectionChange="handleSelectionChange" :clomnSelection="clomnSelection" :rowHeader="rowHeader" :tableOption="tableOption" @disable="disable" @toChange="toChange" @changePassword="changePassword" @toDelete="toDelete" @toDetails="toDetails"></tableBarActiveAccount>
+          </el-col>
+      </el-row>
+      <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center;">
+        <div>
+          <el-button  type="text" size="small" @click="allOn">启用</el-button>
+          <el-button  style="margin-left:30px;color:red;" type="text" size="small" @click="allOff">禁用</el-button>
+          <el-button  style="margin-left:30px;" type="text" size="small" @click="allDelete">删除</el-button>
+        </div>
+        <pageNation :pager="pager" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange"></pageNation>
+      </div>
+    </div>
+    <el-dialog :visible.sync="dialogVisible" width="25%" @close="handleClose1">
+      <div class="addaccout">
+          <el-form :model="ruleForm2" :rules="rules1" ref="ruleForm2" label-position="left" class="demo-ruleForm">
+              <h3 class="title">新建用户</h3>
+              <el-form-item label="使用状态:">
+                  <el-radio v-model="ruleForm2.radio" label="0">启用</el-radio>
+                  <el-radio v-model="ruleForm2.radio" label="1">禁用</el-radio>
+              </el-form-item>
+              <el-form-item prop="username">
+                  <el-form-item label="账号:">
+                      <el-input v-model="ruleForm2.username" placeholder="4-20位字母加数字组合"></el-input>
+                  </el-form-item>
+              </el-form-item>
+              <el-form-item prop="password">
+                  <el-form-item label="密码:" placeholder="密码">
+                      <el-input v-model="ruleForm2.password" type="password" placeholder="6-20位数字字母下划线组成"></el-input>
+                  </el-form-item>
+              </el-form-item>
+              <el-form-item prop="password2">
+                  <el-form-item label="确认密码:">
+                      <el-input v-model="ruleForm2.password2" placeholder="两次密码须一致" type="password"></el-input>
+                  </el-form-item>
+              </el-form-item>
+              <el-form-item prop="name">
+                  <el-form-item label="真实姓名:">
+                      <el-input v-model="ruleForm2.name" placeholder="4-20位汉字数字字母下划线组合"></el-input>
+                  </el-form-item>
+              </el-form-item>
+              <el-form-item prop="phone">
+                  <el-form-item label="联系方式:">
+                      <el-input v-model="ruleForm2.phone" placeholder="11位有效手机号"></el-input>
+                  </el-form-item>
+              </el-form-item>
+              <el-form-item style="width:100%;display: flex;justify-content:center;">
+                  <el-button type="primary" @click.native.prevent="handleSubmit">立即提交</el-button>
+                  <el-button @click="notall()">取消</el-button>
+              </el-form-item>
+          </el-form>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible2" width="25%" @close="handleClose2">
+        <div class="addaccout">
+            <el-form :model="ruleForm3" ref="ruleForm3" label-position="left" class="demo-ruleForm">
+                <h3 class="title">修改信息</h3>
+                <el-form-item label="状态:" >
+                      <el-radio-group v-model="ruleForm3.radio">
+                    <el-radio  label="0">启用</el-radio>
+                    <el-radio  label="1">禁用</el-radio>
+                      </el-radio-group>
+                </el-form-item>
+                <el-form-item prop="username" :rules="[
+  {validator: jiousername, trigger: 'blur' }
+]">
+                    <el-form-item label="账号:">
+                        <el-input v-model="ruleForm3.username" placeholder="账号为4-20位英文加数字组合"></el-input>
                     </el-form-item>
-                    <el-form-item> -->
-                        <el-button type="primary" @click="reset()">重置</el-button>
-                    <!-- </el-form-item> -->
-                </el-row>
+                </el-form-item>
+
+                <el-form-item prop="name" :rules="[
+  {validator: jioname, trigger: 'blur' }
+]">
+                    <el-form-item label="真实姓名:">
+                        <el-input v-model="ruleForm3.name" placeholder="真实姓名为4-20位汉字数字字母组合"></el-input>
+                    </el-form-item>
+                </el-form-item>
+                <el-form-item prop="phone" :rules="[
+  { validator: jiophone, trigger: 'blur' }
+]">
+                    <el-form-item label="联系方式:">
+                        <el-input v-model="ruleForm3.phone" placeholder="11位有效手机号"></el-input>
+                    </el-form-item>
+                </el-form-item>
+                <el-form-item style="width:100%;display: flex;justify-content:center;">
+                    <el-button type="primary" @click.native.prevent="handleSubmit4">修改</el-button>
+                    <el-button @click="resetForm()">取消</el-button>
+                </el-form-item>
             </el-form>
         </div>
-        <div class="devide_table">
-            <el-row type="flex" class="row_active">
-                <el-col :span="6">
-                    <el-button type="primary" @click="addAccout">
-                        新建
-                        <span class="el-icon-plus"></span>
-                    </el-button>
-                </el-col>
-            </el-row>
-            <el-row type="flex" class="row_active">
-                <el-col :span="24">
-                    <tableBarActiveAccount id="rebateSetTable" ref="table1" tooltip-effect="dark" @tableSortChange='tableSortChange' :tableData="tableData" @handleSelectionChange="handleSelectionChange" :clomnSelection="clomnSelection" :rowHeader="rowHeader" :tableOption="tableOption" @disable="disable" @toChange="toChange" @changePassword="changePassword" @toDelete="toDelete" @toDetails="toDetails"></tableBarActiveAccount>
-                </el-col>
-            </el-row>
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible3" width="25%" @close="handleClose3">
+        <div class="addaccout">
+            <el-form :model="ruleForm4" status-icon :rules="rules4" ref="ruleForm4" label-position="left" class="demo-ruleForm">
+                <h3 class="title">密码重置</h3>
+                <el-form-item prop="username">
+                    <el-form-item label="账号:">
+                        <el-input v-model="ruleForm3.username" :disabled="true"></el-input>
+                    </el-form-item>
+                </el-form-item>
+                <el-form-item prop="password">
+                    <el-form-item label="新密码:">
+                        <el-input v-model="ruleForm4.password" placeholder="6-20位数字字母_组成" type="password" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form-item>
+                <el-form-item prop="password2">
+                    <el-form-item label="确认密码:">
+                        <el-input v-model="ruleForm4.password2" placeholder="再出输入密码" type="password" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form-item>
+
+                <el-form-item style="width:100%;display: flex;justify-content:center;">
+                    <el-button type="primary" @click.native.prevent="handleSubmit5">确认</el-button>
+                    <el-button @click="resetForm1()">取消</el-button>
+                </el-form-item>
+            </el-form>
         </div>
-        <div class="devide_pageNation" style="display: flex;justify-content: space-between;">
-            <el-row type="flex">
-                <el-col :span="6" style="display: flex;justify-content: justify-content: flex-start;">
-                    <el-button  type="text" size="small" @click="allOn">启用</el-button>
-                    <el-button  style="margin-left:30px;color:red;" type="text" size="small" @click="allOff">禁用</el-button>
-                    <el-button  style="margin-left:30px;" type="text" size="small" @click="allDelete">删除</el-button>
-                </el-col>
-            </el-row>
-            <el-row type="flex">
-                <el-col :span="6">
-                    <pageNation :pager="pager" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange"></pageNation>
-                </el-col>
-            </el-row>
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible4" width="25%">
+        <div class="addaccout">
+            <el-form :model="ruleForm3" ref="ruleForm3" label-position="left" class="demo-ruleForm">
+                <h3 class="title">详细信息</h3>
+                <el-form-item label="状态:">
+                    
+                              <el-radio-group v-model="ruleForm3.radio">
+                    <el-radio  label="0" :disabled="true">启用</el-radio>
+                    <el-radio  label="1" :disabled="true">禁用</el-radio>
+                      </el-radio-group>
+                </el-form-item>
+                <el-form-item prop="username" :rules="[
+  {validator: jiousername, trigger: 'blur' }
+]">
+                    <el-form-item label="账号:">
+                        <el-input v-model="ruleForm3.username" :disabled="true" placeholder="账号为4-20位英文加数字组合"></el-input>
+                    </el-form-item>
+                </el-form-item>
+
+                <el-form-item prop="name" :rules="[
+  {validator: jioname, trigger: 'blur' }
+]">
+                    <el-form-item label="真实姓名:">
+                        <el-input v-model="ruleForm3.name" :disabled="true" placeholder="真实姓名为4-20位汉字数字字母组合"></el-input>
+                    </el-form-item>
+                </el-form-item>
+                <el-form-item prop="phone" :rules="[
+  { validator: jiophone, trigger: 'blur' }
+]">
+                    <el-form-item label="联系方式:">
+                        <el-input v-model="ruleForm3.phone" :disabled="true" placeholder="11位有效手机号"></el-input>
+                    </el-form-item>
+                </el-form-item>
+                <el-form-item style="width:100%;display: flex;justify-content:center;">
+                    <el-button type="primary" @click="dialogVisible4 = false">确定</el-button>
+                    <el-button @click="dialogVisible4 = false">取消</el-button>
+                </el-form-item>
+            </el-form>
         </div>
-        <el-dialog :visible.sync="dialogVisible" width="25%" @close="handleClose1">
-            <div class="addaccout">
-                <el-form :model="ruleForm2" :rules="rules1" ref="ruleForm2" label-position="left" class="demo-ruleForm">
-                    <h3 class="title">新建用户</h3>
-                    <el-form-item label="使用状态:">
-                        <el-radio v-model="ruleForm2.radio" label="0">启用</el-radio>
-                        <el-radio v-model="ruleForm2.radio" label="1">禁用</el-radio>
-                    </el-form-item>
-                    <el-form-item prop="username">
-                        <el-form-item label="账号:">
-                            <el-input v-model="ruleForm2.username" placeholder="4-20位字母加数字组合"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-                    <el-form-item prop="password">
-                        <el-form-item label="密码:" placeholder="密码">
-                            <el-input v-model="ruleForm2.password" type="password" placeholder="6-20位数字字母下划线组成"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-                    <el-form-item prop="password2">
-                        <el-form-item label="确认密码:">
-                            <el-input v-model="ruleForm2.password2" placeholder="两次密码须一致" type="password"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-                    <el-form-item prop="name">
-                        <el-form-item label="真实姓名:">
-                            <el-input v-model="ruleForm2.name" placeholder="4-20位汉字数字字母下划线组合"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-                    <el-form-item prop="phone">
-                        <el-form-item label="联系方式:">
-                            <el-input v-model="ruleForm2.phone" placeholder="11位有效手机号"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-                    <el-form-item style="width:100%;display: flex;justify-content:center;">
-                        <el-button type="primary" @click.native.prevent="handleSubmit">立即提交</el-button>
-                        <el-button @click="notall()">取消</el-button>
-                    </el-form-item>
-                </el-form>
-            </div>
-        </el-dialog>
-        <el-dialog :visible.sync="dialogVisible2" width="25%" @close="handleClose2">
-            <div class="addaccout">
-                <el-form :model="ruleForm3" ref="ruleForm3" label-position="left" class="demo-ruleForm">
-                    <h3 class="title">修改信息</h3>
-                    <el-form-item label="状态:" >
-                         <el-radio-group v-model="ruleForm3.radio">
-                        <el-radio  label="0">启用</el-radio>
-                        <el-radio  label="1">禁用</el-radio>
-                         </el-radio-group>
-                    </el-form-item>
-                    <el-form-item prop="username" :rules="[
-      {validator: jiousername, trigger: 'blur' }
-    ]">
-                        <el-form-item label="账号:">
-                            <el-input v-model="ruleForm3.username" placeholder="账号为4-20位英文加数字组合"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-
-                    <el-form-item prop="name" :rules="[
-      {validator: jioname, trigger: 'blur' }
-    ]">
-                        <el-form-item label="真实姓名:">
-                            <el-input v-model="ruleForm3.name" placeholder="真实姓名为4-20位汉字数字字母组合"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-                    <el-form-item prop="phone" :rules="[
-      { validator: jiophone, trigger: 'blur' }
-    ]">
-                        <el-form-item label="联系方式:">
-                            <el-input v-model="ruleForm3.phone" placeholder="11位有效手机号"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-                    <el-form-item style="width:100%;display: flex;justify-content:center;">
-                        <el-button type="primary" @click.native.prevent="handleSubmit4">修改</el-button>
-                        <el-button @click="resetForm()">取消</el-button>
-                    </el-form-item>
-                </el-form>
-            </div>
-        </el-dialog>
-        <el-dialog :visible.sync="dialogVisible3" width="25%" @close="handleClose3">
-            <div class="addaccout">
-                <el-form :model="ruleForm4" status-icon :rules="rules4" ref="ruleForm4" label-position="left" class="demo-ruleForm">
-                    <h3 class="title">密码重置</h3>
-                    <el-form-item prop="username">
-                        <el-form-item label="账号:">
-                            <el-input v-model="ruleForm3.username" :disabled="true"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-                    <el-form-item prop="password">
-                        <el-form-item label="新密码:">
-                            <el-input v-model="ruleForm4.password" placeholder="6-20位数字字母_组成" type="password" autocomplete="off"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-                    <el-form-item prop="password2">
-                        <el-form-item label="确认密码:">
-                            <el-input v-model="ruleForm4.password2" placeholder="再出输入密码" type="password" autocomplete="off"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-
-                    <el-form-item style="width:100%;display: flex;justify-content:center;">
-                        <el-button type="primary" @click.native.prevent="handleSubmit5">确认</el-button>
-                        <el-button @click="resetForm1()">取消</el-button>
-                    </el-form-item>
-                </el-form>
-            </div>
-        </el-dialog>
-        <el-dialog :visible.sync="dialogVisible4" width="25%">
-            <div class="addaccout">
-                <el-form :model="ruleForm3" ref="ruleForm3" label-position="left" class="demo-ruleForm">
-                    <h3 class="title">详细信息</h3>
-                    <el-form-item label="状态:">
-                        
-                                 <el-radio-group v-model="ruleForm3.radio">
-                        <el-radio  label="0" :disabled="true">启用</el-radio>
-                        <el-radio  label="1" :disabled="true">禁用</el-radio>
-                         </el-radio-group>
-                    </el-form-item>
-                    <el-form-item prop="username" :rules="[
-      {validator: jiousername, trigger: 'blur' }
-    ]">
-                        <el-form-item label="账号:">
-                            <el-input v-model="ruleForm3.username" :disabled="true" placeholder="账号为4-20位英文加数字组合"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-
-                    <el-form-item prop="name" :rules="[
-      {validator: jioname, trigger: 'blur' }
-    ]">
-                        <el-form-item label="真实姓名:">
-                            <el-input v-model="ruleForm3.name" :disabled="true" placeholder="真实姓名为4-20位汉字数字字母组合"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-                    <el-form-item prop="phone" :rules="[
-      { validator: jiophone, trigger: 'blur' }
-    ]">
-                        <el-form-item label="联系方式:">
-                            <el-input v-model="ruleForm3.phone" :disabled="true" placeholder="11位有效手机号"></el-input>
-                        </el-form-item>
-                    </el-form-item>
-                    <el-form-item style="width:100%;display: flex;justify-content:center;">
-                        <el-button type="primary" @click="dialogVisible4 = false">确定</el-button>
-                        <el-button @click="dialogVisible4 = false">取消</el-button>
-                    </el-form-item>
-                </el-form>
-            </div>
-        </el-dialog>
-    </section>
-</div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>

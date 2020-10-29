@@ -1,9 +1,7 @@
 <template>
   <div class="content">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-    </el-breadcrumb>
     <section class="myself-container">
+      <div class="top_title">用户管理</div>
       <div class="device_form">
         <el-form ref="form" :model="form">
           <el-row type="flex">
@@ -33,14 +31,13 @@
             </el-form-item>
             <el-form-item> -->
               <el-button type="primary" @click="reset()">重置</el-button>
+              <el-button style="margin-left: auto;" type="primary" @click="toexportExcel">导出</el-button>
             <!-- </el-form-item> -->
           </el-row>
         </el-form>
       </div>
       <div class="devide_table">
-        <div style="    display: flex;justify-content: flex-end;">
-          <el-button type="primary" @click="toexportExcel">导出</el-button>
-        </div>
+        
         <el-row type="flex" class="row_active">
           <el-col :span="24">
             <tableBarActive1 id="rebateSetTable" ref="table1" tooltip-effect="dark" @tableSortChange='tableSortChange' :tableData="tableData" :operatingStatus="operatingStatus" @handleSelectionChange="handleSelectionChange" :clomnSelection="clomnSelection" :rowHeader="rowHeader" :tableOption="tableOption" @disable="disable" @toChange="toChange"></tableBarActive1>
@@ -652,7 +649,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .search-con {
   width: 250px;
   height: 40px;
@@ -673,24 +670,22 @@ export default {
 }
 
 .myself-container {
-  // width: 100%;
-  // //min-width: 1600px;
+  border-radius: 32px;
+  padding: 50px;
   text-align: left;
-
+  background: #fff;
   .devide_title {
     width: 100%;
     height: auto;
     overflow: hidden;
     margin-top: 10px;
     background: #f2f2f2;
-    padding: 15px 0px;
     box-sizing: border-box;
 
     .el-col {
       padding: 0px 20px;
     }
   }
-
   .device_form {
     width: 100%;
     height: auto;

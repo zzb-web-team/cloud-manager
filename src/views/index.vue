@@ -4,8 +4,11 @@
       
       <el-col :span="24" class="main">
         <aside style="background: #644CF7;">
-          <el-menu style="background: #644CF7;" :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect" unique-opened router>
-            <div style="fontSize:20px;color:#ffffff;height: 56px;line-height: 56px;">云点播管理平台</div>
+          <el-menu style="background: #644CF7;" :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect" :collapse="isCollapse" :collapse-transition="false" unique-opened router>
+            <div style="height: 56px;line-height: 56px;" >
+              <span v-show="!isCollapse" style="fontSize:20px;color:#ffffff;">云点播管理平台</span>
+              <i @click="changeCollapse" style="fontSize:16px;color:#ffffff;margin-left: 10px;" class="iconfont icon-caidanzhankaishousuo"></i>
+            </div>
             <!-- 一级菜单 -->
             <template v-for="item in  $router.options.routes" v-if="!item.hidden">
               <el-submenu v-if="item.children && item.children.length" :index="item.path" :key="item.path" style="text-align: left;">
@@ -16,7 +19,7 @@
 
                 <!-- 二级菜单 -->
                 <template v-for="itemChild in item.children" v-if="!itemChild.hidden">
-                  <el-submenu v-if="itemChild.children && itemChild.children.length" :index="itemChild.path" :key="itemChild.path" style="background: #5035F6;">
+                  <el-submenu v-if="itemChild.children && itemChild.children.length" :index="itemChild.path" :key="itemChild.path" style="background: rgba(100, 76, 247, 1);">
                     <template slot="title">
                       <i :class="itemChild.icon"></i>
                       <div style="margin-left:20px;">
@@ -26,13 +29,13 @@
                     </template>
 
                     <!-- 三级菜单 -->
-                    <el-menu-item v-for="itemChild_Child in itemChild.children" :index="itemChild_Child.path" :key="itemChild_Child.path" v-if="!itemChild_Child.hidden" style="background: #5035F6;">
+                    <el-menu-item v-for="itemChild_Child in itemChild.children" :index="itemChild_Child.path" :key="itemChild_Child.path" v-if="!itemChild_Child.hidden" style="background: rgba(100, 76, 247, 1);">
                       <i :class="itemChild_Child.icon"></i>
                       <span style="margin-left:20px;color: #fff;" slot="title">{{itemChild_Child.name}}</span>
                     </el-menu-item>
                   </el-submenu>
 
-                  <el-menu-item v-else :index="itemChild.path" :key="itemChild.path">
+                  <el-menu-item v-else :index="itemChild.path" :key="itemChild.path" style="background: rgba(100, 76, 247, 1);">
                     <i :class="itemChild.icon"></i>
                    <div slot="title" style="margin-left:20px;">
                       <div style="display: inline-block;width:4px;height:4px;backgroundColor:#fff;border-radius:50%;margin-right: 5px;"></div>
@@ -42,7 +45,7 @@
                 </template>
               </el-submenu>
 
-              <el-menu-item v-else :index="item.path" :key="item.path">
+              <el-menu-item v-else :index="item.path" :key="item.path" style="background: rgba(100, 76, 247, 1);">
                 <i :class="item.icon"></i>
                 <span slot="title">{{item.name}}</span>
               </el-menu-item>
@@ -75,7 +78,7 @@
               </el-dropdown>
             </el-col>
           </el-col>
-          <div class="grid-content bg-purple-light" style="width: 95%;margin: 0 auto;">
+          <div class="grid-content bg-purple-light" style="margin: 0 80px;">
             <!-- <el-col :span="24" class="breadcrumb-container">
               <strong class="title">{{$route.name}}</strong>
             </el-col>-->
@@ -112,7 +115,8 @@ export default {
         resource: "",
         desc: "",
       },
-      yureData:[]
+      yureData:[],
+      isCollapse: false
     };
   },
   mounted() {
@@ -129,6 +133,9 @@ export default {
    //this.queryInfo();
   },
   methods: {
+    changeCollapse() {
+      this.isCollapse = !this.isCollapse;
+    },
     queryInfo() {
      
  
@@ -366,57 +373,16 @@ export default {
   }
   .main {
     display: flex;
-    // background: #324057;
     position: absolute;
     top: 0px;
     bottom: 0px;
-    // overflow: hidden;
-    aside {
-      flex: 0 0 230px;
+    .el-menu-vertical-demo:not(.el-menu--collapse){
       width: 230px;
-      // position: absolute;
-      // top: 0px;
-      // bottom: 0px;
-      .el-menu {
-        height: 100%;
-        text-align: center;
-      }
-      .collapsed {
-        width: 60px;
-        .item {
-          position: relative;
-        }
-        .submenu {
-          position: absolute;
-          top: 0px;
-          left: 60px;
-          z-index: 99999;
-          height: auto;
-          display: none;
-        }
-      }
-    }
-    .menu-collapsed {
-      flex: 0 0 60px;
-      width: 60px;
-    }
-    .menu-expanded {
-      flex: 0 0 230px;
-      width: 230px;
-      //margin-top: -60px;
     }
     .content-container {
-      // background: #f1f2f7;
       flex: 1;
-      // position: absolute;
-      // right: 0px;
-      // top: 0px;
-      // bottom: 0px;
-      // left: 230px;
       overflow-y: scroll;
-      //padding: 20px;
       .breadcrumb-container {
-        //margin-bottom: 15px;
         float: none !important;
         .title {
           width: 200px;
@@ -430,9 +396,7 @@ export default {
         }
       }
       .content-wrapper {
-        // background-color: #272731;
         box-sizing: border-box;
-        // color: #ffffff;
       }
     }
   }

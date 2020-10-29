@@ -6,11 +6,11 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     var serverUrl = 'http://xyj.grapefruitcloud.com'; //PHP服务URL
 } else if (href.indexOf('service.kclgames.com') >= 0) {
     var serverUrl = 'http://service.kclgames.com'; //PHP服务URL
-} else if (href.indexOf('zzb.onezen.net') >= 0) {
-    var serverUrl = 'http://zzb.onezen.net'; //阿里云服务URL
+} else if (href.indexOf('zzb.stguarantee.com') >= 0) {
+    var serverUrl = 'http://zzb.stguarantee.com'; //阿里云服务URL
 } else {
-    // var serverUrl = 'http://zzb.onezen.net';
-    var serverUrl = 'http://service.kclgames.com';
+    var serverUrl = 'http://zzb.stguarantee.com';
+    // var serverUrl = 'http://service.kclgames.com';
     // var serverUrl = 'http://xyj.grapefruitcloud.com';
 }
 
@@ -102,6 +102,14 @@ export const refresh_state_admin = params => {
     return post(`${serverUrl}/node_mgmt/refresh_state_admin`, params)
 };
 
+//直播加速内容信息
+export const query_liveinfo = params => {
+    return post(`${serverUrl}/livebackmgmt_srv/query_liveinfo_for_admin`, params)
+}
+//直播流信息
+export const query_streaminfo = params => {
+    return post(`${serverUrl}/livebackmgmt_srv/query_streaminfo_for_admin`, params)
+}
 
 //刷新
 export const resource_refresh = params => {

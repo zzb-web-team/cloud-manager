@@ -1,22 +1,10 @@
 <template>
   <div class="content">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item>点播加速管理</el-breadcrumb-item>
-    </el-breadcrumb>
-    <div>
-      <!-- 搜索 -->
+      <div class="top_title">点播加速管理</div>
       <div class="seach">
-        <div class="seach_top">
           <el-input placeholder="请输入渠道ID丶加速内容" v-model="input_text" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmitInput">
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
-          <!-- <div class="seach_top_right" @click="option_display()">
-            筛选
-            <i class="el-icon-caret-bottom" :class="[rotate ? 'fa fa-arrow-down go' : 'fa fa-arrow-down aa']"></i>
-          </div>
-        </div>
-        <div v-if="optiondisplay" class="seach_bottom">
-          <span>状态：</span> -->
           <el-select v-model="value" placeholder="请选择状态" @change="onchangeTab" style="width:200px;margin-right: 10px;">
             <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
           </el-select>
@@ -25,22 +13,16 @@
           <el-date-picker v-model="value1" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="gettimes"></el-date-picker>
           <!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
           <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
-        </div>
       </div>
       <!-- 表格 -->
-      <div class="con_lable">
-        <div style="padding:10px;display: flex;justify-content: space-between;">
-          <div>
-            <el-button type="primary" @click="addUrl">
-              创建加速内容
-              <span class="el-icon-circle-plus-outline"></span>
-            </el-button>
-            <el-button type="primary" plain @click="onImport">批量导入加速内容</el-button>
-            <!-- <el-button type="primary" plain @click="setdomainlist">批量管理标签</el-button> -->
-          </div>
-          <div>
-            <el-button type="primary" @click="toexportExcel">导出</el-button>
-          </div>
+      <div class="device_table">
+        <div class="operating">
+          <el-button type="primary" @click="addUrl">
+            创建加速内容
+            <span class="el-icon-circle-plus-outline"></span>
+          </el-button>
+          <el-button plain @click="onImport">批量导入加速内容</el-button>
+          <el-button style="margin-left: auto;" type="primary" @click="toexportExcel">导出</el-button>
         </div>
 
         <!-- 表格 -->
@@ -103,7 +85,7 @@
           </div>
           <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
         </div>
-      </div>
+      
     </div>
     <!-- 弹窗 -->
     <el-dialog title="添加域名" :visible.sync="dialogFormVisible" custom-class="customWidth" class="domain_dialog">
@@ -1301,7 +1283,7 @@ export default {
         });
     }, // 表头样式设置
     headClass() {
-      return "text-align: center;background:#eef1f6;";
+      return "text-align: center; background: #FDFBFB; font-weight: 500; color: #333";
     },
     // 表格样式设置
     rowClass() {
@@ -1312,38 +1294,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.seach {
-  width: 100%;
-  margin: 30px 0 30px 0;
-  background: #ffffff;
-  border-radius: 2px;
-  padding: 21px 37px;
-  box-shadow: 0px 0px 7px 0px rgba(41, 108, 171, 0.1);
-  .seach_top {
-    width: 100%;
-    height: 60px;
-    line-height: 60px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    .input-with-select {
-      width: 15%;
-    }
-    .seach_top_right {
-      width: 80px;
-      text-align: center;
-      height: 36px;
-      line-height: 36px;
-      margin-left: 10px;
-    }
-  }
-  .seach_bottom {
-    height: 72px;
-    background: rgba(242, 246, 250, 1);
-    border-radius: 2px;
-    display: flex;
-    align-items: center;
-    padding-left: 27px;
-  }
-}
 </style>

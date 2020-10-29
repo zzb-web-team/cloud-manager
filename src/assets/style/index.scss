@@ -73,20 +73,6 @@ body {
     }
 }
 
-.content-container {
-    background: #F6F6F6;
-    width: 100%;
-}
-
-.content {
-    // max-width: 2200px;
-    height: 100%;
-    margin: 30px;
-    box-sizing: border-box;
-    margin: 0 auto;
-    padding-top: 30px;
-}
-
 //登录框样式
 .log_input .el-input {
     width: 80%;
@@ -133,50 +119,49 @@ body {
     width: 30% !important;
 }
 
+.content-container{
+    background: #F9F9F9;
+}
+
 .content {
     width: auto;
     height: 100%;
-    text-align: left;
+    margin-top: 48px;
+    border-radius: 32px;
+    background: #fff;
+    padding: 72px;
+    .top_title{
+        text-align: left;
+        font-size: 18px;
+        color: #333;
+    }
     .seach {
         width: 100%;
-        margin-top: 20px;
-        background: #ffffff;
-        padding: 20px;
-        .seach_top {
-            width: 100%;
-            height: auto;
-            overflow: hidden;
-            .input-with-select {
-                width: 230px;
-                float: left;
-            }
-            .seach_top_right {
-                float: left;
-                height: 40px;
-                line-height: 40px;
-                margin-left: 10px;
-            }
+        margin: 50px 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        .input-with-select {
+            width: 230px;
+            float: left;
         }
-        .seach_bottom {
-            text-align: left;
-            height: auto;
-            background: #f0f5f5;
-            border-radius: 10px;
-            padding: 10px 15px;
-            margin-top: 10px;
-            .el-select {
-                width: 150px;
-            }
-            .seach_bottom_btn {
-                margin: 10px 10px;
-            }
+        .seach_top_right {
+            float: left;
+            height: 40px;
+            line-height: 40px;
+            margin-left: 10px;
         }
     }
-    .con_lable {
-        width: 100%;
-        background: #ffffff;
-        margin-top: 20px;
-        padding: 20px;
+    .device_table {
+        .operating{
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 50px;
+        }
     }
 }
 
@@ -190,39 +175,12 @@ body {
     transition: all 1s;
 }
 
-.content .seach {
-    width: 100%;
-    margin: 30px 0 30px 0;
-    background: #ffffff;
-    border-radius: 2px;
-    padding: 21px 37px;
-    -webkit-box-shadow: 0px 0px 7px 0px rgba(41, 108, 171, 0.1);
-    box-shadow: 0px 0px 7px 0px rgba(41, 108, 171, 0.1);
-}
-
-.content .con_lable {
-    width: 100%;
-    background: #ffffff;
-    background: #fff;
-    -webkit-box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 2px;
-    padding: 8px 37px 0;
-    padding-bottom: 30px;
-}
-
-.el-button--primary {
-    color: #FFF;
-    background-color: #297AFF;
-    border-color: #297AFF;
-}
-
 .domin_index .el-button {
     padding: 10px 10px;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-    background-color: #297AFF;
+    background-color: #644CF7;
     color: #FFF;
 }
 
@@ -257,11 +215,6 @@ body {
 //注册
 .registered_from .el-form-item .el-form-item__content {
     margin-left: 0 !important;
-}
-
-.el-pagination.is-background .el-pager li:not(.disabled).active {
-    background-color: #297AFF;
-    color: #FFF;
 }
 
 //手机号登录
@@ -308,9 +261,9 @@ body {
 
 .resources_con .el-tabs__header {
     padding-left: 45px;
-    margin-top: 25px;
     background: #ffffff;
     font-size: 20px;
+    margin-bottom: 0;
 }
 
 .termail_con .el-tabs .el-tabs__content {
@@ -359,45 +312,113 @@ body {
     width: 25%;
 }
 
-.el-button--primary.is-plain {
-    color: #297AFF;
-    background: #ffffff;
-    border-color: #297AFF;
+.el-input__inner {
+    border-radius: 28px;
+    background: #F9F9F9;
+    border-color: #EEEEEE;
+    outline: none;
+}
+
+.el-input__inner:focus {
+    border-radius: 28px;
+    background: #F9F9F9;
+    border-color: #EEEEEE;
+    outline: none;
+}
+
+.el-select .el-input.is-focus .el-input__inner {
+    border-color: #F9F9F9;
+}
+
+.el-select .el-input__inner:focus {
+    border-color: #F9F9F9;
+}
+
+.el-range-input {
+    background: #F9F9F9;
+}
+
+.el-button--default {
+    color: #333333;
+    background-color: #F9F9F9;
+    border-color: #DDDDDD;
+    border-radius: 28px;
+    outline: none;
+}
+
+.el-button--default:focus, .el-button--default:hover {
+    color: #333333;
+    background:  #F9F9F9;
+    border-color: #DDDDDD;
+    border-radius: 28px;
+    outline: none;
+}
+
+.el-button.is-plain {
+    color: #333333;
+    background-color: #F9F9F9;
+    border-color: #DDDDDD;
+    border-radius: 28px;
+    outline: none;
+}
+
+.el-button.is-plain:focus, .el-button.is-plain:hover {
+    color: #333333;
+    background:  #F9F9F9;
+    border-color: #DDDDDD;
+    border-radius: 28px;
+    outline: none;
+}
+
+.el-button--text:focus, .el-button--text:hover {
+    color: #644CF7;
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.el-button--primary:focus, .el-button--primary:hover {
+    color: #FFF;
+    background: #644CF7;
+    border-color: #644CF7;
+    border-radius: 28px;
+    outline: none;
 }
 
 .el-button--primary {
     color: #FFF;
-    background-color: #297AFF;
-    border-color: #297AFF;
+    background-color: #644CF7;
+    border-color: #644CF7;
+    border-radius: 28px;
+    outline: none;
 }
 
 .el-button--text {
-    color: #297AFF;
+    color: #644CF7;
     background: 0 0;
     padding-left: 0;
     padding-right: 0;
 }
 
-.el-pagination.is-background .el-pager li:not(.disabled).active {
-    background-color: #297AFF;
-    color: #FFF;
+.el-tabs__item.is-active {
+    color: #644CF7;
 }
 
-.el-tabs__item.is-active {
-    color: #297AFF;
+.el-tabs__item:hover {
+    color: #644CF7;
+    cursor: pointer;
 }
 
 .el-tabs__active-bar {
-    background-color: #297AFF;
+    background-color: #644CF7;
 }
 
 .el-radio__input.is-checked+.el-radio__label {
-    color: #297AFF;
+    color: #644CF7;
 }
 
 .el-radio__input.is-checked .el-radio__inner {
-    border-color: #297AFF;
-    background: #297AFF;
+    border-color: #644CF7;
+    background: #644CF7;
 }
 
 // .el-tabs__item {
@@ -413,27 +434,36 @@ body {
 // .el-menu-vertical-demo .el-menu {
 //   box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
 // }
+.el-submenu__title i {
+    color: #fff;
+}
 .el-submenu__title:focus, .el-submenu__title:hover {
     outline: 0;
     background-color: #5035F6;
 }
-.el-submenu:hover {
-    background: #5035F6;
+.el-menu.is-active, .el-menu--inline.is-active {
+    border: none;
+    outline: none;
+}
+.el-submenu:hover,.el-submenu:focus {
+    border: none;
+    outline: none;
 }
 .el-submenu .el-menu-item{
-    background: #5035F6;
+    background: rgba(100, 76, 247, 1);
 }
 .el-submenu .el-menu-item:hover {
     background: #5035F6;
 }
 .el-submenu .el-menu-item.is-active {
     color: #fff;
-    background: #5035F6;
+    background: #5035F6 !important;
 }
 
 .el-table {
-    color: #666666;
+    color: #333;
     font-size: 14px;
+    border-radius: 12px;
 }
 
 .el-table__header tr,
@@ -442,11 +472,48 @@ body {
     height: 48px;
 }
 
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    background-color: #FDFBFB !important;
+}
+
 .el-table__body tr,
 .el-table__body td {
     padding: 0;
     height: 48px;
 }
+
+.el-dialog {
+    padding-right: 0;
+    border-radius: 12px;
+}
+
+.el-dialog__headerbtn .el-dialog__close {
+    color: #fff;
+}
+
+.el-dialog__header{
+    background: #644CF7;
+    color: #fff;
+    border-radius: 12px 12px 0 0;
+}
+
+.el-dialog__header span{
+    color: #fff;
+}
+
+.el-dialog__body {
+    padding: 30px 40px;
+}
+
+.statistics .el-radio-group {
+    background: #F9F9F9;
+}
+
+.statistics .el-radio-button .el-radio-button--medium {
+    background: transparent;
+}
+
+
 
 .add_url .el-input {
     width: 300px;
@@ -547,9 +614,9 @@ body {
 }
 
 .el-input-group__append {
-    background-color: #297AFF;
-    color: #297AFF;
-    border: 1px solid #297AFF;
+    background-color: #644CF7;
+    color: #644CF7;
+    border: 1px solid #644CF7;
 }
 
 .setpwd .el-dialog__body {

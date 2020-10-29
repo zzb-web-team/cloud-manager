@@ -55,7 +55,7 @@
               <i class="el-icon-date"></i>
             </el-button>
           </el-button-group> -->
-          <el-radio-group
+          <!-- <el-radio-group
             v-model="radio"
             size="medium"
             @change="select_time()"
@@ -85,7 +85,8 @@
             end-placeholder="结束日期"
             align="left"
             @change="gettimes"
-          ></el-date-picker>
+          ></el-date-picker> -->
+          <SelectTime @selectTime="selectTime" :type="'daterange'" />
           <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button> -->
         </div>
         <div class="user_item">
@@ -205,6 +206,7 @@
 <script>
 import { dateToMs, getymdtime, getymdtime1, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
+import SelectTime from "@/components/SelectTime";
 import {
   accelerate_flow_query_conditions,
   accelerate_flow,
@@ -355,7 +357,7 @@ export default {
     },
   },
   components: {
-    fenye,
+    fenye, SelectTime
   },
   mounted() {
     this.querychanId();
@@ -401,6 +403,12 @@ export default {
     this.drawLine1();
   },
   methods: {
+    selectTime(val){
+      this.starttime = val.starttime;
+      this.endtime = val.endtime;
+      this.gettable1();
+      this.gettable2();
+    },
     //  统计时间段
     timeFormatter(row, column){
       if(this.timeUnit == 120){
@@ -903,7 +911,7 @@ export default {
 
     // 表头样式设置
     headClass() {
-      return "text-align: center;background:#F3F6FB;";
+      return "text-align: center; background: #FDFBFB; font-weight: 500; color: #333";
     },
     // 表格样式设置
     rowClass() {

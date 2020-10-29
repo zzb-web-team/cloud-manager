@@ -5,7 +5,7 @@
       <div class="resources_con">
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="节点流量" name="first" :lazy="true">
-            <div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+            <div class="statistics" style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
               <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
                 <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
               </el-input>
@@ -19,7 +19,8 @@
                 <el-option label="全部" value="*"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select>
-              <el-radio-group
+              <SelectTime @selectTime="selectTime" :type="'datetimerange'" />
+              <!-- <el-radio-group
                 v-model="radio"
                 size="medium"
                 @change="select_time()"
@@ -39,7 +40,7 @@
                 @click="setZdy"
                 >自定义</el-button
 						  >
-              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
+              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker> -->
               <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu()">确定</el-button> -->
             </div>
             <div class="device_form" style="margin-top: 0px;">
@@ -204,6 +205,7 @@
 <script>
 import { dateToMs, getymdtime, getymdtime1, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
+import SelectTime from "@/components/SelectTime";
 import {
   node_traffic_curve,
   node_traffic_table,
@@ -335,7 +337,7 @@ export default {
     },
   },
   components: {
-    fenye,
+    fenye, SelectTime
   },
   mounted() {
     let monitorUrlname = this.$route.query.monitorUrlname;
@@ -371,6 +373,12 @@ export default {
     this.drawLine2();
   },
   methods: {
+    selectTime(val){
+      this.starttime = val.starttime;
+      this.endtime = val.endtime;
+      this.getNodeTrafficCurve();
+      this.node_traffic_table();
+    },
     renderHeader(h, { column }) {
       const serviceContent = [
         h(
@@ -943,7 +951,7 @@ export default {
     
     // 表头样式设置
     headClass() {
-      return "text-align: center;background:#F3F6FB;";
+      return "text-align: center; background: #FDFBFB; font-weight: 500; color: #333";
     },
     // 表格样式设置
     rowClass() {
