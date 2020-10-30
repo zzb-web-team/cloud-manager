@@ -958,7 +958,7 @@ export default {
           .catch(error => {
             console.log(error);
           });
-      } else if (row.state == 0) {
+      } else {
         this.$confirm("是否要启用此加速内容？", "提示", {
           type: "warning",
         })

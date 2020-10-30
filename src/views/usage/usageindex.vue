@@ -1,6 +1,6 @@
 <template>
-<div>
-  <section class="content" @click="closeSel">
+<div @click="closeSel">
+  <section class="content">
     <div class="top_title">节点流量用量
       <div class="wrapperStyle">
         <div class="itemStyle" :class="{ isSelected: accelerateType == 0 }" @click="changeType(0)">点播加速</div>
@@ -9,7 +9,7 @@
     </div>
     <div class="seach">
       <el-input
-        v-model="value1Activechanid"
+        v-model="valueChannelId"
         placeholder="请输入渠道ID"
         style="width:160px;margin-right: 10px;"
         @keyup.enter.native="onChanges"
@@ -18,7 +18,7 @@
       </el-input>
       <el-input
         v-show="accelerateType==1"
-        v-model="value1Activechanid"
+        v-model="valueChannelId"
         placeholder="请输入直播间ID"
         style="width:160px;margin-right: 10px;"
         @keyup.enter.native="onChanges"
@@ -27,7 +27,7 @@
       </el-input>
       <el-input
         v-show="accelerateType==1"
-        v-model="value1Activechanid"
+        v-model="valueChannelId"
         placeholder="请输入直播流名称"
         style="width:160px;margin-right: 10px;"
         @keyup.enter.native="onChanges"
@@ -36,7 +36,7 @@
       </el-input>
       <el-input
         v-show="accelerateType==0"
-        v-model="valuedomian"
+        v-model="valueDomain"
         placeholder="请输入域名"
         style="width:160px;margin-right: 10px;"
         @keyup.enter.native="onChanges"
@@ -45,7 +45,7 @@
       </el-input>
       <el-input
         v-show="accelerateType==0"
-        v-model="value1"
+        v-model="valueContent"
         placeholder="请输入加速内容名称"
         style="width:160px;margin-right: 10px;"
         @keyup.enter.native="onChanges"
@@ -53,7 +53,7 @@
         <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
       </el-input>
       <el-select
-        v-model="value1acce1"
+        v-model="valueIpfsChannel"
         placeholder="全部节点渠道"
         style="width: 10%;margin-right: 10px;"
         @change="onChanges"
@@ -66,52 +66,9 @@
           :value="item.value"
         ></el-option>
       </el-select>
-
-      <!-- <el-button-group>
-        <el-button v-show="!shoudzyx" @click="today()" label="one">今天</el-button>
-        <el-button v-show="!shoudzyx" @click="yesterday()" label="two">昨天</el-button>
-        <el-button v-show="!shoudzyx" @click="sevendat()" label="three">近7天</el-button>
-        <el-button v-show="!shoudzyx" @click="thirtyday()" label="four">近30天</el-button>
-        <el-button @click="showzdyx">
-          自定义
-          <i class="el-icon-date"></i>
-        </el-button>
-      </el-button-group> -->
-      <!-- <el-radio-group
-        v-model="radio"
-        size="medium"
-        @change="select_time()"
-        v-show="!showzdy"
-      >
-        <el-radio-button size = "small" label="1">今天</el-radio-button >
-        <el-radio-button size = "small" label="2">昨天</el-radio-button >
-        <el-radio-button size = "small" label="3">近7天</el-radio-button >
-        <el-radio-button size = "small" label="4">近30天</el-radio-button >
-        <el-radio-button size = "small" label="5">自定义</el-radio-button >
-      </el-radio-group>
-      <el-button
-        type="primary"
-        v-show="showzdy"
-          size = "small"
-        style="background:#409EFF;border:#409EFF"
-        @click="setZdy"
-        >自定义</el-button
-      >
-      <el-date-picker
-        v-show="showzdy"
-        style="margin-left:10px;"
-        v-model="val2"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        align="left"
-        @change="gettimes"
-      ></el-date-picker> -->
       <SelectTime @selectTime="selectTime" :type="'daterange'" />
-      <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button> -->
     </div>
-    <div class="device_table" style="display: flex; flex-direction: row; flex-wrap: wrap;">
+    <div class="device_table" style="display: flex; flex-direction: row; align-items: flex-start; flex-wrap: wrap;">
       <div class="user_item" style="margin-right: 100px;">
         <div class="item_left" style="margin-right: 30px;">
           <div class="item_text" style="text-align:center;">总流量</div>
@@ -122,9 +79,6 @@
         <img src="../../assets/img/pic.png" /> 
       </div>
       <div style="flex: 1; min-width:300px;">
-        <!-- <el-row type="flex" class="row_active">
-          <el-col :span="24" style="text-align:left;font-weight: bold;padding-left: 10px;">资源用量表</el-col>
-        </el-row> -->
         <el-row type="flex" class="row_active">
           <el-col :span="23">
             <el-table
@@ -139,12 +93,7 @@
                   <div>{{ scope.row.dataFlow | setbytes }}</div>
                 </template>
               </el-table-column>
-              <el-table-column label="时间" prop="time" :formatter="timeFormatter">
-                <!-- <template slot-scope="scope">
-                  <div>{{ scope.row.time | settimes }}</div>
-                  <div>{{ scope.row.time | settimes }}</div>
-                </template> -->
-              </el-table-column>
+              <el-table-column label="时间" prop="time" :formatter="timeFormatter"></el-table-column>
             </el-table>
             <fenye
               style="float:right;margin:10px 0 0 0;"
@@ -159,36 +108,12 @@
     </div>
   </section>
   <div class="device_form">
-    <div style="display: flex; justify-content: flex-start;">
-        <div
-          style="width: 150px;height: 40px;border: 1px solid #C0C4CC;color: #000;text-align:center;line-height:40px;margin-right:30px;border-radius: 28px;"
-        >用户对比</div>
-        <!-- <el-select
-          v-model="valuess"
-          filterable
-          placeholder="请选择对比用户"
-          multiple
-          :collapse-tags="true"
-          @change="querychanIds"
-        >
-          <el-option
-            v-for="item in optionssearch"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>-->
-        <!-- <el-button
-          style="margin-left:10px;"
-          type="primary"
-          @click="querychanIds()"
-          >确定</el-button
-        >
-        -->
+    <div style=" display: flex; justify-content: flex-start;position: relative;margin-bottom: 30px;">
+        <div style="width: 150px;height: 40px;border: 1px solid #C0C4CC;color: #000;text-align:center;line-height:40px;margin-right:30px;border-radius: 28px;">用户对比</div>
+        <el-button type="primary" style="height: 40px;" icon="el-icon-plus" id="sellineName" @click="showduibi">添加对比</el-button>
         <div
           v-show="duibi"
-          style="width: 234px;position:absolute;top: -340px;left: 211px;z-index: 100;height: 350px;border-radius: 5px;box-shadow: -1px 5px 10px -3px;"
+          style="width: 234px; position: absolute; left: 300px;height: 350px;border-radius: 5px;box-shadow: -1px 5px 10px -3px;"
           class="shopw"
           id="shopw"
         >
@@ -215,8 +140,6 @@
             </el-table-column>
           </el-table>
         </div>
-
-        <el-button type="primary" icon="el-icon-plus" id="sellineName" @click="showduibi">添加对比</el-button>
     </div>
     <div id="myChartMap" :style="{ height: '607px' }"></div>
   </div>
@@ -228,21 +151,14 @@ import { dateToMs, getymdtime, getymdtime1, splitTimes } from "../../servers/sev
 import fenye from "@/components/fenye";
 import SelectTime from "@/components/SelectTime";
 import {
-  accelerate_flow_query_conditions,
-  accelerate_flow,
-  accelerate_flow_table,
-  backsource_flow_query_conditions,
-  backsource_flow,
-  getvideo,
-  export_pv_uv_curve_file,
-  export_backsource_flow_file,
-  export_accelerate_flow_file,
-  getterminal,
   cloudUserList,
   manage_dataflow_curve,
   manage_dataflow_table,
   export_manage_dataflow_table_file,
-  get_nodetype_enum
+  get_nodetype_enum,
+  live_manage_dataflow_curve,
+  live_manage_dataflow_table,
+  export_live_manage_dataflow_table_file
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -251,102 +167,21 @@ import _ from "lodash";
 export default {
   data() {
     return {
-      radio1: "one",
-      plain: "",
       search: "",
-      valuedomian: "",
-      value1acce1: "",
+      valueDomain: "",
+      valueIpfsChannel: "",
+      valueRoomId: "",
+      valueStreamName: "",
       duibi: false,
       hashidSets: [],
       chanIds: [],
-      optionssearch1: [],
       optionssearch: [],
-      valuess: "",
-      value1acce: "*",
-      valueacce: "*",
-      hashidSet: [],
-      value1Activechanid: "",
-      value1Activechanid1: "",
-      value1Active: "",
-      options1Active: [],
-      shoudzyx: false,
+      valueChannelId: "",
       showzdyz: false,
-      showzdy: false,
-      options1: [],
-      options1chanid: [],
       accelerateType: 0,
-      options3: [],
-      options4: [],
-      optionsa1: [],
-      optionsa2: [],
-      valuea2chanid: "",
-      optionsa2chanid: [],
-      optionsa3: [],
-      optionsa4: [],
-      value1: "",
-      value2: "*",
-      value3: "*",
-      value4: "",
-      valuea1: "",
-      valuea2: "*",
-      valuea3: "*",
-      valuea4: "",
+      valueContent: "",
       tablecdn: [],
       activeName: "first",
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: "昨天",
-            onClick(picker) {
-              const end = new Date(
-                new Date(new Date().toLocaleDateString()).getTime()
-              );
-              const start =
-                new Date(new Date(new Date().toLocaleDateString()).getTime()) -
-                3600 * 1000 * 24 * 1;
-              picker.$emit("pick", [start, end]);
-            },
-          },
-          {
-            text: "今天",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date(
-                new Date(new Date().toLocaleDateString()).getTime()
-              );
-              picker.$emit("pick", [start, end]);
-            },
-          },
-          {
-            text: "最近一周",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date(
-                new Date(new Date().toLocaleDateString()).getTime()
-              );
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
-              picker.$emit("pick", [start, end]);
-            },
-          },
-          {
-            text: "最近一个月",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date(
-                new Date(new Date().toLocaleDateString()).getTime()
-              );
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 29);
-              picker.$emit("pick", [start, end]);
-            },
-          },
-        ],
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        },
-      },
-      // value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-      val2: [],
-
       timeUnit: 120,
       starttime: "",
       endtime: "",
@@ -357,14 +192,10 @@ export default {
       pageSize: 10, //每页数量
       pageNo: 1, //当前页码
       total_cnt: 1, //数据总量
-      chanid: "",
       pageActive: 0,
       pageActive1: 0,
-      dataFlownum: 0,
-      dataFlownum1: 0,
       flowunit: "",
       totalYl: 0,
-      radio: 1,
     };
   },
   filters: {
@@ -376,33 +207,26 @@ export default {
       return common.formatByteActive(data);
     },
   },
-  components: {
-    fenye, SelectTime
-  },
+  components: { fenye, SelectTime },
   mounted() {
     this.querychanId();
     this.getNodeType();
-
     let monitorUrlname = this.$route.query.monitorUrlname;
     if (monitorUrlname) {
-      this.value1 = monitorUrlname;
+      this.valueContent = monitorUrlname;
     } else {
-      this.value1 = "";
+      this.valueContent = "";
     }
     let monitorChanId = this.$route.query.monitorChanId;
     if (monitorChanId) {
-      this.value1Activechanid = monitorChanId;
+      this.valueChannelId = monitorChanId;
     } else {
-      this.value1Activechanid = "";
+      this.valueChannelId = "";
     }
-
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.endtime = Date.parse(new Date()) / 1000;
-
     this.gettable1();
     this.gettable2();
-
-    // this.configure()
   },
   filters: {
     settimes(data) {
@@ -427,10 +251,14 @@ export default {
       this.accelerateType = v;
       if(v==0){
         this.tablecdn = [];
+        this.totalYl = '';
         this.gettable1();
         this.gettable2();
       }else{
-
+        this.tablecdn = [];
+        this.totalYl = 0;
+        this.liveDataFlowCurve();
+        this.liveDataFlowTable();
       }
     },
     selectTime(val){
@@ -492,21 +320,11 @@ export default {
         return "disabledCheck";
       }
     },
-    //失去焦点事件
-    // onblurs(event) {
-    //   this.chanIds = event;
-    // },
-    // querychanIds() {
-    //   console.log(this.valuess);
-    //   this.gettable1(this.valuess);
-    //   this.gettable2(this.valuess);
-    // },
     //获取页码
     handleCurrentChange(pages) {
       this.pageNo = pages;
       this.gettable2();
     },
-
     //获取每页数量
     handleSizeChange(pagetol) {
       this.pageSize = pagetol;
@@ -520,39 +338,28 @@ export default {
       params.startTs = this.starttime;
       params.endTs = this.endtime;
       // params.chanId = this.chanid + "";
-      if (this.value1) {
-        params.urlName = this.value1;
+      if (this.valueContent) {
+        params.urlName = this.valueContent;
       } else {
         params.urlName = "*";
       }
       if (this.chanIds.length == 0) {
-        if (this.value1Activechanid == "") {
+        if (this.valueChannelId == "") {
           params.channelId = "*";
         } else {
-          params.channelId = this.value1Activechanid;
+          params.channelId = this.valueChannelId;
         }
       } else {
         let nowstr = this.chanIds.join(",");
         params.channelId = nowstr;
       }
-
-      //   if (this.value1Activechanid == "" && this.chanIds.length==0) {
-      //     params.channelId = "*";
-      //     params.channelId.push(this.value1Activechanid);
-      //   } else if(this.value1Activechanid1!=="" && this.chanIds.length==0) {
-      //     params.channelId = this.value1Activechanid1;
-      //   }else if(this.value1Activechanid1!=="" && this.chanIds.length>0){
-      // 	  let nowstr=this.chanIds.join("")
-      // 	   params.channelId = nowstr
-
-      //   }
-      if (this.valuedomian !== "") {
-        params.domain = this.valuedomian;
+      if (this.valueDomain !== "") {
+        params.domain = this.valueDomain;
       } else {
         params.domain = "*";
       }
-      if (this.value1acce1 != "") {
-        params.ipfsChannel = this.value1acce1;
+      if (this.valueIpfsChannel != "") {
+        params.ipfsChannel = this.valueIpfsChannel;
       } else {
         params.ipfsChannel = "*";
       }
@@ -570,14 +377,12 @@ export default {
           })
           .catch((err) => {});
     },
-
     //输入渠道ID查询
     onChanges() {
       this.pageNo = 1;
       this.gettable1();
       this.gettable2();
     },
-
     //获取节点渠道
     getNodeType(){
       let param = {}
@@ -646,59 +451,8 @@ export default {
     showzdyzs() {
       this.showzdyz = !this.showzdyz;
     },
-    showzdyx() {
-      this.shoudzyx = !this.shoudzyx;
-    },
-    setZdy() {
-      this.showzdy = !this.showzdy;
-      this.radio = 1;
-      this.today();
-    },
-    select_time() {
-			if (this.radio == 1) {
-				this.showzdy = false;
-				this.today();
-			} else if (this.radio == 2) {
-				this.showzdy = false;
-				this.yesterday();
-			} else if (this.radio == 3) {
-				this.showzdy = false;
-				this.sevendat();
-			} else if (this.radio == 4) {
-				this.showzdy = false;
-				this.thirtyday();
-			} else if (this.radio == 5) {
-				this.showzdy = true;
-			}
-    },
-    // getdataActive() {},
-    // showzdyzs() {
-    //   this.showzdyz = !this.showzdyz;
-    // },
-    // showzdyx() {
-    //   this.shoudzyx = !this.shoudzyx;
-    // },
-    // //获取页码
-    // getpage(pages) {
-    //   this.pageNo = pages;
-    //   this.getbot();
-    // },
-    // //获取每页数量
-    // gettol(pagetol) {
-    //   this.pagesize = pagetol;
-    //   // this.getuserlist();
-    // },
-    // getdata() {
-    //   this.pageNo = 1;
-    //   this.gettable1();
-    // },
-    // getdata1() {
-    //   this.gettable2();
-    // },
-
     /** 请求数据 */
-
-    //用量查询图表
+    //点播节点流量用量图
     gettable1(data) {
       this.dataFlowArray = [];
       this.timeArray = [];
@@ -706,32 +460,32 @@ export default {
       params.startTs = this.starttime;
       params.endTs = this.endtime;
       // params.chanId = this.chanid + "";
-      if (this.value1) {
-        params.urlName = this.value1;
+      if (this.valueContent) {
+        params.urlName = this.valueContent;
       } else {
         params.urlName = "*";
       }
       if (this.chanIds.length > 0) {
         // let temparr1 = [];
         // temparr1 = data;
-        // temparr1.push(parseInt(this.value1Activechanid));
+        // temparr1.push(parseInt(this.valueChannelId));
         params.channelId = this.chanIds;
       } else {
-        if (this.value1Activechanid !== "") {
+        if (this.valueChannelId !== "") {
           params.channelId = [];
-          params.channelId.push(this.value1Activechanid);
+          params.channelId.push(this.valueChannelId);
         } else {
           params.channelId = [];
         }
       }
 
-      if (this.valuedomian !== "") {
-        params.domain = this.valuedomian;
+      if (this.valueDomain !== "") {
+        params.domain = this.valueDomain;
       } else {
         params.domain = "*";
       }
-      if (this.value1acce1 != "") {
-        params.ipfsChannel = this.value1acce1;
+      if (this.valueIpfsChannel != "") {
+        params.ipfsChannel = this.valueIpfsChannel;
       } else {
         params.ipfsChannel = "*";
       }
@@ -805,8 +559,7 @@ export default {
             console.log(err);
           });
     },
-
-    //用量查询列表
+    //点播节点流量用量表
     gettable2(data) {
       this.dataFlowArray = [];
       this.timeArray = [];
@@ -816,8 +569,8 @@ export default {
       params.pageNo = this.pageNo - 1;
       params.pageSize = 10;
       // params.chanId = this.chanid + "";
-      if (this.value1) {
-        params.urlName = this.value1;
+      if (this.valueContent) {
+        params.urlName = this.valueContent;
       } else {
         params.urlName = "*";
       }
@@ -825,20 +578,20 @@ export default {
       if (this.chanIds.length > 0) {
         params.channelId = this.chanIds;
       } else {
-        if (this.value1Activechanid !== "") {
+        if (this.valueChannelId !== "") {
           params.channelId = [];
-          params.channelId.push(this.value1Activechanid);
+          params.channelId.push(this.valueChannelId);
         } else {
           params.channelId = [];
         }
       }
-      if (this.valuedomian !== "") {
-        params.domain = this.valuedomian;
+      if (this.valueDomain !== "") {
+        params.domain = this.valueDomain;
       } else {
         params.domain = "*";
       }
-      if (this.value1acce1 != "") {
-        params.ipfsChannel = this.value1acce1;
+      if (this.valueIpfsChannel != "") {
+        params.ipfsChannel = this.valueIpfsChannel;
       } else {
         params.ipfsChannel = "*";
       }
@@ -861,84 +614,114 @@ export default {
           console.log(err);
         });
     },
+    //直播节点流量用量图
+    liveDataFlowCurve(data) {
+      let params = new Object();
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      params.pageNo = this.pageNo;
+      params.pageSize = this.pageSize;
+      if (this.chanIds.length > 0) {
+        params.channelId = this.chanIds;
+      } else {
+        if (this.valueChannelId !== "") {
+          params.channelId = [];
+          params.channelId.push(this.valueChannelId);
+        } else {
+          params.channelId = [];
+        }
+      }
+      if (this.valueRoomId !== "") {
+        params.roomId = this.valueRoomId;
+      } else {
+        params.roomId = "*";
+      }
+      if (this.valueStreamName !== "") {
+        params.streamName = this.valueStreamName;
+      } else {
+        params.streamName = "*";
+      }
+      if (this.valueIpfsChannel != "") {
+        params.ipfsChannel = this.valueIpfsChannel;
+      } else {
+        params.ipfsChannel = "*";
+      }
+      params.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      this.timeUnit = this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      live_manage_dataflow_curve(params)
+        .then((res) => {
+          this.totalYl = res.data.total;
+          let nowlengh = res.data.data.length;
+          let nowtemp = res.data.data;
+          this.curveData = res.data.data;
+          let nowarr = [];
+          let childlist = [];
+          let arrs = [];
+          _(res.data.data).forEach(item=>{
+            arrs.push(item.dataflowArray)
+          });
+          if(_.flatten(arrs).length == 0){
+            this.flowunit = "B";
+          }else{
+            let max = _.max(_.flatten(arrs));
+            this.flowunit = this.common.formatByteActiveunit(max);
+          }
 
-    seachtu(data) {
-      if (this.endtime - this.starttime > 7776000) {
-        this.$message({
-          message: "起始时间和结束时间最大跨度不能超过三个月",
-          type: "error",
+          if(res.data.data[0].dataflowArray.length == 0){
+            let arr = splitTimes(this.starttime, this.endtime, this.timeUnit);							
+            arr.forEach((item, index) => {
+              this.timeArray.push(getymdtime1(item));
+            });;
+            let obj = {};
+            obj.type = "bar";
+            obj.barGap = "6%";
+            obj.barMaxWidth = 30;
+            obj.data = _.fill(Array(arr.length), 0);
+            this.curveData[0].dataflowArray = _.fill(Array(arr.length), 0);
+            nowarr.push(obj);
+          }else{
+
+            for (var i = 0; i < nowlengh; i++) {
+              childlist.push(res.data.data[i].channelid);
+              let obj = {};
+              obj.type = "bar";
+              obj.barGap = "6%";
+              (obj.barMaxWidth = 30), (obj.name = res.data.data[i].channelid);
+              let nowarr1 = [];
+              nowtemp[i].dataflowArray.forEach((item, index) => {
+                nowarr1.push(this.common.formatByteNum(item, this.flowunit));
+              });
+              obj.data = nowarr1;
+              nowarr.push(obj);
+            }
+
+            res.data.data[0].timeArray.forEach((item, index) => {
+              this.timeArray.push(getymdtime1(item));
+            });
+          }
+          this.drawLine(nowarr, this.timeArray, childlist);
+        })
+        .catch((err) => {
+          console.log(err);
         });
-        return false;
-      }
-      this.pageNo = 1;
-      this.gettable1();
-      this.gettable2();
-    },
-    //今天
-    today(data) {
-      this.plain = "plain";
-      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-      this.starttime = times;
-      this.endtime = Date.parse(new Date()) / 1000;
-      this.timeUnit = 60;
-      this.pageNo = 1;
-      this.gettable1();
-      this.gettable2();
-      this.$refs.multipleTable.clearSelection();
-    },
-    //昨天
-    yesterday(data) {
-      this.plain = "plain";
-      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-      this.starttime = times - 24 * 60 * 60 * 1;
-      this.endtime = times - 1;
-      this.timeUnit = 60;
-      this.pageNo = 1;
-      this.gettable1();
-      this.gettable2();
-      this.$refs.multipleTable.clearSelection();
-    },
-    //七天
-    sevendat(data) {
-      this.plain = "plain";
-      let times = parseInt(new Date(new Date()).getTime() / 1000);
-      this.starttime = times - 24 * 60 * 60 * 6;
-      this.endtime = times;
-      this.timeUnit = 60 * 24;
-      this.pageNo = 1;
-      this.gettable1();
-      this.gettable2();
-      this.$refs.multipleTable.clearSelection();
-    },
-    //三十天
-    thirtyday(data) {
-      this.plain = "plain";
-      let times = parseInt(new Date(new Date()).getTime() / 1000);
-      this.starttime = times - 24 * 60 * 60 * 29;
-      this.endtime = times;
-      this.timeUnit = 60 * 24;
-      this.pageNo = 1;
-      this.gettable1();
-      this.gettable2();
-      this.$refs.multipleTable.clearSelection();
-    },
-    //自定义时间
-    gettimes(cal) {
-      this.starttime = this.val2 ? dateToMs(this.val2[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
-      this.endtime = this.val2 ? dateToMs(this.val2[1]) + (24*60*60-1) : Date.parse(new Date()) / 1000;
-      // this.starttime = dateToMs(this.val2[0]);
-      // this.endtime = dateToMs(this.val2[1]);
-      if (this.endtime - this.starttime < 86400) {
-        this.timeUnit = 60;
-      } else if (this.endtime - this.starttime >= 86400) {
-        this.timeUnit = 60 * 24;
-      }
-      this.$refs.multipleTable.clearSelection();
-      this.pageNo = 1;
-      this.gettable1();
-      this.gettable2()
-    },
 
+      live_manage_dataflow_table(params)
+        .then((res) => {
+          if (res.status == 0) {
+            this.tablecdn = res.data.list;
+            this.total_cnt = res.data.totalCnt;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     // 表头样式设置
     headClass() {
       return "text-align: center; background: #FDFBFB; font-weight: 500; color: #333";
@@ -1170,7 +953,7 @@ export default {
 .user_item {
   background: #FDFBFB;
   width: 500px;
-  height: auto;
+  height: 300px;
   border-radius: 32px;
   display: flex;
   justify-content: flex-start;

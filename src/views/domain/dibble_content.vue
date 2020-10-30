@@ -11,26 +11,6 @@
       <el-select v-model="state" placeholder="请选择状态" style="width: 10%;margin-right: 10px;" @change="onChanges">
         <el-option v-for="(item, index) in options1" :key="index" :label="item.label" :value="item.value"></el-option>
       </el-select>
-      <!-- <el-radio-group
-        v-model="radio"
-        size="medium"
-        @change="select_time()"
-        v-show="!showzdy"
-      >
-        <el-radio-button size = "small" label="1">今天</el-radio-button >
-        <el-radio-button size = "small" label="2">昨天</el-radio-button >
-        <el-radio-button size = "small" label="3">近7天</el-radio-button >
-        <el-radio-button size = "small" label="4">近30天</el-radio-button >
-        <el-radio-button size = "small" label="5">自定义</el-radio-button >
-      </el-radio-group>
-      <el-button
-        type="primary"
-        v-show="showzdy"
-          size = "small"
-        style="background:#409EFF;border:#409EFF"
-        @click="setZdy"
-        >自定义</el-button
-      > -->
       <el-date-picker style="margin-left:10px;" v-model="times" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
     </div>
     <div class="device_table">
@@ -64,9 +44,13 @@
             </el-table-column>
             <el-table-column label="状态" >
               <template slot-scope="scope">
-                <div style="display: flex;justify-content: center;">
-                  <div>{{ scope.row.state == 1 ? '运行正常' : '异常' }}</div>
+                <div v-if="scope.row.state == 1">正常运行
+                  <span style="display:inline-block;line-height: 20px;width: 50px;height: 20px;background:#999;color:#fff;border-radius: 20px;font-size: 13px;">未加速</span>
                 </div>
+                <div v-else-if="scope.row.state == 2">正常运行
+                  <span style="display:inline-block;line-height: 20px;width: 50px;height: 20px;background:#644CF7;color:#fff;border-radius: 20px;font-size: 13px;">已加速</span>
+                </div>
+                <div style="color:#E54545;" v-else>回源失败</div>
               </template>
             </el-table-column>
             <el-table-column label="统计时间">
@@ -126,12 +110,15 @@ export default {
         },
         {
           value: 1,
-          label: "正常运行",
+          label: "未加速",
         },
-
+        {
+          value: 3,
+          label: "已加速",
+        },
         {
           value: 2,
-          label: "异常",
+          label: "回源失败",
         },
       ],
     };
@@ -220,7 +207,11 @@ export default {
         params.liveProto = 0;
       }
       if (this.state !== "") {
-        params.state = this.state;
+        if(this.state == 3){
+          params.state = 1
+        }else{
+          params.state = this.state;
+        }
       } else {
         params.state = 0;
       }

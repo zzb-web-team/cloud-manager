@@ -177,7 +177,7 @@ body {
             flex-direction: row;
             align-items: center;
             justify-content: flex-start;
-            margin-bottom: 50px;
+            margin-bottom: 20px;
         }
     }
 }
@@ -187,7 +187,7 @@ body {
     height: 100%;
     background: #fff;
     border-radius: 32px;
-    padding: 62px 62px 0;
+    padding: 62px;
     margin-bottom: 48px;
 }
 
@@ -252,60 +252,6 @@ body {
     padding-right: 40px;
 }
 
-.yure_content .el-tabs__header {
-    padding-left: 45px;
-    margin-top: -4px;
-    background: #ffffff;
-    font-size: 20px;
-}
-
-.yure_content .el-tabs .el-tabs__content {
-    width: 100%;
-    margin: auto;
-    background: #ffffff;
-    padding: 38px 62px;
-    margin-top: 38px;
-    box-shadow: 0px 3px 7px 0px rgba(51, 97, 146, 0.07);
-}
-
-.statisics_con .el-tabs__header {
-    padding-left: 45px;
-    margin-top: 25px;
-    background: #ffffff;
-    font-size: 20px;
-}
-
-.statisics_con .el-tabs .el-tabs__content {
-    width: auto;
-    margin: 0 auto;
-}
-
-.resources_con .el-tabs .el-tabs__content {
-    width: auto;
-    margin: auto;
-}
-
-.resources_con .el-tabs__header {
-    padding-left: 45px;
-    background: #ffffff;
-    font-size: 20px;
-    margin-bottom: 0;
-}
-
-.termail_con .el-tabs .el-tabs__content {
-    width: 1240px;
-    margin: auto;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 6px;
-}
-
-.termail_con .el-tabs__header {
-    padding-left: 45px;
-    margin-top: -10px;
-    background: #ffffff;
-    font-size: 20px;
-}
-
 .termail_con .el-dialog {
     width: 23%;
 }
@@ -316,10 +262,6 @@ body {
 
 .copy_active2 .el-dialog {
     width: 58%;
-}
-
-.bath .el-tabs {
-    height: 697px;
 }
 
 .bath .is-left {
@@ -425,6 +367,10 @@ body {
     padding-right: 0;
 }
 
+.el-tabs__header {
+    margin: 30px 0 0px;
+}
+
 .el-tabs__item.is-active {
     color: #644CF7;
 }
@@ -447,19 +393,6 @@ body {
     background: #644CF7;
 }
 
-// .el-tabs__item {
-//   color: #b8b8b8;
-//   font-size: 16px;
-// }
-// .el-submenu__title {
-//   padding-left: 70px !important;
-// }
-// .el-submenu .el-menu-item {
-//   padding-left: 90px !important;
-// }
-// .el-menu-vertical-demo .el-menu {
-//   box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-// }
 .el-submenu__title i {
     color: #fff;
 }

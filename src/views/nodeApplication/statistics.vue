@@ -7,7 +7,6 @@
           <div class="itemStyle" :class="{ isSelected: accelerateType == 1}" @click="changeType(1)">直播加速</div>
         </div>
       </div>
-      <!-- <div class="user-title" style="display: flex;flex-flow: column;width: 1240px;margin: auto;"> -->
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="PV/UV" name="first">
           <div class="seach">
@@ -24,28 +23,7 @@
               <el-option label="全部终端" value="-1"></el-option>
               <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
             </el-select>
-            <el-radio-group
-              v-model="radio"
-              size="medium"
-              @change="select_time()"
-              v-show="!showzdy"
-            >
-              <el-radio-button size = "small" label="1">今天</el-radio-button >
-              <el-radio-button size = "small" label="2">昨天</el-radio-button >
-              <el-radio-button size = "small" label="3">近7天</el-radio-button >
-              <el-radio-button size = "small" label="4">近30天</el-radio-button >
-              <el-radio-button size = "small" label="5">自定义</el-radio-button >
-            </el-radio-group>
-            <el-button
-              type="primary"
-              v-show="showzdy"
-                size = "small"
-              style="background:#409EFF;border:#409EFF"
-              @click="setZdy"
-              >自定义</el-button
-            >
-            <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-            <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(0)">确定</el-button> -->
+            <SelectTime @selectTime="selectTime" :type="'daterange'" />
           </div>
           <div class="user_item">
             <div class="item_left">
@@ -84,36 +62,15 @@
               <el-option label="全部终端" value="-1"></el-option>
               <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
             </el-select>
-            <el-radio-group
-              v-model="radio"
-              size="medium"
-              @change="select_time()"
-              v-show="!showzdy"
-            >
-              <el-radio-button size = "small" label="1">今天</el-radio-button >
-              <el-radio-button size = "small" label="2">昨天</el-radio-button >
-              <el-radio-button size = "small" label="3">近7天</el-radio-button >
-              <el-radio-button size = "small" label="4">近30天</el-radio-button >
-              <el-radio-button size = "small" label="5">自定义</el-radio-button >
-            </el-radio-group>
-            <el-button
-              type="primary"
-              v-show="showzdy"
-                size = "small"
-              style="background:#409EFF;border:#409EFF"
-              @click="setZdy"
-              >自定义</el-button
-            >
-            <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-            <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button> -->
+            <SelectTime @selectTime="selectTime" :type="'daterange'" />
           </div>
           <div class="devide_table">
             <el-row type="flex" class="row_active">
-              <el-col :span="24" style="text-align:left;    font-weight: bold;padding-left:10px;">{{exportTitle}}</el-col>
+              <el-col :span="24" style="text-align:left; font-weight: bold; margin-bottom:10px;">{{exportTitle}}</el-col>
             </el-row>
             <el-row type="flex" class="row_active">
               <el-col :span="24">
-                <el-table :data="tablecdn" border stripe max-height="530" style="width: 100%; margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                <el-table :data="tablecdn" border stripe max-height="530" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">
                   <el-table-column :label="exportTitleTable">
                     <template slot-scope="scope">
                       <div v-if="scope.row.region">
@@ -155,10 +112,6 @@
       </el-tabs>
     </section>
     <div class="device_form" v-show="activeName=='second'">
-      <!-- <el-button-group style="display: flex;justify-content: center;">
-        <el-button plain @click="goarea()">地区</el-button>
-        <el-button plain @click="gosupplier()">运营商</el-button>
-      </el-button-group> -->
       <el-radio-group
         v-model="radios"
         size="medium"
@@ -176,22 +129,17 @@
 <script>
 import { dateToMs, getymdtime, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
+import SelectTime from "@/components/SelectTime";
 import {
-  pv_uv_query_conditions,
   pv_uv_curve,
-  region_query_conditions,
   query_topregion_accesscnt_curve,
-  isp_query_conditions,
   query_topisp_accesscnt_curve,
-  query_playtimes_conditions,
-  query_playtimes_curve,
-  query_playdata_table,
-  getvideo,
   export_pv_uv_curve_file,
-  export_playtimes_curve_file,
   export_topregion_accesscnt_curve_file,
   export_topisp_accesscnt_curve_file,
-  getterminal,
+  query_live_topisp_accesscnt_curve,
+  query_live_topregion_accesscnt_curve,
+  live_visit_statistic,
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -389,7 +337,7 @@ export default {
     },
   },
   components: {
-    fenye,
+    fenye, SelectTime
   },
   mounted() {
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
@@ -404,7 +352,6 @@ export default {
     this.chart = null;
     this.drawLine();
     this.drawLine1();
-    this.drawLine2();
   },
   methods: {
     changeType(v){
@@ -415,6 +362,21 @@ export default {
       }else{
 
       }
+    },
+    //时间选择
+    selectTime(val){
+      this.starttime = val.starttime;
+      this.endtime = val.endtime;
+      if(this.accelerateType == 0){
+        if(thia.activeName == 'first'){
+          this.getcure(0);
+        }else{
+          thi
+        }
+      }else{
+
+      }
+      
     },
     //用户用户供应商导出
     exoprtant_topisp() {
@@ -470,7 +432,6 @@ export default {
         })
         .catch(err => {});
     },
-
     //访问用户地区导出
     exoprtant_topregion() {
       let params = new Object();
@@ -518,55 +479,6 @@ export default {
         this.endtime
       );
       export_topregion_accesscnt_curve_file(params)
-        .then(res => {
-          if (res.status == 0) {
-            window.open(res.msg, "_blank");
-          }
-        })
-        .catch(err => {});
-    },
-    //加速内容导出
-    exoprtant_content() {
-      let params = new Object();
-      params.chanId = this.chanid + "";
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      params.timeUnit = this.timeUnit;
-      if (this.value1fileName) {
-        params.fileName = this.value1fileName;
-      } else {
-        params.fileName = "*";
-      }
-      if (this.value_b2) {
-        params.region = this.value_b2;
-      } else {
-        params.region = "*";
-      }
-      if (this.value_b3) {
-        params.isp = this.value_b3;
-      } else {
-        params.isp = "*";
-      }
-      if (this.value1Activechanid !== "") {
-        params.chanId = this.value1Activechanid;
-      } else {
-        params.chanId = "*";
-      }
-      if(this.valueDomain){
-        params.domain = this.valueDomain;
-      }else{
-        params.domain = "*"
-      }
-      if (this.valueacce !== "") {
-        params.acce = this.valueacce;
-      } else {
-        params.acce = "-1";
-      }
-      params.timeUnit = this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
-      export_playtimes_curve_file(params)
         .then(res => {
           if (res.status == 0) {
             window.open(res.msg, "_blank");
@@ -642,37 +554,12 @@ export default {
         this.gosupplier();
       }
     },
-    //自定义事件组件
-    select_time() {
-			if (this.radio == 1) {
-        this.showzdy = false;
-        this.activeName == 'first' ? this.today(0) : this.today(1);
-			} else if (this.radio == 2) {
-        this.showzdy = false;
-        this.activeName == 'first' ? this.yesterday(0) : this.yesterday(1);
-			} else if (this.radio == 3) {
-        this.showzdy = false;
-        this.activeName == 'first' ? this.sevendat(0) : this.sevendat(1);
-			} else if (this.radio == 4) {
-        this.showzdy = false;
-        this.activeName == 'first' ? this.thirtyday(0) : this.thirtyday(1);
-			} else if (this.radio == 5) {
-				this.showzdy = true;
-			}
-    },
-    setZdy() {
-      this.showzdy = !this.showzdy;
-      this.radio = 1;
-      this.activeName == 'first' ? this.today(0) : this.today(1);
-    },
     //
     onChanges() {
       if(this.activeName == 'first'){
-        // this.getseach(0)
         this.getcure(0)
       }else{
         this.currentPage1 = 1;
-        // this.getcure(1)
         if(this.pagesActive){
           this.getcure(1)
         }else{
@@ -862,107 +749,6 @@ export default {
         }
       }
     },
-    // //自定义时间确定按钮
-    // seachtu(data) {
-    //   this.pageNo = 1;
-    //   if (data == 0) {
-    //     this.getseach(0);
-    //   } else if (data == 1) {
-    //     this.getseach(1);
-    //   } else {
-    //     this.getseach(3);
-    //   }
-    // },
-    //自定义时间显示
-    showzdyx() {
-      this.shoudzyx = !this.shoudzyx;
-    },
-    showzdyz() {
-      this.shoudzyz = !this.shoudzyz;
-    },
-    //今天
-    today(data) {
-      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-      this.starttime = times;
-      this.endtime = Date.parse(new Date()) / 1000;
-      this.timeUnit = 60;
-      if (data == 0) {
-        this.getcure(0);
-      } else if (data == 1) {
-        this.getcure(1);
-      } else {
-        this.getcure(3);
-      }
-    },
-    //昨天
-    yesterday(data) {
-      let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-      this.starttime = times - 24 * 60 * 60 * 1;
-      this.endtime = times - 1;
-      this.timeUnit = 60;
-      if (data == 0) {
-        this.getcure(0);
-      } else if (data == 1) {
-        this.getcure(1);
-      } else {
-        this.getcure(3);
-      }
-    },
-    //七天
-    sevendat(data) {
-      let times = parseInt(new Date(new Date()).getTime() / 1000);
-      this.starttime = times - 24 * 60 * 60 * 7;
-      this.endtime = times;
-      this.timeUnit = 60 * 24;
-      if (data == 0) {
-        this.getcure(0);
-      } else if (data == 1) {
-        this.getcure(1);
-      } else {
-        this.getcure(3);
-      }
-    },
-    //三十天
-    thirtyday(data) {
-      let times = parseInt(new Date(new Date()).getTime() / 1000);
-      this.starttime = times - 24 * 60 * 60 * 30;
-      this.endtime = times;
-      this.timeUnit = 60 * 24;
-      if (data == 0) {
-        this.getcure(0);
-      } else if (data == 1) {
-        this.getcure(1);
-      } else {
-        this.getcure(3);
-      }
-    },
-    //自定义时间-确定
-    gettimes(cal) {
-      this.starttime = dateToMs(this.val2[0]);
-      this.endtime = dateToMs(this.val2[1]);
-      if (this.endtime - this.starttime < 21600) {
-        this.timeUnit = 60;
-      } else if (
-        this.endtime - this.starttime >= 21600 &&
-        this.endtime - this.starttime < 86400
-      ) {
-        this.timeUnit = 60;
-      } else if (this.endtime - this.starttime >= 86400) {
-        this.timeUnit = 60 * 24;
-      }
-      if(this.activeName == 'first'){
-        // this.getseach(0)
-        this.getcure(0)
-      }else{
-        this.currentPage1 = 1;
-        // this.getcure(1)
-        if(this.pagesActive){
-          this.getcure(1)
-        }else{
-          this.getcure(2)
-        }
-      }
-    },
     //切换到地区
     goarea() {
       this.twob = false;
@@ -1029,11 +815,9 @@ export default {
     destroyed: function() {
       this.drawLine();
       this.drawLine1();
-      this.drawLine2();
     },
     drawLine() {
       let _this = this;
-      // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById("myChart"));
       window.onresize = myChart.resize;
       // 绘制图表
@@ -1154,7 +938,6 @@ export default {
     },
     drawLine1(a, b, data) {
       let _this = this;
-      // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById("myChart1"));
       window.onresize = myChart.resize;
       // 绘制图表
@@ -1168,12 +951,6 @@ export default {
           top: 60, // 默认60
           right: 35, // 默认10%
           bottom: 60, // 默认60
-          // width: "100%", // grid 组件的宽度。默认自适应。
-          // height: "100%",
-          // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
-          // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
-          // backgroundColor:'#ccac62',
-          // borderColor:"#000",
         },
         toolbox: {
           //show: true,
@@ -1181,11 +958,6 @@ export default {
           itemGap: 30,
           right: 50,
           feature: {
-            // mark: { show: true },
-            // dataView: { show: true, readOnly: false },
-            // magicType: { show: true, type: ['line', 'bar'] },
-            // restore: { show: true },
-            // saveAsImage: { show: false },
             mydow: {
               show: true,
               title: "导出",
@@ -1225,81 +997,6 @@ export default {
         ],
       };
       myChart.setOption(options);
-    },
-    drawLine2(a, b) {
-      let _this = this;
-      // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById("myChart2"));
-      window.onresize = myChart.resize;
-      // 绘制图表
-      let option = {
-        title: {
-          text: "访问TOP10",
-        },
-        grid: {
-          // 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
-          left: "3%", // 默认10%，给24就挺合适的。
-          top: 60, // 默认60
-          right: 35, // 默认10%
-          bottom: 60, // 默认60
-          // width: "100%", // grid 组件的宽度。默认自适应。
-          // height: "100%",
-          // containLabel:true, // grid 区域是否包含坐标轴的刻度标签。(如果true的时候，上下左右可以为0了)
-          // show:true, // 是否显示直角坐标系网格。是否显示grid，grid:show后，下面的一些参数生效。
-          // backgroundColor:'#ccac62',
-          // borderColor:"#000",
-        },
-        toolbox: {
-          feature: {
-            // mark: { show: true },
-            // dataView: { show: true, readOnly: false },
-            // magicType: { show: true, type: ['line', 'bar'] },
-            // restore: { show: true },
-            // saveAsImage: { show: false },
-            mydow: {
-              show: true,
-              title: "导出",
-              icon:
-                "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
-              onclick: function() {
-                _this.exoprtant_content();
-              },
-            },
-          },
-        },
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross",
-            label: {
-              backgroundColor: "#6a7985",
-            },
-          },
-        },
-        xAxis: {
-          type: "category",
-          data: b,
-        },
-        yAxis: {
-          type: "value",
-        },
-        series: [
-          {
-            data: a,
-            type: "line",
-            smooth: true,
-            itemStyle: {
-              normal: {
-                color: "#8cd5c2", //改变折线点的颜色
-                lineStyle: {
-                  color: "#409EFF", //改变折线颜色
-                },
-              },
-            },
-          },
-        ],
-      };
-      myChart.setOption(option);
     },
   },
 };

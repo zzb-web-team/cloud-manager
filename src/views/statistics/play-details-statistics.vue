@@ -12,17 +12,23 @@
             <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
-            <el-input v-model="valuePlayUrl" placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <el-input v-show="accelerateType==1" placeholder="请输入直播间ID" style="width:160px;margin-right: 10px;" v-model="valueRoomId" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <el-input v-show="accelerateType==1" placeholder="请输入直播流名称" style="width:160px;margin-right: 10px;" v-model="valueStreamName" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <el-input v-show="accelerateType==0" v-model="valuePlayUrl" placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" @change="onChanges">
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
-            <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <el-input v-show="accelerateType==0" v-model="valueContent" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
             <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="请选择播放区域" :options="hashidSet" ref="cascaderAddr" :show-all-levels="false" v-model="valueRegion" @change="onChanges"></el-cascader>
-            <el-select v-model="valueIsp" placeholder="请选择运营商网络" style="width: 10%;margin-right: 10px;" @change="onChanges">
+            <el-select v-show="accelerateType==0" v-model="valueIsp" placeholder="请选择运营商网络" style="width: 10%;margin-right: 10px;" @change="onChanges">
               <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
             </el-select>                
-            <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
+            <el-date-picker style="margin-right:10px;" v-model="times" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
             <el-button type="primary" @click="reset(0)">重置</el-button>
           </div>
           <div class="device_table">
@@ -31,59 +37,48 @@
             </div>
             <el-row type="flex" class="row_active">
               <el-col :span="24">
-                <el-table :data="tableZb" border max-height="800" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                  <el-table-column label="播放URL" width="250">
-                    <template slot-scope="scope">
-                        <div>{{ scope.row.playurl }}</div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="加速内容名称">
-                      <template slot-scope="scope">
-                          <div>{{ scope.row.urlname }}</div>
-                      </template>
-                  </el-table-column>
-                  <el-table-column label="渠道ID">
-                    <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                            <div>{{ scope.row.channelid }}</div>
-                        </div>
-                    </template>
-                  </el-table-column>
+                <el-table v-show="accelerateType==0" :data="dibbleData" border max-height="800" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table-column prop="playurl" label="播放URL" width="250"></el-table-column>
+                  <el-table-column prop="urlname" label="加速内容名称"></el-table-column>
+                  <el-table-column prop="channelid" label="渠道ID"></el-table-column>
                   <el-table-column label="P2P播放流量">
                     <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                            <div>{{ scope.row.p2pflow | setbytes }}</div>
-                        </div>
+                      <div>{{ scope.row.p2pflow | setbytes }}</div>
                     </template>
                   </el-table-column>
                   <el-table-column label="CDN播放流量">
-                      <template slot-scope="scope">
-                          <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.Cdnflow | setbytes }}</div>
-                          </div>
-                      </template>
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.Cdnflow | setbytes }}</div>
+                    </template>
                   </el-table-column>
-                  <el-table-column label="P2P切换至CDN（次）">
-                      <template slot-scope="scope">
-                          <div>{{ scope.row.P2PSwitchCount }}</div>
-                      </template>
-                  </el-table-column>
-                  <el-table-column label="CDN切换至P2P（次）">
-                      <template slot-scope="scope">
-                          <div>{{ scope.row.CDNSwitchCount }}</div>
-                      </template>
-                  </el-table-column>
-                  <el-table-column label="播放区域（省市）" >
-                      <template slot-scope="scope">
-                          <div>{{ scope.row.region }}</div>
-                      </template>
-                  </el-table-column>
-                  <el-table-column label="播放运营商网络">
-                      <template slot-scope="scope">
-                          <div>{{ scope.row.isp }}</div>
-                      </template>
-                  </el-table-column>
+                  <el-table-column prop="P2PSwitchCount" label="P2P切换至CDN（次）"></el-table-column>
+                  <el-table-column prop="CDNSwitchCount" label="CDN切换至P2P（次）"></el-table-column>
+                  <el-table-column prop="region" label="播放区域（省市）"></el-table-column>
+                  <el-table-column prop="isp" label="播放运营商网络"></el-table-column>
                   <el-table-column label="实际播放时间">
+                      <template slot-scope="scope">
+                          <div>{{ common.formatDays(scope.row.playtime*1000) }}</div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="时间">
+                      <template slot-scope="scope">
+                        <div>{{ common.getTimess(scope.row.fdate * 1000) }}</div>
+                      </template>
+                  </el-table-column>
+                </el-table>
+                <el-table v-show="accelerateType==1" :data="liveData" border max-height="800" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table-column prop="streamName" label="直播流名称"></el-table-column>
+                  <el-table-column prop="livAddr" label="直播流地址" width="250"></el-table-column>
+                  <el-table-column prop="roomId" label="直播间ID"></el-table-column>
+                  <el-table-column prop="channelId" label="渠道ID"></el-table-column>
+                  <el-table-column label="P2P播放流量">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.P2Pflow | setbytes }}</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="region" label="播放区域（省市）"></el-table-column>
+                  <el-table-column prop="isp" label="有效访问数（次）"></el-table-column>
+                  <el-table-column label="平均在线时长">
                       <template slot-scope="scope">
                           <div>{{ common.formatDays(scope.row.playtime*1000) }}</div>
                       </template>
@@ -104,10 +99,16 @@
             <el-input placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" v-model="valueChannelId" @change="onChanges">
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
-            <el-input placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" v-model="valueContent" @change="onChanges">
+            <el-input v-show="accelerateType==1" placeholder="请输入直播间ID" style="width:160px;margin-right: 10px;" v-model="valueRoomId" @change="onChanges">
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
-            <el-input placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" v-model="valuePlayUrl" @change="onChanges">
+            <el-input v-show="accelerateType==1" placeholder="请输入直播流名称" style="width:160px;margin-right: 10px;" v-model="valueStreamName" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <el-input v-show="accelerateType==0" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" v-model="valueContent" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <el-input v-show="accelerateType==0" placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" v-model="valuePlayUrl" @change="onChanges">
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
             </el-input>
             <el-select v-model="exceptionType" style="margin-right: 10px;" placeholder="请选择播放异常类型" @change="onChanges">
@@ -118,7 +119,7 @@
               <el-option label="全部" value="-1"></el-option>
               <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
-            <el-date-picker style="margin-right:10px;" v-model="val3" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
+            <el-date-picker style="margin-right:10px;" v-model="times" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
             <el-button type="primary" @click="reset(1)">重置</el-button>
           </div>
           <div class="device_table">
@@ -127,41 +128,34 @@
             </div>
             <el-row type="flex" class="row_active">
               <el-col :span="24">
-                <el-table :data="tableZb1" border max-height = "800" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                    <el-table-column label="播放异常类型" prop="exceptionType" :formatter="typeFormat"></el-table-column>
-                    <el-table-column label="播放异常原因"  prop="exceptionStatus" :formatter="statusFormat">
-                    </el-table-column>
-                    <el-table-column label="加速内容名称" width="250">
+                <el-table v-show="accelerateType==0" :data="dibbleExceptionData" border max-height = "800" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table-column label="播放异常类型" prop="exceptionType" :formatter="typeFormat"></el-table-column>
+                  <el-table-column label="播放异常原因"  prop="exceptionStatus" :formatter="statusFormat"></el-table-column>
+                  <el-table-column label="加速内容名称" prop="urlname" width="250"></el-table-column>
+                  <el-table-column label="播放URL" prop="playurl" width="300"></el-table-column>
+                  <el-table-column label="渠道ID" prop="channelid"></el-table-column>
+                  <el-table-column label="异常次数" prop="times"></el-table-column>
+                  <el-table-column label="时间">
                     <template slot-scope="scope">
-                      <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.urlname }}</div>
-                      </div>
+                      <div>{{ common.getTimess(scope.row.timereport*1000) }}</div>
                     </template>
-                    </el-table-column>
-                    <el-table-column label="播放URL" width="300">
-                    <template slot-scope="scope">
-                      <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.playurl }}</div>
-                      </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column label="渠道ID" >
-                      <template slot-scope="scope">
-                        <div>{{ scope.row.channelid }}</div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="异常次数">
-                      <template slot-scope="scope">
-                        <div>{{ scope.row.times }}</div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="时间">
-                      <template slot-scope="scope">
-                        <div>{{ common.getTimess(scope.row.timereport*1000) }}</div>
-                      </template>
-                    </el-table-column>
+                  </el-table-column>
                 </el-table>
-                <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :currentPage = "pageNo1" :pagesa="total_cnt1"></fenye>
+                <el-table v-show="accelerateType==1" :data="liveExceptionData" border max-height = "800" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table-column label="播放异常类型" prop="exceptionType" :formatter="typeFormat"></el-table-column>
+                  <el-table-column label="播放异常原因"  prop="exceptionStatus" :formatter="statusFormat"></el-table-column>
+                  <el-table-column label="直播流名称" prop="urlname"></el-table-column>
+                  <el-table-column label="直播流地址" prop="liveAddr"></el-table-column>
+                  <el-table-column label="直播间ID" prop="roomId"></el-table-column>
+                  <el-table-column label="渠道ID" prop="channelid"></el-table-column>
+                  <el-table-column label="异常次数" prop="times"></el-table-column>
+                  <el-table-column label="时间">
+                    <template slot-scope="scope">
+                      <div>{{ common.getTimess(scope.row.timereport*1000) }}</div>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
               </el-col>
             </el-row>
           </div>
@@ -177,7 +171,11 @@ import {
   video_info_statistics,
   video_exception_statistics,
   export_video_info_statistics_file,
-  export_video_exception_statistics_file
+  export_video_exception_statistics_file,
+  live_exception_statistics,
+  live_info_statistics,
+  export_live_exception_statistics_file,
+  export_live_info_statistics_file
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -186,9 +184,6 @@ export default {
   data() {
     return {
       accelerateType: 0,
-      showState: false,
-      rotate: false,
-      searchText: '',
       hashidSets: [
         {
           value: "全部",
@@ -445,30 +440,23 @@ export default {
       valueRegion: "",
       valueIsp: "",
       valueTerminal: "",
+      valueRoomId: "",
+      valueStreamName: "",
       exceptionStatus: "",
       exceptionType: "",
-      shoudzyx: false,
-      showzdyz: false,
-      tableZb: [],
-      tableZb1: [],
+      dibbleData: [],
+      dibbleExceptionData: [],
       activeName: "first",
-      activeName1: "first",
-      val2: [],
-      val3: [],
       timeUnit: 120,
       starttime: "",
       endtime: "",
-      dataFlowArray: [], //图1
-      timeArray: [], //图1
       pageSize: 10, //每页数量
       pageNo: 1, //当前页码
-      pageSize1: 10, //每页数量
-      pageNo1: 1, //当前页码
       total_cnt: 1, //数据总量
       total_cnt1: 1, //数据总量
-      chanid: "",
-      flowunit: "",
-      timeArrayZb: [],
+      liveData: [],
+      liveExceptionData: [],
+      times: []
     };
   },
   filters: {
@@ -493,11 +481,8 @@ export default {
     let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.starttime = times;
     this.endtime = Date.parse(new Date()) / 1000;
-    this.val2[0] = this.common.getTimess(this.starttime*1000);
-    this.val2[1] = this.common.getTimess(this.endtime*1000);
-    this.val3[0] = this.common.getTimess(this.starttime*1000);
-    this.val3[1] = this.common.getTimess(this.endtime*1000);
-    console.log(this.val2)
+    this.times[0] = this.common.getTimess(this.starttime*1000);
+    this.times[1] = this.common.getTimess(this.endtime*1000);
     this.videoInfoStatistics();
   },
   beforeDestroy() {
@@ -505,11 +490,13 @@ export default {
   methods: {
     changeType(v){
       this.accelerateType = v;
+      this.activeName = 'first';
       if(v==0){
-        this.tablecdn = [];
+        this.dibbleData = [];
         this.videoInfoStatistics();
       }else{
-
+        this.liveData = [];
+        this.liveInfoStatistics();
       }
     },
     ternimalFormatter (row, column) {
@@ -557,71 +544,59 @@ export default {
         return 'P2P播放超时';
       }
     },
-    getShow() {
-      this.showState = !this.showState;
-      this.rotate = !this.rotate;
-    },
-    //搜索
-    search(){
-      this.pageNo = 1;
-      this.pageSize = 10;
-      this.videoInfoStatistics();
-    },
-    search1(){
-      this.pageNo1 = 1;
-      this.pageSize1 = 10;
-      this.videoExceptionStatistics();
-    },
     //获取播放信息统计每页数量
     handleSizeChange(pagetol) {
-      this.pageSize = pagetol;
-      this.videoInfoStatistics();
     },
     //获取页码
     handleCurrentChange(pages) {
       this.pageNo = pages;
-      this.videoInfoStatistics();
-    },
-    //获取加速流量每页数量
-    handleSizeChange1(pagetol) {
-      this.pagesize1 = pagetol;
-      this.videoExceptionStatistics();
-    },
-    //获取页码
-    handleCurrentChange1(pages) {
-      this.pageNo1 = pages;
-      this.videoExceptionStatistics();
+      if(this.accelerateType == 0){
+        if(this.activeName == 'first'){
+          this.videoInfoStatistics();
+        }else{
+          this.videoExceptionStatistics();
+        }
+      }else{
+        if(this.activeName == 'first'){
+          this.liveInfoStatistics();
+        }else{
+          this.liveExceptionStatistics();
+        }
+      }
     },
     //自定义时间
     gettimes(cal) {
       if(cal == 0){
-        this.starttime = this.val2 ? dateToMs(this.val2[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
-        this.endtime = this.val2 ? dateToMs(this.val2[1]) + (24*60*60-1) : Date.parse(new Date()) / 1000;
+        this.starttime = this.times ? dateToMs(this.times[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
+        this.endtime = this.times ? dateToMs(this.times[1]) + (24*60*60-1) : Date.parse(new Date()) / 1000;
       }else{
-        this.starttime = this.val3 ? dateToMs(this.val3[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
-        this.endtime = this.val3 ? dateToMs(this.val3[1]) + (24*60*60-1) : Date.parse(new Date()) / 1000;
+        this.starttime = this.times ? dateToMs(this.times[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
+        this.endtime = this.times ? dateToMs(this.times[1]) + (24*60*60-1) : Date.parse(new Date()) / 1000;
       }
       if (this.endtime - this.starttime <= 86400) {
         this.timeUnit = 60 * 2;
       } else if (this.endtime - this.starttime > 86400) {
         this.timeUnit = 60 * 24;
       }
-      if(this.activeName == 'first'){
-        this.pageNo = 1;
-        this.videoInfoStatistics();
-      }else{
-        this.pageNo = 1;
-        this.videoExceptionStatistics();
-      }
-      
+      this.onChanges();
     },
     onChanges() {
-      if(this.activeName == 'first'){
-        this.pageNo = 1;
-        this.videoInfoStatistics();
+      if(this.accelerateType == 0){
+        if(this.activeName == 'first'){
+          this.pageNo = 1;
+          this.videoInfoStatistics();
+        }else{
+          this.pageNo = 1;
+          this.videoExceptionStatistics();
+        }
       }else{
-        this.pageNo1 = 1;
-        this.videoExceptionStatistics();
+        if(this.activeName == 'first'){
+          this.pageNo = 1;
+          this.liveInfoStatistics();
+        }else{
+          this.pageNo = 1;
+          this.liveExceptionStatistics();
+        }
       }
     },
     //重置
@@ -632,23 +607,30 @@ export default {
       this.valuePlayUrl = "";
       this.valueChannelId = "";
       this.valueContent = "";
-      if(param == 0){
-        this.val2 = [];
-        this.valueIsp = "";
-        this.valueRegion = "";
-        this.pageSize = 10;
-        this.pageNo = 1;
-        this.videoInfoStatistics();
+      this.valueRoomId = "";
+      this.valueStreamName = "";
+      this.times = [];
+      this.valueIsp = "";
+      this.valueRegion = "";
+      this.pageNo = 1;
+      this.total_cnt = 0;
+      this.exceptionStatus = "";
+      this.exceptionType = "";
+      if(this.accelerateType == 0){
+        if(param == 0){
+          this.videoInfoStatistics();
+        }else{
+          this.videoExceptionStatistics();
+        }
       }else{
-        this.exceptionStatus = "";
-        this.exceptionType = "";
-        this.val3=[];
-        this.pageSize1 = 10;
-        this.pageNo1 = 1;
-        this.videoExceptionStatistics();
+        if(param == 0){
+          this.liveInfoStatistics();
+        }else{
+          this.liveExceptionStatistics();
+        }
       }
     },
-    //播放信息统计
+    //点播播放信息统计
     videoInfoStatistics() {
       let params = new Object();
       params.pageNo = this.pageNo - 1;
@@ -690,18 +672,18 @@ export default {
 
       video_info_statistics(params)
         .then(res => {
-            this.tableZb = res.data.data;
+            this.dibbleData = res.data.data;
             this.total_cnt = res.data.totalCnt;
         })
         .catch(error => {
           console.log(error);
         });
     },
-
+    //点播播放异常统计
     videoExceptionStatistics(){
       let params = new Object();
-      params.pageNo = this.pageNo1 - 1;
-      params.pageSize = this.pageSize1;
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = this.pageSize;
       params.startTs = this.starttime;
       params.endTs = this.endtime;
       if (this.valueContent) {
@@ -738,14 +720,103 @@ export default {
 
       video_exception_statistics(params)
         .then(res => {
-            this.tableZb1 = res.data.data;
-            this.total_cnt1 = res.data.totalCnt;
+            this.dibbleExceptionData = res.data.data;
+            this.total_cnt = res.data.totalCnt;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //直播播放信息统计
+    liveInfoStatistics() {
+      let params = new Object();
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = this.pageSize;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      if (this.valueChannelId !== "") {
+        params.channelId = this.valueChannelId;
+      } else {
+        params.channelId = "*";
+      }
+      if (this.valueRoomId !== "") {
+        params.roomId = this.valueRoomId;
+      } else {
+        params.roomId = "*";
+      }
+      if (this.valueStreamName !== "") {
+        params.streamName = this.valueStreamName;
+      } else {
+        params.streamName = "*";
+      }
+      if (this.valueRegion[1]) {
+        params.region = this.valueRegion[1];
+      } else {
+        params.region = "*";
+      }
+
+      params.timeUnit = 60;
+      this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+
+      live_info_statistics(params)
+        .then(res => {
+            this.liveData = res.data.data.data;
+            this.total_cnt = res.data.totalCnt;
         })
         .catch(error => {
           console.log(error);
         });
     },
 
+    //直播播放异常统计
+    liveExceptionStatistics() {
+      let params = new Object();
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = this.pageSize;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      if (this.valueChannelId !== "") {
+        params.channelId = this.valueChannelId;
+      } else {
+        params.channelId = "*";
+      }
+      if (this.valueRoomId) {
+        params.roomId = this.valueRoomId;
+      } else {
+        params.roomId = "*";
+      }
+      if (this.valueStreamName) {
+        params.streamName = this.valueStreamName;
+      } else {
+        params.streamName = "*";
+      }
+      if (this.exceptionType != "") {
+        params.exceptionType = parseInt(this.exceptionType);
+      } else {
+        params.exceptionType = -1;
+      }
+      if (this.exceptionStatus != "") {
+        params.exceptionStatus = parseInt(this.exceptionStatus);
+      } else {
+        params.exceptionStatus = -1;
+      }
+      params.timeUnit = 60;
+      this.common.timeUnitActive(
+        this.starttime,
+        this.endtime
+      );
+      live_exception_statistics(params)
+        .then(res => {
+            this.liveExceptionData = res.data.data.data;
+            this.total_cnt = res.data.totalCnt;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     //导出播放信息统计
     toExportVideoInfoExcel(){
       let params = new Object();
@@ -850,26 +921,38 @@ export default {
     //选项卡
     handleClick(tab, event) {
       this.valuePlayUrl = "";
-      this.valueDomain = "";
-      this.valueContent = "";
       this.valueChannelId = "";
-      this.val2= [];
-      this.val3= [];
+      this.valueContent = "";
+      this.valueRoomId = "";
+      this.valueStreamName = "";
+      this.times = [];
+      this.valueIsp = "";
+      this.valueRegion = "";
       this.pageNo = 1;
+      this.total_cnt = 0;
+      this.exceptionStatus = "";
+      this.exceptionType = "";
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.starttime = times;
       this.endtime = Date.parse(new Date()) / 1000;
       if (tab.index == 0) {
-        this.val2[0] = this.common.getTimess(this.starttime*1000);
-        this.val2[1] = this.common.getTimess(this.endtime*1000);
-        this.videoInfoStatistics();
+        this.times[0] = this.common.getTimess(this.starttime*1000);
+        this.times[1] = this.common.getTimess(this.endtime*1000);
+        if(this.accelerateType == 0){
+          this.videoInfoStatistics();
+        }else{
+          this.liveInfoStatistics()
+        }
       } else if (tab.index == 1) {
-        this.val3[0] = this.common.getTimess(this.starttime*1000);
-        this.val3[1] = this.common.getTimess(this.endtime*1000);
-        this.videoExceptionStatistics();
+        this.times[0] = this.common.getTimess(this.starttime*1000);
+        this.times[1] = this.common.getTimess(this.endtime*1000);
+        if(this.accelerateType == 0){
+          this.videoExceptionStatistics();
+        }else{
+          this.liveExceptionStatistics();
+        }
       }
     },
-
     // 表头样式设置
     headClass() {
       return "text-align: center; background: #FDFBFB; font-weight: 500; color: #333";
@@ -878,144 +961,8 @@ export default {
     rowClass() {
       return "text-align: center;";
     },
-
   },
 };
 </script>
-
-<style lang="scss">
-.myself-container {
-  width: 100%;
-  //min-width: 1600px;
-
-  .device_form {
-    width: auto;
-    height: auto;
-    margin-top: 20px;
-    background: #ffffff;
-    padding: 15px 30px;
-    box-sizing: border-box;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 2px;
-
-    .bottom {
-      margin-top: 20px;
-    }
-
-    .el-form-item__label {
-      white-space: nowrap;
-    }
-
-    .el-form-item {
-      margin-bottom: 0px;
-      margin-left: 10px;
-    }
-
-    .row_activess {
-      margin-top: 20px;
-      display: flex;
-      justify-content: flex-start;
-    }
-
-    .div_show {
-      width: auto;
-      display: flex;
-      height: 40px;
-      justify-content: center;
-      align-items: center;
-      color: #409eff;
-      cursor: pointer;
-      margin-left: 20px;
-    }
-  }
-
-  .devide_table {
-    padding: 35px;
-    height: auto;
-    margin-top: 20px;
-    background: #ffffff;
-    border-radius: 2px;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 2px;
-
-    .el-table td,
-    .el-table th {
-      padding: 6px 0px;
-    }
-  }
-
-  .devide_pageNation {
-    width: 100%;
-    height: auto;
-    // overflow: hidden;
-    margin-top: 20px;
-
-    .devide_pageNation_active {
-      float: right;
-    }
-  }
-}
-
-.addaccout {
-  .el-form--label-left .el-form-item__label {
-    text-align: right;
-    width: 90px;
-  }
-
-  .el-form-item__error {
-    margin-left: 80px;
-  }
-}
-.user_item {
-  width: auto;
-  height: 130px;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-  border-radius: 2px;
-  margin-top: 20px;
-
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: left;
-  padding: 36px 71px;
-
-  .item_left {
-    width: 49%;
-    height: 58px;
-    border-right: 1px solid #e6e9ed;
-
-    .item_text {
-      font-size: 14px;
-      color: #333333;
-    }
-
-    .item_count {
-      line-height: 55px;
-
-      span {
-        font-size: 34px;
-      }
-    }
-  }
-
-  .item_right {
-    height: 48px;
-    width: 49%;
-    padding-left: 40px;
-
-    .item_text {
-      font-size: 14px;
-      color: #333333;
-    }
-
-    .item_count {
-      line-height: 55px;
-
-      span {
-        font-size: 34px;
-      }
-    }
-  }
-}
+<style lang="scss" scoped>
 </style>
