@@ -1,213 +1,172 @@
 <template>
   <section class="myself-container content">
-    <div class="top_title">播放详情统计</div>
-    <div class="user-title" style="display: flex;flex-flow: column;">
-      <div class="resources_con">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="播放信息统计" name="first">
-                <div style="display: flex;flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
-                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <el-input v-model="valuePlayUrl" placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" @change="onChanges">
-                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
-                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="请选择播放区域" :options="hashidSet" ref="cascaderAddr" :show-all-levels="false" v-model="valueRegion" @change="onChanges"></el-cascader>
-                <el-select v-model="valueIsp" placeholder="请选择运营商网络" style="width: 10%;margin-right: 10px;" @change="onChanges">
-                  <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-                </el-select>                
-                <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
-                <el-button type="primary" @click="reset(0)">重置</el-button>
-                </div>
-                <div class="devide_table">
-                  <div style="display: flex;justify-content: flex-end;margin-right: 6px;">
-                    <el-button type="primary" @click="toExportVideoInfoExcel">导出</el-button>
-                  </div>
-                <el-row type="flex" class="row_active">
-                    <el-col :span="24">
-                    <el-table :data="tableZb" border max-height="800" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                        <el-table-column label="播放URL" width="250">
-                        <template slot-scope="scope">
-                            <div>{{ scope.row.playurl }}</div>
-                        </template>
-                        </el-table-column>
-
-                        <el-table-column label="加速内容名称">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.urlname }}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="渠道ID">
-                        <template slot-scope="scope">
-                            <div style="display: flex;justify-content: center;">
-                                <div>{{ scope.row.channelid }}</div>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column label="P2P播放流量">
-                        <template slot-scope="scope">
-                            <div style="display: flex;justify-content: center;">
-                                <div>{{ scope.row.p2pflow | setbytes }}</div>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column label="CDN播放流量">
-                            <template slot-scope="scope">
-                                <div style="display: flex;justify-content: center;">
-                                <div>{{ scope.row.Cdnflow | setbytes }}</div>
-                                </div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="P2P切换至CDN（次）">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.P2PSwitchCount }}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="CDN切换至P2P（次）">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.CDNSwitchCount }}</div>
-                            </template>
-                        </el-table-column>
-                        <!-- <el-table-column label="播放终端IP列表" width="300">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.SDKIPList }}</div>
-                            </template>
-                        </el-table-column> -->
-                        <el-table-column label="播放区域（省市）" >
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.region }}</div>
-                            </template>
-                        </el-table-column>
-                        <!-- <el-table-column label="播放终端类型" prop="terminalname" :formatter="ternimalFormatter">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.terminalname }}</div>
-                            </template>
-                        </el-table-column> -->
-                        <el-table-column label="播放运营商网络">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.isp }}</div>
-                            </template>
-                        </el-table-column>
-                        <!-- <el-table-column label="当前加速通道" prop="curAccelState" :formatter="curAccelFormatter">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.curAccelState }}</div>
-                            </template>
-                        </el-table-column> -->
-                        <el-table-column label="实际播放时间">
-                            <template slot-scope="scope">
-                                <div>{{ common.formatDays(scope.row.playtime*1000) }}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="时间">
-                            <template slot-scope="scope">
-                              <div>{{ common.getTimess(scope.row.fdate * 1000) }}</div>
-                            </template>
-                        </el-table-column>
-                        <!-- <el-table-column label="播放开始-结束时间">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.playstartTime | settimes }}</div>
-                                <div>{{ scope.row.playendTime | settimes }}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="统计时间">
-                            <template slot-scope="scope">
-                                <div>{{ scope.row.startTime | settimes }}</div>
-                                <div>{{ scope.row.endTime | settimes }}</div>
-                            </template>
-                        </el-table-column> -->
-                    </el-table>
-                    <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
-                    </el-col>
-                </el-row>
-                </div>
-            </el-tab-pane>
-            <el-tab-pane label="播放异常统计" name="second">
-                <div class="device_form">
-                    <el-form ref="form">
-                        <el-row type="flex">
-                          <el-input placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" v-model="valueChannelId" @change="onChanges">
-                              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                          </el-input>
-                          <el-input placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" v-model="valueContent" @change="onChanges">
-                              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                          </el-input>
-                          <el-input placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" v-model="valuePlayUrl" @change="onChanges">
-                              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                          </el-input>
-                          <el-select v-model="exceptionType" style="margin-right: 10px;" placeholder="请选择播放异常类型" @change="onChanges">
-                            <el-option label="全部" value="-1"></el-option>
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                          </el-select>
-                          <el-select v-model="exceptionStatus" style="margin-right: 10px;" placeholder="请选择播放异常原因" @change="onChanges">
-                            <el-option label="全部" value="-1"></el-option>
-                            <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                          </el-select>
-                          <el-date-picker style="margin-right:10px;" v-model="val3" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
-                          <el-button type="primary" @click="reset(1)">重置</el-button>
-                        </el-row>
-                    </el-form>
-                </div>
-                <div class="devide_table">
-                <div style="display: flex;justify-content: flex-end;margin-right: 6px;">
-                  <el-button type="primary" @click="toExportVideoExceptionExcel">导出</el-button>
-                </div>
-                <el-row type="flex" class="row_active">
-                    <el-col :span="24">
-                    <el-table :data="tableZb1" border max-height = "800" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                        <el-table-column label="播放异常类型" prop="exceptionType" :formatter="typeFormat">
-                        <!-- <template slot-scope="scope">
-                            <div>{{ scope.row.exceptionType }}</div>
-                        </template> -->
-                        </el-table-column>
-
-                        <el-table-column label="播放异常原因"  prop="exceptionStatus" :formatter="statusFormat">
-                        <!-- <template slot-scope="scope">
-                            <div>{{ scope.row.exceptionStatus }}</div>
-                        </template> -->
-                        </el-table-column>
-                        <el-table-column label="加速内容名称" width="250">
-                        <template slot-scope="scope">
-                            <div style="display: flex;justify-content: center;">
-                                <div>{{ scope.row.urlname }}</div>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column label="播放URL" width="300">
-                        <template slot-scope="scope">
-                            <div style="display: flex;justify-content: center;">
-                                <div>{{ scope.row.playurl }}</div>
-                            </div>
-                        </template>
-                        </el-table-column>
-                        <el-table-column label="渠道ID" >
-                            <template slot-scope="scope">
-                                <div style="display: flex;justify-content: center;">
-                                <div>{{ scope.row.channelid }}</div>
-                                </div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="异常次数">
-                            <template slot-scope="scope">
-                              <div>{{ scope.row.times }}</div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="时间">
-                            <template slot-scope="scope">
-                              <div>{{ common.getTimess(scope.row.timereport*1000) }}</div>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :currentPage = "pageNo1" :pagesa="total_cnt1"></fenye>
-                    </el-col>
-                </el-row>
-                </div>
-            </el-tab-pane>
-        </el-tabs>
+    <div class="top_title">播放详情统计
+      <div class="wrapperStyle">
+        <div class="itemStyle" :class="{ isSelected: accelerateType == 0 }" @click="changeType(0)">点播加速</div>
+        <div class="itemStyle" :class="{ isSelected: accelerateType == 1}" @click="changeType(1)">直播加速</div>
       </div>
     </div>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="播放信息统计" name="first">
+          <div class="seach">
+            <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <el-input v-model="valuePlayUrl" placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="请选择播放区域" :options="hashidSet" ref="cascaderAddr" :show-all-levels="false" v-model="valueRegion" @change="onChanges"></el-cascader>
+            <el-select v-model="valueIsp" placeholder="请选择运营商网络" style="width: 10%;margin-right: 10px;" @change="onChanges">
+              <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select>                
+            <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
+            <el-button type="primary" @click="reset(0)">重置</el-button>
+          </div>
+          <div class="device_table">
+            <div class="operating">
+              <el-button style="margin-left: auto;" type="primary" @click="toExportVideoInfoExcel">导出</el-button>
+            </div>
+            <el-row type="flex" class="row_active">
+              <el-col :span="24">
+                <el-table :data="tableZb" border max-height="800" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table-column label="播放URL" width="250">
+                    <template slot-scope="scope">
+                        <div>{{ scope.row.playurl }}</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="加速内容名称">
+                      <template slot-scope="scope">
+                          <div>{{ scope.row.urlname }}</div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="渠道ID">
+                    <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
+                            <div>{{ scope.row.channelid }}</div>
+                        </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="P2P播放流量">
+                    <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
+                            <div>{{ scope.row.p2pflow | setbytes }}</div>
+                        </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="CDN播放流量">
+                      <template slot-scope="scope">
+                          <div style="display: flex;justify-content: center;">
+                          <div>{{ scope.row.Cdnflow | setbytes }}</div>
+                          </div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="P2P切换至CDN（次）">
+                      <template slot-scope="scope">
+                          <div>{{ scope.row.P2PSwitchCount }}</div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="CDN切换至P2P（次）">
+                      <template slot-scope="scope">
+                          <div>{{ scope.row.CDNSwitchCount }}</div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="播放区域（省市）" >
+                      <template slot-scope="scope">
+                          <div>{{ scope.row.region }}</div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="播放运营商网络">
+                      <template slot-scope="scope">
+                          <div>{{ scope.row.isp }}</div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="实际播放时间">
+                      <template slot-scope="scope">
+                          <div>{{ common.formatDays(scope.row.playtime*1000) }}</div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="时间">
+                      <template slot-scope="scope">
+                        <div>{{ common.getTimess(scope.row.fdate * 1000) }}</div>
+                      </template>
+                  </el-table-column>
+                </el-table>
+                <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
+              </el-col>
+            </el-row>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="播放异常统计" name="second">
+          <div class="seach">
+            <el-input placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" v-model="valueChannelId" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <el-input placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" v-model="valueContent" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <el-input placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" v-model="valuePlayUrl" @change="onChanges">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <el-select v-model="exceptionType" style="margin-right: 10px;" placeholder="请选择播放异常类型" @change="onChanges">
+              <el-option label="全部" value="-1"></el-option>
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <el-select v-model="exceptionStatus" style="margin-right: 10px;" placeholder="请选择播放异常原因" @change="onChanges">
+              <el-option label="全部" value="-1"></el-option>
+              <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <el-date-picker style="margin-right:10px;" v-model="val3" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
+            <el-button type="primary" @click="reset(1)">重置</el-button>
+          </div>
+          <div class="device_table">
+            <div class="operating">
+              <el-button style="margin-left: auto;" type="primary" @click="toExportVideoExceptionExcel">导出</el-button>
+            </div>
+            <el-row type="flex" class="row_active">
+              <el-col :span="24">
+                <el-table :data="tableZb1" border max-height = "800" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table-column label="播放异常类型" prop="exceptionType" :formatter="typeFormat"></el-table-column>
+                    <el-table-column label="播放异常原因"  prop="exceptionStatus" :formatter="statusFormat">
+                    </el-table-column>
+                    <el-table-column label="加速内容名称" width="250">
+                    <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.urlname }}</div>
+                      </div>
+                    </template>
+                    </el-table-column>
+                    <el-table-column label="播放URL" width="300">
+                    <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.playurl }}</div>
+                      </div>
+                    </template>
+                    </el-table-column>
+                    <el-table-column label="渠道ID" >
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.channelid }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="异常次数">
+                      <template slot-scope="scope">
+                        <div>{{ scope.row.times }}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="时间">
+                      <template slot-scope="scope">
+                        <div>{{ common.getTimess(scope.row.timereport*1000) }}</div>
+                      </template>
+                    </el-table-column>
+                </el-table>
+                <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :currentPage = "pageNo1" :pagesa="total_cnt1"></fenye>
+              </el-col>
+            </el-row>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
   </section>
 </template>
 
@@ -226,6 +185,7 @@ import common from "../../comm/js/util";
 export default {
   data() {
     return {
+      accelerateType: 0,
       showState: false,
       rotate: false,
       searchText: '',
@@ -543,6 +503,15 @@ export default {
   beforeDestroy() {
   },
   methods: {
+    changeType(v){
+      this.accelerateType = v;
+      if(v==0){
+        this.tablecdn = [];
+        this.videoInfoStatistics();
+      }else{
+
+      }
+    },
     ternimalFormatter (row, column) {
       if(row.terminalname == 0){
         return 'Android';

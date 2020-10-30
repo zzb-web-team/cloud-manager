@@ -1,63 +1,57 @@
 <template>
   <div class="content">
-    <section class="myself-container">
-      <div class="top_title">用户管理</div>
-      <div class="device_form">
-        <el-form ref="form" :model="form">
-          <el-row type="flex">
-            <!-- <div class="search-con">
-                        <i class="el-icon-search" @click="searchInfo" style="color:#606266"></i>
-                        <el-input class="search-input" v-model="searchText" maxlength="70" placeholder="用户ID,账号,手机号" @keyup.enter.native="searchInfo"></el-input>
-                    </div> -->
-            <el-input placeholder="用户ID,账号,手机号" style="width:200px;margin-right: 10px;" v-model="searchText" class="input-with-select" @keyup.enter.native="searchInfo" maxlength="70">
-              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            </el-input>
-            <!-- <div @click="getShow()" class="div_show" style="color:#606266">
-              筛选
-              <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
-            </div>
-          </el-row>
-          <el-row type="flex" class="row_activess" v-show="showState"> -->
-            <!-- <el-form-item label="状态" style="display: flex;"> -->
-              <el-select v-model="value" placeholder="请选择状态" @change="onChangeTab" style="width:200px;margin-right: 10px;">
-                <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            <!-- </el-form-item> -->
-            <!-- <el-form-item label="注册时间" style="display: flex;"> -->
-              <el-date-picker style="margin-right:10px;" v-model="valueTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left"></el-date-picker>
-            <!-- </el-form-item> -->
-            <!-- <el-form-item>
-              <el-button type="primary" @click="searchInfo">确定</el-button>
-            </el-form-item>
-            <el-form-item> -->
-              <el-button type="primary" @click="reset()">重置</el-button>
-              <el-button style="margin-left: auto;" type="primary" @click="toexportExcel">导出</el-button>
-            <!-- </el-form-item> -->
-          </el-row>
-        </el-form>
-      </div>
-      <div class="devide_table">
-        
-        <el-row type="flex" class="row_active">
-          <el-col :span="24">
-            <tableBarActive1 id="rebateSetTable" ref="table1" tooltip-effect="dark" @tableSortChange='tableSortChange' :tableData="tableData" :operatingStatus="operatingStatus" @handleSelectionChange="handleSelectionChange" :clomnSelection="clomnSelection" :rowHeader="rowHeader" :tableOption="tableOption" @disable="disable" @toChange="toChange"></tableBarActive1>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="devide_pageNation" style="display: flex;justify-content: space-between;">
+    <div class="top_title">用户管理</div>
+    <div class="seach">
+      <el-form ref="form" :model="form">
         <el-row type="flex">
-          <el-col :span="6" style="display: flex;justify-content: justify-content: flex-start;">
-            <el-button type="text" size="small" @click="allOn">启用</el-button>
-            <el-button type="text" size="small" style="margin-left:30px;" @click="allOff">冻结</el-button>
-          </el-col>
+          <!-- <div class="search-con">
+                      <i class="el-icon-search" @click="searchInfo" style="color:#606266"></i>
+                      <el-input class="search-input" v-model="searchText" maxlength="70" placeholder="用户ID,账号,手机号" @keyup.enter.native="searchInfo"></el-input>
+                  </div> -->
+          <el-input placeholder="用户ID,账号,手机号" style="width:200px;margin-right: 10px;" v-model="searchText" class="input-with-select" @keyup.enter.native="searchInfo" maxlength="70">
+            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+          </el-input>
+          <!-- <div @click="getShow()" class="div_show" style="color:#606266">
+            筛选
+            <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
+          </div>
         </el-row>
-        <el-row type="flex">
-          <el-col :span="6">
-            <pageNation :pager="pager" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange"></pageNation>
-          </el-col>
+        <el-row type="flex" class="row_activess" v-show="showState"> -->
+          <!-- <el-form-item label="状态" style="display: flex;"> -->
+            <el-select v-model="value" placeholder="请选择状态" @change="onChangeTab" style="width:200px;margin-right: 10px;">
+              <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          <!-- </el-form-item> -->
+          <!-- <el-form-item label="注册时间" style="display: flex;"> -->
+            <el-date-picker style="margin-right:10px;" v-model="valueTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left"></el-date-picker>
+          <!-- </el-form-item> -->
+          <!-- <el-form-item>
+            <el-button type="primary" @click="searchInfo">确定</el-button>
+          </el-form-item>
+          <el-form-item> -->
+            <el-button type="primary" @click="reset()">重置</el-button>
+            
+          <!-- </el-form-item> -->
         </el-row>
+      </el-form>
+    </div>
+    <div class="device_table">
+      <div class="operating">
+        <el-button style="margin-left: auto;" type="primary" @click="toexportExcel">导出</el-button>
       </div>
-    </section>
+      <el-row type="flex" class="row_active">
+        <el-col :span="24">
+          <tableBarActive1 id="rebateSetTable" ref="table1" tooltip-effect="dark" @tableSortChange='tableSortChange' :tableData="tableData" :operatingStatus="operatingStatus" @handleSelectionChange="handleSelectionChange" :clomnSelection="clomnSelection" :rowHeader="rowHeader" :tableOption="tableOption" @disable="disable" @toChange="toChange"></tableBarActive1>
+        </el-col>
+      </el-row>
+      <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center;">
+        <div>
+          <el-button type="text" size="small" @click="allOn">启用</el-button>
+          <el-button type="text" size="small" style="margin-left:30px;" @click="allOff">冻结</el-button>
+        </div>
+        <pageNation :pager="pager" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange"></pageNation>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -650,106 +644,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.search-con {
-  width: 250px;
-  height: 40px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border-bottom: 1px solid #999999;
-
-  // i {
-  // }
-
-  .search-input {
-    .el-input__inner {
-      border: none;
-      background: none;
-    }
-  }
-}
-
-.myself-container {
-  border-radius: 32px;
-  padding: 50px;
-  text-align: left;
-  background: #fff;
-  .devide_title {
-    width: 100%;
-    height: auto;
-    overflow: hidden;
-    margin-top: 10px;
-    background: #f2f2f2;
-    box-sizing: border-box;
-
-    .el-col {
-      padding: 0px 20px;
-    }
-  }
-  .device_form {
-    width: 100%;
-    height: auto;
-    overflow: hidden;
-    margin-top: 20px;
-    background: #ffffff;
-    padding: 15px 30px;
-    box-sizing: border-box;
-
-    .el-form-item__label {
-      white-space: nowrap;
-    }
-
-    .el-form-item {
-      margin-bottom: 0px;
-      margin-left: 10px;
-    }
-
-    .row_activess {
-      margin-top: 20px;
-      display: flex;
-      justify-content: flex-start;
-    }
-
-    .div_show {
-      width: auto;
-      display: flex;
-      height: 40px;
-      justify-content: center;
-      align-items: center;
-      color: #409eff;
-      cursor: pointer;
-      margin-left: 20px;
-    }
-  }
-
-  .devide_table {
-    width: 100%;
-    height: auto;
-    overflow: hidden;
-    margin-top: 20px;
-
-    .el-table td,
-    .el-table th {
-      padding: 6px 0px;
-    }
-
-    .row_active {
-      margin-top: 10px;
-    }
-  }
-
-  .devide_pageNation {
-    width: 100%;
-    height: auto;
-    overflow: hidden;
-    margin-top: 20px;
-
-    .devide_pageNation_active {
-      float: right;
-    }
-  }
-}
-
 .addaccout {
   .title {
     width: 100%;

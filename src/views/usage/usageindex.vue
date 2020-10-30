@@ -1,206 +1,226 @@
 <template>
-  <section class="myself-container content" @click="closeSel">
-    <div class="top_title">节点流量用量</div>
-    <div class="user-title" style="display: flex;flex-flow: column;">
-      <div class="resources_con">
-        <div
-          style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;"
-        >
-          <el-input
-            v-model="value1Activechanid"
-            placeholder="请输入渠道ID"
-            style="width:160px;margin-right: 10px;"
-            @keyup.enter.native="onChanges"
-          >
-            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-          </el-input>
-          <el-input
-            v-model="valuedomian"
-            placeholder="请输入域名"
-            style="width:160px;margin-right: 10px;"
-            @keyup.enter.native="onChanges"
-          >
-            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-          </el-input>
-          <el-input
-            v-model="value1"
-            placeholder="请输入加速内容名称"
-            style="width:160px;margin-right: 10px;"
-            @keyup.enter.native="onChanges"
-          >
-            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-          </el-input>
-          <el-select
-            v-model="value1acce1"
-            placeholder="全部节点渠道"
-            style="width: 10%;margin-right: 10px;"
-            @change="onChanges"
-          >
-            <el-option label="全部" value="*"></el-option>
-            <el-option
-              v-for="(item, index) in hashidSets"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
+<div>
+  <section class="content" @click="closeSel">
+    <div class="top_title">节点流量用量
+      <div class="wrapperStyle">
+        <div class="itemStyle" :class="{ isSelected: accelerateType == 0 }" @click="changeType(0)">点播加速</div>
+        <div class="itemStyle" :class="{ isSelected: accelerateType == 1}" @click="changeType(1)">直播加速</div>
+      </div>
+    </div>
+    <div class="seach">
+      <el-input
+        v-model="value1Activechanid"
+        placeholder="请输入渠道ID"
+        style="width:160px;margin-right: 10px;"
+        @keyup.enter.native="onChanges"
+      >
+        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+      </el-input>
+      <el-input
+        v-show="accelerateType==1"
+        v-model="value1Activechanid"
+        placeholder="请输入直播间ID"
+        style="width:160px;margin-right: 10px;"
+        @keyup.enter.native="onChanges"
+      >
+        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+      </el-input>
+      <el-input
+        v-show="accelerateType==1"
+        v-model="value1Activechanid"
+        placeholder="请输入直播流名称"
+        style="width:160px;margin-right: 10px;"
+        @keyup.enter.native="onChanges"
+      >
+        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+      </el-input>
+      <el-input
+        v-show="accelerateType==0"
+        v-model="valuedomian"
+        placeholder="请输入域名"
+        style="width:160px;margin-right: 10px;"
+        @keyup.enter.native="onChanges"
+      >
+        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+      </el-input>
+      <el-input
+        v-show="accelerateType==0"
+        v-model="value1"
+        placeholder="请输入加速内容名称"
+        style="width:160px;margin-right: 10px;"
+        @keyup.enter.native="onChanges"
+      >
+        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+      </el-input>
+      <el-select
+        v-model="value1acce1"
+        placeholder="全部节点渠道"
+        style="width: 10%;margin-right: 10px;"
+        @change="onChanges"
+      >
+        <el-option label="全部" value="*"></el-option>
+        <el-option
+          v-for="(item, index) in hashidSets"
+          :key="index"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
 
-          <!-- <el-button-group>
-            <el-button v-show="!shoudzyx" @click="today()" label="one">今天</el-button>
-            <el-button v-show="!shoudzyx" @click="yesterday()" label="two">昨天</el-button>
-            <el-button v-show="!shoudzyx" @click="sevendat()" label="three">近7天</el-button>
-            <el-button v-show="!shoudzyx" @click="thirtyday()" label="four">近30天</el-button>
-            <el-button @click="showzdyx">
-              自定义
-              <i class="el-icon-date"></i>
-            </el-button>
-          </el-button-group> -->
-          <!-- <el-radio-group
-            v-model="radio"
-            size="medium"
-            @change="select_time()"
-            v-show="!showzdy"
-          >
-            <el-radio-button size = "small" label="1">今天</el-radio-button >
-            <el-radio-button size = "small" label="2">昨天</el-radio-button >
-            <el-radio-button size = "small" label="3">近7天</el-radio-button >
-            <el-radio-button size = "small" label="4">近30天</el-radio-button >
-            <el-radio-button size = "small" label="5">自定义</el-radio-button >
-          </el-radio-group>
-          <el-button
-            type="primary"
-            v-show="showzdy"
-              size = "small"
-            style="background:#409EFF;border:#409EFF"
-            @click="setZdy"
-            >自定义</el-button
-          >
-          <el-date-picker
-            v-show="showzdy"
-            style="margin-left:10px;"
-            v-model="val2"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            align="left"
-            @change="gettimes"
-          ></el-date-picker> -->
-          <SelectTime @selectTime="selectTime" :type="'daterange'" />
-          <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button> -->
-        </div>
-        <div class="user_item">
-          <div class="item_left" style="width:100%;border:none;">
-            <div class="item_text" style="text-align:center;">总流量</div>
-            <div class="item_count" style="text-align:center;">
-              <span>{{ totalYl | setbytes }}</span>
-            </div>
+      <!-- <el-button-group>
+        <el-button v-show="!shoudzyx" @click="today()" label="one">今天</el-button>
+        <el-button v-show="!shoudzyx" @click="yesterday()" label="two">昨天</el-button>
+        <el-button v-show="!shoudzyx" @click="sevendat()" label="three">近7天</el-button>
+        <el-button v-show="!shoudzyx" @click="thirtyday()" label="four">近30天</el-button>
+        <el-button @click="showzdyx">
+          自定义
+          <i class="el-icon-date"></i>
+        </el-button>
+      </el-button-group> -->
+      <!-- <el-radio-group
+        v-model="radio"
+        size="medium"
+        @change="select_time()"
+        v-show="!showzdy"
+      >
+        <el-radio-button size = "small" label="1">今天</el-radio-button >
+        <el-radio-button size = "small" label="2">昨天</el-radio-button >
+        <el-radio-button size = "small" label="3">近7天</el-radio-button >
+        <el-radio-button size = "small" label="4">近30天</el-radio-button >
+        <el-radio-button size = "small" label="5">自定义</el-radio-button >
+      </el-radio-group>
+      <el-button
+        type="primary"
+        v-show="showzdy"
+          size = "small"
+        style="background:#409EFF;border:#409EFF"
+        @click="setZdy"
+        >自定义</el-button
+      >
+      <el-date-picker
+        v-show="showzdy"
+        style="margin-left:10px;"
+        v-model="val2"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        align="left"
+        @change="gettimes"
+      ></el-date-picker> -->
+      <SelectTime @selectTime="selectTime" :type="'daterange'" />
+      <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button> -->
+    </div>
+    <div class="device_table" style="display: flex; flex-direction: row; flex-wrap: wrap;">
+      <div class="user_item" style="margin-right: 100px;">
+        <div class="item_left" style="margin-right: 30px;">
+          <div class="item_text" style="text-align:center;">总流量</div>
+          <div class="item_count" style="text-align:center;">
+            <span>{{ totalYl | setbytes }}</span>
           </div>
         </div>
-        <div class="device_form">
-          <div id="myChartMap" :style="{ height: '607px' }"></div>
-        </div>
-        <div
-          class="device_form"
-          style="display: flex;justify-content: flex-start;position:relative;overflow:initial;"
-        >
-          <div
-            style="width: 150px;height: 40px;border: 1px solid #C0C4CC;color: #000;text-align:center;line-height:40px;margin-right:30px;border-radius: 2px;"
-          >用户对比</div>
-          <!-- <el-select
-						v-model="valuess"
-						filterable
-						placeholder="请选择对比用户"
-						multiple
-						:collapse-tags="true"
-						@change="querychanIds"
-					>
-						<el-option
-							v-for="item in optionssearch"
-							:key="item.value"
-							:label="item.label"
-							:value="item.value"
-						>
-						</el-option>
-          </el-select>-->
-          <!-- <el-button
-						style="margin-left:10px;"
-						type="primary"
-						@click="querychanIds()"
-						>确定</el-button
-					>
-          -->
-          <div
-            v-show="duibi"
-            style="width: 234px;position:absolute;top: -340px;left: 211px;z-index: 100;height: 350px;border-radius: 5px;box-shadow: -1px 5px 10px -3px;"
-            class="shopw"
-            id="shopw"
-          >
+        <img src="../../assets/img/pic.png" /> 
+      </div>
+      <div style="flex: 1; min-width:300px;">
+        <!-- <el-row type="flex" class="row_active">
+          <el-col :span="24" style="text-align:left;font-weight: bold;padding-left: 10px;">资源用量表</el-col>
+        </el-row> -->
+        <el-row type="flex" class="row_active">
+          <el-col :span="23">
             <el-table
-              ref="multipleTable"
-              :data="optionssearch"
-              tooltip-effect="dark"
-              :header-cell-class-name="cellClass"
-              style="width:234px;"
-              height="350"
-              @selection-change="handleSelectionChange"
+              :data="tablecdn"
+              border
+              style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;"
+              :cell-style="rowClass"
+              :header-cell-style="headClass"
             >
-              <el-table-column type="selection" width="30"></el-table-column>
-              <el-table-column align="right" width="200">
-                <template slot="header" slot-scope="scope">
-                  <el-input
-                    v-model="search"
-                    size="mini"
-                    placeholder="输入用户id"
-                    @keyup.enter.native="searchid"
-                  />
+              <el-table-column label="总流量">
+                <template slot-scope="scope">
+                  <div>{{ scope.row.dataFlow | setbytes }}</div>
                 </template>
-                <template slot-scope="scope">{{ scope.row.label }}</template>
+              </el-table-column>
+              <el-table-column label="时间" prop="time" :formatter="timeFormatter">
+                <!-- <template slot-scope="scope">
+                  <div>{{ scope.row.time | settimes }}</div>
+                  <div>{{ scope.row.time | settimes }}</div>
+                </template> -->
               </el-table-column>
             </el-table>
-          </div>
-
-          <el-button type="primary" icon="el-icon-plus" id="sellineName" @click="showduibi">添加对比</el-button>
-        </div>
-
-        <div class="devide_table">
-          <el-row type="flex" class="row_active">
-            <el-col :span="24" style="text-align:left;font-weight: bold;padding-left: 10px;">资源用量表</el-col>
-          </el-row>
-          <el-row type="flex" class="row_active">
-            <el-col :span="24">
-              <el-table
-                :data="tablecdn"
-                border
-                style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;"
-                :cell-style="rowClass"
-                :header-cell-style="headClass"
-              >
-                <el-table-column label="总流量">
-                  <template slot-scope="scope">
-                    <div>{{ scope.row.dataFlow | setbytes }}</div>
-                  </template>
-                </el-table-column>
-                <el-table-column label="时间" prop="time" :formatter="timeFormatter">
-                  <!-- <template slot-scope="scope">
-                    <div>{{ scope.row.time | settimes }}</div>
-                    <div>{{ scope.row.time | settimes }}</div>
-                  </template> -->
-                </el-table-column>
-              </el-table>
-              <fenye
-                style="float:right;margin:10px 0 0 0;"
-                @handleCurrentChange="handleCurrentChange"
-                @handleSizeChange="handleSizeChange"
-                :pagesa="total_cnt"
-                :currentPage="pageNo"
-              ></fenye>
-            </el-col>
-          </el-row>
-        </div>
+            <fenye
+              style="float:right;margin:10px 0 0 0;"
+              @handleCurrentChange="handleCurrentChange"
+              @handleSizeChange="handleSizeChange"
+              :pagesa="total_cnt"
+              :currentPage="pageNo"
+            ></fenye>
+          </el-col>
+        </el-row>
       </div>
     </div>
   </section>
+  <div class="device_form">
+    <div style="display: flex; justify-content: flex-start;">
+        <div
+          style="width: 150px;height: 40px;border: 1px solid #C0C4CC;color: #000;text-align:center;line-height:40px;margin-right:30px;border-radius: 28px;"
+        >用户对比</div>
+        <!-- <el-select
+          v-model="valuess"
+          filterable
+          placeholder="请选择对比用户"
+          multiple
+          :collapse-tags="true"
+          @change="querychanIds"
+        >
+          <el-option
+            v-for="item in optionssearch"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>-->
+        <!-- <el-button
+          style="margin-left:10px;"
+          type="primary"
+          @click="querychanIds()"
+          >确定</el-button
+        >
+        -->
+        <div
+          v-show="duibi"
+          style="width: 234px;position:absolute;top: -340px;left: 211px;z-index: 100;height: 350px;border-radius: 5px;box-shadow: -1px 5px 10px -3px;"
+          class="shopw"
+          id="shopw"
+        >
+          <el-table
+            ref="multipleTable"
+            :data="optionssearch"
+            tooltip-effect="dark"
+            :header-cell-class-name="cellClass"
+            style="width:234px;"
+            height="350"
+            @selection-change="handleSelectionChange"
+          >
+            <el-table-column type="selection" width="30"></el-table-column>
+            <el-table-column align="right" width="200">
+              <template slot="header" slot-scope="scope">
+                <el-input
+                  v-model="search"
+                  size="mini"
+                  placeholder="输入用户id"
+                  @keyup.enter.native="searchid"
+                />
+              </template>
+              <template slot-scope="scope">{{ scope.row.label }}</template>
+            </el-table-column>
+          </el-table>
+        </div>
+
+        <el-button type="primary" icon="el-icon-plus" id="sellineName" @click="showduibi">添加对比</el-button>
+    </div>
+    <div id="myChartMap" :style="{ height: '607px' }"></div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -254,7 +274,7 @@ export default {
       showzdy: false,
       options1: [],
       options1chanid: [],
-
+      accelerateType: 0,
       options3: [],
       options4: [],
       optionsa1: [],
@@ -403,6 +423,16 @@ export default {
     this.drawLine1();
   },
   methods: {
+    changeType(v){
+      this.accelerateType = v;
+      if(v==0){
+        this.tablecdn = [];
+        this.gettable1();
+        this.gettable2();
+      }else{
+
+      }
+    },
     selectTime(val){
       this.starttime = val.starttime;
       this.endtime = val.endtime;
@@ -1136,148 +1166,12 @@ export default {
   position: absolute;
   right: 11px;
 }
-.myself-container {
-  width: 100%;
-  //min-width: 1600px;
 
-  .device_form {
-    width: auto;
-    height: auto;
-    margin-top: 20px;
-    background: #ffffff;
-    padding: 15px 30px;
-    box-sizing: border-box;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 2px;
-
-    .bottom {
-      margin-top: 20px;
-    }
-
-    .el-form-item__label {
-      white-space: nowrap;
-    }
-
-    .el-form-item {
-      margin-bottom: 0px;
-      margin-left: 10px;
-    }
-
-    .row_activess {
-      margin-top: 20px;
-      display: flex;
-      justify-content: flex-start;
-    }
-
-    .div_show {
-      width: auto;
-      display: flex;
-      height: 40px;
-      justify-content: center;
-      align-items: center;
-      color: #409eff;
-      cursor: pointer;
-      margin-left: 20px;
-    }
-    .user_item {
-      width: auto;
-      height: 130px;
-      background: rgba(255, 255, 255, 1);
-      box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-      border-radius: 2px;
-      margin-top: 20px;
-
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      text-align: left;
-      padding: 36px 71px;
-
-      .item_left {
-        width: 49%;
-        height: 58px;
-        border-right: 1px solid #e6e9ed;
-
-        .item_text {
-          font-size: 14px;
-          color: #333333;
-        }
-
-        .item_count {
-          line-height: 55px;
-
-          span {
-            font-size: 34px;
-          }
-        }
-      }
-
-      .item_right {
-        height: 48px;
-        width: 49%;
-        padding-left: 40px;
-
-        .item_text {
-          font-size: 14px;
-          color: #333333;
-        }
-
-        .item_count {
-          line-height: 55px;
-
-          span {
-            font-size: 34px;
-          }
-        }
-      }
-    }
-  }
-
-  .devide_table {
-    padding: 35px;
-    height: auto;
-    margin-top: 20px;
-    background: #ffffff;
-    border-radius: 2px;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 2px;
-
-    .el-table td,
-    .el-table th {
-      padding: 6px 0px;
-    }
-  }
-
-  .devide_pageNation {
-    width: 100%;
-    height: auto;
-    // overflow: hidden;
-    margin-top: 20px;
-
-    .devide_pageNation_active {
-      float: right;
-    }
-  }
-}
-
-.addaccout {
-  .el-form--label-left .el-form-item__label {
-    text-align: right;
-    width: 90px;
-  }
-
-  .el-form-item__error {
-    margin-left: 80px;
-  }
-}
 .user_item {
-  width: auto;
-  height: 130px;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-  border-radius: 2px;
-  margin-top: 20px;
-
+  background: #FDFBFB;
+  width: 500px;
+  height: auto;
+  border-radius: 32px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -1287,35 +1181,27 @@ export default {
   .item_left {
     width: 49%;
     height: 58px;
-    border-right: 1px solid #e6e9ed;
-
     .item_text {
       font-size: 14px;
       color: #333333;
     }
-
     .item_count {
       line-height: 55px;
-
       span {
         font-size: 34px;
       }
     }
   }
-
   .item_right {
     height: 48px;
     width: 49%;
     padding-left: 40px;
-
     .item_text {
       font-size: 14px;
       color: #333333;
     }
-
     .item_count {
       line-height: 55px;
-
       span {
         font-size: 34px;
       }

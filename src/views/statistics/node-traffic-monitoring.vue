@@ -1,205 +1,210 @@
 <template>
-  <section class="myself-container content">
-    <div class="top_title">节点流量监控</div>
-    <div class="user-title" style="display: flex;flex-flow: column;">
-      <div class="resources_con">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="节点流量" name="first" :lazy="true">
-            <div class="statistics" style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-              <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-input v-model="valueDomain" placeholder="请输入域名" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-select v-model="valueChanel" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;" @change="onChanges">
-                <el-option label="全部" value="*"></el-option>
-                <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-              <SelectTime @selectTime="selectTime" :type="'datetimerange'" />
-              <!-- <el-radio-group
-                v-model="radio"
-                size="medium"
-                @change="select_time()"
-                v-show="!showzdy"
-              >
-                <el-radio-button size = "small" label="1">今天</el-radio-button >
-                <el-radio-button size = "small" label="2">昨天</el-radio-button >
-                <el-radio-button size = "small" label="3">近7天</el-radio-button >
-                <el-radio-button size = "small" label="4">近30天</el-radio-button >
-                <el-radio-button size = "small" label="5">自定义</el-radio-button >
-              </el-radio-group>
-              <el-button
-                type="primary"
-                v-show="showzdy"
-                 size = "small"
-                style="background:#409EFF;border:#409EFF"
-                @click="setZdy"
-                >自定义</el-button
-						  >
-              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker> -->
-              <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu()">确定</el-button> -->
-            </div>
-            <div class="device_form" style="margin-top: 0px;">
-              <div id="myChartMap2" :style="{ height: '607px' }"></div>
-            </div>
-            <div class="devide_table">
-              <el-row type="flex" class="row_active">
-                <el-col :span="24">
-                  <el-table :data="tableZb" border max-height="560px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                    <el-table-column label="渠道ID">
-                      <template slot-scope="scope">
-                        <div>{{ scope.row.channelid }}</div>
-                      </template>
-                    </el-table-column>
+  <div>
+    <section class="content">
+      <div class="top_title">节点流量监控
+        <div class="wrapperStyle">
+          <div class="itemStyle" :class="{ isSelected: accelerateType == 0 }" @click="changeType(0)">点播加速</div>
+          <div class="itemStyle" :class="{ isSelected: accelerateType == 1}" @click="changeType(1)">直播加速</div>
+        </div>
+      </div>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="节点流量" name="first" :lazy="true" >
+          <div class="seach">
+            <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-model="valueDomain" placeholder="请输入域名" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-select v-model="valueChanel" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;" @change="onChanges">
+              <el-option label="全部" value="*"></el-option>
+              <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <SelectTime @selectTime="selectTime" :type="'datetimerange'" />
+            <!-- <el-radio-group
+              v-model="radio"
+              size="medium"
+              @change="select_time()"
+              v-show="!showzdy"
+            >
+              <el-radio-button size = "small" label="1">今天</el-radio-button >
+              <el-radio-button size = "small" label="2">昨天</el-radio-button >
+              <el-radio-button size = "small" label="3">近7天</el-radio-button >
+              <el-radio-button size = "small" label="4">近30天</el-radio-button >
+              <el-radio-button size = "small" label="5">自定义</el-radio-button >
+            </el-radio-group>
+            <el-button
+              type="primary"
+              v-show="showzdy"
+                size = "small"
+              style="background:#409EFF;border:#409EFF"
+              @click="setZdy"
+              >自定义</el-button
+            >
+            <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker> -->
+            <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu()">确定</el-button> -->
+          </div>
+          <div class="device_table">
+            <el-row type="flex" class="row_active">
+              <el-col :span="24">
+                <el-table :data="tableZb" border max-height="560px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table-column label="渠道ID">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.channelid }}</div>
+                    </template>
+                  </el-table-column>
 
-                    <el-table-column label="P2P播放流量">
-                      <template slot-scope="scope">
-                        <div>{{ scope.row.p2pflow | setbytes }}</div>
-                      </template>
-                    </el-table-column>
-                    <!-- <el-table-column label="上行回源流量">
-                      <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.upbackflow | setbytes }}</div>
-                        </div>
-                      </template>
-                    </el-table-column> -->
-                    <el-table-column label="下行CDN回源流量">
-                      <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.downcdnflow | setbytes }}</div>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="下行节点回源流量" >
-                      <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.downbackflow | setbytes }}</div>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="统计时间">
-                      <template slot-scope="scope">
-                        <div>{{ scope.row.stime | settimes }}</div>
-                        <div>{{ scope.row.etime | settimes }}</div>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange2" @handleSizeChange="handleSizeChange2" :currentPage = "pageNo2" :pagesa="total_cnt2"></fenye>
-                </el-col>
-              </el-row>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="TOP加速流量" name="second" :lazy="true">
-            <div style="display: flex;align-items: center; flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-              <el-input v-model="valueChannelId1" placeholder="请输入渠道ID" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-input v-model="valueDomain1" placeholder="请输入域名" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-input v-model="valueContent1" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-date-picker style="margin-left:10px;" v-model="val3" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
-              <!-- <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button> -->
-            </div>
-            <div class="devide_table">
+                  <el-table-column label="P2P播放流量">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.p2pflow | setbytes }}</div>
+                    </template>
+                  </el-table-column>
+                  <!-- <el-table-column label="上行回源流量">
+                    <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.upbackflow | setbytes }}</div>
+                      </div>
+                    </template>
+                  </el-table-column> -->
+                  <el-table-column label="下行CDN回源流量">
+                    <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.downcdnflow | setbytes }}</div>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="下行节点回源流量" >
+                    <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.downbackflow | setbytes }}</div>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="统计时间">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.stime | settimes }}</div>
+                      <div>{{ scope.row.etime | settimes }}</div>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange2" @handleSizeChange="handleSizeChange2" :currentPage = "pageNo2" :pagesa="total_cnt2"></fenye>
+              </el-col>
+            </el-row>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="加速排行" name="second" :lazy="true">
+          <div class="seach">
+            <el-input v-model="valueChannelId1" placeholder="请输入渠道ID" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-model="valueDomain1" placeholder="请输入域名" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-model="valueContent1" placeholder="请输入加速内容名称" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-date-picker style="margin-left:10px;" v-model="val3" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
+            <!-- <el-button style="margin-left:10px;" type="primary" @click="search">确定</el-button> -->
+          </div>
+          <div class="device_table">
+            <div v-show="accelerateType == 0" class="operating">
               <el-radio-group 
                 v-model="radioTop"
                 @change="handleClick1">
                 <el-radio-button label="1">TOP加速次数排行</el-radio-button>
                 <el-radio-button label="2">TOP加速流量排行</el-radio-button>
               </el-radio-group>
-              <div style="display: flex;justify-content: flex-end;margin-right: 6px;">
-                <el-button type="primary" @click="toExportExcel">导出</el-button>
-              </div>
-              <el-row v-show="radioTop == 1" type="flex" class="row_active">
-                <el-col :span="24">
-                  <el-table :data="tableTop" border max-height = "530px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                    <el-table-column label="加速内容名称">
-                      <template slot-scope="scope">
-                          <div>{{ scope.row.urlname }}</div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="渠道ID">
-                    <template slot-scope="scope">
-                        <div>{{ scope.row.channelid }}</div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column label="加速域名">
-                    <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.domain }}</div>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column label="加速次数">
-                    <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.accelCnt }}</div>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column label="加速次数占比" >
-                      <template slot-scope="scope">
-                          <div style="display: flex;justify-content: center;">
-                            <div>{{ scope.row.accelCntpercent | percentss }}</div>
-                          </div>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                  <fenye style="float:right;margin:10px 0 20px 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
-                </el-col>
-              </el-row>
-              <el-row v-show="radioTop != 1" type="flex" class="row_active">
-                <el-col :span="24">
-                  <el-table :data="tableTop1" border max-height = "530px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                    <el-table-column label="加速内容名称">
-                      <template slot-scope="scope">
-                        <div>{{ scope.row.urlname }}</div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="渠道ID">
-                      <template slot-scope="scope">
-                        <div>{{ scope.row.channelid }}</div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="加速域名">
-                    <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.domain }}</div>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column label="加速流量">
-                    <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.dataflow | setbytes }}</div>
-                        </div>
-                    </template>
-                    </el-table-column>
-                    <el-table-column label="流量占比" >
-                      <template slot-scope="scope">
-                          <div style="display: flex;justify-content: center;">
-                            <div>{{ scope.row.dataflowpercent | percentss }}</div>
-                          </div>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :currentPage = "pageNo1" :pagesa="total_cnt1"></fenye>
-                </el-col>
-              </el-row>
             </div>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
+            <div style="display: flex;justify-content: flex-end;margin-left: auto;">
+              <el-button type="primary" @click="toExportExcel">导出</el-button>
+            </div>
+            <el-row v-show="radioTop == 1" type="flex" class="row_active">
+              <el-col :span="24">
+                <el-table :data="tableTop" border max-height = "530px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table-column label="加速内容名称">
+                    <template slot-scope="scope">
+                        <div>{{ scope.row.urlname }}</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="渠道ID">
+                  <template slot-scope="scope">
+                      <div>{{ scope.row.channelid }}</div>
+                  </template>
+                  </el-table-column>
+                  <el-table-column label="加速域名">
+                  <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.domain }}</div>
+                      </div>
+                  </template>
+                  </el-table-column>
+                  <el-table-column label="加速次数">
+                  <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.accelCnt }}</div>
+                      </div>
+                  </template>
+                  </el-table-column>
+                  <el-table-column label="加速次数占比" >
+                    <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
+                          <div>{{ scope.row.accelCntpercent | percentss }}</div>
+                        </div>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <fenye style="float:right;margin:10px 0 20px 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
+              </el-col>
+            </el-row>
+            <el-row v-show="radioTop != 1" type="flex" class="row_active">
+              <el-col :span="24">
+                <el-table :data="tableTop1" border max-height = "530px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table-column label="加速内容名称">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.urlname }}</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="渠道ID">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.channelid }}</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="加速域名">
+                  <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.domain }}</div>
+                      </div>
+                  </template>
+                  </el-table-column>
+                  <el-table-column label="加速流量">
+                  <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.dataflow | setbytes }}</div>
+                      </div>
+                  </template>
+                  </el-table-column>
+                  <el-table-column label="流量占比" >
+                    <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
+                          <div>{{ scope.row.dataflowpercent | percentss }}</div>
+                        </div>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :currentPage = "pageNo1" :pagesa="total_cnt1"></fenye>
+              </el-col>
+            </el-row>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </section>
+    <div class="device_form" v-show="activeName=='first'">
+      <div id="myChartMap2" :style="{ height: '650px' }"></div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -223,6 +228,7 @@ import _ from "lodash";
 export default {
   data() {
     return {
+      accelerateType: 0,
       dataAry: [],
       dataAry1: [],
       dataAry2: [],
@@ -373,6 +379,16 @@ export default {
     this.drawLine2();
   },
   methods: {
+    changeType(v){
+      this.accelerateType = v;
+      if(v==0){
+        this.tablecdn = [];
+        this.getNodeTrafficCurve();
+        this.node_traffic_table();
+      }else{
+
+      }
+    },
     selectTime(val){
       this.starttime = val.starttime;
       this.endtime = val.endtime;

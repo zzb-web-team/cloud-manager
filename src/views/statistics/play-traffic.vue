@@ -1,275 +1,279 @@
 <template>
-  <section class="myself-container content">
-    <div class="top_title">播放流量</div>
-    <div class="user-title" style="display: flex;flex-flow: column;">
-      <div class="resources_con">
-        <el-tabs v-model="activeName" @tab-click="handleClick" ref="tabs">
-          <el-tab-pane label="播放流量占比" name="threed" :lazy="true">
-            <div style="display: flex;align-items: center; flex-flow: row; margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-input v-model="value1Activechanidactive" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-input v-model="valuea1" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-select v-model="value1acce1" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
-                <el-option label="全部终端" value="-1"></el-option>
-                <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-              <el-select v-model="valueChanel" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;" @change="onChanges">
-                <el-option label="全部" value="*"></el-option>
-                <el-option v-for="(item, index) in hashidSets1" :key="index" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-              <!-- <el-radio-group
-                v-model="radio"
-                size="medium"
-                @change="select_time()"
-                v-show="!showzdy"
-              >
-                <el-radio-button size = "small" label="1">今天</el-radio-button >
-                <el-radio-button size = "small" label="2">昨天</el-radio-button >
-                <el-radio-button size = "small" label="3">近7天</el-radio-button >
-                <el-radio-button size = "small" label="4">近30天</el-radio-button >
-                <el-radio-button size = "small" label="5">自定义</el-radio-button >
-              </el-radio-group>
-              <el-button
-                type="primary"
-                v-show="showzdy"
-                 size = "small"
-                style="background:#409EFF;border:#409EFF"
-                @click="setZdy"
-                >自定义</el-button
-						  >
-              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker> -->
-              <SelectTime @selectTime="selectTime" :type="'daterange'" />
-              <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button> -->
-            </div>
-            <div class="user_item">
-              <div class="item_left">
-                <div class="item_count" style="text-align:center;">
-                  <span>{{totalp2p |setbytes}}</span>
-                </div>
-                <div class="item_text" style="text-align:center;">P2P播放流量</div>
+  <div>
+    <section class="myself-container content">
+      <div class="top_title">播放流量
+        <div class="wrapperStyle">
+          <div class="itemStyle" :class="{ isSelected: accelerateType == 0 }" @click="changeType(0)">点播加速</div>
+          <div class="itemStyle" :class="{ isSelected: accelerateType == 1}" @click="changeType(1)">直播加速</div>
+        </div>
+      </div>
+      <el-tabs v-model="activeName" @tab-click="handleClick" ref="tabs">
+        <el-tab-pane label="播放流量占比" name="threed" :lazy="true">
+          <div class="seach">
+            <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-model="value1Activechanidactive" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-model="valuea1" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-select v-model="value1acce1" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
+              <el-option label="全部终端" value="-1"></el-option>
+              <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <el-select v-model="valueChanel" placeholder="全部节点渠道" style="width: 10%;margin-right: 10px;" @change="onChanges">
+              <el-option label="全部" value="*"></el-option>
+              <el-option v-for="(item, index) in hashidSets1" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <!-- <el-radio-group
+              v-model="radio"
+              size="medium"
+              @change="select_time()"
+              v-show="!showzdy"
+            >
+              <el-radio-button size = "small" label="1">今天</el-radio-button >
+              <el-radio-button size = "small" label="2">昨天</el-radio-button >
+              <el-radio-button size = "small" label="3">近7天</el-radio-button >
+              <el-radio-button size = "small" label="4">近30天</el-radio-button >
+              <el-radio-button size = "small" label="5">自定义</el-radio-button >
+            </el-radio-group>
+            <el-button
+              type="primary"
+              v-show="showzdy"
+                size = "small"
+              style="background:#409EFF;border:#409EFF"
+              @click="setZdy"
+              >自定义</el-button
+            >
+            <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker> -->
+            <SelectTime @selectTime="selectTime" :type="'daterange'" />
+            <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button> -->
+          </div>
+          <div class="user_item">
+            <div class="item_left">
+              <div class="item_count" style="text-align:center;">
+                <span>{{totalp2p |setbytes}}</span>
               </div>
-              <div class="item_right">
-                <div class="item_count" style="text-align:center;">
-                  <span>{{totalcdn |setbytes}}</span>
-                </div>
-                <div class="item_text" style="text-align:center;">CDN播放流量</div>
-
+              <div class="item_text" style="text-align:center;">P2P播放流量</div>
+            </div>
+            <div class="item_right">
+              <div class="item_count" style="text-align:center;">
+                <span>{{totalcdn |setbytes}}</span>
               </div>
-            </div>
-            <div class="device_form" style>
-              <div id="myChartMap2" :style="{ height: '607px' }"></div>
-            </div>
-            <div class="devide_table">
+              <div class="item_text" style="text-align:center;">CDN播放流量</div>
 
-              <el-row type="flex" class="row_active">
+            </div>
+            <img src="../../assets/img/pic1.png" />
+          </div>
+          <div class="device_table">
+            <el-row type="flex" class="row_active">
+              <el-col :span="24">
+                <el-table :data="tableZb" border max-height="750" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table-column label="加速内容名称">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.urlname }}</div>
+                    </template>
+                  </el-table-column>
+
+                  <el-table-column label="播放URL" width="250">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.playurl }}</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="P2P播放流量（%）">
+                    <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.p2pflow | setbytes }}</div>
+                        <div>({{ scope.row.p2ppercent | percentss }})</div>
+                      </div>
+
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="CDN播放流量（%）">
+                    <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.cdnflow | setbytes }}</div>
+                        <div>({{ scope.row.cdnpercent | percentss }})</div>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column :render-header="renderHeader" label="节点有资源时CDN播放流量（%）" >
+                    <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.cdnactiveflow | setbytes }}</div>
+                        <div>({{ scope.row.cdnactivepercent | percentss }})</div>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column :render-header="renderHeader" label="节点无资源时CDN播放流量（%）">
+                    <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+
+                        <div>{{ scope.row.cdnpassiveflow | setbytes }}</div>
+                        <div>({{ scope.row.cdnpassivepercent | percentss }})</div>
+
+                      </div>
+
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="加速播放次数">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.times }}</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="时间" prop="stime" :formatter="timeFormatter">
+                    <!-- <template slot-scope="scope"> -->
+                      <!-- <div>{{ scope.row.stime | settimes }}</div> -->
+                      <!-- <div>{{ common.getTimess(scope.row.etime * 1000) }}</div>
+                    </template> -->
+                  </el-table-column>
+                </el-table>
+                <fenye style="float:right;margin:10px 0 0 0;" :currentPage="pageNo1" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
+              </el-col>
+            </el-row>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="播放流量分布" name="second" :lazy="true">
+          <div style="display: flex;align-items: center; flex-flow: row; margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+            <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-radio-group
+              v-model="radio"
+              size="medium"
+              @change="select_time()"
+              v-show="!showzdy"
+            >
+              <el-radio-button size = "small" label="1">今天</el-radio-button >
+              <el-radio-button size = "small" label="2">昨天</el-radio-button >
+              <el-radio-button size = "small" label="3">近7天</el-radio-button >
+              <el-radio-button size = "small" label="4">近30天</el-radio-button >
+              <el-radio-button size = "small" label="5">自定义</el-radio-button >
+            </el-radio-group>
+            <el-button
+              type="primary"
+              v-show="showzdy"
+                size = "small"
+              style="background:#409EFF;border:#409EFF"
+              @click="setZdy"
+              >自定义</el-button
+            >
+            <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
+            <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button> -->
+          </div>
+          <div class="device_form">
+            <el-row type="flex" class="row_active">
+              <el-col :span="24" style="text-align:left;font-weight: bold;margin-bottom:30px;">播放流量地域分布</el-col>
+            </el-row>
+            <el-radio-group 
+              v-model="radioPlayFlow"
+              @change="handleClick1">
+              <el-radio-button label="1">P2P播放流量</el-radio-button>
+              <el-radio-button label="2">CDN播放流量</el-radio-button>
+            </el-radio-group>
+            <div id="myChartMap1" :style="{ height: '607px' }"></div>
+          </div>
+          
+          <div class="devide_table">
+            <el-row type="flex" class="row_active">
+              <el-col :span="24" style="text-align:left;font-weight: bold;margin-bottom:20px;">省/市流量统计</el-col>
+            </el-row>
+            <div style="display: flex;flex-direction: row; justify-content: space-between">
+              <div style="width: 30%;">
+                <div v-for="(item, index) in locationCurveList" :key="index" style="display: flex;flex-direction: row;align-items: center;margin-top:8px;">
+                  <span style="width: 15%">{{item.region}}</span>
+                  <p :style="{height:16 + 'px',width: ((radioPlayFlow == 1 ? item.p2p_flow : item.cdn_flow) / locationMax)*70 +'%', backgroundColor: '#297aff', marginRight: '6px'}"></p>
+                  <span style="width: 15%" v-if="radioPlayFlow == 1">{{ item.p2p_flow | setbytes }}</span>
+                  <span style="width: 15%" v-else>{{ item.cdn_flow | setbytes }}</span>
+                </div>
+              </div>
+              <el-row type="flex" class="row_active" style="width: 63%;margin-top: 0;">
                 <el-col :span="24">
-                  <el-table :data="tableZb" border max-height="750" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                    <el-table-column label="加速内容名称">
+                  <el-table :data="locationTableList" border max-height="750" style="margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table-column label="序号">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.urlname }}</div>
+                        <div>{{ scope.row.index }}</div>
                       </template>
                     </el-table-column>
-
-                    <el-table-column label="播放URL" width="250">
+                    <el-table-column label="省市">
                       <template slot-scope="scope">
-                        <div>{{ scope.row.playurl }}</div>
+                        <div>{{ scope.row.region }}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="P2P播放流量（%）">
+                    <el-table-column :label="radioPlayFlow == 1 ? 'P2P播放流量' : 'CDN播放流量'">
                       <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.p2pflow | setbytes }}</div>
-                          <div>({{ scope.row.p2ppercent | percentss }})</div>
-                        </div>
-
+                        <div v-if="radioPlayFlow == 1">{{scope.row.p2p_flow | setbytes}}</div>
+                        <div v-else>{{scope.row.cdn_flow | setbytes}}</div>
                       </template>
                     </el-table-column>
-                    <el-table-column label="CDN播放流量（%）">
+                    <el-table-column label="流量占比">
                       <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.cdnflow | setbytes }}</div>
-                          <div>({{ scope.row.cdnpercent | percentss }})</div>
-                        </div>
+                        <div v-if="radioPlayFlow == 1">{{scope.row.p2pPercent | percentss}}</div>
+                        <div v-else>{{scope.row.cdnPercent | percentss}}</div>
                       </template>
-                    </el-table-column>
-                    <el-table-column :render-header="renderHeader" label="节点有资源时CDN播放流量（%）" >
-                      <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.cdnactiveflow | setbytes }}</div>
-                          <div>({{ scope.row.cdnactivepercent | percentss }})</div>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column :render-header="renderHeader" label="节点无资源时CDN播放流量（%）">
-                      <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-
-                          <div>{{ scope.row.cdnpassiveflow | setbytes }}</div>
-                          <div>({{ scope.row.cdnpassivepercent | percentss }})</div>
-
-                        </div>
-
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="加速播放次数">
-                      <template slot-scope="scope">
-                        <div>{{ scope.row.times }}</div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="时间" prop="stime" :formatter="timeFormatter">
-                      <!-- <template slot-scope="scope"> -->
-                        <!-- <div>{{ scope.row.stime | settimes }}</div> -->
-                        <!-- <div>{{ common.getTimess(scope.row.etime * 1000) }}</div>
-                      </template> -->
                     </el-table-column>
                   </el-table>
-                  <fenye style="float:right;margin:10px 0 0 0;" :currentPage="pageNo1" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
+                  <!-- <fenye style="float:right;margin:10px 0 0 0;" :currentPage="pageNo1" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye> -->
                 </el-col>
               </el-row>
             </div>
-          </el-tab-pane>
-          <el-tab-pane label="播放流量分布" name="second" :lazy="true">
-            <div style="display: flex;align-items: center; flex-flow: row; margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-radio-group
-                v-model="radio"
-                size="medium"
-                @change="select_time()"
-                v-show="!showzdy"
-              >
-                <el-radio-button size = "small" label="1">今天</el-radio-button >
-                <el-radio-button size = "small" label="2">昨天</el-radio-button >
-                <el-radio-button size = "small" label="3">近7天</el-radio-button >
-                <el-radio-button size = "small" label="4">近30天</el-radio-button >
-                <el-radio-button size = "small" label="5">自定义</el-radio-button >
-              </el-radio-group>
-              <el-button
-                type="primary"
-                v-show="showzdy"
-                 size = "small"
-                style="background:#409EFF;border:#409EFF"
-                @click="setZdy"
-                >自定义</el-button
-						  >
-              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
-              <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button> -->
-            </div>
-            <div class="device_form">
-              <el-row type="flex" class="row_active">
-                <el-col :span="24" style="text-align:left;font-weight: bold;margin-bottom:30px;">播放流量地域分布</el-col>
-              </el-row>
-              <el-radio-group 
-                v-model="radioPlayFlow"
-                @change="handleClick1">
-                <el-radio-button label="1">P2P播放流量</el-radio-button>
-                <el-radio-button label="2">CDN播放流量</el-radio-button>
-              </el-radio-group>
-              <div id="myChartMap1" :style="{ height: '607px' }"></div>
-            </div>
-            
-            <div class="devide_table">
-              <el-row type="flex" class="row_active">
-                <el-col :span="24" style="text-align:left;font-weight: bold;margin-bottom:20px;">省/市流量统计</el-col>
-              </el-row>
-              <div style="display: flex;flex-direction: row; justify-content: space-between">
-                <div style="width: 30%;">
-                  <div v-for="(item, index) in locationCurveList" :key="index" style="display: flex;flex-direction: row;align-items: center;margin-top:8px;">
-                    <span style="width: 15%">{{item.region}}</span>
-                    <p :style="{height:16 + 'px',width: ((radioPlayFlow == 1 ? item.p2p_flow : item.cdn_flow) / locationMax)*70 +'%', backgroundColor: '#297aff', marginRight: '6px'}"></p>
-                    <span style="width: 15%" v-if="radioPlayFlow == 1">{{ item.p2p_flow | setbytes }}</span>
-                    <span style="width: 15%" v-else>{{ item.cdn_flow | setbytes }}</span>
-                  </div>
-                </div>
-                <el-row type="flex" class="row_active" style="width: 63%;margin-top: 0;">
-                  <el-col :span="24">
-                    <el-table :data="locationTableList" border max-height="750" style="margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                      <el-table-column label="序号">
-                        <template slot-scope="scope">
-                          <div>{{ scope.row.index }}</div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column label="省市">
-                        <template slot-scope="scope">
-                          <div>{{ scope.row.region }}</div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column :label="radioPlayFlow == 1 ? 'P2P播放流量' : 'CDN播放流量'">
-                        <template slot-scope="scope">
-                          <div v-if="radioPlayFlow == 1">{{scope.row.p2p_flow | setbytes}}</div>
-                          <div v-else>{{scope.row.cdn_flow | setbytes}}</div>
-                        </template>
-                      </el-table-column>
-                      <el-table-column label="流量占比">
-                        <template slot-scope="scope">
-                          <div v-if="radioPlayFlow == 1">{{scope.row.p2pPercent | percentss}}</div>
-                          <div v-else>{{scope.row.cdnPercent | percentss}}</div>
-                        </template>
-                      </el-table-column>
-                    </el-table>
-                    <!-- <fenye style="float:right;margin:10px 0 0 0;" :currentPage="pageNo1" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye> -->
-                  </el-col>
-                </el-row>
-              </div>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="播放流量终端" name="four" :lazy="true">
-            <div style="display: flex;align-items: center; flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onChanges" style="width:160px;margin-right: 10px;">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-input v-model="value1Activechanidactive" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onChanges" style="width:160px;margin-right: 10px;">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <!-- <el-select v-model="value1acce1" placeholder="全部终端类型" @change="onChanges" style="width: 10%;margin-right: 10px;">
-                <el-option label="全部终端" value="-1"></el-option>
-                <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-              </el-select> -->
-              <el-select v-model="valueChanel1" placeholder="全部节点渠道" @change="onChanges" style="width: 10%;margin-right: 10px;">
-                <el-option label="全部" value="*"></el-option>
-                <el-option v-for="(item, index) in hashidSets1" :key="index" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-              <el-radio-group
-                v-model="radio"
-                size="medium"
-                @change="select_time()"
-                v-show="!showzdy"
-              >
-                <el-radio-button size = "small" label="1">今天</el-radio-button >
-                <el-radio-button size = "small" label="2">昨天</el-radio-button >
-                <el-radio-button size = "small" label="3">近7天</el-radio-button >
-                <el-radio-button size = "small" label="4">近30天</el-radio-button >
-                <el-radio-button size = "small" label="5">自定义</el-radio-button >
-              </el-radio-group>
-              <el-button
-                type="primary"
-                v-show="showzdy"
-                 size = "small"
-                style="background:#409EFF;border:#409EFF"
-                @click="setZdy"
-                >自定义</el-button
-						  >
-              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
-              <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(4)">确定</el-button> -->
-            </div>
-            <div class="device_form" style>
-              <div id="myChartMap3" :style="{ height: '607px' }"></div>
-            </div>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="播放流量终端" name="four" :lazy="true">
+          <div class="seach">
+            <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" @change="onChanges" style="width:160px;margin-right: 10px;">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-model="value1Activechanidactive" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-model="valuea1" placeholder="请输入加速内容名称" @change="onChanges" style="width:160px;margin-right: 10px;">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <!-- <el-select v-model="value1acce1" placeholder="全部终端类型" @change="onChanges" style="width: 10%;margin-right: 10px;">
+              <el-option label="全部终端" value="-1"></el-option>
+              <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select> -->
+            <el-select v-model="valueChanel1" placeholder="全部节点渠道" @change="onChanges" style="width: 10%;margin-right: 10px;">
+              <el-option label="全部" value="*"></el-option>
+              <el-option v-for="(item, index) in hashidSets1" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <SelectTime @selectTime="selectTime" :type="'daterange'" />
+            <!-- <el-radio-group
+              v-model="radio"
+              size="medium"
+              @change="select_time()"
+              v-show="!showzdy"
+            >
+              <el-radio-button size = "small" label="1">今天</el-radio-button >
+              <el-radio-button size = "small" label="2">昨天</el-radio-button >
+              <el-radio-button size = "small" label="3">近7天</el-radio-button >
+              <el-radio-button size = "small" label="4">近30天</el-radio-button >
+              <el-radio-button size = "small" label="5">自定义</el-radio-button >
+            </el-radio-group>
+            <el-button
+              type="primary"
+              v-show="showzdy"
+                size = "small"
+              style="background:#409EFF;border:#409EFF"
+              @click="setZdy"
+              >自定义</el-button
+            >
+            <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker> -->
+            <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(4)">确定</el-button> -->
+          </div>
+          <div class="device_form" style>
+            <div id="myChartMap3" :style="{ height: '607px' }"></div>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </section>
+    <div class="device_form" v-show="activeName=='threed'">
+      <div id="myChartMap2" :style="{ height: '650px' }"></div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -305,6 +309,7 @@ import _ from "lodash";
 export default {
   data() {
     return {
+      accelerateType: 0,
       dataAry: [],
       dataAry1: [],
       dataAry2: [],
@@ -720,6 +725,16 @@ export default {
     // this.drawLine1();
   },
   methods: {
+    changeType(v){
+      this.accelerateType = v;
+      if(v==0){
+        this.tablecdn = [];
+        this.querySdkflow();
+    this.querySdkflowTable();
+      }else{
+
+      }
+    },
     selectTime(val){
       this.starttime = val.starttime;
       this.endtime = val.endtime;
@@ -1875,135 +1890,41 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.myself-container {
-  width: 100%;
-  //min-width: 1600px;
-
-  .device_form {
-    width: auto;
-    height: auto;
-    margin-top: 20px;
-    background: #ffffff;
-    padding: 15px 30px;
-    box-sizing: border-box;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 2px;
-
-    .bottom {
-      margin-top: 20px;
-    }
-
-    .el-form-item__label {
-      white-space: nowrap;
-    }
-
-    .el-form-item {
-      margin-bottom: 0px;
-      margin-left: 10px;
-    }
-
-    .row_activess {
-      margin-top: 20px;
-      display: flex;
-      justify-content: flex-start;
-    }
-
-    .div_show {
-      width: auto;
-      display: flex;
-      height: 40px;
-      justify-content: center;
-      align-items: center;
-      color: #409eff;
-      cursor: pointer;
-      margin-left: 20px;
-    }
-  }
-
-  .devide_table {
-    padding: 35px;
-    height: auto;
-    margin: 20px 0;
-    background: #ffffff;
-    border-radius: 2px;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 2px;
-
-    .el-table td,
-    .el-table th {
-      padding: 6px 0px;
-    }
-  }
-
-  .devide_pageNation {
-    width: 100%;
-    height: auto;
-    // overflow: hidden;
-    margin-top: 20px;
-
-    .devide_pageNation_active {
-      float: right;
-    }
-  }
-}
-
-.addaccout {
-  .el-form--label-left .el-form-item__label {
-    text-align: right;
-    width: 90px;
-  }
-
-  .el-form-item__error {
-    margin-left: 80px;
-  }
-}
+<style lang="scss" scoped>
 .user_item {
   width: auto;
-  height: 130px;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-  border-radius: 2px;
-  margin-top: 20px;
-
+  height: auto;
+  background: #FDFBFB;
+  border-radius: 32px;
+  margin-bottom: 50px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
-  text-align: left;
   padding: 36px 71px;
 
   .item_left {
-    width: 49%;
     height: 58px;
     border-right: 1px solid #e6e9ed;
-
     .item_text {
       font-size: 14px;
       color: #333333;
     }
-
     .item_count {
       line-height: 55px;
-
       span {
         font-size: 34px;
       }
     }
   }
-
   .item_right {
-    height: 48px;
-    width: 49%;
+    width: 33%;
     padding-left: 40px;
-
     .item_text {
       font-size: 14px;
       color: #333333;
     }
-
     .item_count {
       line-height: 55px;
-
       span {
         font-size: 34px;
       }

@@ -1,175 +1,176 @@
 <template>
-  <section class="myself-container content">
-    <div class="top_title">统计分析</div>
-    <!-- <div class="user-title" style="display: flex;flex-flow: column;width: 1240px;margin: auto;"> -->
-    <div class="user-title">
-      <div class="statisics_con">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="PV/UV" name="first">
-            <div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-
-              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-select v-model="valueacce" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
-                <el-option label="全部终端" value="-1"></el-option>
-                <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-
-              <el-radio-group
-                v-model="radio"
-                size="medium"
-                @change="select_time()"
-                v-show="!showzdy"
-              >
-                <el-radio-button size = "small" label="1">今天</el-radio-button >
-                <el-radio-button size = "small" label="2">昨天</el-radio-button >
-                <el-radio-button size = "small" label="3">近7天</el-radio-button >
-                <el-radio-button size = "small" label="4">近30天</el-radio-button >
-                <el-radio-button size = "small" label="5">自定义</el-radio-button >
-              </el-radio-group>
-              <el-button
-                type="primary"
-                v-show="showzdy"
-                 size = "small"
-                style="background:#409EFF;border:#409EFF"
-                @click="setZdy"
-                >自定义</el-button
-						  >
-              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-              <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(0)">确定</el-button> -->
-            </div>
-
-            <div class="user_item">
-              <div class="item_left">
-                <div class="item_text">总访问次数(PV)</div>
-                <div class="item_count">
-                  <span>{{ totalPV }}</span>
-                </div>
-              </div>
-              <div class="item_right">
-                <div class="item_text">独立IP访问数(UV)</div>
-                <div class="item_count">
-                  <span>{{ totalUV }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="device_form">
-              <div id="myChart" :style="{ height: '607px' }"></div>
-            </div>
-
-          </el-tab-pane>
-
-          <el-tab-pane label="访问用户分布" name="second">
-            <div style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-
-              <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-input v-model="value1fileName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
-                <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-              </el-input>
-              <el-select v-model="valueacce" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
-                <el-option label="全部终端" value="-1"></el-option>
-                <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-              <el-radio-group
-                v-model="radio"
-                size="medium"
-                @change="select_time()"
-                v-show="!showzdy"
-              >
-                <el-radio-button size = "small" label="1">今天</el-radio-button >
-                <el-radio-button size = "small" label="2">昨天</el-radio-button >
-                <el-radio-button size = "small" label="3">近7天</el-radio-button >
-                <el-radio-button size = "small" label="4">近30天</el-radio-button >
-                <el-radio-button size = "small" label="5">自定义</el-radio-button >
-              </el-radio-group>
-              <el-button
-                type="primary"
-                v-show="showzdy"
-                 size = "small"
-                style="background:#409EFF;border:#409EFF"
-                @click="setZdy"
-                >自定义</el-button
-						  >
-              <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-              <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button> -->
-            </div>
-            <div class="device_form" style>
-              <!-- <el-button-group style="display: flex;justify-content: center;">
-                <el-button plain @click="goarea()">地区</el-button>
-                <el-button plain @click="gosupplier()">运营商</el-button>
-              </el-button-group> -->
-              <el-radio-group
-                v-model="radios"
-                size="medium"
-                @change="select()"
-                style="display: flex;justify-content: center;"
-              >
-                <el-radio-button label="1">地区</el-radio-button >
-                <el-radio-button label="2">运营商</el-radio-button >
-              </el-radio-group>
-              <div id="myChart1" :style="{ height: '607px' }"></div>
-            </div>
-            <div class="devide_table">
-              <el-row type="flex" class="row_active">
-                <el-col :span="24" style="text-align:left;    font-weight: bold;padding-left:10px;">{{exportTitle}}</el-col>
-              </el-row>
-              <el-row type="flex" class="row_active">
-                <el-col :span="24">
-                  <el-table :data="tablecdn" border stripe max-height="530" style="width: 100%; margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                    <el-table-column :label="exportTitleTable">
-                      <template slot-scope="scope">
-                        <div v-if="scope.row.region">
-                          {{ scope.row.region }}
-                        </div>
-                        <div v-else>{{ scope.row.isp }}</div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="访问用户总数">
-                      <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.sumCnt }}</div>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="有效访问用户数（%）">
-                      <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.validCnt }}</div>
-                          <div>({{ scope.row.validPercent | percentss }})</div>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="无效访问用户数（%）">
-                      <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.invalidCnt }}</div>
-                          <div>({{ scope.row.invalidPercent | percentss }})</div>
-                        </div>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                  <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :currentPage="currentPage1" :pagesa="total_cnt1"></fenye>
-
-                </el-col>
-              </el-row>
-            </div>
-          </el-tab-pane>
-        </el-tabs>
+  <div>
+    <section class="content">
+      <div class="top_title">统计分析
+        <div class="wrapperStyle">
+          <div class="itemStyle" :class="{ isSelected: accelerateType == 0 }" @click="changeType(0)">点播加速</div>
+          <div class="itemStyle" :class="{ isSelected: accelerateType == 1}" @click="changeType(1)">直播加速</div>
+        </div>
       </div>
+      <!-- <div class="user-title" style="display: flex;flex-flow: column;width: 1240px;margin: auto;"> -->
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="PV/UV" name="first">
+          <div class="seach">
+            <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-model="value1fileName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-select v-model="valueacce" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
+              <el-option label="全部终端" value="-1"></el-option>
+              <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <el-radio-group
+              v-model="radio"
+              size="medium"
+              @change="select_time()"
+              v-show="!showzdy"
+            >
+              <el-radio-button size = "small" label="1">今天</el-radio-button >
+              <el-radio-button size = "small" label="2">昨天</el-radio-button >
+              <el-radio-button size = "small" label="3">近7天</el-radio-button >
+              <el-radio-button size = "small" label="4">近30天</el-radio-button >
+              <el-radio-button size = "small" label="5">自定义</el-radio-button >
+            </el-radio-group>
+            <el-button
+              type="primary"
+              v-show="showzdy"
+                size = "small"
+              style="background:#409EFF;border:#409EFF"
+              @click="setZdy"
+              >自定义</el-button
+            >
+            <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+            <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(0)">确定</el-button> -->
+          </div>
+          <div class="user_item">
+            <div class="item_left">
+              <div class="item_text">总访问次数(PV)</div>
+              <div class="item_count">
+                <span>{{ totalPV }}</span>
+              </div>
+            </div>
+            <div class="item_right">
+              <div class="item_text">独立IP访问数(UV)</div>
+              <div class="item_count">
+                <span>{{ totalUV }}</span>
+              </div>
+            </div>
+            <img src="../../assets/img/pic1.png" />
+          </div>
+          <div style="margin-top: 40px;">
+            <div id="myChart" :style="{ height: '607px' }"></div>
+          </div>
+
+        </el-tab-pane>
+
+        <el-tab-pane label="访问用户分布" name="second">
+          <div class="seach">
+
+            <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-model="value1fileName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-select v-model="valueacce" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
+              <el-option label="全部终端" value="-1"></el-option>
+              <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <el-radio-group
+              v-model="radio"
+              size="medium"
+              @change="select_time()"
+              v-show="!showzdy"
+            >
+              <el-radio-button size = "small" label="1">今天</el-radio-button >
+              <el-radio-button size = "small" label="2">昨天</el-radio-button >
+              <el-radio-button size = "small" label="3">近7天</el-radio-button >
+              <el-radio-button size = "small" label="4">近30天</el-radio-button >
+              <el-radio-button size = "small" label="5">自定义</el-radio-button >
+            </el-radio-group>
+            <el-button
+              type="primary"
+              v-show="showzdy"
+                size = "small"
+              style="background:#409EFF;border:#409EFF"
+              @click="setZdy"
+              >自定义</el-button
+            >
+            <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+            <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button> -->
+          </div>
+          <div class="devide_table">
+            <el-row type="flex" class="row_active">
+              <el-col :span="24" style="text-align:left;    font-weight: bold;padding-left:10px;">{{exportTitle}}</el-col>
+            </el-row>
+            <el-row type="flex" class="row_active">
+              <el-col :span="24">
+                <el-table :data="tablecdn" border stripe max-height="530" style="width: 100%; margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                  <el-table-column :label="exportTitleTable">
+                    <template slot-scope="scope">
+                      <div v-if="scope.row.region">
+                        {{ scope.row.region }}
+                      </div>
+                      <div v-else>{{ scope.row.isp }}</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="访问用户总数">
+                    <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.sumCnt }}</div>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="有效访问用户数（%）">
+                    <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.validCnt }}</div>
+                        <div>({{ scope.row.validPercent | percentss }})</div>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="无效访问用户数（%）">
+                    <template slot-scope="scope">
+                      <div style="display: flex;justify-content: center;">
+                        <div>{{ scope.row.invalidCnt }}</div>
+                        <div>({{ scope.row.invalidPercent | percentss }})</div>
+                      </div>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :currentPage="currentPage1" :pagesa="total_cnt1"></fenye>
+
+              </el-col>
+            </el-row>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </section>
+    <div class="device_form" v-show="activeName=='second'">
+      <!-- <el-button-group style="display: flex;justify-content: center;">
+        <el-button plain @click="goarea()">地区</el-button>
+        <el-button plain @click="gosupplier()">运营商</el-button>
+      </el-button-group> -->
+      <el-radio-group
+        v-model="radios"
+        size="medium"
+        @change="select()"
+        style="display: flex;justify-content: center;"
+      >
+        <el-radio-button label="1">地区</el-radio-button >
+        <el-radio-button label="2">运营商</el-radio-button >
+      </el-radio-group>
+      <div id="myChart1" :style="{ height: '607px' }"></div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -198,7 +199,8 @@ import common from "../../comm/js/util";
 export default {
   data() {
     return {
-        hashidSets: [
+      accelerateType: 0,
+      hashidSets: [
         {
           value: "1",
           label: "iOS",
@@ -405,6 +407,15 @@ export default {
     this.drawLine2();
   },
   methods: {
+    changeType(v){
+      this.accelerateType = v;
+      if(v==0){
+        this.tablecdn = [];
+        this.getcure(0);
+      }else{
+
+      }
+    },
     //用户用户供应商导出
     exoprtant_topisp() {
       let params = new Object();
@@ -1294,144 +1305,41 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.myself-container {
-  width: 100%;
-  //min-width: 1600px;
-
-  .device_form {
-    width: auto;
-    height: auto;
-
-    overflow: hidden;
-    margin-top: 20px;
-    background: #ffffff;
-    padding: 15px 30px;
-    box-sizing: border-box;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 2px;
-
-    .bottom {
-      margin-top: 20px;
-    }
-
-    .el-form-item__label {
-      white-space: nowrap;
-    }
-
-    .el-form-item {
-      margin-bottom: 0px;
-      margin-left: 10px;
-    }
-
-    .row_activess {
-      margin-top: 20px;
-      display: flex;
-      justify-content: flex-start;
-    }
-
-    .div_show {
-      width: auto;
-      display: flex;
-      height: 40px;
-      justify-content: center;
-      align-items: center;
-      color: #409eff;
-      cursor: pointer;
-      margin-left: 20px;
-    }
-  }
-
-  .devide_table {
-    width: auto;
-
-    height: auto;
-    overflow: hidden;
-    margin-top: 20px;
-    background: #ffffff;
-    padding: 37px;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 2px;
-
-    .el-table td,
-    .el-table th {
-      padding: 6px 0px;
-    }
-
-    .row_active {
-      margin-top: 10px;
-    }
-  }
-
-  .devide_pageNation {
-    width: 100%;
-    height: auto;
-    overflow: hidden;
-    margin-top: 20px;
-
-    .devide_pageNation_active {
-      float: right;
-    }
-  }
-}
-
-.addaccout {
-  .el-form--label-left .el-form-item__label {
-    text-align: right;
-    width: 90px;
-  }
-
-  .el-form-item__error {
-    margin-left: 80px;
-  }
-}
-
+<style lang="scss" scoped>
 .user_item {
   width: auto;
-  height: 130px;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-  border-radius: 2px;
+  height: auto;
+  background: #FDFBFB;
+  border-radius: 32px;
   margin-top: 20px;
-
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
-  text-align: left;
   padding: 36px 71px;
-
   .item_left {
-    width: 49%;
     height: 58px;
     border-right: 1px solid #e6e9ed;
-
     .item_text {
       font-size: 14px;
       color: #333333;
     }
-
     .item_count {
       line-height: 55px;
-
       span {
         font-size: 34px;
       }
     }
   }
-
   .item_right {
     height: 48px;
     width: 49%;
     padding-left: 40px;
-
     .item_text {
       font-size: 14px;
       color: #333333;
     }
-
     .item_count {
       line-height: 55px;
-
       span {
         font-size: 34px;
       }

@@ -135,7 +135,7 @@ export default {
 
 
 
-<style>
+<style scoped>
 .wrapper {
   height: 40px;
   background: #f9f9f9;
