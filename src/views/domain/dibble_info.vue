@@ -3,32 +3,11 @@
     <div class="top_title">直播流信息</div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <div class="seach">
-        <el-input v-model="values" placeholder="请输入直播流名称、直播流地址、直播间ID、渠道ID" style="width:20%;margin-right: 10px;" @keyup.enter.native="onChanges">
+        <el-input v-model="values" placeholder="请输入直播流名称、直播流地址、直播间ID、渠道ID" style="width:24%;margin-right: 10px;" @keyup.enter.native="onChanges">
           <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
         </el-input>
-        <!-- <el-radio-group
-          v-model="radio"
-          size="medium"
-          @change="select_time()"
-          v-show="!showzdy"
-        >
-          <el-radio-button size = "small" label="1">今天</el-radio-button >
-          <el-radio-button size = "small" label="2">昨天</el-radio-button >
-          <el-radio-button size = "small" label="3">近7天</el-radio-button >
-          <el-radio-button size = "small" label="4">近30天</el-radio-button >
-          <el-radio-button size = "small" label="5">自定义</el-radio-button >
-        </el-radio-group>
-        <el-button
-          type="primary"
-          v-show="showzdy"
-            size = "small"
-          style="background:#409EFF;border:#409EFF"
-          @click="setZdy"
-          >自定义</el-button
-        > -->
-        <el-date-picker style="margin-left:10px;" v-model="times" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-        <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu()">确定</el-button> -->
-        <el-button style="margin-left: auto" type="primary" @click="toExportExcel">导出</el-button>
+        <el-date-picker style="margin-left:10px;" v-model="times" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+        <el-button style="margin-left: 10px;" type="primary" @click="reset">重置</el-button>
       </div>
       <el-tab-pane label="在线流" name="first" :lazy="true">
         <div class="device_table">
@@ -67,7 +46,7 @@
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column label="拉流开始时间">
+                <el-table-column label="拉流开始时间" sortable="true" sort-by="settimes">
                   <template slot-scope="scope">
                     <div>{{ scope.row.startTime | settimes }}</div>
                   </template>
@@ -80,6 +59,9 @@
       </el-tab-pane>
       <el-tab-pane label="历史流" name="second" :lazy="true">
         <div class="device_table">
+          <div class="operating">
+            <el-button style="margin-left: auto;" type="primary">导出</el-button>
+          </div>
           <el-row type="flex" class="row_active">
             <el-col :span="24">
               <el-table :data="historyDatas" border max-height = "530px" style="width: 100%; margin: 10px 0;" :cell-style="rowClass" :header-cell-style="headClass">
@@ -152,7 +134,7 @@ export default {
       radio: 1,
       showzdy: false,
       times: [],
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       total_cnt: 0,
       onlineDatas: [],
@@ -184,72 +166,36 @@ export default {
     this.times[1] = this.common.getTimes(this.endtime * 1000);
     this.getStreamInfo();
   },
-  // mounted() {
-  //   this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-  //   this.endtime = Date.parse(new Date()) / 1000;
-  //   this.times[0] = this.common.getTimes(this.starttime * 1000);
-  //   this.times[1] = this.common.getTimes(this.endtime * 1000);
-  //   console.log(this.times)
-  // },
   methods: {
-    search(){
-      this.pageNo = 1;
-      // this.pageSize = 10;
-    },
     //获取加速次数每页数量
     handleSizeChange(pagetol) {
       this.pageSize = pagetol;
-      this.topAccelcntRanking();
+      this.getStreamInfo();
     },
     //获取页码
     handleCurrentChange(pages) {
       this.pageNo = pages;
-      this.topAccelcntRanking();
-    },
-    //自定义事件组件
-    select_time() {
-			if (this.radio == 1) {
-				this.showzdy = false;
-				this.today();
-			} else if (this.radio == 2) {
-				this.showzdy = false;
-				this.yesterday();
-			} else if (this.radio == 3) {
-				this.showzdy = false;
-				this.sevendat();
-			} else if (this.radio == 4) {
-				this.showzdy = false;
-				this.thirtyday();
-			} else if (this.radio == 5) {
-				this.showzdy = true;
-			}
+      this.getStreamInfo();
     },
     onChanges() {
       this.pageNo = 1;
       this.getStreamInfo();
     },
 
-    setZdy() {
-      this.showzdy = !this.showzdy;
-      this.radio = 1;
-    },
-
-    seachtu(data) {
-      if (this.endtime - this.starttime > 7776000) {
-        this.$message({
-          message: "起始时间和结束时间最大跨度不能超过三个月",
-          type: "error",
-        });
-        return false;
-      }
+    reset() {
       this.pageNo = 1;
+      this.values = '';
+      this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.endtime = Date.parse(new Date()) / 1000;
+      this.times = [];
+      this.getStreamInfo();
     },
 
     getStreamInfo() {
        let params = new Object();
       params.startTime = this.starttime;
       params.endTime = this.endtime;
-      params.page = this.pageNo;
+      params.page = this.pageN-1;
       if(this.values !== ""){
         var channelIdReg = /^\d{12}$/;
         var roomId = /^\d{8}$/;
@@ -368,7 +314,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .myself-container {
   width: 100%;
   //min-width: 1600px;

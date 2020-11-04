@@ -986,7 +986,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .el-table /deep/.disabledCheck .cell .el-checkbox__inner {
   display: none !important;
 }

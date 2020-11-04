@@ -123,6 +123,11 @@ export default {
         endtime: this.endtime,
       });
     },
+    resetTimes() {
+      this.showTimePicker = false;
+      this.times = [];
+      this.selected = 0;
+    },
     handleSizeChange(val) {
       this.$emit("handleSizeChange", { val: val });
     },

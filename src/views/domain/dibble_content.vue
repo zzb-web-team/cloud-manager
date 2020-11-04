@@ -2,21 +2,25 @@
   <section class="myself-container content">
     <div class="top_title">直播加速管理</div>
     <div class="seach" >
-      <el-input v-model="values" placeholder="请输入渠道ID、直播间ID、源站域名" style="width:10%;margin-right: 10px;" @keyup.enter.native="onChanges">
+      <el-input v-model="values" placeholder="请输入渠道ID、直播间ID、源站域名" style="width:18%;margin-right: 10px;" @keyup.enter.native="onChanges">
         <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
       </el-input>
-      <el-select v-model="liveProto" placeholder="请选择回源协议" style="width: 10%;margin-right: 10px;" @change="onChanges">
+      <el-select v-model="liveProto" placeholder="请选择回源协议" style="width: 12%;margin-right: 10px;" @change="onChanges">
         <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
       </el-select>
-      <el-select v-model="state" placeholder="请选择状态" style="width: 10%;margin-right: 10px;" @change="onChanges">
+      <el-select v-model="state" placeholder="请选择状态" style="width: 12%;margin-right: 10px;" @change="onChanges">
         <el-option v-for="(item, index) in options1" :key="index" :label="item.label" :value="item.value"></el-option>
       </el-select>
       <el-date-picker style="margin-left:10px;" v-model="times" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+      <el-button style="margin-left: 10px;" type="primary" @click="reset">重置</el-button>
     </div>
     <div class="device_table">
+      <div class="operating">
+        <el-button style="margin-left: auto;" type="primary" @click="toExportExcel">导出</el-button>
+      </div>
       <el-row type="flex" class="row_active">
         <el-col :span="24">
-          <el-table :data="datas" border max-height="560px" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+          <el-table :data="datas" border max-height="560px" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">
             <el-table-column label="渠道ID">
               <template slot-scope="scope">
                 <div>{{ scope.row.ChanId }}</div>
@@ -53,7 +57,7 @@
                 <div style="color:#E54545;" v-else>回源失败</div>
               </template>
             </el-table-column>
-            <el-table-column label="统计时间">
+            <el-table-column label="创建日期">
               <template slot-scope="scope">
                 <div>{{ scope.row.createTime | settimes }}</div>
               </template>
@@ -70,7 +74,7 @@
 import { dateToMs, getymdtime, getymdtime1, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
 import {
-  query_liveinfo
+  query_liveinfo, export_liveinfo_for_admin
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -159,44 +163,20 @@ export default {
       this.pageNo = pages;
       this.getContentInfo();
     },
-    //自定义事件组件
-    select_time() {
-			if (this.radio == 1) {
-				this.showzdy = false;
-				this.today();
-			} else if (this.radio == 2) {
-				this.showzdy = false;
-				this.yesterday();
-			} else if (this.radio == 3) {
-				this.showzdy = false;
-				this.sevendat();
-			} else if (this.radio == 4) {
-				this.showzdy = false;
-				this.thirtyday();
-			} else if (this.radio == 5) {
-				this.showzdy = true;
-			}
-    },
     onChanges() {
       this.getContentInfo();
     },
-    setZdy() {
-      this.showzdy = !this.showzdy;
-      this.radio = 1;
+    reset() {
+      this.liveProto = '';
+      this.state = '';
+      this.values = '';
+      this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.endtime = Date.parse(new Date()) / 1000;
+      this.times = [];
+      this.getContentInfo();
     },
-
-    seachtu(data) {
-      if (this.endtime - this.starttime > 7776000) {
-        this.$message({
-          message: "起始时间和结束时间最大跨度不能超过三个月",
-          type: "error",
-        });
-        return false;
-      }
-    },
-
     getContentInfo() {
-       let params = new Object();
+      let params = new Object();
       params.startTime = this.starttime;
       params.endTime = this.endtime;
       params.page = this.pageNo;
@@ -250,6 +230,57 @@ export default {
         });
     },
 
+    toExportExcel() {
+      let params = new Object();
+      params.startTime = this.starttime;
+      params.endTime = this.endtime;
+      params.page = this.pageNo;
+      params.order = 0;
+      if (this.liveProto !== "") {
+        params.liveProto = this.liveProto;
+      } else {
+        params.liveProto = 0;
+      }
+      if (this.state !== "") {
+        if(this.state == 3){
+          params.state = 1
+        }else{
+          params.state = this.state;
+        }
+      } else {
+        params.state = 0;
+      }
+      if(this.values !== ""){
+        var channelIdReg = /^\d{12}$/;
+        var roomId = /^\d{8}$/;
+        if(channelIdReg.test(this.values)){
+          params.chanId = this.values;
+          params.roomId = '';
+          params.domain = '';
+        }else if(roomId.test(this.values)){
+          params.chanId = '';
+          params.roomId = this.values;
+          params.domain = '';
+        }else{
+          params.chanId = '';
+          params.roomId = '';
+          params.domain = this.values;
+        }
+      } else {
+        params.chanId = '';
+        params.roomId = '';
+        params.domain = '';
+      }
+      export_liveinfo_for_admin(params)
+        .then((res) => {
+          if (res) {
+            window.open(res.downloadAddr, "_blank");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     //今天
     today(data) {
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;

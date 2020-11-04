@@ -11,7 +11,7 @@
       <el-input
         v-model="valueChannelId"
         placeholder="请输入渠道ID"
-        style="width:160px;margin-right: 10px;"
+        style="width:10%;margin-right: 10px;"
         @keyup.enter.native="onChanges"
       >
         <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
@@ -20,7 +20,7 @@
         v-show="accelerateType==1"
         v-model="valueChannelId"
         placeholder="请输入直播间ID"
-        style="width:160px;margin-right: 10px;"
+        style="width:10%;margin-right: 10px;"
         @keyup.enter.native="onChanges"
       >
         <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
@@ -29,7 +29,7 @@
         v-show="accelerateType==1"
         v-model="valueChannelId"
         placeholder="请输入直播流名称"
-        style="width:160px;margin-right: 10px;"
+        style="width:10%;margin-right: 10px;"
         @keyup.enter.native="onChanges"
       >
         <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
@@ -38,7 +38,7 @@
         v-show="accelerateType==0"
         v-model="valueDomain"
         placeholder="请输入域名"
-        style="width:160px;margin-right: 10px;"
+        style="width:10%;margin-right: 10px;"
         @keyup.enter.native="onChanges"
       >
         <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
@@ -47,7 +47,7 @@
         v-show="accelerateType==0"
         v-model="valueContent"
         placeholder="请输入加速内容名称"
-        style="width:160px;margin-right: 10px;"
+        style="width:10%;margin-right: 10px;"
         @keyup.enter.native="onChanges"
       >
         <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
@@ -66,9 +66,9 @@
           :value="item.value"
         ></el-option>
       </el-select>
-      <SelectTime @selectTime="selectTime" :type="'daterange'" />
+      <SelectTime ref="selectTime" @selectTime="selectTime" :type="'daterange'" />
     </div>
-    <div class="device_table" style="display: flex; flex-direction: row; align-items: flex-start; flex-wrap: wrap;">
+    <div class="device_table" style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; flex-wrap: wrap;">
       <div class="user_item" style="margin-right: 100px;">
         <div class="item_left" style="margin-right: 30px;">
           <div class="item_text" style="text-align:center;">总流量</div>
@@ -78,13 +78,13 @@
         </div>
         <img src="../../assets/img/pic.png" /> 
       </div>
-      <div style="flex: 1; min-width:300px;">
+      <div style="flex: 1; min-width: 400px;">
         <el-row type="flex" class="row_active">
           <el-col :span="23">
             <el-table
               :data="tablecdn"
               border
-              style="width: 98%;margin:10px;max-height: 530px; overflow-y: auto;"
+              style="width: 100%; max-height: 530px; overflow-y: auto;"
               :cell-style="rowClass"
               :header-cell-style="headClass"
             >
@@ -249,23 +249,29 @@ export default {
   methods: {
     changeType(v){
       this.accelerateType = v;
+      this.tablecdn = [];
+      this.totalYl = 0;
+      this.$refs.selectTime.resetTimes();
+      this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.endtime = Date.parse(new Date()) / 1000;
       if(v==0){
-        this.tablecdn = [];
-        this.totalYl = '';
         this.gettable1();
         this.gettable2();
       }else{
-        this.tablecdn = [];
-        this.totalYl = 0;
         this.liveDataFlowCurve();
-        this.liveDataFlowTable();
       }
     },
     selectTime(val){
       this.starttime = val.starttime;
       this.endtime = val.endtime;
-      this.gettable1();
-      this.gettable2();
+      this.tablecdn = [];
+      this.totalYl = 0;
+      if(this.accelerateType == 0){
+        this.gettable1();
+        this.gettable2();
+      }else{
+        this.liveDataFlowCurve();
+      }
     },
     //  统计时间段
     timeFormatter(row, column){
@@ -940,7 +946,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .el-table /deep/.disabledCheck .cell .el-checkbox__inner {
   display: none !important;
 }

@@ -36,7 +36,7 @@ export default {
 };
 </script>
 
-<style <style lang="scss">
+<style <style lang="scss" scoped>
     .el-alert .el-alert__description{
         margin: 0px;
         

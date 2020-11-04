@@ -1,10 +1,11 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import 'element-ui/lib/theme-chalk/index.css';
+import "./assets/icon_font/iconfont.css"
 import Vue from 'vue'
 import App from './App'
 import router from './router'
 import ElementUI from 'element-ui';
-import "./assets/icon_font/iconfont.css"
 
 /** 引入导出Excel表格组件*/
 import Blob from './excel/Blob'
@@ -18,7 +19,7 @@ Vue.use(VueCookies)
 import common from "./comm/js/util.js";
 Vue.prototype.common = common
 
-import 'element-ui/lib/theme-chalk/index.css';
+
 import echarts from 'echarts'
 import uploader from 'vue-simple-uploader'
 Vue.use(uploader)

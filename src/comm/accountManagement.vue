@@ -786,7 +786,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .search-con {
     width: 250px;
     height: 40px;

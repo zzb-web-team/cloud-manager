@@ -10,20 +10,26 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="PV/UV" name="first">
           <div class="seach">
-            <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
               <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
-            <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <el-input v-show="accelerateType == 0" v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
               <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
-            <el-input v-model="value1fileName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <el-input v-show="accelerateType == 0" v-model="valueUrlName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
               <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
-            <el-select v-model="valueacce" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
+            <el-input v-show="accelerateType == 1" v-model="valueRoomId" placeholder="请输入直播间ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-show="accelerateType == 1" v-model="valueStreamName" placeholder="请输入直播流名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-select v-model="terminalName" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
               <el-option label="全部终端" value="-1"></el-option>
               <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
             </el-select>
-            <SelectTime @selectTime="selectTime" :type="'daterange'" />
+            <SelectTime ref="selectTime" @selectTime="selectTime" :type="'daterange'" />
           </div>
           <div class="user_item">
             <div class="item_left">
@@ -38,31 +44,40 @@
                 <span>{{ totalUV }}</span>
               </div>
             </div>
-            <img src="../../assets/img/pic1.png" />
+            <div class="item_right" v-show="accelerateType==1">
+              <div class="item_text">并发连接数峰值</div>
+              <div class="item_count">
+                <span>{{ maxConnect }}</span>
+              </div>
+            </div>
+            <img v-show="accelerateType==0" src="../../assets/img/pic1.png" />
           </div>
           <div style="margin-top: 40px;">
             <div id="myChart" :style="{ height: '607px' }"></div>
           </div>
-
         </el-tab-pane>
-
         <el-tab-pane label="访问用户分布" name="second">
           <div class="seach">
-
-            <el-input v-model="value1Activechanid" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
               <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
-            <el-input v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <el-input v-show="accelerateType == 0" v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
               <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
-            <el-input v-model="value1fileName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <el-input v-show="accelerateType == 0" v-model="valueUrlName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
               <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
-            <el-select v-model="valueacce" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
+            <el-input v-show="accelerateType == 1" v-model="valueRoomId" placeholder="请输入直播间ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-input v-show="accelerateType == 1" v-model="valueStreamName" placeholder="请输入直播流名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            </el-input>
+            <el-select v-model="terminalName" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
               <el-option label="全部终端" value="-1"></el-option>
               <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
             </el-select>
-            <SelectTime @selectTime="selectTime" :type="'daterange'" />
+            <SelectTime ref="selectTime" @selectTime="selectTime" :type="'daterange'" />
           </div>
           <div class="devide_table">
             <el-row type="flex" class="row_active">
@@ -70,7 +85,7 @@
             </el-row>
             <el-row type="flex" class="row_active">
               <el-col :span="24">
-                <el-table :data="tablecdn" border stripe max-height="530" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">
+                <el-table :data="tableData" border stripe max-height="530" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">
                   <el-table-column :label="exportTitleTable">
                     <template slot-scope="scope">
                       <div v-if="scope.row.region">
@@ -103,7 +118,7 @@
                     </template>
                   </el-table-column>
                 </el-table>
-                <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :currentPage="currentPage1" :pagesa="total_cnt1"></fenye>
+                <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="pageNo" :pagesa="total_cnt"></fenye>
 
               </el-col>
             </el-row>
@@ -162,129 +177,26 @@ export default {
           label: "其他",
         },
       ],
-      ableStatus: true,
-      primaryActive: "primary",
-      exportActive: 0,
       exportTitle: "用户访问分布",
       exportTitleTable: "省市",
-      currentPage: 1,
-      currentPage1: 1,
-      total_cnt1: 0,
-      pagesize: 10,
+      pageNo: 1,
+      pageSize: 10,
       total_cnt: 0,
-      value1fileName: "",
-      valueacce: "",
-      options3: [
-        {
-          value: "1",
-          label: "终端1",
-        },
-
-        {
-          value: "2",
-          label: "终端2",
-        },
-
-        {
-          value: "3",
-          label: "终端3",
-        },
-      ],
-
-      activeDq: true,
-      activeGys: false,
-      shoudzy: false,
-      shoudzyx: false,
-      shoudzyz: false,
-      showzdy: false,
-      value1Active: "",
-      value1Activechanid: "",
+      valueUrlName: "",
+      terminalName: "",
+      valueChannelId: "",
       valueDomain: "",
-      options1Active: [],
-      optionsa1: [],
-      optionsa2: [],
-      optionsa3: [],
-      optionsb1: [],
-      optionsb2: [],
-      optionsb3: [],
-      optionsc1: [],
-      optionsc2: [],
-      optionsc3: [],
-      value_a1: "",
-      value_a2: "",
-      value_a3: "",
-      value_b1: "",
-      value_b2: "",
-      value_b3: "",
-      value_c1: "",
-      value_c2: "",
-      value_c3: "",
-      pageSize: 10, //煤业
-      pageNo: 1, //页码
-      total_cnt: 1, //数据总量
-      tablecdn: [],
-      tablecdn2: [],
+      valueChannelId: "",
+      valueRoomId: "",
+      valueStreamName: "",
+      tableData: [],
       activeName: "first",
       totalPV: 0,
       totalUV: 0,
-      twob: false,
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: "昨天",
-            onClick(picker) {
-              const end = new Date(
-                new Date(new Date().toLocaleDateString()).getTime()
-              );
-              const start =
-                new Date(new Date(new Date().toLocaleDateString()).getTime()) -
-                3600 * 1000 * 24 * 1;
-              picker.$emit("pick", [start, end]);
-            },
-          },
-          {
-            text: "今天",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date(
-                new Date(new Date().toLocaleDateString()).getTime()
-              );
-              picker.$emit("pick", [start, end]);
-            },
-          },
-          {
-            text: "最近一周",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date(
-                new Date(new Date().toLocaleDateString()).getTime()
-              );
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
-              picker.$emit("pick", [start, end]);
-            },
-          },
-          {
-            text: "最近一个月",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date(
-                new Date(new Date().toLocaleDateString()).getTime()
-              );
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 29);
-              picker.$emit("pick", [start, end]);
-            },
-          },
-        ],
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        },
-      },
-      value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-      val2: [],
+      maxConnect: 0,
       starttime: "",
       endtime: "",
       timeUnit: 60,
-      chanid: "",
       uvArray: [], //图一y1
       pvArray: [], //图一y2
       timeArray: [], //图一x
@@ -292,10 +204,6 @@ export default {
       timeArray1: [], //图二x
       playTimesArray2: [], //图三y
       timeArray2: [], //图三x
-      options1chanid: [],
-      value1Activechanid: "",
-      pagesActive: true,
-      radio: 1,
       radios: 1,
     };
   },
@@ -342,7 +250,7 @@ export default {
   mounted() {
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.endtime = Date.parse(new Date()) / 1000;
-    this.getcure(0);
+    this.pvuvCure();
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -356,74 +264,47 @@ export default {
   methods: {
     changeType(v){
       this.accelerateType = v;
+      this.activeName = 'first';
+      this.reset();
       if(v==0){
-        this.tablecdn = [];
-        this.getcure(0);
+        this.pvuvCure();
       }else{
-
+        this.livePuVuCurve();
       }
     },
     //时间选择
     selectTime(val){
       this.starttime = val.starttime;
       this.endtime = val.endtime;
-      if(this.accelerateType == 0){
-        if(thia.activeName == 'first'){
-          this.getcure(0);
+      this.reset();
+      this.changes();
+    },
+    changes(){
+      if(this.accelerateType==0){
+        if(this.activeName == 'first'){
+          this.pvuvCure();
         }else{
-          thi
+          if(this.radios == 1){
+            this.topregionCurve();
+          }else{
+            this.topispCurve()
+          }
         }
       }else{
-
+        if(this.activeName == 'first'){
+          this.livePuVuCurve();
+        }else{
+          if(this.radios == 1){
+            this.liveTopregionCurve();
+          }else{
+            this.liveTopispCurve()
+          }
+        }
       }
-      
     },
     //用户用户供应商导出
     exoprtant_topisp() {
-      let params = new Object();
-      params.chanId = this.chanid + "";
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      params.timeUnit = this.timeUnit;
-      if (this.value1fileName) {
-        params.fileName = this.value1fileName;
-      } else {
-        params.fileName = "*";
-      }
-      if (this.value_b2) {
-        params.region = this.value_b2;
-      } else {
-        params.region = "*";
-      }
-      if (this.value_b3) {
-        params.isp = this.value_b3;
-      } else {
-        params.isp = "*";
-      }
-      if (this.value1Activechanid !== "") {
-        params.chanId = this.value1Activechanid;
-      } else {
-        params.chanId = "*";
-      }
-      // if (this.valueacce !== "") {
-      //   params.acce = this.valueacce;
-      // } else {
-      //   params.acce = "-1";
-      // }
-      if(this.valueDomain){
-        params.domain = this.valueDomain;
-      }else{
-        params.domain = "*"
-      }
-      if (this.valueacce !== "") {
-        params.terminalName = parseInt(this.valueacce);
-      } else {
-        params.terminalName = -1;
-      }
-      params.timeUnit = this.common.timeUnitActive2(
-        this.starttime,
-        this.endtime
-      );
+      let params = this.getParams();
       export_topisp_accesscnt_curve_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -434,50 +315,7 @@ export default {
     },
     //访问用户地区导出
     exoprtant_topregion() {
-      let params = new Object();
-      params.chanId = this.chanid + "";
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      params.timeUnit = this.timeUnit;
-      if (this.value1fileName) {
-        params.fileName = this.value1fileName;
-      } else {
-        params.fileName = "*";
-      }
-      if (this.value_b2) {
-        params.region = this.value_b2;
-      } else {
-        params.region = "*";
-      }
-      if (this.value_b3) {
-        params.isp = this.value_b3;
-      } else {
-        params.isp = "*";
-      }
-      if (this.value1Activechanid !== "") {
-        params.chanId = this.value1Activechanid;
-      } else {
-        params.chanId = "*";
-      }
-      // if (this.valueacce !== "") {
-      //   params.acce = this.valueacce;
-      // } else {
-      //   params.acce = "-1";
-      // }
-      if(this.valueDomain){
-        params.domain = this.valueDomain;
-      }else{
-        params.domain = "*"
-      }
-      if (this.valueacce !== "") {
-        params.terminalName = parseInt(this.valueacce);
-      } else {
-        params.terminalName = -1;
-      }
-      params.timeUnit = this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
+      let params = this.getParams();
       export_topregion_accesscnt_curve_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -488,56 +326,7 @@ export default {
     },
     //PV/UV导出
     exoprtant_pupv() {
-      let params = new Object();
-      params.chanId = this.chanid + "";
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      params.timeUnit = this.timeUnit;
-
-      if (this.value1fileName) {
-        params.fileName = this.value1fileName;
-      } else {
-        params.fileName = "*";
-      }
-      if (this.value_a2[1]) {
-        params.region = this.value_a2[1];
-      } else {
-        params.region = "*";
-      }
-      if (this.value_a3) {
-        params.isp = this.value_a3;
-      } else {
-        params.isp = "*";
-      }
-      if(this.valueDomain){
-          params.domain = this.valueDomain;
-        }else{
-          params.domain = "*"
-        }
-      if (this.value1Activechanid !== "") {
-        params.chanId = this.value1Activechanid;
-      } else {
-        params.chanId = "*";
-      }
-      // if (this.valueacce !== "") {
-      //   params.acce = this.valueacce;
-      // } else {
-      //   params.acce = "-1";
-      // }
-
-      if (this.valueacce !== "") {
-        params.terminalName = parseInt(this.valueacce);
-      } else {
-        params.terminalName = -1;
-      }
-
-      this.uvArray = [];
-      this.pvArray = [];
-      this.timeArray = [];
-      params.timeUnit = this.common.timeUnitActive2(
-        this.starttime,
-        this.endtime
-      );
+      let params = this.getParams();
       export_pv_uv_curve_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -546,99 +335,80 @@ export default {
         })
         .catch(err => {});
     },
-    //地区运营商选择
-    select(){
-      if (this.radios == 1) {
-        this.goarea();
-      }else{
-        this.gosupplier();
-      }
-    },
     //
-    onChanges() {
-      if(this.activeName == 'first'){
-        this.getcure(0)
-      }else{
-        this.currentPage1 = 1;
-        if(this.pagesActive){
-          this.getcure(1)
-        }else{
-          this.getcure(2)
-        }
-      }
+    onChanges() { 
+      this.changes();
     },
     //获取页码
-    handleCurrentChange1(pages) {
-      this.currentPage1 = pages;
-      if (this.pagesActive == true) {
-        this.getcure(1);
-      } else {
-        this.getcure(2);
-      }
+    handleCurrentChange(pages) {
+      this.pageNo = pages;
     },
     //获取每页数量
     handleSizeChange(pagetol) {
-      this.pagesize = pagetol;
+      this.pageSize = pagetol;
       // this.getuserlist();
     },
-    handleSizeChange1() {},
-    getdata() {
-      this.getcure(0);
+    //重置参数
+    reset(){
+      this.valueChannelId = "";
+      this.valueUrlName = "";
+      this.valueRoomId = "";
+      this.valueStreamName = "";
+      this.valueTerminalName = "";
+      this.valueDomain = "";
+      this.$refs.selectTime.resetTimes();
+      this.totalPV = 0,
+      this.totalUV = 0,
+      this.pageNo = 1;
+      this.tableData = [];
+      this.total_cnt = 0;
     },
-    getdata1() {
-      this.getcure(1);
+    //地区运营商选择
+    select(){
+      if (this.radios == 1) {
+        this.exportTitle = "用户访问分布";
+        this.exportTitleTable = "省市";
+        if(this.accelerateType == 0){
+          this.topregionCurve()
+        }else{
+          this.liveTopregionCurve();
+        }
+      }else{
+        this.exportTitle = "用户运营商分布";
+        this.exportTitleTable = "运营商";
+        if(this.accelerateType == 0){
+          this.topispCurve();
+        }else{
+          this.liveTopispCurve();
+        }
+      }
     },
-    getdata2() {
-      this.getcure(3);
+    //参数处理
+    getParams(){
+      let params = new Object();
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
+      params.isp = "*";
+      params.region = "*";
+      if(this.accelerateType == 0){
+        params.fileName = this.valueUrlName ? this.valueUrlName : '*' ;
+        params.domain = this.valueDomain ? this.valueDomain : "*";
+      }
+      if(this.accelerateType == 1){
+        params.roomId = this.valueRoomId ? this.valueRoomId : '*';
+        params.streamName = this.valueStreamName ? this.valueStreamName : '*';
+      }
+      params.chanId = this.valueChannelId ? this.valueChannelId : '*';
+      params.terminalName = this.valueTerminalName ? parseInt(this.valueTerminalName) : -1;
+      params.timeUnit = this.common.timeUnitActive2(
+        this.starttime,
+        this.endtime
+      );
+      return params;
     },
     //请求数据--曲线图
-    getcure(data) {
-     
-      let params = new Object();
-      params.chanId = this.chanid + "";
-      params.timeUnit = this.timeUnit;
-      if (data == 0) {
-        params.startTs = this.starttime;
-        params.endTs = this.endtime;
-        if (this.value1fileName) {
-          params.fileName = this.value1fileName;
-        } else {
-          params.fileName = "*";
-        }
-        // if (this.value_a2[1]) {
-        //   params.region = this.value_a2[1];
-        // } else {
-          params.region = "*";
-        // }
-        // if (this.value_a3) {
-        //   params.isp = this.value_a3;
-        // } else {
-          params.isp = "*";
-        // }
-        if(this.valueDomain){
-          params.domain = this.valueDomain;
-        }else{
-          params.domain = "*"
-        }
-        if (this.value1Activechanid !== "") {
-          params.chanId = this.value1Activechanid;
-        } else {
-          params.chanId = "*";
-        }
-        if (this.valueacce !== "") {
-          params.terminalName = parseInt(this.valueacce);
-        } else {
-          params.terminalName = -1;
-        }
-
-        this.uvArray = [];
-        this.pvArray = [];
-        this.timeArray = [];
-
-        params.timeUnit = this.common.timeUnitActive2(
-          this.starttime,
-          this.endtime
-        );
+    pvuvCure() {
+      let params = this.getParams();
         pv_uv_curve(params)
           .then(res => {
             this.totalPV = res.data.totalPV;
@@ -668,108 +438,104 @@ export default {
             this.drawLine();
           })
           .catch(err => {});
-      } else if (data == 1 || data == 2) {
-        this.tablecdn = [];
-        params.startTs = this.starttime;
-        params.endTs = this.endtime;
-        if (this.value1fileName) {
-          params.fileName = this.value1fileName;
-        } else {
-          params.fileName = "*";
-        }
-        if (this.value_b2) {
-          params.region = this.value_b2;
-        } else {
-          params.region = "*";
-        }
-        if (this.value_b3) {
-          params.isp = this.value_b3;
-        } else {
-          params.isp = "*";
-        }
-        if(this.valueDomain){
-          params.domain = this.valueDomain;
-        }else{
-          params.domain = "*"
-        }
-        if (this.value1Activechanid !== "") {
-          params.chanId = this.value1Activechanid;
-        } else {
-          params.chanId = "*";
-        }
-        // if (this.valueacce !== "") {
-        //   params.acce = this.valueacce;
-        // } else {
-        //   params.acce = "-1";
-        // }
-        if (this.valueacce !== "") {
-          params.terminalName = parseInt(this.valueacce);
-        } else {
-          params.terminalName = -1;
-        }
-        params.top = 10;
-        params.timeUnit = this.common.timeUnitActive(
-          this.starttime,
-          this.endtime
-        );
-        
-        if (data == 1) {
-          this.playTimesArray1 = [];
-          this.timeArray1 = [];
-          params.pageNo = this.currentPage1 - 1;
-          params.pageSize = 10;
-
-          query_topregion_accesscnt_curve(params)
-            .then(res => {
-              this.playTimesArray1 = res.data.accessCntArray;
-              this.timeArray1 = res.data.regionArray;
-              this.drawLine1(this.playTimesArray1, this.timeArray1, data);
-              this.tablecdn = res.data.accessCntTable;
-              this.total_cnt1 = res.data.totalCnt;
-            })
-            .catch(err => {
-              console.log(err);
-            });
-        } else {
-          this.playTimesArray1 = [];
-          this.timeArray1 = [];
-          params.pageNo = this.currentPage1 - 1;
-          params.pageSize = 10;
-          query_topisp_accesscnt_curve(params)
-            .then(res => {
-              this.playTimesArray1 = res.data.accessCntArray;
-              this.timeArray1 = res.data.ispArray;
-              this.drawLine1(this.playTimesArray1, this.timeArray1, data);
-              this.tablecdn = res.data.accessCntTable;
-              this.total_cnt1 = res.data.totalCnt;
-            })
-            .catch(err => {
-              console.log(err);
-            });
-        }
-      }
     },
-    //切换到地区
-    goarea() {
-      this.twob = false;
-      this.exportActive = 0;
-      this.currentPage1 = 1;
-      this.exportTitle = "用户访问分布";
-      this.exportTitleTable = "省市";
-      this.primaryActive = !this.primaryActive;
-      (this.pagesActive = true), this.getcure(1);
+    livePuVuCurve(){
+      let params = this.getParams();
+        live_visit_statistic(params)
+          .then(res => {
+            this.totalPV = res.data.data.totalPV;
+            this.totalUV = res.data.data.totalUV;
+            this.maxConnect = res.data.data.maxConnect;
+            if(res.data.data.uvArray.length == 0 && res.data.pvArray.length == 0){
+              let arr = splitTimes(this.starttime, this.endtime, 60);
+              arr.forEach((item, index) => {
+                this.timeArray.push(getymdtime(item));
+              });
+              this.uvArray = _.fill(Array(arr.length), 0);
+              this.pvArray = _.fill(Array(arr.length), 0);
+            }else{
+              if (res.data.data.uvArray) {
+                res.data.data.uvArray.forEach((item, index) => {
+                  this.uvArray.push(Math.floor(item));
+                });
+              }
+              if (res.data.data.pvArray) {
+                res.data.data.pvArray.forEach((item, index) => {
+                  this.pvArray.push(Math.floor(item));
+                });
+              }
+              res.data.data.timeArray.forEach((item, index) => {
+                this.timeArray.push(getymdtime(item));
+              });
+            }
+            this.drawLine();
+          })
+          .catch(err => {});
     },
-    //切换到运营商
-    gosupplier() {
-      this.currentPage1 = 1;
-      this.twob = true;
-      this.exportActive = 1;
-      (this.pagesActive = false), (this.exportTitle = "用户运营商分布");
-      this.exportTitleTable = "运营商";
-      this.primaryActive = !this.primaryActive;
-      this.getcure(2);
+    topregionCurve(){
+      let params = this.getParams();
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = this.pageSize;
+      query_topregion_accesscnt_curve(params)
+        .then(res => {
+          this.playTimesArray1 = res.data.accessCntArray;
+          this.timeArray1 = res.data.regionArray;
+          this.drawLine1(this.playTimesArray1, this.timeArray1, data);
+          this.tableData = res.data.accessCntTable;
+          this.total_cnt = res.data.totalCnt;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
-
+    topispCurve() {
+      let params = this.getParams();
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = this.pageSize;
+      query_topisp_accesscnt_curve(params)
+        .then(res => {
+          this.playTimesArray1 = res.data.accessCntArray;
+          this.timeArray1 = res.data.ispArray;
+          this.drawLine1(this.playTimesArray1, this.timeArray1, data);
+          this.tableData = res.data.accessCntTable;
+          this.total_cnt = res.data.totalCnt;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    liveTopregionCurve(){
+      let params = this.getParams();
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = this.pageSize;
+      query_live_topregion_accesscnt_curve(params)
+        .then(res => {
+          this.playTimesArray1 = res.data.accessCntArray;
+          this.timeArray1 = res.data.regionArray;
+          this.drawLine1(this.playTimesArray1, this.timeArray1, data);
+          this.tableData = res.data.accessCntTable;
+          this.total_cnt = res.data.totalCnt;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    liveTopispCurve(){
+      let params = this.getParams();
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = this.pageSize;
+      query_live_topisp_accesscnt_curve(params)
+        .then(res => {
+          this.playTimesArray1 = res.data.accessCntArray;
+          this.timeArray1 = res.data.ispArray;
+          this.drawLine1(this.playTimesArray1, this.timeArray1, data);
+          this.tableData = res.data.accessCntTable;
+          this.total_cnt = res.data.totalCnt;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     // 表头样式设置
     headClass() {
       return "text-align: center; background: #FDFBFB; font-weight: 500; color: #333";
@@ -780,36 +546,21 @@ export default {
     },
     //选项卡
     handleClick(tab, event) {
-      this.shoudzy = false;
-      this.shoudzyx = false;
-
-      this.shoudzyz = false;
-      this.radio = 1;
-
-      this.ableStatus = true;
-      this.value1fileName = "";
-      this.value1Activechanid = "";
-      this.valueacce = "";
-      this.valueDomain = "";
-      //切换时重置时间为当前时间
-      this.val2 = [];
-      this.starttime =
-        new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.reset();
+      new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.endtime = Date.parse(new Date()) / 1000;
       if (tab.index == 0) {
-        this.value_a1 = "";
-        this.value_a2 = "";
-        this.value_a3 = "";
-        this.value1Activechanid = "";
-        // this.getseach(0);
-        this.getcure(0)
+        if(this.accelerateType==0){
+          this.pvuvCure();
+        }else{
+          this.livePuVuCurve();
+        }
       } else if (tab.index == 1) {
-        this.value_b1 = "";
-        this.value_b2 = "";
-        this.value_b3 = "";
-        this.twob = false;
-        this.value1Activechanid = "";
-        this.getcure(1);
+        if(this.accelerateType==0){
+          this.topregionCurve();
+        }else{
+          this.liveTopregionCurve();
+        }
       }
     },
     destroyed: function() {
@@ -964,7 +715,7 @@ export default {
               icon:
                 "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
               onclick: function() {
-                if (_this.exportActive == 0) {
+                if (_this.radios == 1) {
                   _this.exoprtant_topregion();
                 } else {
                   _this.exoprtant_topisp();
@@ -1014,8 +765,6 @@ export default {
   align-items: center;
   padding: 36px 71px;
   .item_left {
-    height: 58px;
-    border-right: 1px solid #e6e9ed;
     .item_text {
       font-size: 14px;
       color: #333333;
@@ -1028,9 +777,6 @@ export default {
     }
   }
   .item_right {
-    height: 48px;
-    width: 49%;
-    padding-left: 40px;
     .item_text {
       font-size: 14px;
       color: #333333;

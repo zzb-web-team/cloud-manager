@@ -110,6 +110,10 @@ export const query_liveinfo = params => {
 export const query_streaminfo = params => {
     return post(`${serverUrl}/livebackmgmt_srv/query_streaminfo_for_admin`, params)
 }
+//导出直播加速内容信息
+export const export_liveinfo_for_admin = params => {
+    return post(`${serverUrl}/livebackmgmt_srv/export_liveinfo_for_admin`, params)
+}
 
 //刷新
 export const resource_refresh = params => {
@@ -528,9 +532,13 @@ export const live_manage_dataflow_curve = (params) => {
 export const live_manage_dataflow_table = (params) => {
     return post(`${serverUrl}/resource_manage/live_manage_dataflow_table`, params)
 };
-//播放流量统计-柱形图
+//播放流量终端统计
 export const live_sdk_flow_control = (params) => {
     return post(`${serverUrl}/resource_manage/live_sdk_flow_control`, params)
+};
+//播放流量统计-图
+export const live_sdk_flow = (params) => {
+    return post(`${serverUrl}/resource_manage/live_sdk_flow`, params)
 };
 //播放流量统计-列表
 export const live_sdk_flow_table = (params) => {

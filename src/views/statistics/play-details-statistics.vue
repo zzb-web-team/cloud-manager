@@ -68,19 +68,19 @@
                 </el-table>
                 <el-table v-show="accelerateType==1" :data="liveData" border max-height="800" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
                   <el-table-column prop="streamName" label="直播流名称"></el-table-column>
-                  <el-table-column prop="livAddr" label="直播流地址" width="250"></el-table-column>
+                  <el-table-column prop="liveAddr" label="直播流地址" width="250"></el-table-column>
                   <el-table-column prop="roomId" label="直播间ID"></el-table-column>
                   <el-table-column prop="channelId" label="渠道ID"></el-table-column>
                   <el-table-column label="P2P播放流量">
                     <template slot-scope="scope">
-                      <div>{{ scope.row.P2Pflow | setbytes }}</div>
+                      <div>{{ scope.row.p2pflow | setbytes }}</div>
                     </template>
                   </el-table-column>
                   <el-table-column prop="region" label="播放区域（省市）"></el-table-column>
-                  <el-table-column prop="isp" label="有效访问数（次）"></el-table-column>
+                  <el-table-column prop="validCnt" label="有效访问数（次）"></el-table-column>
                   <el-table-column label="平均在线时长">
                       <template slot-scope="scope">
-                          <div>{{ common.formatDays(scope.row.playtime*1000) }}</div>
+                          <div>{{ common.formatDays(scope.row.onlineTime*1000) }}</div>
                       </template>
                   </el-table-column>
                   <el-table-column label="时间">
@@ -144,14 +144,14 @@
                 <el-table v-show="accelerateType==1" :data="liveExceptionData" border max-height = "800" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
                   <el-table-column label="播放异常类型" prop="exceptionType" :formatter="typeFormat"></el-table-column>
                   <el-table-column label="播放异常原因"  prop="exceptionStatus" :formatter="statusFormat"></el-table-column>
-                  <el-table-column label="直播流名称" prop="urlname"></el-table-column>
+                  <el-table-column label="直播流名称" prop="streamName"></el-table-column>
                   <el-table-column label="直播流地址" prop="liveAddr"></el-table-column>
                   <el-table-column label="直播间ID" prop="roomId"></el-table-column>
-                  <el-table-column label="渠道ID" prop="channelid"></el-table-column>
+                  <el-table-column label="渠道ID" prop="channelId"></el-table-column>
                   <el-table-column label="异常次数" prop="times"></el-table-column>
                   <el-table-column label="时间">
                     <template slot-scope="scope">
-                      <div>{{ common.getTimess(scope.row.timereport*1000) }}</div>
+                      <div>{{ common.getTimess(scope.row.fdate*1000) }}</div>
                     </template>
                   </el-table-column>
                 </el-table>
