@@ -78,7 +78,7 @@
               v-show="accelerateType == 1"
               v-model="valueChannelId"
               placeholder="请输入直播流名称"
-              style="width: 160px; margin-right: 10px"
+              style="width: 10%; margin-right: 10px"
               @keyup.enter.native="onChanges"
             >
               <i
@@ -369,6 +369,7 @@
                 <el-table
                   :data="tableData"
                   border
+                  @sort-change="changeSort"
                   max-height="530px"
                   style="width: 100%; margin-top: 20px"
                   :cell-style="rowClass"
@@ -381,7 +382,8 @@
                       <div>{{ scope.row.dataflow | setbytes }}</div>
                     </template>
                   </el-table-column>
-                  <el-table-column label="加速流量占比">
+                  <el-table-column label="加速次数" prop="accelCnt" sortable="custom"></el-table-column>
+                  <el-table-column label="加速流量占比" sortable="custom">
                     <template slot-scope="scope">
                       <div>{{ scope.row.dataflowpercent | percentss }}</div>
                     </template>
@@ -473,6 +475,8 @@ export default {
       flowunit: "",
       timeArrayZb: [],
       radioTop: 1,
+      sortName: 'dataflow',  //sortName dataflow/ acc_cnt  
+      sortType: 'desc' // sortType  asc/desc
     };
   },
   filters: {
@@ -577,6 +581,12 @@ export default {
       this.valueStreamName = '';
       this.valueChannelId = '';
     },
+    changeSort(val){
+      console.log(val)
+      this.sortName = val.prop == 'accelCnt' ? 'acc_cnt' : 'dataflow';
+      this.sortType = val.order == 'descending' ? 'desc' : 'asc';
+      this.liveIpfsFlowRank();
+    },
     //获取加速次数每页数量
     handleSizeChange(pagetol) {
       this.pageSize = pagetol;
@@ -613,38 +623,7 @@ export default {
     },
     //点播节点流量图表
     getNodeTraffic() {
-      let params = new Object();
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      params.pageNo = this.pageNo - 1;
-      params.pageSize = this.pageSize;
-      if (this.valueContent) {
-        params.urlName = this.valueContent;
-      } else {
-        params.urlName = "*";
-      }
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valueChanel != "") {
-        params.ipfsChanel = this.valueChanel;
-      } else {
-        params.ipfsChanel = "*";
-      }
-
-      if (this.valueDomain !== "") {
-        params.domain = this.valueDomain;
-      } else {
-        params.domain = "*";
-      }
-
-      params.timeUnit = this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
-
+      let params = this.getParams();
       node_traffic_table(params)
         .then((res) => {
           if (res.status == 0) {
@@ -741,30 +720,7 @@ export default {
     },
     //直播节点流量图
     liveIpfsFlow() {
-      let params = new Object();
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valueRoomId !== "") {
-        params.roomId = this.valueRoomId;
-      } else {
-        params.roomId = "*";
-      }
-      if (this.valueStreamName != "") {
-        params.streamName = this.valueStreamName;
-      } else {
-        params.streamName = "*";
-      }
-
-      params.timeUnit = this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
-
+      let params = this.getParams();
       live_ipfs_flow_curve(params)
         .then((res) => {
           if (res.status == 0) {
@@ -851,25 +807,7 @@ export default {
     },
     //直播加速排行
     liveIpfsFlowRank() {
-      let params = new Object();
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valueRoomId !== "") {
-        params.roomId = this.valueRoomId;
-      } else {
-        params.roomId = "*";
-      }
-
-      params.timeUnit = this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
-
+      let params = this.getParams();
       query_live_ranking(params)
         .then((res) => {
           if (res.status == 0) {
@@ -884,36 +822,7 @@ export default {
     },
     //下载节点流量图表
     exoprtNodeTraffic() {
-      let params = new Object();
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      // params.chanId = this.chanid + "";
-      if (this.valueContent) {
-        params.urlName = this.valueContent;
-      } else {
-        params.urlName = "*";
-      }
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valueChanel != "") {
-        params.ipfsChanel = this.valueChanel;
-      } else {
-        params.ipfsChanel = "*";
-      }
-
-      if (this.valueDomain !== "") {
-        params.domain = this.valueDomain;
-      } else {
-        params.domain = "*";
-      }
-
-      params.timeUnit = this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
+      let params = this.getParams();
       node_traffic_download(params)
         .then((res) => {
           if (res.status == 0) {
@@ -931,20 +840,22 @@ export default {
       params.endTs = this.endtime;
       params.pageNo = this.pageNo - 1;
       params.pageSize = this.pageSize;
-      if (this.valueContent) {
-        params.urlName = this.valueContent;
-      } else {
-        params.urlName = "*";
-      }
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valueDomain !== "") {
-        params.domain = this.valueDomain;
-      } else {
-        params.domain = "*";
+      params.channelId = this.valueChannelId ? this.valueChannelId : "*";
+      if(this.accelerateType == 0){
+        params.urlName = this.valueContent ? this.valueContent : "*";
+        params.domain = this.valueDomain ? this.valueDomain : "*";
+        if(this.activeName=='first'){
+          params.ipfsChanel = this.valueChanel ? this.valueChanel : "*";
+        }
+      }else{
+        params.roomId = this.valueRoomId ? this.valueRoomId : "*";
+        if(this.activeName=='first'){
+          params.streamName = this.valueStreamName ? this.valueStreamName : "*";
+          params.ipfsChanel = this.valueChanel ? this.valueChanel : "*";
+        }else{
+          params.sortName = this.sortName; //sortName dataflow/ acc_cnt  
+          params.sortType = this.sortType; // sortType  asc/desc
+        }
       }
       params.timeUnit = this.common.timeUnitActive(
         this.starttime,
@@ -1258,7 +1169,7 @@ export default {
           x: "center", //可设定图例在左、右、居中
           y: "bottom", //可设定图例在上、下、居中
           padding: [0, 0, 0, 0], //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
-          data: ["P2P播放流量"],
+          data: ["P2P播放流量", "直播源流量"],
         },
         tooltip: {
           trigger: "axis",

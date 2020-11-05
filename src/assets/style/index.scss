@@ -153,10 +153,10 @@ body {
     }
     .seach {
         width: 100%;
-        margin: 50px 0;
+        margin: 50px 0 30px;
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
         justify-content: flex-start;
         flex-wrap: wrap;
         .input-with-select {
@@ -168,6 +168,16 @@ body {
             height: 40px;
             line-height: 40px;
             margin-left: 10px;
+        }
+        .el-button{
+            height: 40px;
+        }
+        .el-input {
+            margin-bottom: 20px;
+        }
+        .el-select {
+            height: 40px;
+            margin-bottom: 20px;
         }
     }
     .device_table {

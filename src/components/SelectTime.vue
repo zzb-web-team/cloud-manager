@@ -127,13 +127,7 @@ export default {
       this.showTimePicker = false;
       this.times = [];
       this.selected = 0;
-    },
-    handleSizeChange(val) {
-      this.$emit("handleSizeChange", { val: val });
-    },
-    handleCurrentChange(val) {
-      this.$emit("handleCurrentChange", { val: val });
-    },
+    }
   },
 };
 </script>

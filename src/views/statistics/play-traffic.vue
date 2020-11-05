@@ -199,7 +199,8 @@
             <SelectTime @selectTime="selectTime" :type="'daterange'" />
           </div>
           <div>
-            <div id="myChartMap3" :style="{ height: '607px' }"></div>
+            <div v-show="accelerateType==0" id="myChartMap3" :style="{ height: '607px' }"></div>
+            <div v-show="accelerateType==1" id="myChartMap4" :style="{ height: '607px' }"></div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -347,18 +348,19 @@ export default {
     selectTime(val){
       this.starttime = val.starttime;
       this.endtime = val.endtime;
+      this.pageNo = 1;
       this.changes();
     },
     changes(){
       if(this.accelerateType==0){
-        if(this.activeName == 'first'){
+        if(this.activeName == 'threed'){
           this.querySdkflow();
           this.querySdkflowTable();
         }else{
           this.querySdkflowControl();
         }
       }else{
-        if(this.activeName == 'first'){
+        if(this.activeName == 'threed'){
           this.liveQuerySdkFlow()
         }else{
           this.liveSdkflowControl()
@@ -380,6 +382,19 @@ export default {
       this.pageNo = 1;
       this.tableData = [];
       this.total_cnt = 0;
+      this.timeArrayZb = [];
+      this.timeArrayZb1 = [];
+      this.dataZb1 = [];
+      this.dataZb2 = [];
+      this.dataZb3 = [];
+      this.dataAry = [];
+      this.dataAry1 = [];
+      this.dataAry2 = [];
+      this.timeArrayJk = [];
+      this.dataJk1 = [];
+      this.dataJk2 = [];
+      this.dataJk3 = [];
+      this.dataJk4 = [];
     },
     timeFormatter(row){
       if(this.timeUnit == 120){
@@ -574,37 +589,7 @@ export default {
     },
     //点播流量终端
     querySdkflowControl() {
-      let params = new Object();
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      if (this.valueUrlName) {
-        params.urlName = this.valueUrlName;
-      } else {
-        params.urlName = "*";
-      }
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valueChanel !== "") {
-        params.ipfsChannel = this.valueChanel;
-      } else {
-        params.ipfsChannel = "*";
-      }
-      if (this.valueDomain !== "") {
-        params.domain = this.valueDomain;
-      } else {
-        params.domain = "*";
-      }
-      params.timeUnit = this.common.timeUnitActive1(
-        this.starttime,
-        this.endtime
-      );
-      this.timeUnit = this.common.timeUnitActive1(
-        this.starttime,
-        this.endtime
-      );
+      let params = this.getParams();
       sdk_flow_control(params)
         .then(res => {
           if (res.status == 0) {
@@ -665,10 +650,6 @@ export default {
                 this.timeArrayJk.push(getymdtime1(item));
               });
             }
-            // this.dataJk1 = res.data.iospstreamarray;
-            // this.dataJk2 = res.data.ioscstreamarray;
-            // this.dataJk3 = res.data.andriodpstreamarray;
-            // this.dataJk4 = res.data.andriodcstreamarray;
             this.drawLine3(
               this.timeArrayJk,
               this.dataJk1,
@@ -754,17 +735,13 @@ export default {
           if (res.status == 0) {
             if([
 							...res.data.iospstreamarray,
-							...res.data.ioscstreamarray,
 							...res.data.andriodpstreamarray,
-							...res.data.andriodcstreamarray
 							].length == 0){
 							this.flowunit = 'B'
 						}else{
 							var max = _.max([
 								...res.data.iospstreamarray,
-								...res.data.ioscstreamarray,
-								...res.data.andriodpstreamarray,
-								...res.data.andriodcstreamarray
+								...res.data.andriodpstreamarray
 							]);
 							this.flowunit = this.common.formatByteActiveunit(max);
 						}
@@ -772,10 +749,8 @@ export default {
             this.timeArrayJk = [];
             this.dataJk1 = [];
             this.dataJk2 = [];
-            this.dataJk3 = [];
-            this.dataJk4 = [];
 
-            if(res.data.iospstreamarray.length == 0 && res.data.ioscstreamarray.length == 0 && res.data.andriodpstreamarray.length == 0 && res.data.andriodcstreamarray.length == 0){
+            if(res.data.iospstreamarray.length == 0 && res.data.andriodpstreamarray.length == 0){
 							let arr = splitTimes(this.starttime, this.endtime, params.timeUnit);
 							if (params.timeUnit == 60) {
 								arr.forEach((item, index) => {
@@ -788,37 +763,22 @@ export default {
 							}
 							this.dataJk1 = _.fill(Array(arr.length), 0);
 							this.dataJk2 = _.fill(Array(arr.length), 0);
-							this.dataJk3 = _.fill(Array(arr.length), 0);
-							this.dataJk4 = _.fill(Array(arr.length), 0);
 						}else{
-
               res.data.iospstreamarray.forEach((item, index) => {
                 this.dataJk1.push(this.common.formatByteNum(item*1, this.flowunit));
               });
-              res.data.ioscstreamarray.forEach((item, index) => {
+              res.data.andriodpstreamarray.forEach((item, index) => {
                 this.dataJk2.push(this.common.formatByteNum(item*1, this.flowunit));
               });
-              res.data.andriodpstreamarray.forEach((item, index) => {
-                this.dataJk3.push(this.common.formatByteNum(item*1, this.flowunit));
-              });
-              res.data.andriodcstreamarray.forEach((item, index) => {
-                this.dataJk4.push(this.common.formatByteNum(item*1, this.flowunit));
-              });
-
               res.data.timeArray.forEach((item, index) => {
                 this.timeArrayJk.push(getymdtime1(item));
               });
             }
-            // this.dataJk1 = res.data.iospstreamarray;
-            // this.dataJk2 = res.data.ioscstreamarray;
-            // this.dataJk3 = res.data.andriodpstreamarray;
-            // this.dataJk4 = res.data.andriodcstreamarray;
-            this.drawLine3(
+
+            this.drawLiveLine3(
               this.timeArrayJk,
               this.dataJk1,
-              this.dataJk2,
-              this.dataJk3,
-              this.dataJk4
+              this.dataJk2
             );
           }
         })
@@ -828,16 +788,7 @@ export default {
     },
     //播放流量分布图
     queryDataFlowLocation() {
-      let params = new Object();
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-
+      let params = this.getParams();
       query_dataflow_location_curve(params).then(res=>{
         if (res.status == 0) {
           this.locationCurveList = res.data.curveList // res.data.curveList;
@@ -861,33 +812,7 @@ export default {
     },
     //流量监控导出
     exoprtant_Ll() {
-      let params = new Object();
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      if (this.valueUrlName) {
-        params.urlName = this.valueUrlName;
-      } else {
-        params.urlName = "*";
-      }
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valueChanel !== "") {
-        params.ipfsChannel = this.valueChanel;
-      } else {
-        params.ipfsChannel = "*";
-      }
-      if (this.valueDomain !== "") {
-        params.domain = this.valueDomain;
-      } else {
-        params.domain = "*";
-      }
-      params.timeUnit = this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
+      let params = this.getParams();
       export_sdk_flow_control_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -898,39 +823,7 @@ export default {
     },
     //流量占比导出
     exoprtant_Zb() {
-      let params = new Object();
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      if (this.valueUrlName) {
-        params.urlName = this.valueUrlName;
-      } else {
-        params.urlName = "*";
-      }
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valueTerminalName !== "") {
-        params.terminalName = parseInt(this.valueTerminalName);
-      } else {
-        params.terminalName = -1;
-      }
-      if (this.valueChanel !== "") {
-        params.ipfsChannel = this.valueChanel;
-      } else {
-        params.ipfsChannel = "*";
-      }
-      if (this.valueDomain !== "") {
-        params.domain = this.valueDomain;
-      } else {
-        params.domain = "*";
-      }
-
-      params.timeUnit = this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
+      let params = this.getParams();
       export_sdk_flow_table_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -952,6 +845,8 @@ export default {
     //选项卡
     handleClick(tab, event) {
       this.reset();
+      this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.endtime = Date.parse(new Date()) / 1000;
       if (tab.index == 0) {
         if(this.accelerateType == 0){
           this.querySdkflow();
@@ -1315,7 +1210,6 @@ export default {
       myChart.setOption(options);
     },
 
-
     drawLine3(a, b, c, d, e) {
       var dataTime = a;
       let _this = this;
@@ -1471,6 +1365,128 @@ export default {
             },
           },
         ],
+      };
+      myChart.setOption(options);
+    },
+
+    drawLiveLine3(a, b, c) {
+      var dataTime = a;
+      let _this = this;
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = this.$echarts.init(document.getElementById("myChartMap4"));
+      window.onresize = myChart.resize;
+      // 绘制图表
+      let options = {
+        title: {
+          text: "流量监控",
+          left: "12px",
+          textStyle: {
+            color: "#333333",
+            fontSize: 16,
+          },
+        },
+        toolbox: {
+          //show: true,
+          itemSize: 20,
+          itemGap: 30,
+          right: 50,
+          feature: {
+            mydow: {
+              show: true,
+              title: "导出",
+              icon:
+                "path://M552 586.178l60.268-78.53c13.45-17.526 38.56-20.83 56.085-7.38s20.829 38.56 7.38 56.085l-132 172c-16.012 20.863-47.454 20.863-63.465 0l-132-172c-13.45-17.526-10.146-42.636 7.38-56.085 17.525-13.45 42.635-10.146 56.084 7.38L472 586.177V152c0-22.091 17.909-40 40-40s40 17.909 40 40v434.178zM832 512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 61.856-50.144 112-112 112H224c-61.856 0-112-50.144-112-112V512c0-22.091 17.909-40 40-40s40 17.909 40 40v288c0 17.673 14.327 32 32 32h576c17.673 0 32-14.327 32-32V512z",
+              onclick: function() {
+                _this.exoprtant_Ll();
+              },
+            },
+          },
+        },
+        legend: {
+          // orient: 'vertical',
+          x: "center", //可设定图例在左、右、居中
+          y: "bottom", //可设定图例在上、下、居中
+          padding: [0, 0, 0, 0], //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+          data: ["IOS-P2P", "Android-P2P",],
+        },
+        tooltip: {
+          trigger: "axis",
+          formatter: function(params) {
+            console.log(_this.flowunit)
+            let str = "";
+            params.forEach((item, index) => {
+              if (index == 0) {
+                str +=
+                  item.axisValue +
+                  "</br>" +
+                  item.seriesName +
+                  "：" +
+                  item.value +
+                  _this.flowunit +
+                  "</br>";
+              } else {
+                str +=
+                  item.seriesName +
+                  "：" +
+                  item.value +
+                  _this.flowunit +
+                  "</br>";
+              }
+            });
+            return str;
+          },
+        },
+        grid: {
+          left: "4%", // 默认10%，给24就挺合适的。
+          top: 60, // 默认60
+          right: 35, // 默认10%
+          bottom: 100, // 默认60
+        },
+        xAxis: {
+          data: a,
+          splitLine: {
+            show: false,
+          },
+        },
+        yAxis: {
+          name: _this.flowunit,
+        },
+        series: [
+          {
+            name: "IOS-P2P",
+            type: "line",
+            data: b,
+            smooth: false,
+            symbol: "star", //拐点样式
+            symbolSize: 8, //拐点大小
+            itemStyle: {
+              normal: { color: "#E8505B" },
+            },
+            label: {
+              normal: {
+                show: false,
+                position: "insideRight",
+              },
+            },
+          },
+          {
+            name: "Android-P2P",
+            type: "line",
+            data: c,
+            smooth: false,
+            symbol: "pin", //拐点样式
+            symbolSize: 8, //拐点大小
+            itemStyle: {
+              normal: { color: "#F2C33C" },
+            },
+            label: {
+              normal: {
+                show: false,
+                position: "insideRight",
+              },
+            },
+          }
+        ]
       };
       myChart.setOption(options);
     },

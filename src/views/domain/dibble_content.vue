@@ -20,7 +20,7 @@
       </div>
       <el-row type="flex" class="row_active">
         <el-col :span="24">
-          <el-table :data="datas" border max-height="560px" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">
+          <el-table :data="datas" border max-height="560px" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass" @sort-change="changeSort">
             <el-table-column label="渠道ID">
               <template slot-scope="scope">
                 <div>{{ scope.row.ChanId }}</div>
@@ -57,7 +57,7 @@
                 <div style="color:#E54545;" v-else>回源失败</div>
               </template>
             </el-table-column>
-            <el-table-column label="创建日期">
+            <el-table-column label="创建日期" sortable="custom">
               <template slot-scope="scope">
                 <div>{{ scope.row.createTime | settimes }}</div>
               </template>
@@ -85,6 +85,7 @@ export default {
     return {
       pageNo: 0,
       total_cnt: 0,
+      order: 0,
       datas: [],
       values: "",
       liveProto: "",
@@ -175,12 +176,21 @@ export default {
       this.times = [];
       this.getContentInfo();
     },
+    changeSort(val){
+      console.log(val)
+      if(this.order==0){
+        this.order = 1;
+      }else{
+        this.order = 0;
+      }
+      this.getContentInfo();
+    },
     getContentInfo() {
       let params = new Object();
       params.startTime = this.starttime;
       params.endTime = this.endtime;
       params.page = this.pageNo;
-      params.order = 0;
+      params.order = this.order;
       if (this.liveProto !== "") {
         params.liveProto = this.liveProto;
       } else {

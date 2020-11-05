@@ -8,29 +8,29 @@
         </div>
       </div>
       <el-tabs v-model="activeName" @tab-click="handleClick">
+        <div class="seach">
+          <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+          </el-input>
+          <el-input v-show="accelerateType == 0" v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+          </el-input>
+          <el-input v-show="accelerateType == 0" v-model="valueUrlName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+          </el-input>
+          <el-input v-show="accelerateType == 1" v-model="valueRoomId" placeholder="请输入直播间ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+          </el-input>
+          <el-input v-show="accelerateType == 1" v-model="valueStreamName" placeholder="请输入直播流名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+          </el-input>
+          <el-select v-model="terminalName" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
+            <el-option label="全部终端" value="-1"></el-option>
+            <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+          <SelectTime ref="selectTime" @selectTime="selectTime" :type="'daterange'" />
+        </div>
         <el-tab-pane label="PV/UV" name="first">
-          <div class="seach">
-            <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-            </el-input>
-            <el-input v-show="accelerateType == 0" v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-            </el-input>
-            <el-input v-show="accelerateType == 0" v-model="valueUrlName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-            </el-input>
-            <el-input v-show="accelerateType == 1" v-model="valueRoomId" placeholder="请输入直播间ID" style="width:160px;margin-right: 10px;" @change="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-            </el-input>
-            <el-input v-show="accelerateType == 1" v-model="valueStreamName" placeholder="请输入直播流名称" style="width:160px;margin-right: 10px;" @change="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-            </el-input>
-            <el-select v-model="terminalName" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
-              <el-option label="全部终端" value="-1"></el-option>
-              <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-            <SelectTime ref="selectTime" @selectTime="selectTime" :type="'daterange'" />
-          </div>
           <div class="user_item">
             <div class="item_left">
               <div class="item_text">总访问次数(PV)</div>
@@ -57,29 +57,7 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="访问用户分布" name="second">
-          <div class="seach">
-            <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-            </el-input>
-            <el-input v-show="accelerateType == 0" v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-            </el-input>
-            <el-input v-show="accelerateType == 0" v-model="valueUrlName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-            </el-input>
-            <el-input v-show="accelerateType == 1" v-model="valueRoomId" placeholder="请输入直播间ID" style="width:160px;margin-right: 10px;" @change="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-            </el-input>
-            <el-input v-show="accelerateType == 1" v-model="valueStreamName" placeholder="请输入直播流名称" style="width:160px;margin-right: 10px;" @change="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-            </el-input>
-            <el-select v-model="terminalName" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
-              <el-option label="全部终端" value="-1"></el-option>
-              <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-            <SelectTime ref="selectTime" @selectTime="selectTime" :type="'daterange'" />
-          </div>
-          <div class="devide_table">
+          <div class="device_table">
             <el-row type="flex" class="row_active">
               <el-col :span="24" style="text-align:left; font-weight: bold; margin-bottom:10px;">{{exportTitle}}</el-col>
             </el-row>
@@ -119,7 +97,6 @@
                   </el-table-column>
                 </el-table>
                 <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="pageNo" :pagesa="total_cnt"></fenye>
-
               </el-col>
             </el-row>
           </div>
@@ -202,8 +179,6 @@ export default {
       timeArray: [], //图一x
       playTimesArray1: [], //图二y
       timeArray1: [], //图二x
-      playTimesArray2: [], //图三y
-      timeArray2: [], //图三x
       radios: 1,
     };
   },
@@ -265,6 +240,7 @@ export default {
     changeType(v){
       this.accelerateType = v;
       this.activeName = 'first';
+      this.$refs.selectTime.resetTimes();
       this.reset();
       if(v==0){
         this.pvuvCure();
@@ -276,6 +252,7 @@ export default {
     selectTime(val){
       this.starttime = val.starttime;
       this.endtime = val.endtime;
+      this.pageNo = 1;
       this.reset();
       this.changes();
     },
@@ -356,12 +333,16 @@ export default {
       this.valueStreamName = "";
       this.valueTerminalName = "";
       this.valueDomain = "";
-      this.$refs.selectTime.resetTimes();
       this.totalPV = 0,
       this.totalUV = 0,
       this.pageNo = 1;
       this.tableData = [];
       this.total_cnt = 0;
+      this.uvArray = [];
+      this.pvArray = [];
+      this.timeArray = [];
+      this.playTimesArray1 = [];
+      this.timeArray1 = [];
     },
     //地区运营商选择
     select(){
@@ -446,7 +427,7 @@ export default {
             this.totalPV = res.data.data.totalPV;
             this.totalUV = res.data.data.totalUV;
             this.maxConnect = res.data.data.maxConnect;
-            if(res.data.data.uvArray.length == 0 && res.data.pvArray.length == 0){
+            if(res.data.data.uvArray.length == 0 && res.data.data.pvArray.length == 0){
               let arr = splitTimes(this.starttime, this.endtime, 60);
               arr.forEach((item, index) => {
                 this.timeArray.push(getymdtime(item));
@@ -476,11 +457,12 @@ export default {
       let params = this.getParams();
       params.pageNo = this.pageNo - 1;
       params.pageSize = this.pageSize;
+      params.top = 10;
       query_topregion_accesscnt_curve(params)
         .then(res => {
           this.playTimesArray1 = res.data.accessCntArray;
           this.timeArray1 = res.data.regionArray;
-          this.drawLine1(this.playTimesArray1, this.timeArray1, data);
+          this.drawLine1(this.playTimesArray1, this.timeArray1);
           this.tableData = res.data.accessCntTable;
           this.total_cnt = res.data.totalCnt;
         })
@@ -492,11 +474,12 @@ export default {
       let params = this.getParams();
       params.pageNo = this.pageNo - 1;
       params.pageSize = this.pageSize;
+      params.top = 10;
       query_topisp_accesscnt_curve(params)
         .then(res => {
           this.playTimesArray1 = res.data.accessCntArray;
           this.timeArray1 = res.data.ispArray;
-          this.drawLine1(this.playTimesArray1, this.timeArray1, data);
+          this.drawLine1(this.playTimesArray1, this.timeArray1);
           this.tableData = res.data.accessCntTable;
           this.total_cnt = res.data.totalCnt;
         })
@@ -508,13 +491,15 @@ export default {
       let params = this.getParams();
       params.pageNo = this.pageNo - 1;
       params.pageSize = this.pageSize;
+      params.top = 10;
       query_live_topregion_accesscnt_curve(params)
         .then(res => {
-          this.playTimesArray1 = res.data.accessCntArray;
-          this.timeArray1 = res.data.regionArray;
-          this.drawLine1(this.playTimesArray1, this.timeArray1, data);
-          this.tableData = res.data.accessCntTable;
-          this.total_cnt = res.data.totalCnt;
+          this.playTimesArray1 = res.data.data.accessCntArray;
+          this.timeArray1 = res.data.data.regionArray;
+          this.drawLine1(this.playTimesArray1, this.timeArray1);
+          this.tableData = res.data.data.accessCntTable;
+          console.log(this.tableData)
+          this.total_cnt = res.data.data.totalCnt;
         })
         .catch(err => {
           console.log(err);
@@ -524,13 +509,14 @@ export default {
       let params = this.getParams();
       params.pageNo = this.pageNo - 1;
       params.pageSize = this.pageSize;
+      params.top = 10;
       query_live_topisp_accesscnt_curve(params)
         .then(res => {
-          this.playTimesArray1 = res.data.accessCntArray;
-          this.timeArray1 = res.data.ispArray;
-          this.drawLine1(this.playTimesArray1, this.timeArray1, data);
-          this.tableData = res.data.accessCntTable;
-          this.total_cnt = res.data.totalCnt;
+          this.playTimesArray1 = res.data.data.accessCntArray;
+          this.timeArray1 = res.data.data.ispArray;
+          this.drawLine1(this.playTimesArray1, this.timeArray1);
+          this.tableData = res.data.data.accessCntTable;
+          this.total_cnt = res.data.data.totalCnt;
         })
         .catch(err => {
           console.log(err);
@@ -547,7 +533,8 @@ export default {
     //选项卡
     handleClick(tab, event) {
       this.reset();
-      new Date(new Date().toLocaleDateString()).getTime() / 1000;
+      this.$refs.selectTime.resetTimes();
+      this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.endtime = Date.parse(new Date()) / 1000;
       if (tab.index == 0) {
         if(this.accelerateType==0){
@@ -687,7 +674,7 @@ export default {
       };
       myChart.setOption(options);
     },
-    drawLine1(a, b, data) {
+    drawLine1(a, b) {
       let _this = this;
       let myChart = this.$echarts.init(document.getElementById("myChart1"));
       window.onresize = myChart.resize;
