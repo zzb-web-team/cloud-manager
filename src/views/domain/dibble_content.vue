@@ -118,11 +118,11 @@ export default {
           label: "未加速",
         },
         {
-          value: 3,
+          value: 2,
           label: "已加速",
         },
         {
-          value: 2,
+          value: 3,
           label: "回源失败",
         },
       ],
@@ -197,11 +197,7 @@ export default {
         params.liveProto = 0;
       }
       if (this.state !== "") {
-        if(this.state == 3){
-          params.state = 1
-        }else{
-          params.state = this.state;
-        }
+        params.state = this.state;
       } else {
         params.state = 0;
       }

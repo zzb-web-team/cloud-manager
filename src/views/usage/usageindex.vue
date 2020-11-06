@@ -251,6 +251,9 @@ export default {
       this.accelerateType = v;
       this.tablecdn = [];
       this.totalYl = 0;
+      this.pageNo = 1;
+      this.timeArray = [];
+      this.dataFlowArray = [];
       this.$refs.selectTime.resetTimes();
       this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.endtime = Date.parse(new Date()) / 1000;
@@ -329,12 +332,16 @@ export default {
     //获取页码
     handleCurrentChange(pages) {
       this.pageNo = pages;
-      this.gettable2();
+      if(this.accelerateType==0){
+        this.gettable2();
+      }else{
+        this.liveDataFlowCurve()
+      }
+      
     },
     //获取每页数量
     handleSizeChange(pagetol) {
       this.pageSize = pagetol;
-      this.gettable2();
     },
     //图表导出
     exoprtant_Yl() {
@@ -513,8 +520,6 @@ export default {
             this.curveData = res.data.data;
             let nowarr = [];
             let childlist = [];
-
-            
             let arrs = [];
             _(res.data.data).forEach(item=>{
               arrs.push(item.dataflowArray)
@@ -539,7 +544,6 @@ export default {
               this.curveData[0].dataflowArray = _.fill(Array(arr.length), 0);
               nowarr.push(obj);
 						}else{
-
               for (var i = 0; i < nowlengh; i++) {
                 childlist.push(res.data.data[i].channelid);
                 let obj = {};
@@ -553,12 +557,10 @@ export default {
                 obj.data = nowarr1;
                 nowarr.push(obj);
               }
-
               res.data.data[0].timeArray.forEach((item, index) => {
                 this.timeArray.push(getymdtime1(item));
               });
             }
-
             this.drawLine(nowarr, this.timeArray, childlist);
           })
           .catch((err) => {
@@ -622,11 +624,11 @@ export default {
     },
     //直播节点流量用量图
     liveDataFlowCurve(data) {
+      this.dataFlowArray = [];
+      this.timeArray = [];
       let params = new Object();
       params.startTs = this.starttime;
       params.endTs = this.endtime;
-      params.pageNo = this.pageNo;
-      params.pageSize = this.pageSize;
       if (this.chanIds.length > 0) {
         params.channelId = this.chanIds;
       } else {
@@ -660,6 +662,8 @@ export default {
         this.starttime,
         this.endtime
       );
+      params.pageNo = this.pageNo - 1;
+      params.pageSize = this.pageSize;
       live_manage_dataflow_curve(params)
         .then((res) => {
           this.totalYl = res.data.total;
@@ -678,7 +682,6 @@ export default {
             let max = _.max(_.flatten(arrs));
             this.flowunit = this.common.formatByteActiveunit(max);
           }
-
           if(res.data.data[0].dataflowArray.length == 0){
             let arr = splitTimes(this.starttime, this.endtime, this.timeUnit);							
             arr.forEach((item, index) => {
@@ -692,7 +695,6 @@ export default {
             this.curveData[0].dataflowArray = _.fill(Array(arr.length), 0);
             nowarr.push(obj);
           }else{
-
             for (var i = 0; i < nowlengh; i++) {
               childlist.push(res.data.data[i].channelid);
               let obj = {};
@@ -706,7 +708,6 @@ export default {
               obj.data = nowarr1;
               nowarr.push(obj);
             }
-
             res.data.data[0].timeArray.forEach((item, index) => {
               this.timeArray.push(getymdtime1(item));
             });

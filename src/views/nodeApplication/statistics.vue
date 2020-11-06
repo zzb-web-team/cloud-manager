@@ -39,7 +39,7 @@
               </div>
             </div>
             <div class="item_right">
-              <div class="item_text">独立IP访问数(UV)</div>
+              <div class="item_text">{{accelerateType==0 ? '独立IP访问数(UV)' : '独立IP访问数'}}</div>
               <div class="item_count">
                 <span>{{ totalUV }}</span>
               </div>
