@@ -1,72 +1,67 @@
 <template>
-  <section class="myself-container content">
-    <div class="top_title">SDK版本统计</div>
-    <div class="user-title" style="display: flex;flex-flow: column; margin-top: 20px;">
-      <div class="resources_con">
-        <div style="display: flex;flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-            <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
-        </div>
-        <div class="device_form" style>
-          <!-- <el-button-group style="display: flex;justify-content: center;">
-            <el-button plain @click="goarea()">地区</el-button>
-            <el-button plain @click="gosupplier()">运营商</el-button>
-          </el-button-group> -->
-          <el-radio-group
-            v-model="radios"
-            size="medium"
-            @change="select()"
-            style="display: flex;justify-content: center;"
-          >
-            <el-radio-button label="0">Android</el-radio-button >
-            <el-radio-button label="1">IOS</el-radio-button >
-          </el-radio-group>
-          <div id="myChart1" :style="{ height: '650px' }"></div>
-        </div>
-        <div class="devide_table">
-          <el-row type="flex" class="row_active">
-            <el-col :span="24" style="text-align:left;font-weight: bold;padding-left: 10px;">版本分布明细数据</el-col>
-          </el-row>
-          <el-row type="flex" class="row_active">
-              <el-col :span="24">
-              <el-table :span-method="objectSpanMethod" :data="tableZb" border max-height="800" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
-                  <el-table-column prop="sdkType" label="SDK应用类型" :formatter="formattType">
-                  </el-table-column>
-                  <el-table-column label="版本" prop="sdkVersion">
-                  </el-table-column>
-                  <el-table-column label="版本用户" prop="userCnt">
-                  </el-table-column>
-                  <el-table-column label="占比">
-                    <template slot-scope="scope">
-                      <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.percent | percentss }}</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="版本用户清单">
-                    <template slot-scope="scope">
-                      <el-button @click="view(scope.$index, scope.row)" class="lab_btn" type="text" size="small">查看</el-button>
-                    </template>
-                  </el-table-column>
-              </el-table>
-              <!-- <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye> -->
-              </el-col>
-          </el-row>
-        </div>
+  <div>
+    <section class="myself-container content">
+      <div class="top_title">SDK版本统计</div>
+      <div class="seach">
+          <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
       </div>
+      <div class="device_table">
+        <el-row type="flex" class="row_active">
+          <el-col :span="24" style="text-align:left;font-weight: bold;padding-left: 10px;">版本分布明细数据</el-col>
+        </el-row>
+        <el-row type="flex" class="row_active">
+            <el-col :span="24">
+            <el-table :span-method="objectSpanMethod" :data="tableZb" border max-height="800" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                <el-table-column prop="sdkType" label="SDK应用类型" :formatter="formattType">
+                </el-table-column>
+                <el-table-column label="版本" prop="sdkVersion">
+                </el-table-column>
+                <el-table-column label="版本用户" prop="userCnt">
+                </el-table-column>
+                <el-table-column label="占比">
+                  <template slot-scope="scope">
+                    <div style="display: flex;justify-content: center;">
+                      <div>{{ scope.row.percent | percentss }}</div>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column label="版本用户清单">
+                  <template slot-scope="scope">
+                    <el-button @click="view(scope.$index, scope.row)" class="lab_btn" type="text" size="small">查看</el-button>
+                  </template>
+                </el-table-column>
+            </el-table>
+            <!-- <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye> -->
+            </el-col>
+        </el-row>
+      </div>
+
+      <el-dialog :title="title" :visible.sync="dialogTableVisible" width="50%">
+        <el-table :data="tableData" border>
+          <el-table-column property="channelId" label="渠道ID"></el-table-column>
+          <el-table-column label="安装时间">
+            <template slot-scope="scope">
+              <div style="display: flex;justify-content: center;">
+                <div>{{ scope.row.timeReport | settimes }}</div>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
+    </section>
+    <div class="device_form">
+      <el-radio-group
+        v-model="radios"
+        size="medium"
+        @change="select()"
+        style="display: flex;justify-content: center;"
+      >
+        <el-radio-button label="0">Android</el-radio-button >
+        <el-radio-button label="1">IOS</el-radio-button >
+      </el-radio-group>
+      <div id="myChart1" :style="{ height: '650px' }"></div>
     </div>
-    <el-dialog :title="title" :visible.sync="dialogTableVisible" width="50%">
-      <el-table :data="tableData" border>
-        <el-table-column property="channelId" label="渠道ID"></el-table-column>
-        <el-table-column label="安装时间">
-          <template slot-scope="scope">
-            <div style="display: flex;justify-content: center;">
-              <div>{{ scope.row.timeReport | settimes }}</div>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-dialog>
-  </section>
+  </div>
 </template>
 
 <script>

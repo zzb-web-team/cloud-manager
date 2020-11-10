@@ -201,28 +201,28 @@ export default {
         var roomId = /^\d{8}$/;
         var liveAddr = /^http?:\/\/(([a-zA-Z0-9_-])+(\.)?)*(:\d+)?(\/((\.)?(\?)?=?&?[a-zA-Z0-9_-](\?)?)*)*$/i;
         if(channelIdReg.test(this.values)){
-          params.channelId = this.values;
+          params.chanId = this.values;
           params.roomId = '';
           params.liveAddr = '';
           params.streamName = '';
         }else if(roomId.test(this.values)){
-          params.channelId = '';
+          params.chanId = '';
           params.roomId = this.values;
           params.liveAddr = '';
           params.streamName = '';
         }else if(liveAddr.test(this.values)){
-          params.channelId = '';
+          params.chanId = '';
           params.roomId = '';
           params.liveAddr = this.values;
           params.streamName = '';
         }else{
-          params.channelId = '';
+          params.chanId = '';
           params.roomId = '';
           params.liveAddr = '';
           params.streamName = this.values;
         }
       } else {
-        params.channelId = '';
+        params.chanId = '';
         params.roomId = '';
         params.liveAddr = '';
         params.streamName = '';
