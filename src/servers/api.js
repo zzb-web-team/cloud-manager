@@ -106,6 +106,10 @@ export const refresh_state_admin = params => {
 export const query_liveinfo = params => {
     return post(`${serverUrl}/livebackmgmt_srv/query_liveinfo_for_admin`, params)
 }
+//历史流信息
+export const query_live_history = params => {
+    return post(`${serverUrl}/resource_manage/query_live_history`, params)
+}
 //直播流信息
 export const query_streaminfo = params => {
     return post(`${serverUrl}/livebackmgmt_srv/query_streaminfo_for_admin`, params)

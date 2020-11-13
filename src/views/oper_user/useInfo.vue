@@ -1,63 +1,64 @@
 <template>
     <section class="myself-container">
         <div class="top_title" style="display: flex;margin-top:30px;">
-            <span @click="goback" style="font-size: 24px;color: #202020;">
-                <i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
+            <span @click="goback" style="font-size: 24px;color: #333;">
+                <i class="el-icon-arrow-left" style="color: #644CF7;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
                 用户详情</span>
         </div>
-        <div class="user-title">
-            <el-row>
-                <el-col :span="5">
-                    <div class="user-item">
-                        <div class="item-text" style="margin-top:7px;">加速内容</div>
-                        <div class="item-text" style="margin-top:7px;">
-                            {{count}}个
-                        </div>
-                    </div>
-                </el-col>
-                <el-col :span="5" style="margin-left:30px;">
-                    <div class="user-item">
-                        <div class="item-text" style="margin-top:7px;">累计消费流量</div>
-                        <div class="item-text" style="margin-top:7px;">
-                            {{dataFlow}}
-                        </div>
-                    </div>
-                </el-col>
+        <div class="content">
+          <div class="user-title">
+              <el-row>
+                  <el-col :span="5">
+                      <div class="user-item">
+                          <div class="item-text" style="margin-top:7px;">加速内容</div>
+                          <div class="item-text" style="margin-top:7px;">
+                              {{count}}个
+                          </div>
+                      </div>
+                  </el-col>
+                  <el-col :span="5" style="margin-left:30px;">
+                      <div class="user-item">
+                          <div class="item-text" style="margin-top:7px;">累计消费流量</div>
+                          <div class="item-text" style="margin-top:7px;">
+                              {{dataFlow}}
+                          </div>
+                      </div>
+                  </el-col>
 
-            </el-row>
+              </el-row>
+          </div>
+          <div class="user-info">
+              <div class="title">
+                  <div class="title-text">基本信息</div>
+
+              </div>
+              <div class="h3" style="text-align: left;">
+                  基本信息
+              </div>
+              <div class="user-con">
+                  <div class="item" style="margin-top:10px;">
+                      <div class="item-l">用户ID:</div>
+                      <div class="item-r">{{ids}}</div>
+                  </div>
+                  <div class="item">
+                      <div class="item-l">用户昵称:</div>
+                      <div class="item-r">{{username}}</div>
+                  </div>
+                  <div class="item">
+                      <div class="item-l">手 机 号:</div>
+                      <div class="item-r">{{phone}}</div>
+                  </div>
+                  <div class="item">
+                      <div class="item-l">邮箱:</div>
+                      <div class="item-r">{{email}}</div>
+                  </div>
+                  <div class="item">
+                      <div class="item-l">注册时间:</div>
+                      <div class="item-r">{{time_create}}</div>
+                  </div>
+              </div>
+          </div>
         </div>
-        <div class="user-info">
-            <div class="title">
-                <div class="title-text">基本信息</div>
-
-            </div>
-            <div class="h3" style="text-align: left;">
-                基本信息
-            </div>
-            <div class="user-con">
-                <div class="item" style="margin-top:10px;">
-                    <div class="item-l">用户ID:</div>
-                    <div class="item-r">{{ids}}</div>
-                </div>
-                <div class="item">
-                    <div class="item-l">用户昵称:</div>
-                    <div class="item-r">{{username}}</div>
-                </div>
-                <div class="item">
-                    <div class="item-l">手 机 号:</div>
-                    <div class="item-r">{{phone}}</div>
-                </div>
-                <div class="item">
-                    <div class="item-l">邮箱:</div>
-                    <div class="item-r">{{email}}</div>
-                </div>
-                <div class="item">
-                    <div class="item-l">注册时间:</div>
-                    <div class="item-r">{{time_create}}</div>
-                </div>
-            </div>
-        </div>
-
     </section>
 </template>
 
@@ -144,12 +145,12 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .user-title {
   margin-top: 30px;
 
   .user-item {
-    background: #f2f2f2;
+    background: #FDFBFB;
     padding: 25px;
     border-radius: 5px;
     display: flex;
@@ -170,7 +171,7 @@ export default {
 
   .title {
     width: 100%;
-    border-bottom: 2px solid #999999;
+    border-bottom: 2px solid #644CF7;
     height: 40px;
 
     .title-text {
@@ -178,7 +179,7 @@ export default {
       height: 40px;
       line-height: 40px;
       text-align: center;
-      background: #66b1ff;
+      background: #644CF7;
       color: #ffffff;
     }
   }
@@ -186,7 +187,7 @@ export default {
   .h3 {
     width: 100%;
     height: 40px;
-    background: #f2f2f2;
+    background: #FDFBFB;
     border-radius: 4px;
     margin-top: 10px;
     line-height: 40px;

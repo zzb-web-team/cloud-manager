@@ -1,8 +1,8 @@
 <template>
   <div class="add_url">
     <div class="top_title" style="display: flex;margin-top:30px;">
-      <span @click="goback" style="font-size: 24px;color: #202020;    margin-left: 40px;">
-        <i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
+      <span @click="goback" style="font-size: 24px;color: #333;">
+        <i class="el-icon-arrow-left" style="color: #644CF7; font-size: 18px; margin-right:23px; font-weight: 600;"></i>
         创建加速内容</span>
     </div>
     <div class="content">
@@ -62,8 +62,8 @@
         <!-- 说明：用户可以自定义标签设置，标签设置为自选项，标签设置的作用是保护源站信息隐藏不被泄露，防止黑客攻击 -->
       </p>
       <div slot="footer" class="add_urlfooter">
-        <el-button type="primary" @click="dialogFormVisiblea('dynamicValidateForm')" style="width:96px;height:36px;background:rgba(41,122,255,1);border-radius:2px;">确 定</el-button>
-        <el-button @click="dialogFormVisibles('dynamicValidateForm')" style="width:96px;height:36px;background:rgba(225,225,225,1);border-radius:2px;color:#666666;">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisiblea('dynamicValidateForm')" style="width:96px;height:36px;">确 定</el-button>
+        <el-button @click="dialogFormVisibles('dynamicValidateForm')" style="width:96px;height:36px;">取 消</el-button>
       </div>
     </div>
   </div>
@@ -517,14 +517,6 @@ export default {
 
 <style lang="scss" scoped>
 .content {
-  width: 100%;
-  margin: 0 auto;
-  // height: 538px;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-  border-radius: 2px;
-  margin-top: 20px;
-  padding: 23px 38px;
   p {
     width: 100%;
     height: 30px;

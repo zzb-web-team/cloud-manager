@@ -1,41 +1,45 @@
 <template>
-    <div class="content">
-        <div class="top_title" style="display: flex;margin-bottom: 20px;">
-            <span @click="goback" style="font-size: 24px;color: #202020;">
-                <i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
+    <div>
+        <div class="top_title" style="display: flex;margin: 30px 0 20px;">
+            <span @click="goback" style="font-size: 24px;color: #333;">
+                <i class="el-icon-arrow-left" style="color: #644CF7;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
                 刷新/预热</span>
         </div>
         <!-- 主体内容 -->
-        <div class="yure_content">
+        <div class="content">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="刷新缓存" name="first">
-                    <div style="text-align: left;margin: 10px 0;">
-                        <span style="width:80px;float:left;line-height: 40px;">渠道ID：</span>
+                    <div style="text-align: left;margin: 30px 0 15px;">
+                        <span style="width:80px; display: inline-block; line-height: 40px;">渠道ID：</span>
                         <el-input placeholder="请输入渠道ID" style="width:250px;" v-model="refreshBuserId"></el-input>
                     </div>
-                    <span style="width:80px;float:left;line-height: 40px;">刷新区域：</span>
-                    <el-cascader style="width:250px;" :options="citylist1" ref="cascaderAddr" :show-all-levels="false" v-model="citylabel" @change="handleChange"></el-cascader>
+                    <div style="text-align: left;margin: 10px 0;">
+                      <span style="width:80px; display: inline-block; line-height: 40px;">刷新区域：</span>
+                      <el-cascader style="width:250px;" :options="citylist1" ref="cascaderAddr" :show-all-levels="false" v-model="citylabel" @change="handleChange"></el-cascader>
+                    </div>
                     <p style="text-align: left;color: #999999;margin-bottom: 21px;font-size:18px;margin-top:15px;">
                         Filed刷新单次提交最多 10 条，使用回车换行输入，刷新任务完成时间预计为 10 分钟
                     </p>
                     <el-input type="textarea" style="width:800px;" :rows="2" placeholder="请输入内容" :autosize="{ minRows: 10, maxRows: 20 }" v-model="textarea1"></el-input>
                     <div style="margin: 20px 0;">
-                        <el-button @click="onsumbit()" style="width:96px;-height:40px;background:rgba(41,122,255,1);border-radius:6px;color:#ffffff;">提交</el-button>
+                        <el-button type="primary" @click="onsumbit()" style="width:96px; height:40px">提交</el-button>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="内容预热" name="second">
-                    <div style="text-align: left;margin: 10px 0;">
+                    <div style="text-align: left ;margin: 30px 0 15px;">
                         <span style="width:80px;float:left;line-height: 40px;">渠道ID：</span>
                         <el-input placeholder="请输入渠道ID" style="width:250px;" v-model="refreshBuserId"></el-input>
                     </div>
-                    <span style="width:80px;float:left;line-height: 40px;">预热区域：</span>
-                    <el-cascader style="width:250px;" :options="citylist1" ref="cascaderAddr1" :show-all-levels="false" v-model="citylabel" @change="handleChange1"></el-cascader>
+                    <div style="text-align: left; margin: 10px 0;">
+                      <span style="width:80px;float:left;line-height: 40px;">预热区域：</span>
+                      <el-cascader style="width:250px;" :options="citylist1" ref="cascaderAddr1" :show-all-levels="false" v-model="citylabel" @change="handleChange1"></el-cascader>
+                    </div>
                     <p style="text-align: left;color: #999999;margin-bottom: 21px;font-size:18px;margin-top:15px;">
                         Filed预热单次提交最多 10 条，使用回车换行输入，刷新任务完成时间预计为 10 分钟
                     </p>
                     <el-input type="textarea" style="width:800px;" :rows="2" placeholder="请输入内容" :autosize="{ minRows: 10, maxRows: 20 }" v-model="textarea1"></el-input>
                     <div style="margin: 20px 0;">
-                        <el-button @click="onsumbit()" style="width:96px;-height:40px;background:rgba(41,122,255,1);border-radius:6px;color:#ffffff;">提交</el-button>
+                        <el-button type="primary" @click="onsumbit()" style="width:96px; height:40px;">提交</el-button>
                     </div>
                 </el-tab-pane>
             </el-tabs>

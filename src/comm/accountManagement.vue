@@ -888,28 +888,4 @@ export default {
         }
     }
 }
-
-.addaccout {
-    .title {
-        width: 100%;
-        text-align: center;
-    }
-
-    .el-dialog__body {
-        padding: 0px;
-    }
-
-    .el-form-item {
-        display: flex
-    }
-
-    .el-form--label-left .el-form-item__label {
-        text-align: right;
-        width: 90px;
-    }
-
-    .el-form-item__error {
-        margin-left: 80px;
-    }
-}
 </style>

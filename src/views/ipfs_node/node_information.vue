@@ -36,7 +36,7 @@
               </el-table-column>
           </el-table>
           <!-- 详情弹窗 -->
-          <el-dialog title="新增发布" :visible.sync="dialog" custom-class="customWidth" width="50%">
+          <el-dialog title="新增发布" :visible.sync="dialog" width="600px">
               <div class="add-sdk">
                   <div class="item" style="align-items: flex-start;">
                       <div class="item_l">应用包：</div>
@@ -46,7 +46,7 @@
                           <el-button type="primary" class="onchoose-file" @click="upFile()" :disabled="disableStatus">确定</el-button>
                           进度条
                           <span id="per">{{perNum}}</span>%
-                          <div style="width: 400px;height: 16px;background-color: #999;margin-top:10px;">
+                          <div style="width: 300px;height: 16px;background-color: #999;margin-top:10px;">
                               <div style="height: 16px;background-color: #67c23a" id="loading" v-bind:style="{'width': widthData+'%'}"></div>
                           </div>
                           <div id="result" style="margin-top:10px;"></div>
@@ -55,7 +55,7 @@
                   <div class="item">
                       <div class="item_l">应用类型：</div>
                       <div class="item-r">
-                          <el-select v-model="valueActive2" placeholder="请选择" style="width:250px;">
+                          <el-select v-model="valueActive2" placeholder="请选择" style="width:300px;">
                               <el-option v-for="(item, index) in optionsActive2" :key="index" :label="item" :value="item"></el-option>
                           </el-select>
                       </div>
@@ -63,7 +63,7 @@
                   <div class="item">
                       <div class="item_l">包含功能：</div>
                       <div class="item-r">
-                          <el-checkbox-group v-model="checkList">
+                          <el-checkbox-group v-model="checkList" style="width:300px;">
                               <el-checkbox label="mp4"></el-checkbox>
                               <el-checkbox label="hls"></el-checkbox>
                               <el-checkbox label="flv"></el-checkbox>
@@ -73,23 +73,23 @@
                   <div class="item">
                       <div class="item_l">版本号：</div>
                       <div class="item-r">
-                          <el-input placeholder="请输入版本号" v-model="versionInput" style="width:250px;"></el-input>
+                          <el-input placeholder="请输入版本号" v-model="versionInput" style="width:300px;"></el-input>
                       </div>
                   </div>
                   <div class="item">
                       <div class="item_l">说明：</div>
                       <div class="item-r">
-                          <el-input placeholder="请输入说明地址" v-model="versionInputActive" style="width:250px;"></el-input>
+                          <el-input placeholder="请输入说明地址" v-model="versionInputActive" style="width:300px;"></el-input>
                       </div>
                   </div>
               </div>
-              <div slot="footer" class="dialog-footer" style="text-align: center;">
+              <div slot="footer" class="dialog-footer" style="text-align: left; padding-left: 130px;">
                   <el-button type="primary" @click="onSubmitUpload">发布</el-button>
-                  <el-button type="primary" @click="dialog=false">取消</el-button>
+                  <el-button @click="dialog=false">取消</el-button>
               </div>
           </el-dialog>
           <!-- 修改 -->
-          <el-dialog title="修改SDK" :visible.sync="editDialog" custom-class="customWidth" width="50%">
+          <el-dialog title="修改SDK" :visible.sync="editDialog" width="600px">
               <div class="add-sdk">
                   <div class="item">
                       <div class="item_l">应用包：</div>
@@ -99,7 +99,7 @@
                           <el-button type="primary" class="onchoose-file" @click="upFile1()" :disabled="disableStatus1">确定</el-button>
                           进度条
                           <span id="per1">{{perNum1}}</span>%
-                          <div style="width: 400px;height: 16px;background-color: #999;margin-top:10px;">
+                          <div style="width: 300px;height: 16px;background-color: #999;margin-top:10px;">
                               <div style="width: 0%;height: 16px;background-color: #67c23a" id="loading1" v-bind:style="{'width': widthData1+'%'}"></div>
                           </div>
                           <div id="result" style="margin-top:10px;"></div>
@@ -108,7 +108,7 @@
                   <div class="item">
                       <div class="item_l">应用类型：</div>
                       <div class="item-r">
-                          <el-input v-model="value11" disabled></el-input>
+                          <el-input v-model="value11" style="width:300px;" disabled></el-input>
                           <!-- <el-select v-model="value11" placeholder="请选择">
                               <el-option v-for="(item, index) in options1" :key="index" :label="item" :value="item"></el-option>
                           </el-select> -->
@@ -117,7 +117,7 @@
                   <div class="item">
                       <div class="item_l">包含功能：</div>
                       <div class="item-r">
-                          <el-checkbox-group v-model="checkList11">
+                          <el-checkbox-group v-model="checkList11" style="width:300px;">
                               <el-checkbox label="mp4"></el-checkbox>
                               <el-checkbox label="hls"></el-checkbox>
                               <el-checkbox label="flv"></el-checkbox>
@@ -127,19 +127,19 @@
                   <div class="item">
                       <div class="item_l">版本号：</div>
                       <div class="item-r">
-                          <el-input v-model="versionInput1" placeholder="请输入内容"></el-input>
+                          <el-input v-model="versionInput1" style="width:300px;" placeholder="请输入内容"></el-input>
                       </div>
                   </div>
                   <div class="item">
                       <div class="item_l">说明：</div>
                       <div class="item-r">
-                          <el-input v-model="versionInput1Active" placeholder="请输入说明地址"></el-input>
+                          <el-input v-model="versionInput1Active" style="width:300px;" placeholder="请输入说明地址"></el-input>
                       </div>
                   </div>
               </div>
-              <div slot="footer" class="dialog-footer" style="text-align: center;">
+              <div slot="footer" class="dialog-footer" style="text-align: left; padding-left: 130px;">
                   <el-button type="primary" @click="onEdit">发布</el-button>
-                  <el-button type="primary" @click="editDialog=false">取消</el-button>
+                  <el-button @click="editDialog=false">取消</el-button>
               </div>
           </el-dialog>
 
@@ -794,8 +794,6 @@ export default {
 .add-sdk {
   width: 80%;
   height: auto;
-  margin: 0 auto;
-
   .item {
     width: 100%;
     display: flex;

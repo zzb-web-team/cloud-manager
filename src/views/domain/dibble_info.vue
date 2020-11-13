@@ -120,7 +120,7 @@
 import { dateToMs, getymdtime, getymdtime1, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
 import {
-  query_streaminfo
+  query_streaminfo, query_live_history
 } from "../../servers/api";
 import echarts from "echarts";
 import common from "../../comm/js/util";
@@ -170,7 +170,11 @@ export default {
     //获取加速次数每页数量
     handleSizeChange(pagetol) {
       this.pageSize = pagetol;
-      this.getStreamInfo();
+      if(this.activeName == 'first'){
+        this.getStreamInfo();
+      }else{
+        this.getHistoryInfo();
+      }
     },
     //获取页码
     handleCurrentChange(pages) {
@@ -188,46 +192,54 @@ export default {
       this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.endtime = Date.parse(new Date()) / 1000;
       this.times = [];
-      this.getStreamInfo();
+      if(this.activeName == 'first'){
+        this.getStreamInfo();
+      }else{
+        this.getHistoryInfo();
+      }
     },
 
-    getStreamInfo() {
-       let params = new Object();
-      params.startTime = this.starttime;
-      params.endTime = this.endtime;
-      params.page = this.pageN-1;
+    getParams() {
+      let params = new Object();
+      this.activeName == 'first' ? params.startTime = this.starttime : params.startTs = this.starttime;
+      this.activeName == 'first' ? params.endTime = this.endtime : params.endTs = this.endtime;
+      this.activeName == 'first' ? params.page = this.pageNo - 1 : (params.pageNo = this.pageNo - 1,params.pageSize = 10);
       if(this.values !== ""){
         var channelIdReg = /^\d{12}$/;
         var roomId = /^\d{8}$/;
         var liveAddr = /^http?:\/\/(([a-zA-Z0-9_-])+(\.)?)*(:\d+)?(\/((\.)?(\?)?=?&?[a-zA-Z0-9_-](\?)?)*)*$/i;
         if(channelIdReg.test(this.values)){
-          params.chanId = this.values;
+          this.activeName == 'first' ? params.chanId = this.values : params.channelId = this.values;
           params.roomId = '';
           params.liveAddr = '';
           params.streamName = '';
         }else if(roomId.test(this.values)){
-          params.chanId = '';
+          this.activeName == 'first' ? params.chanId = '' : params.channelId = '';
           params.roomId = this.values;
           params.liveAddr = '';
           params.streamName = '';
         }else if(liveAddr.test(this.values)){
-          params.chanId = '';
+         this.activeName == 'first' ? params.chanId = '' : params.channelId = '';
           params.roomId = '';
           params.liveAddr = this.values;
           params.streamName = '';
         }else{
-          params.chanId = '';
+          this.activeName == 'first' ? params.chanId = '' : params.channelId = '';
           params.roomId = '';
           params.liveAddr = '';
           params.streamName = this.values;
         }
       } else {
-        params.chanId = '';
+        this.activeName == 'first' ? params.chanId = '' : params.channelId = '';
         params.roomId = '';
         params.liveAddr = '';
         params.streamName = '';
       }
+      return params;
+    },
 
+    getStreamInfo() {
+      let params = this.getParams();
       query_streaminfo(params)
         .then(res => {
           console.log(res)
@@ -241,44 +253,78 @@ export default {
         });
     },
 
+    getHistoryInfo() {
+      let params = this.getParams();
+      query_live_history(params)
+        .then(res => {
+          console.log(res)
+          if (res.status == 0) {
+            this.historyDatas = res.result;
+            this.total_cnt = res.total;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     //今天
     today(data) {
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.starttime = times;
       this.endtime = Date.parse(new Date()) / 1000;
-      this.pageNo = 0;
-      this.getStreamInfo();
+      this.pageNo = 1;
+      if(this.activeName == 'first'){
+        this.getStreamInfo();
+      }else{
+        this.getHistoryInfo();
+      }
     },
     //昨天
     yesterday(data) {
       let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.starttime = times - 24 * 60 * 60 * 1;
       this.endtime = times - 1;
-      this.pageNo = 0;
-      this.getStreamInfo();
+      this.pageNo = 1;
+      if(this.activeName == 'first'){
+        this.getStreamInfo();
+      }else{
+        this.getHistoryInfo();
+      }
     },
     //七天
     sevendat(data) {
       let times = parseInt(new Date(new Date()).getTime() / 1000);
       this.starttime = times - 24 * 60 * 60 * 6;
       this.endtime = times;
-      this.pageNo = 0;
-      this.getStreamInfo();
+      this.pageNo = 1;
+      if(this.activeName == 'first'){
+        this.getStreamInfo();
+      }else{
+        this.getHistoryInfo();
+      }
     },
     //三十天
     thirtyday(data) {
       let times = parseInt(new Date(new Date()).getTime() / 1000);
       this.starttime = times - 24 * 60 * 60 * 29;
       this.endtime = times;
-      this.pageNo = 0;
-      this.getStreamInfo();
+      this.pageNo = 1;
+      if(this.activeName == 'first'){
+        this.getStreamInfo();
+      }else{
+        this.getHistoryInfo();
+      }
     },
     //自定义时间
     gettimes(cal) {
       this.starttime = this.times ? dateToMs(this.times[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.endtime = this.times ? dateToMs(this.times[1]) + (24*60*60-1) : Date.parse(new Date()) / 1000;
-      this.pageNo = 0;
-      this.getStreamInfo();
+      this.pageNo = 1;
+      if(this.activeName == 'first'){
+        this.getStreamInfo();
+      }else{
+        this.getHistoryInfo();
+      }
     },
     
     // 表头样式设置
@@ -297,6 +343,7 @@ export default {
         let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
         this.starttime = times;
         this.endtime = Date.parse(new Date()) / 1000;
+        this.getStreamInfo();
       } else if (tab.index == 1) {
         this.times = [];
         let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
@@ -304,6 +351,7 @@ export default {
         this.endtime = Date.parse(new Date()) / 1000;
         this.times[0] = this.common.getTimes(this.starttime * 1000);
         this.times[1] = this.common.getTimes(this.endtime * 1000);
+        this.getHistoryInfo();
       }
     },
 
