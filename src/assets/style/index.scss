@@ -484,6 +484,11 @@ body {
 .addSdk .el-dialog__body {
     padding: 56px 106px;
 }
+.addSdk .el-radio-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
 
 .statistics .el-radio-group {
     background: #F9F9F9;

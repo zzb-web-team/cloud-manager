@@ -80,11 +80,21 @@
                   <div class="item">
                       <div class="item_l">包含功能：</div>
                       <div class="item-r">
-                          <el-checkbox-group v-model="checkList" style="width: 240px;">
-                              <el-checkbox label="mp4"></el-checkbox>
-                              <el-checkbox label="hls"></el-checkbox>
-                              <el-checkbox label="flv"></el-checkbox>
+                        <el-radio-group v-model="type" @change="selectType()">
+                          <el-radio label="点播"></el-radio>
+                          <el-radio label="直播"></el-radio>
+                        </el-radio-group>
+                        <div class="selectBg" :style="{background: type=='点播' ? 'url(../../assets/img/select.png)' : 'url(../../assets/img/select_right.png)'}">
+                          <el-checkbox-group v-if="type=='点播'" v-model="checkList" style="width: 240px;margin-top: 8px;">
+                            <el-checkbox label="mp4"></el-checkbox>
+                            <el-checkbox label="hls"></el-checkbox>
+                            <el-checkbox label="flv"></el-checkbox>
                           </el-checkbox-group>
+                          <el-checkbox-group v-else v-model="checkList" style="width: 240px;margin-top: 8px;">
+                            <el-checkbox label="hls"></el-checkbox>
+                            <el-checkbox label="flv"></el-checkbox>
+                          </el-checkbox-group>
+                        </div>
                       </div>
                   </div>
                   <div class="item">
@@ -134,11 +144,19 @@
                   <div class="item">
                       <div class="item_l">包含功能：</div>
                       <div class="item-r">
-                          <el-checkbox-group v-model="checkList11" style="width:300px;">
-                              <el-checkbox label="mp4"></el-checkbox>
-                              <el-checkbox label="hls"></el-checkbox>
-                              <el-checkbox label="flv"></el-checkbox>
+                        <div style="display: flex; flex-direction: row; justify-content: flex-start;">
+                          <el-radio-group v-model="type" @change="selectType()">
+                            <el-radio label="点播"></el-radio>
+                            <el-radio label="直播"></el-radio>
+                          </el-radio-group>
+                        </div>
+                        <div style="background: (../../assets/img/select.png);width: 240px; height: 73px;">
+                          <el-checkbox-group v-model="checkList11" style="width:240px;">
+                            <el-checkbox label="mp4"></el-checkbox>
+                            <el-checkbox label="hls"></el-checkbox>
+                            <el-checkbox label="flv"></el-checkbox>
                           </el-checkbox-group>
+                        </div>  
                       </div>
                   </div>
                   <div class="item">
@@ -181,6 +199,7 @@ import {
 export default {
   data() {
     return {
+      type: "点播",
       input: "", //搜索输入框
       value1: "IOS",
       value11: "",
@@ -262,6 +281,9 @@ export default {
     // this.getuserlist();
   },
   methods: {
+    selectType(){
+      console.log(this.type)
+    },
     onchangeTab() {
       this.querySdkList();
     },
@@ -342,7 +364,8 @@ export default {
       this.dialog = true;
       this.startUpload = false;
       this.fileName = "";
-      this.$refs.upLoadFile.value = "";
+      // console.log(this.$refs.upLoadFile);
+      // this.$refs.upLoadFile.value = "";
     },
     //修改弹窗
     handleEdit(rows) {
@@ -579,7 +602,6 @@ export default {
       }
       this.startUpload = true;
       this.fileName = f.name;
-      console.log(f.name)
       this.disableStatus = true;
       var len = 2 * 1024 * 1024;
       var tota_temp = Math.ceil(totalSize / len);
@@ -882,7 +904,15 @@ export default {
       padding: 7px 20px;
       margin-top: 35px;
     }
-
+    .item-r {
+      .selectBg{
+        width: 240px; 
+        height: 73px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
     .item_l {
       width: 100px;
       text-align: right;
