@@ -42,6 +42,26 @@
               <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
               <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu()">确定</el-button> -->
             </div>
+            <div class="user_item">
+              <div class="item_left">
+                <div class="item_count" style="text-align:center;">
+                  <span>{{sump2p |setbytes}}</span>
+                </div>
+                <div class="item_text" style="text-align:center;">P2P播放流量</div>
+              </div>
+              <div class="item_left">
+                <div class="item_count" style="text-align:center;">
+                  <span>{{sumnode |setbytes}}</span>
+                </div>
+                <div class="item_text" style="text-align:center;">下行节点扩散流量</div>
+              </div>
+              <div class="item_right">
+                <div class="item_count" style="text-align:center;">
+                  <span>{{sumcdn |setbytes}}</span>
+                </div>
+                <div class="item_text" style="text-align:center;">CDN回源流量</div>
+              </div>
+            </div>
             <div class="device_form" style="margin-top: 0px;">
               <div id="myChartMap2" :style="{ height: '607px' }"></div>
             </div>
@@ -67,17 +87,17 @@
                         </div>
                       </template>
                     </el-table-column> -->
-                    <el-table-column label="下行CDN回源流量">
-                      <template slot-scope="scope">
-                        <div style="display: flex;justify-content: center;">
-                          <div>{{ scope.row.downcdnflow | setbytes }}</div>
-                        </div>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="下行节点回源流量" >
+                    <el-table-column label="下行节点扩散流量">
                       <template slot-scope="scope">
                         <div style="display: flex;justify-content: center;">
                           <div>{{ scope.row.downbackflow | setbytes }}</div>
+                        </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="CDN回源流量" >
+                      <template slot-scope="scope">
+                        <div style="display: flex;justify-content: center;">
+                          <div>{{ scope.row.downcdnflow | setbytes }}</div>
                         </div>
                       </template>
                     </el-table-column>
@@ -317,6 +337,9 @@ export default {
       timeArrayZb: [],
       radio: 1,
       radioTop: 1,
+      sumcdn: 0,
+      sumnode: 0,
+      sump2p: 0
     };
   },
   filters: {
@@ -553,6 +576,9 @@ export default {
             }
             this.timeArrayZb = [];
             this.curveData = res.data;
+            this.sumcdn = res.data.sumcdn;
+            this.sumnode = res.data.sumnode;
+            this.sump2p = res.data.sump2p;
 
             if(res.data.p2parray.length == 0 && res.data.downbackarray.length ==0 && res.data.downcdnarray.length == 0){
               let arr = splitTimes(this.starttime, this.endtime, params.timeUnit);
@@ -1024,7 +1050,7 @@ export default {
           x: "center", //可设定图例在左、右、居中
           y: "bottom", //可设定图例在上、下、居中
           padding: [0, 0, 0, 0], //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
-          data: ['P2P播放流量', '下行节点回源流量','下行CDN回源流量'],
+          data: ['P2P播放流量', '下行节点扩散流量','CDN回源流量'],
         },
         tooltip: {
           trigger: "axis",
@@ -1035,15 +1061,15 @@ export default {
               "P2P播放流量:"+
                 common.formatByteActive(Number(_this.curveData.p2parray[params[0].dataIndex])) +
               "</br>" +
-              "<div style='backgroundColor: rgba(0, 0, 0, 0.5); height: 20px;z-index: 99999999;'></div>"+
-              params[0].axisValue +
-              "</br>" +
-              "下行CDN回源流量:" +
-                common.formatByteActive(Number(_this.curveData.downcdnarray[params[0].dataIndex])) 
+              // "<div style='backgroundColor: rgba(0, 0, 0, 0.5); height: 20px;z-index: 99999999;'></div>"+
+              // params[0].axisValue +
+              // "</br>" +
+              "下行节点扩散流量:" +
+                common.formatByteActive(Number(_this.curveData.downbackarray[params[0].dataIndex])) 
                +
               "</br>" +
-              "下行节点回源流量:" +
-                common.formatByteActive(Number(_this.curveData.downbackarray[params[0].dataIndex])) 
+              "CDN回源流量:" +
+                common.formatByteActive(Number(_this.curveData.downcdnarray[params[0].dataIndex])) 
               +
               "<br>" 
             );
@@ -1081,11 +1107,11 @@ export default {
             }
           },
           {
-            name: "下行节点回源流量",
+            name: "下行节点扩散流量",
             type: "bar",
-            stack: "使用情况",
+            // stack: "使用情况",
             data: z,
-             barMaxWidth: 30, //柱图宽度
+            barMaxWidth: 30, //柱图宽度
             itemStyle: {
               normal: {
                 color: '#FFB430',
@@ -1101,11 +1127,11 @@ export default {
             },
           },
           {
-            name: "下行CDN回源流量",
+            name: "CDN回源流量",
             type: "bar",
-            stack: "使用情况",
+            // stack: "使用情况",
             data: y,
-           barMaxWidth: 30, //柱图宽度
+            barMaxWidth: 30, //柱图宽度
             itemStyle: {
               normal: {
                 color: '#FFD800',
@@ -1196,6 +1222,58 @@ export default {
     margin-top: 20px;
     .devide_pageNation_active {
       float: right;
+    }
+  }
+
+  .user_item {
+    width: auto;
+    height: 130px;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+    border-radius: 2px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: left;
+    padding: 36px 71px;
+
+    .item_left {
+      width: 49%;
+      height: 58px;
+      border-right: 1px solid #e6e9ed;
+
+      .item_text {
+        font-size: 14px;
+        color: #333333;
+      }
+
+      .item_count {
+        line-height: 55px;
+
+        span {
+          font-size: 34px;
+        }
+      }
+    }
+
+    .item_right {
+      height: 58px;
+      width: 49%;
+      padding-left: 40px;
+
+      .item_text {
+        font-size: 14px;
+        color: #333333;
+      }
+
+      .item_count {
+        line-height: 55px;
+
+        span {
+          font-size: 34px;
+        }
+      }
     }
   }
 }
