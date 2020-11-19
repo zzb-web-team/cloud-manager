@@ -350,7 +350,7 @@ body {
 }
 
 .el-button--text:focus, .el-button--text:hover {
-    color: #644CF7;
+    color: #786FAB;
     border-color: transparent;
     background-color: transparent;
 }
@@ -372,7 +372,7 @@ body {
 }
 
 .el-button--text {
-    color: #644CF7;
+    color: #786FAB;
     background: 0 0;
     padding-left: 0;
     padding-right: 0;
@@ -473,6 +473,16 @@ body {
 
 .el-dialog__body {
     padding: 30px 40px;
+}
+
+.el-textarea__inner{
+    background: #F9F9F9 !important;
+    border-radius: 12px;
+    border: 1px solid #EEEEEE;
+}
+
+.addSdk .el-dialog__body {
+    padding: 56px 106px;
 }
 
 .statistics .el-radio-group {

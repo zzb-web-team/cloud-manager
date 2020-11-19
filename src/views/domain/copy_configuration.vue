@@ -1,20 +1,36 @@
 <template>
     <div class="copy_configuration">
-        <div class="top_title" style="display: flex;margin-top:20px;">
-            <span @click="goback" style="font-size: 24px;color: #202020;">
-                <i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
+        <div class="top_title" style="display: flex;margin-top:50px;">
+            <span @click="goback" style="font-size: 18px;color: #333;">
+                <i class="el-icon-arrow-left" style="color:#333;font-size: 18px;margin-right:16px;font-weight: 600;"></i>
                 复制配置</span>
         </div>
         <p class="copy_title">
             复制配置允许将一个加速内容的配置项复制到多个加速内容，帮助您对加速内容进行批量配置
         </p>
         <div class="copy_con">
-            <div>
-                <el-steps :active="actives" finish-status="success" simple style="margin-top: 20px;">
+            <div class="stepStyle">
+                <!-- <el-steps :active="actives" finish-status="success" simple style="margin-top: 20px;">
                     <el-step title="确认配置项" description="这是一段很长很长很长的描述性文字"></el-step>
                     <el-step title="选择加速内容" description="这是一段很长很长很长的描述性文字"></el-step>
                     <el-step title="完成" description="这是一段很长很长很长的描述性文字"></el-step>
-                </el-steps>
+                </el-steps> -->
+                <div class="itemsStyle">
+                  <img src="../../assets/img/gou.png" width="32px" height="32px" alt="">
+                  <span>确定配置项</span>
+                </div>
+                <div class="indicatorStyle"></div>
+                <div class="itemsStyle">
+                  <div class="step_numberStyle" v-if="actives<2">2</div>
+                  <img v-else src="../../assets/img/gou.png" width="32px" height="32px" alt="">
+                  <span>选择加速内容</span>
+                </div>
+                <div class="indicatorStyle"></div>
+                <div class="itemsStyle">
+                  <div class="step_numberStyle" v-if="actives<3">3</div>
+                  <img v-else src="../../assets/img/gou.png" width="32px" height="32px" alt="">
+                  <span>完成</span>
+                </div>
             </div>
 
             <div v-show="actives === 1">
@@ -40,21 +56,14 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-button style="margin-top: 12px;" type="primary" @click="next">下一步</el-button>
-                <el-button style="margin-top: 12px;" @click="furesetacitive">取消</el-button>
+                <el-button style="margin-top: 120px;" type="primary" @click="next">下一步</el-button>
+                <el-button style="margin-top: 120px;" @click="furesetacitive">取消</el-button>
             </div>
             <!-- <div v-else-if="actives === 2"> -->
             <div v-show="actives === 2">
-                <div style="display: flex;justify-content: flex-start;align-items: center;margin: 10px 0">
+                <div style="display: flex;justify-content: flex-start;align-items: center;margin-bottom: 49px">
                     <span style="margin-right:21px;color:#333333;font-size:14px;">加速内容列表</span>
                     <el-input placeholder="请输入加速内容" v-model="fuinput" style=" width:300px" class="input-with-select" maxlength="70" @keyup.enter.native="onSubmit"></el-input>
-                </div>
-                <div class="copy_prompt">
-                    <div class="banyuan"></div>
-                    <i class="el-icon-info" style="color:#6666FF;font-size:18px;margin-left:15px;"></i>
-                    已选择
-                    <span>{{ urlnum }}</span>个加速内容，最多允许50个
-                    <span @click="seturllist()" v-if="urlnum !== 0">点击查看</span>
                 </div>
                 <!-- 弹窗 -->
                 <div class="copy_active2">
@@ -84,10 +93,15 @@
                       </template>
                     </el-table-column>
                   </el-table>
+                  <div class="copy_prompt">
+                    已选择
+                    <span>{{ urlnum }}</span>个加速内容，最多允许50个
+                    <span style="color: #6850F7; font-size: 16px; cursor: pointer; margin-left: 8px;" @click="seturllist()" v-if="urlnum !== 0">点击查看</span>
+                  </div>
                   <fenye style="text-align:right;margin:20px 0 10px 0;" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange" :pagesa="total_cnt"></fenye>
                 </div>
-                <el-button style="margin-top: 2px;" type="primary" @click="last">上一步</el-button>
-                <el-button style="margin-top: 2px;" type="primary" @click="next">下一步</el-button>
+                <el-button style="margin-top: 120px;" type="primary" @click="last">上一步</el-button>
+                <el-button style="margin-top: 120px;" type="primary" @click="next">下一步</el-button>
                 <!-- <el-button style="margin-top: 2px;" @click="fureset">取消</el-button> -->
                 <!-- <el-button style="margin-top: 2px;" @click="fureset()">取消</el-button> -->
 
@@ -550,7 +564,7 @@ export default {
     },
     // 表头样式设置
     headClass() {
-      return "text-align: center;background:#eef1f6;color:#333333;font-size:16px;";
+      return "text-align: center; background:#FDFBFB; color:#333333; font-size:16px;";
     },
     // 表格样式设置
     rowClass() {
@@ -563,49 +577,71 @@ export default {
 <style lang="scss" scoped>
 .copy_configuration {
   .copy_title {
-    // width: 1240px;
-    height: 40px;
-    background: rgba(224, 240, 255, 1);
-    border: 1px solid rgba(97, 157, 255, 1);
-    font-size: 14px;
-    color: #728abd;
-    margin: 0 auto;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    line-height: 40px;
+    height: 56px;
+    background: #F5F3FF;;
+    border: 1px solid #D4CDFF;
+    border-radius: 28px;
+    font-size: 16px;
+    color: #644CF7;
+    margin: 48px auto;
+    line-height: 56px;
     text-align: left;
-    padding-left: 17px;
+    padding-left: 32px;
   }
 
   .copy_con {
     // width: 1240px;
     min-height: 675px;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 6px;
-    margin: 0 auto;
+    background: #fff;
+    border-radius: 32px;
     padding: 45px 37px;
-
+    .stepStyle{
+      margin: 20px auto 57px;
+      width: 70%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      .itemsStyle{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .step_numberStyle{
+          width: 32px;
+          height: 32px;
+          background: #644CF7;
+          box-shadow: 0px 4px 10px 0px rgba(100, 76, 247, 0.3);
+          border-radius: 50%;
+          font-size: 16px;
+          color: #fff;
+          line-height: 32px;
+        }
+        span{  
+          font-size: 16px;
+          font-weight: 400;
+          color: #6850F7;
+          margin-left: 27px;
+        }
+      }
+      .indicatorStyle{
+        width:22%;
+        height: 8px;
+        background: #F5F3FF;
+        border-radius: 4px;
+        margin: 0 28px;
+      }
+    }
     .copy_prompt {
       text-align: left;
       // width: 632px;
       height: 50px;
       line-height: 50px;
-      background: #f0f0ff;
+      // background: #f0f0ff;
       margin-bottom: 2px;
       border-radius: 2px;
       display: flex;
       align-items: center;
       border-radius: 2px;
-
-      .banyuan {
-        width: 5px;
-        height: 100%;
-        background: #6666ff;
-        border-top-left-radius: 15px;
-        border-bottom-left-radius: 15px;
-      }
-
       span {
         font-size: 18px;
         color: #6666ff;

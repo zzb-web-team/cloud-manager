@@ -5,7 +5,7 @@
     <el-table-column :label="tableOption.label" :width="tableOption.width" v-if="operatingStatus">
         <template slot-scope="scope">
             <el-button type="text" @click="toChange(scope.row)" size="mini">详情</el-button>
-            <el-button type="text" @click="disable(scope.row)" size="mini">{{scope.row.status=='正常'?"冻结":"启用"}}</el-button>
+            <el-button type="text" @click="disable(scope.row)" :style="{ color: scope.row.status=='正常' ? '#F85555' : '#665AB2' }" size="mini">{{scope.row.status=='正常'?"冻结":"启用"}}</el-button>
         </template> 
     </el-table-column>
 </el-table>
@@ -96,7 +96,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .el-table {
     font-size: 12px;
 }

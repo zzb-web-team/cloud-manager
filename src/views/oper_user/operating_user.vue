@@ -47,7 +47,7 @@
       <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center;">
         <div>
           <el-button type="text" size="small" @click="allOn">启用</el-button>
-          <el-button type="text" size="small" style="margin-left:30px;" @click="allOff">冻结</el-button>
+          <el-button type="text" size="small" style="color: red;" @click="allOff">冻结</el-button>
         </div>
         <pageNation :pager="pager" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange"></pageNation>
       </div>
@@ -604,15 +604,15 @@ export default {
             });
         })
         .catch(() => {
-          this.$message({
-            message: "操作失败",
-            type: "error",
-          });
-          if (param.status == 1) {
-            this.common.monitoringLogs("修改", "禁用用户", 0);
-          } else {
-            this.common.monitoringLogs("修改", "启用用户", 0);
-          }
+          // this.$message({
+          //   message: "操作失败",
+          //   type: "error",
+          // });
+          // if (param.status == 1) {
+          //   this.common.monitoringLogs("修改", "禁用用户", 0);
+          // } else {
+          //   this.common.monitoringLogs("修改", "启用用户", 0);
+          // }
         });
     },
     //修改

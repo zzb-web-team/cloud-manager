@@ -1,48 +1,94 @@
 <template>
-    <div>
-        <div class="top_title" style="display: flex;margin: 30px 0 20px;">
+    <div class="yure">
+        <!-- <div class="top_title" style="display: flex;margin: 30px 0 20px;">
             <span @click="goback" style="font-size: 24px;color: #333;">
                 <i class="el-icon-arrow-left" style="color: #644CF7;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
                 刷新/预热</span>
+        </div> -->
+        <div class="tabsStyle">
+          <div class="itemStyle" style="height: 136px; line-height: 136px; font-weight: 500;margin-bottom: 0;" @click="goBack">
+            <i class="el-icon-arrow-left" style="font-size: 18px;color: #333;font-weight: 500;"></i>
+            刷新预热</div>
+          <template v-for="item in names">
+            <div
+              class="itemStyle"
+              :class="{ isActive: item.key == selected}"
+              :index="item.key"
+              :key="item.key"
+              @click="select(item.key, item.value)"
+            >
+              {{ item.value }}
+            </div>
+          </template>
         </div>
         <!-- 主体内容 -->
-        <div class="content">
-            <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="刷新缓存" name="first">
-                    <div style="text-align: left;margin: 30px 0 15px;">
-                        <span style="width:80px; display: inline-block; line-height: 40px;">渠道ID：</span>
-                        <el-input placeholder="请输入渠道ID" style="width:250px;" v-model="refreshBuserId"></el-input>
-                    </div>
-                    <div style="text-align: left;margin: 10px 0;">
-                      <span style="width:80px; display: inline-block; line-height: 40px;">刷新区域：</span>
-                      <el-cascader style="width:250px;" :options="citylist1" ref="cascaderAddr" :show-all-levels="false" v-model="citylabel" @change="handleChange"></el-cascader>
-                    </div>
-                    <p style="text-align: left;color: #999999;margin-bottom: 21px;font-size:18px;margin-top:15px;">
-                        Filed刷新单次提交最多 10 条，使用回车换行输入，刷新任务完成时间预计为 10 分钟
-                    </p>
-                    <el-input type="textarea" style="width:800px;" :rows="2" placeholder="请输入内容" :autosize="{ minRows: 10, maxRows: 20 }" v-model="textarea1"></el-input>
-                    <div style="margin: 20px 0;">
-                        <el-button type="primary" @click="onsumbit()" style="width:96px; height:40px">提交</el-button>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane label="内容预热" name="second">
-                    <div style="text-align: left ;margin: 30px 0 15px;">
-                        <span style="width:80px;float:left;line-height: 40px;">渠道ID：</span>
-                        <el-input placeholder="请输入渠道ID" style="width:250px;" v-model="refreshBuserId"></el-input>
-                    </div>
-                    <div style="text-align: left; margin: 10px 0;">
-                      <span style="width:80px;float:left;line-height: 40px;">预热区域：</span>
-                      <el-cascader style="width:250px;" :options="citylist1" ref="cascaderAddr1" :show-all-levels="false" v-model="citylabel" @change="handleChange1"></el-cascader>
-                    </div>
-                    <p style="text-align: left;color: #999999;margin-bottom: 21px;font-size:18px;margin-top:15px;">
-                        Filed预热单次提交最多 10 条，使用回车换行输入，刷新任务完成时间预计为 10 分钟
-                    </p>
-                    <el-input type="textarea" style="width:800px;" :rows="2" placeholder="请输入内容" :autosize="{ minRows: 10, maxRows: 20 }" v-model="textarea1"></el-input>
-                    <div style="margin: 20px 0;">
-                        <el-button type="primary" @click="onsumbit()" style="width:96px; height:40px;">提交</el-button>
-                    </div>
-                </el-tab-pane>
-            </el-tabs>
+        <div class="main-content">
+          <div class="wrapper" v-show="selected==0">
+            <div style="text-align: left;margin: 0px 0 30px;">
+              <span style="width:80px; display: inline-block; line-height: 40px;">渠道ID：</span>
+              <el-input placeholder="请输入渠道ID" style="width:250px;" v-model="refreshBuserId"></el-input>
+            </div>
+            <div style="text-align: left;margin: 0px 0 30px;">
+              <span style="width:80px; display: inline-block; line-height: 40px;">刷新区域：</span>
+              <el-cascader style="width:250px;" :options="citylist1" ref="cascaderAddr" :show-all-levels="false" v-model="citylabel" @change="handleChange"></el-cascader>
+            </div>
+            <el-input type="textarea" style="width:100%;" :rows="2" placeholder="请输入内容" :autosize="{ minRows: 10, maxRows: 20 }" v-model="textarea1"></el-input>
+            <p style="text-align: left;color: #999999;margin-bottom: 47px;font-size:16px;margin-top:31px;">
+              Filed刷新单次提交最多 10 条，使用回车换行输入，刷新任务完成时间预计为 10 分钟
+            </p>
+            <el-button type="primary" @click="onsumbit()" style="width:120px; height:56px">提交</el-button>
+          </div>
+          <div class="wrapper" v-show="selected==1">
+            <div style="text-align: left ;margin: 30px 0 30px;">
+              <span style="width:80px;float:left;line-height: 40px;">渠道ID：</span>
+              <el-input placeholder="请输入渠道ID" style="width:250px;" v-model="refreshBuserId"></el-input>
+            </div>
+            <div style="text-align: left; margin: 0px 0 30px;">
+              <span style="width:80px;float:left;line-height: 40px;">预热区域：</span>
+              <el-cascader style="width:250px;" :options="citylist1" ref="cascaderAddr1" :show-all-levels="false" v-model="citylabel" @change="handleChange1"></el-cascader>
+            </div>
+            <el-input type="textarea" style="width:100%;" :rows="2" placeholder="请输入内容" :autosize="{ minRows: 10, maxRows: 20 }" v-model="textarea1"></el-input>
+            <p style="text-align: left;color: #999999;margin-bottom: 47px;font-size:16px;margin-top:31px;">
+              Filed预热单次提交最多 10 条，使用回车换行输入，刷新任务完成时间预计为 10 分钟
+            </p>
+            <el-button type="primary" @click="onsumbit()" style="width:120px; height:56px;">提交</el-button>
+          </div>
+          <!-- <el-tabs v-model="activeName" @tab-click="handleClick" style="display: none">
+            <el-tab-pane label="刷新缓存" name="first">
+              <div style="text-align: left;margin: 30px 0 15px;">
+                  <span style="width:80px; display: inline-block; line-height: 40px;">渠道ID：</span>
+                  <el-input placeholder="请输入渠道ID" style="width:250px;" v-model="refreshBuserId"></el-input>
+              </div>
+              <div style="text-align: left;margin: 10px 0;">
+                <span style="width:80px; display: inline-block; line-height: 40px;">刷新区域：</span>
+                <el-cascader style="width:250px;" :options="citylist1" ref="cascaderAddr" :show-all-levels="false" v-model="citylabel" @change="handleChange"></el-cascader>
+              </div>
+              <p style="text-align: left;color: #999999;margin-bottom: 21px;font-size:18px;margin-top:15px;">
+                  Filed刷新单次提交最多 10 条，使用回车换行输入，刷新任务完成时间预计为 10 分钟
+              </p>
+              <el-input type="textarea" style="width:800px;" :rows="2" placeholder="请输入内容" :autosize="{ minRows: 10, maxRows: 20 }" v-model="textarea1"></el-input>
+              <div style="margin: 20px 0;">
+                  <el-button type="primary" @click="onsumbit()" style="width:96px; height:40px">提交</el-button>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="内容预热" name="second">
+              <div style="text-align: left ;margin: 30px 0 15px;">
+                  <span style="width:80px;float:left;line-height: 40px;">渠道ID：</span>
+                  <el-input placeholder="请输入渠道ID" style="width:250px;" v-model="refreshBuserId"></el-input>
+              </div>
+              <div style="text-align: left; margin: 10px 0;">
+                <span style="width:80px;float:left;line-height: 40px;">预热区域：</span>
+                <el-cascader style="width:250px;" :options="citylist1" ref="cascaderAddr1" :show-all-levels="false" v-model="citylabel" @change="handleChange1"></el-cascader>
+              </div>
+              <p style="text-align: left;color: #999999;margin-bottom: 21px;font-size:18px;margin-top:15px;">
+                  Filed预热单次提交最多 10 条，使用回车换行输入，刷新任务完成时间预计为 10 分钟
+              </p>
+              <el-input type="textarea" style="width:800px;" :rows="2" placeholder="请输入内容" :autosize="{ minRows: 10, maxRows: 20 }" v-model="textarea1"></el-input>
+              <div style="margin: 20px 0;">
+                  <el-button type="primary" @click="onsumbit()" style="width:96px; height:40px;">提交</el-button>
+              </div>
+            </el-tab-pane>
+          </el-tabs> -->
         </div>
         <!--  -->
     </div>
@@ -54,6 +100,17 @@ import { resource_refresh, refresh_state } from "../../servers/api";
 export default {
   data() {
     return {
+      names: [
+        {
+          key: 0,
+          value: "刷新缓存",
+        },
+        {
+          key: 1,
+          value: "内容预热",
+        },
+      ],
+      selected: 0,
       errarr: "",
       total_cnt: 1,
       activeName: "first",
@@ -180,6 +237,12 @@ export default {
     //this.getrefreshstate();
   },
   methods: {
+    goBack(){
+      this.$router.go(-1);
+    },
+    select(val){
+      this.selected = val;
+    },
     //移除空格
     removeEmpty(arr) {
       for (var i = 0; i < arr.length; i++) {
@@ -333,59 +396,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.content {
-  .yure_content {
-    width: 100%;
-    // margin: 15px 0;
-  }
-
-  width: 100%;
-  height: 100%;
-  text-align: left;
-
-  .seach {
-    width: 100%;
-
-    // display: flex;
-    // align-items: center;
-    .seach_top {
-      width: 100%;
-      height: 60px;
-      line-height: 60px;
-
-      .input-with-select {
-        width: 300px;
-        float: left;
-        margin-right: 10px;
-      }
+.yure {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: row;
+  .tabsStyle {
+    background: #ffffff;
+    border-radius: 32px;
+    margin-right: 24px;
+    width: 292px;
+    min-height: 700;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    .itemStyle{
+      width: 148px;
+      height: 48px;
+      margin-bottom: 49px;
+      text-align: center;
+      line-height: 49px;
+      font-size: 18px;
+      cursor: pointer;
     }
-
-    .seach_bottom {
-      text-align: left;
-      height: 80px;
-      background: #f2f6fa;
-      border-radius: 10px;
-      padding: 10px 15px;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      margin-bottom: 20px;
-
-      span {
-        color: #999999;
-        font-size: 14px;
-      }
+    .isActive{
+      background: #644CF7;
+      color: #ffffff;
+      border-radius: 24px;
     }
   }
-}
-
-//旋转
-.aa {
-  transition: all 1s;
-}
-
-.go {
-  transform: rotate(-180deg);
-  transition: all 1s;
+  .main-content{
+    background: #ffffff;
+    border-radius: 32px;
+    width: 100%;
+    height: 100%;
+    padding: 72px;
+  }
 }
 </style>

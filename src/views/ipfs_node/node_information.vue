@@ -36,26 +36,43 @@
               </el-table-column>
           </el-table>
           <!-- 详情弹窗 -->
-          <el-dialog title="新增发布" :visible.sync="dialog" width="600px">
+          <el-dialog title="新增发布" :visible.sync="dialog" width="600px" class="addSdk">
               <div class="add-sdk">
-                  <div class="item" style="align-items: flex-start;">
-                      <div class="item_l">应用包：</div>
-                      <div class="item-r" style="position: relative;">
-                          <el-button class="choose-file" size="mini">请选择要上传的文件</el-button>
-                          <input id="f" class="choose-input" type="file" name="file">
-                          <el-button type="primary" class="onchoose-file" @click="upFile()" :disabled="disableStatus">确定</el-button>
-                          进度条
-                          <span id="per">{{perNum}}</span>%
-                          <div style="width: 300px;height: 16px;background-color: #999;margin-top:10px;">
-                              <div style="height: 16px;background-color: #67c23a" id="loading" v-bind:style="{'width': widthData+'%'}"></div>
-                          </div>
-                          <div id="result" style="margin-top:10px;"></div>
+                  <label for="upload">
+                    <div class="upload" :class="{ isStart: startUpload}"  @change="upLoad()">
+                      <div class="leftStyle">
+                        <img width="55px" height="52px" src="../../assets/img/upload.png" alt="">
+                        <p style="font-size: 16px; color: #333; margin-top: 18px;">上传SDK包</p>
                       </div>
-                  </div>
+                      <div class="rightStyle" v-show="startUpload">
+                        <p style="font-size: 14px; color: #999;">{{fileName}}</p>
+                        <div style="display: flex; flex-direction: row; align-items: center;">
+                          <div style="width: 200px; height: 8px; background: #DFECFD; border-radius: 4px;margin-right: 10px;">
+                            <div style="height: 8px; background: #644CF7; border-radius: 4px;" id="loading" v-bind:style="{'width': widthData+'%'}"></div>
+                          </div>
+                          <span id="per" v-if="perNum<100">{{perNum}}%</span>
+                          <img v-else src="../../assets/img/uploadSuccess.png" alt="">
+                        </div>
+                      </div>
+                        <!-- <div class="item_l">应用包：</div>
+                        <div class="item-r" style="position: relative;">
+                            <el-button class="choose-file" size="mini">请选择要上传的文件</el-button>
+                            <input id="f" class="choose-input" type="file" name="file">
+                            <el-button type="primary" class="onchoose-file" @click="upFile()" :disabled="disableStatus">确定</el-button>
+                            进度条
+                            <span id="per">{{perNum}}</span>%
+                            <div style="width: 300px;height: 16px;background-color: #999;margin-top:10px;">
+                                <div style="height: 16px;background-color: #67c23a" id="loading" v-bind:style="{'width': widthData+'%'}"></div>
+                            </div>
+                            <div id="result" style="margin-top:10px;"></div>
+                        </div> -->
+                    </div>
+                  </label>
+                  <input id="upload" style="display: none;" ref="upLoadFile" @change="upFile()" type="file" name="upload">
                   <div class="item">
                       <div class="item_l">应用类型：</div>
                       <div class="item-r">
-                          <el-select v-model="valueActive2" placeholder="请选择" style="width:300px;">
+                          <el-select v-model="valueActive2" placeholder="请选择" style="width: 240px;">
                               <el-option v-for="(item, index) in optionsActive2" :key="index" :label="item" :value="item"></el-option>
                           </el-select>
                       </div>
@@ -63,7 +80,7 @@
                   <div class="item">
                       <div class="item_l">包含功能：</div>
                       <div class="item-r">
-                          <el-checkbox-group v-model="checkList" style="width:300px;">
+                          <el-checkbox-group v-model="checkList" style="width: 240px;">
                               <el-checkbox label="mp4"></el-checkbox>
                               <el-checkbox label="hls"></el-checkbox>
                               <el-checkbox label="flv"></el-checkbox>
@@ -73,17 +90,17 @@
                   <div class="item">
                       <div class="item_l">版本号：</div>
                       <div class="item-r">
-                          <el-input placeholder="请输入版本号" v-model="versionInput" style="width:300px;"></el-input>
+                          <el-input placeholder="请输入版本号" v-model="versionInput" style="width: 240px;"></el-input>
                       </div>
                   </div>
                   <div class="item">
                       <div class="item_l">说明：</div>
                       <div class="item-r">
-                          <el-input placeholder="请输入说明地址" v-model="versionInputActive" style="width:300px;"></el-input>
+                          <el-input placeholder="请输入说明地址" v-model="versionInputActive" style="width: 240px;"></el-input>
                       </div>
                   </div>
               </div>
-              <div slot="footer" class="dialog-footer" style="text-align: left; padding-left: 130px;">
+              <div class="dialog-footer">
                   <el-button type="primary" @click="onSubmitUpload">发布</el-button>
                   <el-button @click="dialog=false">取消</el-button>
               </div>
@@ -178,7 +195,6 @@ export default {
       pagesize: 10,
       valueTime: "",
       total_cnt: 1,
-
       form: {
         account: "",
         nickname: "",
@@ -233,6 +249,8 @@ export default {
           return time.getTime() > Date.now() - 8.64e6; //如果没有后面的-8.64e6就是不可以选择今天的
         },
       },
+      startUpload: false,
+      fileName: "",
     };
   },
   components: {
@@ -322,6 +340,9 @@ export default {
       this.versionInputActive = "";
       // this.checkList = []
       this.dialog = true;
+      this.startUpload = false;
+      this.fileName = "";
+      this.$refs.upLoadFile.value = "";
     },
     //修改弹窗
     handleEdit(rows) {
@@ -533,10 +554,12 @@ export default {
     rowClass() {
       return "text-align: center;";
     },
+    upLoad() {
+      this.$refs.upLoadFile.click();
+    },
     upFile() {
       let _this = this;
-
-      var file = document.getElementById("f");
+      var file = document.getElementById("upload");
       var f = file.files[0];
       if (f == undefined) {
         this.$message({
@@ -554,6 +577,9 @@ export default {
         });
         return false;
       }
+      this.startUpload = true;
+      this.fileName = f.name;
+      console.log(f.name)
       this.disableStatus = true;
       var len = 2 * 1024 * 1024;
       var tota_temp = Math.ceil(totalSize / len);
@@ -632,6 +658,7 @@ export default {
 
       var file = document.getElementById("f1");
       var f = file.files[0];
+      console.log(f)
       if (f == undefined) {
         this.$message({
           type: "warning",
@@ -792,12 +819,45 @@ export default {
 }
 
 .add-sdk {
-  width: 80%;
+  width: 100%;
   height: auto;
+  .isStart{
+    background: #fff !important;
+    border: none !important;
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-between !important;
+  }
+  .upload{
+    width: 100%;
+    height: 128px;
+    background: #F6F4FF;
+    border: 1px solid #644CF7;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .leftStyle{
+      width: 100px;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .rightStyle{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+  }
   .item {
     width: 100%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     flex-flow: row;
     align-items: center;
     margin-top: 20px;
@@ -829,5 +889,8 @@ export default {
       margin-right: 10px;
     }
   }
+}
+.dialog-footer{
+  margin-top: 67px;
 }
 </style>

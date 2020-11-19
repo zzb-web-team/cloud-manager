@@ -1,11 +1,133 @@
 <template>
-  <div class="content bath_m">
-    <div class="top_title">
+  <div class="back_source">
+    <div class="tabsStyle">
+      <div class="itemStyle" style="height: 136px; line-height: 136px; font-weight: 500;margin-bottom: 0;" @click="goBack">
+        <i class="el-icon-arrow-left" style="font-size: 18px;color: #333;font-weight: 500;"></i>
+        返回域名列表</div>
+      <template v-for="item in names">
+        <div
+          class="itemStyle"
+          :class="{ isActive: item.key == selected}"
+          :index="item.key"
+          :key="item.key"
+          @click="select(item.key, item.value)"
+        >
+          {{ item.value }}
+        </div>
+      </template>
+    </div>
+    <div class="main-content">
+      <div class="top">
+        <div class="urlStyle">{{urlLinks}}</div>
+        <div class="actionStyle">
+          <el-button v-if="datalist.state == 1" @click="disableuser(0)" style="background:#fff;color:#F85555;border-color:#F85555;width:120px;height:56px;">停用</el-button>
+          <el-button v-else @click="disableuser(1)" style="background:#fff;color:#665AB2;border-color:#665AB2;width:120px;height:56px;">启用</el-button>
+        </div>
+      </div>
+      <div class="wrapper" v-show="selected==0">
+        <ol class="tala">
+            <li style="display: flex;justify-content: flex-start;align-items: center;">
+              <span>创建时间</span>
+              <span class="tala_con">{{ datalist.create_time | settimes }}
+              </span>
+            </li>
+             <li style="display: flex;justify-content: flex-start;align-items: center;">
+              <span>渠道ID&nbsp;&nbsp;&nbsp;</span>
+              <span class="tala_con">{{ datalist.buser_id}}
+              </span>
+            </li>
+            <li style="display: flex;justify-content: flex-start;align-items: center;">
+              <span>源站域名</span>
+              <el-select v-model="datalist.domainId" placeholder="请选择" @change="onchange">
+                <el-option v-for="(item, index) in labelData" :key="index + item" :label="item.label" :value="item.value" style="width:250px;">
+                </el-option>
+              </el-select>
+            </li>
+            <li style="display: flex;justify-content: flex-start;align-items: center;">
+              <span>回源路径</span>
+              <div class="tala_con" style="width: 295px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ datalist.label2 }}</div>
+              <span style="color: rgb(64, 158, 255);" @click="cleckurl(1)">修改</span>
+            </li>
+            <el-dialog :title="title_content" :visible.sync="zurl" width="30%">
+              <el-input v-model="sleckurl"></el-input>
+              <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="onSave(1)">确 定</el-button>
+              </span>
+            </el-dialog>
+            <li style="display: flex;justify-content: flex-start;align-items: center;">
+              <span>播放路径</span>
+              <div class="tala_con" style="width: 295px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ datalist.label2s }}</div>
+              <span style="color: rgb(64, 158, 255);" @click="cleckurl(2)">修改</span>
+            </li>
+              <el-dialog :title="title_content" :visible.sync="zurl1" width="30%">
+              <el-input v-model="sleckurl"></el-input>
+              <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="onSave(2)">确 定</el-button>
+              </span>
+            </el-dialog>
+            <li style="display: flex;justify-content: flex-start;align-items: center;">
+              <span>视频格式</span>
+              <el-select v-model="datalist.url_type" placeholder="请选择" @change="onchangeType">
+                <el-option v-for="(item, index) in yewu" :key="index" :label="item.label" :value="item.value"></el-option>
+              </el-select>
+            </li>
+          </ol>
+      </div>
+      <div class="wrapper" v-show="selected==1">
+        <div class="talb_title_tio">
+          <div style="display: flex;flex-directiomn: row; align-items: baseline; justify-content: flex-start;">
+            <p>缓存自动刷新</p>
+            <div style="display: flex;flex-direction: column; align-items: flex-start; justify-content: flex-start;margin-left: 47px;">
+              <div style="display: flex;flex-directiomn: row; align-items: center;">
+                <p style="margin-right: 23px;color:#333;font-size:16px;">{{valueh ? '开启' : '未开启'}}</p>
+                <el-switch v-model="valueh" active-color="#13ce66" inactive-color="#ddd" @change="changeSwitch2"></el-switch>
+              </div>
+              <p style="margin-top: 25px;color:#999;font-size:16px;">开启后，能够自动发现加速节点的同名缓存刷新，并自动同步最新缓存</p>
+            </div>
+          </div>
+        </div>
+        <div class="talb_title_tio" style="margin-top: 47px;">
+          <div style="display: flex;flex-directiomn: row; align-items: center; ">
+            <p style="">缓存过期时间</p>
+            <p style="margin: 0 23px 0 47px;" v-if="expireTime&&!valueh">{{expireTime | settimes}}</p>
+            <p style="margin: 0 23px 0 47px;" v-else>默认自动过期</p>
+            <el-button type="text" :disabled="valueh" @click="huanVisible = true;radio1='自动过期';automatic_time=true;automatic()">设置</el-button>
+            <el-dialog title="配置缓存过期时间" :visible.sync="huanVisible">
+              <el-form :model="huanform">
+                <el-form-item label="过期类型:" style="text-align:left;" :label-width="formLabelWidth">
+                  <el-radio-group v-model="radio1" @change="selecttime()" class="huandan">
+                    <el-radio-button label="自动过期"></el-radio-button>
+                    <el-radio-button label="自定义时间"></el-radio-button>
+                  </el-radio-group>
+
+                  <p v-if="automatic_time == true" style="font-size: 12px;color: #676767;height: 18px;">
+                    当加速内容失去热度时缓存将自动过期
+                  </p>
+                </el-form-item>
+                <el-form-item class="huancuntime" label="过期时间:" :label-width="formLabelWidth" style="text-align:left;" v-if="automatic_time == false">
+                  <el-date-picker v-model="huanfo" type="datetime" style="width:100%;" align="right" placeholder="选择日期时间" :picker-options="pickerOptions0">
+                  </el-date-picker>
+                  <p style="font-size: 12px;color: #676767;height: 18px;">
+                    最长过期时间为三年
+                  </p>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="huanno">取 消</el-button>
+                <el-button type="primary" @click="huanVisib()">确 定</el-button>
+              </div>
+            </el-dialog>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="top_title" style="display: none">
       <span @click="goback" style="font-size: 24px;color: #202020;">
         <i class="el-icon-arrow-left" style="color:#297AFF;font-size: 18px;margin-right:23px;font-weight: 600;"></i>
         {{urlLinks}}</span>
     </div>
-    <div class="bath" style="margin: auto;background: #ffffff;margin-top: 25px;border-radius: 2px;padding: 15px;box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);">
+    <div class="bath" style="display: none">
       <el-tabs v-model="oneName" @tab-click="handleClick" v-loading="loading" ref="tabs">
         <div class="tala_title" style="display:flex;justify-content:flex-end;">
           <!-- <span style="max-width: 230px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ datalist.url }}</span> -->
@@ -270,6 +392,17 @@ export default {
   // inject: ["reload"],
   data() {
     return {
+      names: [
+        {
+          key: 0,
+          value: "基础配置",
+        },
+        {
+          key: 1,
+          value: "缓存配置",
+        },
+      ],
+      selected: 0,
       title_content: "回源路径",
       pageActive: 0,
       nowcharId: "",
@@ -531,6 +664,12 @@ export default {
     this.queryInfoLabel();
   },
   methods: {
+    goBack(){
+      this.$router.go(-1);
+    },
+    select(val){
+      this.selected = val;
+    },
     //保存
     onSave(type) {
       if(type==1){
@@ -1216,19 +1355,84 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.content {
-  // width: 1240px;
-  // margin: auto;
-  // padding: 19px;
-  // margin-top: 34px;
-  // background: #ffffff;
-  .bath_title_btn {
-    font-size: 16px;
+.back_source {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: row;
+  .tabsStyle {
+    background: #ffffff;
+    border-radius: 32px;
+    margin-right: 24px;
+    width: 292px;
+    min-height: 700;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    .itemStyle{
+      width: 148px;
+      height: 48px;
+      margin-bottom: 49px;
+      text-align: center;
+      line-height: 49px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .isActive{
+      background: #644CF7;
+      color: #ffffff;
+      border-radius: 24px;
+    }
+  }
+  .main-content{
+    background: #ffffff;
+    border-radius: 32px;
+    width: 100%;
+    height: 100%;
+    .top{
+      height: 136px;
+      padding: 0 72px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom-style: solid ;
+      border-bottom-width: 1px;
+      border-bottom-color: #F2F2F2;
+    }
+    .wrapper{
+      min-height: 700px;
+      padding: 63px 0 0 72px;
+      .tala {
+        padding: 0;
+        margin: 0;
+        li {
+          height: 50px;
+          text-align: left;
+          span {
+            margin-right: 25px;
+          }
 
-    i {
-      font-size: 16px;
-      font-weight: 600;
-      margin-right: 5px;
+          .tala_con {
+            display: inline-block;
+            width: 200px;
+          }
+        }
+      }
+      .talb_title_tio {
+        text-align: left;
+        margin-top: 20px;
+        // display: flex;
+        .talb_title_p{
+          width: 4px;
+          height:20px;
+          background-color:#297aff;
+          margin-right: 8px
+        }
+        span {
+          margin-right: 45px;
+        }
+      }
     }
   }
 
@@ -1248,43 +1452,28 @@ export default {
     }
   }
 
-  .tala {
-    li {
-      height: 50px;
-      // line-height: 50px;
-      text-align: left;
-
-      span {
-        margin-right: 25px;
-      }
-
-      .tala_con {
-        display: inline-block;
-        width: 200px;
-      }
-    }
-  }
+  
 
   .tala_x {
     margin-left: 10px;
     color: rgb(64, 158, 255);
   }
 
-  .talb_title_tio {
-    text-align: left;
-    margin-left: 40px;
-    margin-top: 20px;
-    // display: flex;
-    .talb_title_p{
-      width: 4px;
-      height:20px;
-      background-color:#297aff;
-      margin-right: 8px
-    }
-    span {
-      margin-right: 45px;
-    }
-  }
+  // .talb_title_tio {
+  //   text-align: left;
+  //   margin-left: 40px;
+  //   margin-top: 20px;
+  //   // display: flex;
+  //   .talb_title_p{
+  //     width: 4px;
+  //     height:20px;
+  //     background-color:#297aff;
+  //     margin-right: 8px
+  //   }
+  //   span {
+  //     margin-right: 45px;
+  //   }
+  // }
 
   .talb_title_two {
     text-align: left;
@@ -1296,6 +1485,7 @@ export default {
     }
   }
 }
+
 
 .seach {
   width: 100%;
