@@ -54,18 +54,6 @@
                           <img v-else src="../../assets/img/uploadSuccess.png" alt="">
                         </div>
                       </div>
-                        <!-- <div class="item_l">应用包：</div>
-                        <div class="item-r" style="position: relative;">
-                            <el-button class="choose-file" size="mini">请选择要上传的文件</el-button>
-                            <input id="f" class="choose-input" type="file" name="file">
-                            <el-button type="primary" class="onchoose-file" @click="upFile()" :disabled="disableStatus">确定</el-button>
-                            进度条
-                            <span id="per">{{perNum}}</span>%
-                            <div style="width: 300px;height: 16px;background-color: #999;margin-top:10px;">
-                                <div style="height: 16px;background-color: #67c23a" id="loading" v-bind:style="{'width': widthData+'%'}"></div>
-                            </div>
-                            <div id="result" style="margin-top:10px;"></div>
-                        </div> -->
                     </div>
                   </label>
                   <input id="upload" style="display: none;" ref="upLoadFile" @change="upFile()" type="file" name="upload">
@@ -77,14 +65,14 @@
                           </el-select>
                       </div>
                   </div>
-                  <div class="item">
+                  <div class="item" style="align-items: flex-start;">
                       <div class="item_l">包含功能：</div>
                       <div class="item-r">
                         <el-radio-group v-model="type" @change="selectType()">
                           <el-radio label="点播"></el-radio>
-                          <el-radio label="直播"></el-radio>
+                          <el-radio label="直播" style="margin-right:40px"></el-radio>
                         </el-radio-group>
-                        <div class="selectBg" :style="{background: type=='点播' ? 'url(../../assets/img/select.png)' : 'url(../../assets/img/select_right.png)'}">
+                        <div class="selectBg" :style="{background: type=='点播' ? 'url('+require('../../assets/img/select.png') + ')' : 'url('+require('../../assets/img/select_right.png') + ')'}">
                           <el-checkbox-group v-if="type=='点播'" v-model="checkList" style="width: 240px;margin-top: 8px;">
                             <el-checkbox label="mp4"></el-checkbox>
                             <el-checkbox label="hls"></el-checkbox>
@@ -116,41 +104,33 @@
               </div>
           </el-dialog>
           <!-- 修改 -->
-          <el-dialog title="修改SDK" :visible.sync="editDialog" width="600px">
+          <el-dialog title="修改SDK" :visible.sync="editDialog" width="600px" class="addSdk">
               <div class="add-sdk">
                   <div class="item">
-                      <div class="item_l">应用包：</div>
-                      <div class="item-r" style="position: relative;">
-                          <el-button class="choose-file" size="mini">请选择要上传的文件</el-button>
-                          <input id="f1" class="choose-input" type="file" name="file">
-                          <el-button type="primary" class="onchoose-file" @click="upFile1()" :disabled="disableStatus1">确定</el-button>
-                          进度条
-                          <span id="per1">{{perNum1}}</span>%
-                          <div style="width: 300px;height: 16px;background-color: #999;margin-top:10px;">
-                              <div style="width: 0%;height: 16px;background-color: #67c23a" id="loading1" v-bind:style="{'width': widthData1+'%'}"></div>
-                          </div>
-                          <div id="result" style="margin-top:10px;"></div>
+                    <div class="item_l">SDK包</div>
+                    <div class="item-r" style="display: flex; flex-direction: row; align-items: flex-end;">
+                      <div style="display: flex; flex-direction: column; align-items: center;">
+                        <img width="55px" height="52px" src="../../assets/img/upload.png" alt="">
+                        <p style="font-size: 16px; color: #333; margin-top: 18px;">上传SDK包</p>
+                      </div>
+                      <p style="width: 130px; margin-left: 20px">{{sdkUrl}}</p>
+                    </div>
+                    
+                  </div>
+                  <div class="item">
+                      <div class="item_l">应用类型</div>
+                      <div class="item-r">
+                          <el-input v-model="value11" style="width:240px;" disabled></el-input>
                       </div>
                   </div>
                   <div class="item">
-                      <div class="item_l">应用类型：</div>
+                      <div class="item_l">包含功能</div>
                       <div class="item-r">
-                          <el-input v-model="value11" style="width:300px;" disabled></el-input>
-                          <!-- <el-select v-model="value11" placeholder="请选择">
-                              <el-option v-for="(item, index) in options1" :key="index" :label="item" :value="item"></el-option>
-                          </el-select> -->
-                      </div>
-                  </div>
-                  <div class="item">
-                      <div class="item_l">包含功能：</div>
-                      <div class="item-r">
-                        <div style="display: flex; flex-direction: row; justify-content: flex-start;">
-                          <el-radio-group v-model="type" @change="selectType()">
-                            <el-radio label="点播"></el-radio>
-                            <el-radio label="直播"></el-radio>
-                          </el-radio-group>
-                        </div>
-                        <div style="background: (../../assets/img/select.png);width: 240px; height: 73px;">
+                        <el-radio-group v-model="type" @change="selectType()">
+                          <el-radio label="点播"></el-radio>
+                          <el-radio label="直播" style="margin-right:40px"></el-radio>
+                        </el-radio-group>
+                        <div class="selectBg" :style="{background: type=='点播' ? 'url('+require('../../assets/img/select.png') + ')' : 'url('+require('../../assets/img/select_right.png') + ')'}">
                           <el-checkbox-group v-model="checkList11" style="width:240px;">
                             <el-checkbox label="mp4"></el-checkbox>
                             <el-checkbox label="hls"></el-checkbox>
@@ -160,19 +140,19 @@
                       </div>
                   </div>
                   <div class="item">
-                      <div class="item_l">版本号：</div>
+                      <div class="item_l">版本号</div>
                       <div class="item-r">
-                          <el-input v-model="versionInput1" style="width:300px;" placeholder="请输入内容"></el-input>
+                          <el-input v-model="versionInput1" style="width:240px;" placeholder="请输入内容"></el-input>
                       </div>
                   </div>
                   <div class="item">
-                      <div class="item_l">说明：</div>
+                      <div class="item_l">说明</div>
                       <div class="item-r">
-                          <el-input v-model="versionInput1Active" style="width:300px;" placeholder="请输入说明地址"></el-input>
+                          <el-input v-model="versionInput1Active" style="width:240px;" placeholder="请输入说明地址"></el-input>
                       </div>
                   </div>
               </div>
-              <div slot="footer" class="dialog-footer" style="text-align: left; padding-left: 130px;">
+              <div class="dialog-footer">
                   <el-button type="primary" @click="onEdit">发布</el-button>
                   <el-button @click="editDialog=false">取消</el-button>
               </div>
@@ -882,8 +862,7 @@ export default {
     justify-content: space-between;
     flex-flow: row;
     align-items: center;
-    margin-top: 20px;
-
+    margin-top: 48px;
     .choose-file {
       width: 130px;
       height: 25px;
@@ -891,7 +870,6 @@ export default {
       padding: 2px;
       z-index: 99;
     }
-
     .choose-input {
       position: absolute;
       z-index: 100;
@@ -899,7 +877,6 @@ export default {
       opacity: 0;
       height: auto;
     }
-
     .onchoose-file {
       padding: 7px 20px;
       margin-top: 35px;
