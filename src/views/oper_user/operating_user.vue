@@ -728,10 +728,13 @@ export default {
   }
 
   .devide_table {
-    width: 100%;
+    padding: 35px;
     height: auto;
-    overflow: hidden;
-    margin-top: 20px;
+    margin: 20px 0;
+    background: #fff;
+    -webkit-box-shadow: 0 2px 3px 0 rgba(6,17,36,.14);
+    box-shadow: 0 2px 3px 0 rgba(6,17,36,.14);
+    border-radius: 2px;
 
     .el-table td,
     .el-table th {
