@@ -84,7 +84,6 @@ export default {
     return {
       val2: [],
       radios: 0,
-      val3: [],
       timeUnit: 120,
       starttime: "",
       endtime: "",
@@ -118,12 +117,10 @@ export default {
   },
   created() {
     let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-    this.starttime = times;
-    this.endtime = Date.parse(new Date()) / 1000;
+    this.starttime = times - 24 * 60 * 60 * 29;
+    this.endtime = times;
     this.val2[0] = this.common.getTimess(this.starttime*1000);
     this.val2[1] = this.common.getTimess(this.endtime*1000);
-    this.val3[0] = this.common.getTimess(this.starttime*1000);
-    this.val3[1] = this.common.getTimess(this.endtime*1000);
     this.sdkVersionStatistics();
   },
   beforeDestroy() {
