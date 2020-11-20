@@ -1,26 +1,29 @@
 <template>
+  <div>
+    <div class="top_title">SDK发布</div>
     <div class="content">
-      <div class="top_title">点播SDK发布</div>
-      <!-- 搜索 -->
-      <div class="seach">
+      <div class="seach" style="margin-top: 0;">
         <el-input placeholder="包名、版本" v-model="input" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmitInput">
             <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
         </el-input>
-        <!-- <span>应用类型：</span> -->
         <el-select v-model="valueActive" placeholder="请选择应用类型" @change="onchangeTab" style="width:200px;margin-right: 10px;">
             <el-option v-for="(item, index) in options" :key="index" :label="item" :value="item"></el-option>
         </el-select>
-        <!-- <span>日期：</span> -->
         <el-date-picker v-model="valueTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
-        <!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
         <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
       </div>
       <!-- 表格 -->
       <div class="device_table">
-          <div style="text-align: left;margin-bottom:20px;margin-top:20px;">
-              <el-button type="primary" @click="addSdk()">新增发布</el-button>
+          <div class="operating">
+              <el-button style="background:#fff;color:#644CF7;border:2px solid #644CF7;font-weight:600;" type="primary" @click="addSdk()">
+                <span class="el-icon-plus" style="font-weight: 600;"></span>
+                新增发布
+              </el-button>
+              <div style="margin-left: auto;display:flex;flex-direction: row; align-items: center;cursor: pointer;">
+                <img width="24px" height="22px" src="../../assets/img/export.png" alt="">
+                <span style="color: #644CF7;font-size: 16px;margin-left:8px;">导出</span>
+              </div>
           </div>
-
           <!-- 表格 -->
           <el-table stripe ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" :default-sort="{prop: 'date', order: 'descending'}" @selection-change="handleSelectionChange">
               <el-table-column prop="url" label="发布包名"></el-table-column>
@@ -164,6 +167,7 @@
           </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -806,20 +810,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.customWidth {
-  width: 30% !important;
+.top_title{
+    margin-top: 49px;
+    text-align: left;
+    font-size: 18px;
+    color: #333;
 }
-
-//旋转
-.aa {
-  transition: all 1s;
-}
-
-.go {
-  transform: rotate(-180deg);
-  transition: all 1s;
-}
-
 .add-sdk {
   width: 100%;
   height: auto;

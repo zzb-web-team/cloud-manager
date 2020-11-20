@@ -70,13 +70,13 @@
     </div>
     <div class="device_table" style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; flex-wrap: wrap;">
       <div class="user_item" style="margin-right: 100px;">
-        <div class="item_left" style="margin-right: 30px;">
-          <div class="item_text" style="text-align:center;">总流量</div>
+        <div class="item_left" style="margin: 0 30px 22px 0;">
+          <div class="item_text" style="text-align:left;">总流量</div>
           <div class="item_count" style="text-align:center;">
             <span>{{ totalYl | setbytes }}</span>
           </div>
         </div>
-        <img src="../../assets/img/pic.png" /> 
+        <img width="83px" height="260px" src="../../assets/img/backfemale.png" /> 
       </div>
       <div style="flex: 1; min-width: 400px;">
         <el-row type="flex" class="row_active">
@@ -959,15 +959,15 @@ export default {
 
 .user_item {
   background: #FDFBFB;
-  width: 500px;
-  height: 300px;
+  width: 324px;
+  height: auto;
   border-radius: 32px;
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   text-align: left;
   padding: 36px 71px;
-
   .item_left {
     width: 49%;
     height: 58px;

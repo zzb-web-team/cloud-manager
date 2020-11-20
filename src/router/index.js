@@ -28,8 +28,9 @@ import user_center from "@/views/account/user_center";
 import operating_user from "@/views/oper_user/operating_user";
 import useInfo from "@/views/oper_user/useInfo";
 
-//ptfs节点信息
+//sdk
 import node_information from "@/views/ipfs_node/node_information";
+import device_info from "@/views/ipfs_node/device_info";
 //ipfs节点应用
 import fs_storage from "@/views/ipfs_application/fs_storage";
 import ipflow from "@/views/ipfs_application/ipflow";
@@ -217,6 +218,11 @@ export default new Router({
           path: "/node_information",
           name: "SDK发布",
           component: node_information,
+        },
+        {
+          path: "/device_info",
+          name: "终端信息",
+          component: device_info,
         },
       ],
     },

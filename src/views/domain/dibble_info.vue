@@ -1,118 +1,132 @@
 <template>
   <section class="myself-container content">
-    <div class="top_title">直播流信息</div>
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <div class="seach">
-        <el-input v-model="values" placeholder="请输入直播流名称、直播流地址、直播间ID、渠道ID" style="width:24%;margin-right: 10px;" @keyup.enter.native="onChanges">
-          <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-        </el-input>
-        <el-date-picker style="margin-left:10px;" v-model="times" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-        <el-button style="margin-left: 10px;" type="primary" @click="reset">重置</el-button>
+    <div class="top_title">直播流信息
+      <div class="wrapperStyle">
+        <div
+          class="itemStyle"
+          :class="{ isSelected: activeName == 0 }"
+          @click="changeType(0)"
+        >
+          在线流
+        </div>
+        <div
+          class="itemStyle"
+          :class="{ isSelected: activeName == 1 }"
+          @click="changeType(1)"
+        >
+          历史流
+        </div>
       </div>
-      <el-tab-pane label="在线流" name="first" :lazy="true">
-        <div class="device_table">
-          <el-row type="flex" class="row_active">
-            <el-col :span="24">
-              <el-table :data="onlineDatas" border max-height="560px" style="width: 100%;margin: 10px 0;" :cell-style="rowClass" :header-cell-style="headClass">
-                <el-table-column label="直播流名称">
-                  <template slot-scope="scope">
-                    <div>{{ scope.row.streamName }}</div>
-                  </template>
-                </el-table-column>
+    </div>
+    <div class="seach">
+      <el-input v-model="values" placeholder="请输入直播流名称、直播流地址、直播间ID、渠道ID" style="width:24%;margin-right: 10px;" @keyup.enter.native="onChanges">
+        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+      </el-input>
+      <el-date-picker style="margin-left:10px;" v-model="times" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+      <el-button style="margin-left: 10px;" type="primary" @click="reset">重置</el-button>
+    </div>
+    <div class="device_table" v-if="activeName == 0">
+      <el-row type="flex" class="row_active">
+        <el-col :span="24">
+          <el-table :data="onlineDatas" border max-height="560px" style="width: 100%;margin: 10px 0;" :cell-style="rowClass" :header-cell-style="headClass">
+            <el-table-column label="直播流名称">
+              <template slot-scope="scope">
+                <div>{{ scope.row.streamName }}</div>
+              </template>
+            </el-table-column>
 
-                <el-table-column label="直播流地址">
-                  <template slot-scope="scope">
-                    <div>{{ scope.row.liveAddr }}</div>
-                  </template>
-                </el-table-column>
-                <el-table-column label="直播间ID">
-                  <template slot-scope="scope">
-                    <div style="display: flex;justify-content: center;">
-                      <div>{{ scope.row.roomId }}</div>
-                    </div>
-                  </template>
-                </el-table-column>
-                <el-table-column label="终端名称" >
-                  <template slot-scope="scope">
-                    <div style="display: flex;justify-content: center;">
-                      <div>{{ scope.row.terminalName }}</div>
-                    </div>
-                  </template>
-                </el-table-column>
-                <el-table-column label="渠道ID" >
-                  <template slot-scope="scope">
-                    <div style="display: flex;justify-content: center;">
-                      <div>{{ scope.row.ChanId }}</div>
-                    </div>
-                  </template>
-                </el-table-column>
-                <el-table-column label="拉流开始时间" sortable="true" sort-by="settimes">
-                  <template slot-scope="scope">
-                    <div>{{ scope.row.startTime | settimes }}</div>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
-            </el-col>
-          </el-row>
+            <el-table-column label="直播流地址">
+              <template slot-scope="scope">
+                <div>{{ scope.row.liveAddr }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="直播间ID">
+              <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.roomId }}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="终端名称" >
+              <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.terminalName }}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="渠道ID" >
+              <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.ChanId }}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="拉流开始时间" sortable="true" sort-by="settimes">
+              <template slot-scope="scope">
+                <div>{{ scope.row.startTime | settimes }}</div>
+              </template>
+            </el-table-column>
+          </el-table>
+          <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="device_table" v-else>
+      <div class="operating">
+        <div style="margin-left: auto;display:flex;flex-direction: row; align-items: center;cursor: pointer;">
+          <img width="24px" height="22px" src="../../assets/img/export.png" alt="">
+          <span style="color: #644CF7;font-size: 16px;margin-left:8px;">导出</span>
         </div>
-      </el-tab-pane>
-      <el-tab-pane label="历史流" name="second" :lazy="true">
-        <div class="device_table">
-          <div class="operating">
-            <el-button style="margin-left: auto;" type="primary">导出</el-button>
-          </div>
-          <el-row type="flex" class="row_active">
-            <el-col :span="24">
-              <el-table :data="historyDatas" border max-height = "530px" style="width: 100%; margin: 10px 0;" :cell-style="rowClass" :header-cell-style="headClass">
-                <el-table-column label="直播流名称">
-                  <template slot-scope="scope">
-                      <div>{{ scope.row.urlname }}</div>
-                  </template>
-                </el-table-column>
-                <el-table-column label="直播流地址">
-                <template slot-scope="scope">
-                    <div>{{ scope.row.domain }}</div>
-                </template>
-                </el-table-column>
-                <el-table-column label="直播间ID">
-                <template slot-scope="scope">
-                    <div style="display: flex;justify-content: center;">
-                      <div>{{ scope.row.RoomId }}</div>
-                    </div>
-                </template>
-                </el-table-column>
-                <el-table-column label="终端名称">
-                <template slot-scope="scope">
-                    <div style="display: flex;justify-content: center;">
-                      <div>{{ scope.row.accelCnt }}</div>
-                    </div>
-                </template>
-                </el-table-column>
-                <el-table-column label="渠道ID" >
-                  <template slot-scope="scope">
-                      <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.accelCntpercent  }}</div>
-                      </div>
-                  </template>
-                </el-table-column>
-                <el-table-column label="拉流开始时间">
-                  <template slot-scope="scope">
-                    <div>{{ scope.row.stime | settimes }}</div>
-                  </template>
-                </el-table-column>
-                <el-table-column label="拉流结束时间">
-                  <template slot-scope="scope">
-                    <div>{{ scope.row.etime | settimes }}</div>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <fenye style="float:right;margin:10px 0 20px 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
-            </el-col>
-          </el-row>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
+      </div>
+      <el-row type="flex" class="row_active">
+        <el-col :span="24">
+          <el-table :data="historyDatas" border max-height = "530px" style="width: 100%; margin: 10px 0;" :cell-style="rowClass" :header-cell-style="headClass">
+            <el-table-column label="直播流名称">
+              <template slot-scope="scope">
+                  <div>{{ scope.row.urlname }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="直播流地址">
+            <template slot-scope="scope">
+                <div>{{ scope.row.domain }}</div>
+            </template>
+            </el-table-column>
+            <el-table-column label="直播间ID">
+            <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.RoomId }}</div>
+                </div>
+            </template>
+            </el-table-column>
+            <el-table-column label="终端名称">
+            <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.accelCnt }}</div>
+                </div>
+            </template>
+            </el-table-column>
+            <el-table-column label="渠道ID" >
+              <template slot-scope="scope">
+                  <div style="display: flex;justify-content: center;">
+                    <div>{{ scope.row.accelCntpercent  }}</div>
+                  </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="拉流开始时间">
+              <template slot-scope="scope">
+                <div>{{ scope.row.stime | settimes }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="拉流结束时间">
+              <template slot-scope="scope">
+                <div>{{ scope.row.etime | settimes }}</div>
+              </template>
+            </el-table-column>
+          </el-table>
+          <fenye style="float:right;margin:10px 0 20px 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
+        </el-col>
+      </el-row>
+    </div>
   </section>
 </template>
 
@@ -129,7 +143,7 @@ import _ from "lodash";
 export default {
   data() {
     return {
-      activeName: "first",
+      activeName: 0,
       values: "",
       radio: 1,
       showzdy: false,
@@ -167,23 +181,44 @@ export default {
     this.getStreamInfo();
   },
   methods: {
+    changeType(val){
+      if (val == 0) {
+        this.times= [];
+        let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+        this.starttime = times;
+        this.endtime = Date.parse(new Date()) / 1000;
+        this.getStreamInfo();
+      } else if (val == 1) {
+        this.times = [];
+        let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+        this.starttime = times;
+        this.endtime = Date.parse(new Date()) / 1000;
+        // this.times[0] = this.common.getTimes(this.starttime * 1000);
+        // this.times[1] = this.common.getTimes(this.endtime * 1000);
+        this.getHistoryInfo();
+      }
+      this.activeName = val;
+    },
     //获取加速次数每页数量
     handleSizeChange(pagetol) {
       this.pageSize = pagetol;
-      if(this.activeName == 'first'){
+    },
+    //获取页码
+    handleCurrentChange(pages) {
+      this.pageNo = pages;
+      if(this.activeName == 0){
         this.getStreamInfo();
       }else{
         this.getHistoryInfo();
       }
     },
-    //获取页码
-    handleCurrentChange(pages) {
-      this.pageNo = pages;
-      this.getStreamInfo();
-    },
     onChanges() {
       this.pageNo = 1;
-      this.getStreamInfo();
+      if(this.activeName == 0){
+        this.getStreamInfo();
+      }else{
+        this.getHistoryInfo();
+      }
     },
 
     reset() {
@@ -192,7 +227,7 @@ export default {
       this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.endtime = Date.parse(new Date()) / 1000;
       this.times = [];
-      if(this.activeName == 'first'){
+      if(this.activeName == 0){
         this.getStreamInfo();
       }else{
         this.getHistoryInfo();
@@ -273,7 +308,7 @@ export default {
       this.starttime = times;
       this.endtime = Date.parse(new Date()) / 1000;
       this.pageNo = 1;
-      if(this.activeName == 'first'){
+      if(this.activeName == 0){
         this.getStreamInfo();
       }else{
         this.getHistoryInfo();
@@ -285,7 +320,7 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 1;
       this.endtime = times - 1;
       this.pageNo = 1;
-      if(this.activeName == 'first'){
+      if(this.activeName == 0){
         this.getStreamInfo();
       }else{
         this.getHistoryInfo();
@@ -297,7 +332,7 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 6;
       this.endtime = times;
       this.pageNo = 1;
-      if(this.activeName == 'first'){
+      if(this.activeName == 0){
         this.getStreamInfo();
       }else{
         this.getHistoryInfo();
@@ -309,7 +344,7 @@ export default {
       this.starttime = times - 24 * 60 * 60 * 29;
       this.endtime = times;
       this.pageNo = 1;
-      if(this.activeName == 'first'){
+      if(this.activeName == 0){
         this.getStreamInfo();
       }else{
         this.getHistoryInfo();
@@ -320,7 +355,7 @@ export default {
       this.starttime = this.times ? dateToMs(this.times[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.endtime = this.times ? dateToMs(this.times[1]) + (24*60*60-1) : Date.parse(new Date()) / 1000;
       this.pageNo = 1;
-      if(this.activeName == 'first'){
+      if(this.activeName == 0){
         this.getStreamInfo();
       }else{
         this.getHistoryInfo();
@@ -334,25 +369,6 @@ export default {
     // 表格样式设置
     rowClass() {
       return "text-align: center;";
-    },
-
-    //选项卡
-    handleClick(tab, event) {
-      if (tab.index == 0) {
-        this.times= [];
-        let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-        this.starttime = times;
-        this.endtime = Date.parse(new Date()) / 1000;
-        this.getStreamInfo();
-      } else if (tab.index == 1) {
-        this.times = [];
-        let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
-        this.starttime = times;
-        this.endtime = Date.parse(new Date()) / 1000;
-        this.times[0] = this.common.getTimes(this.starttime * 1000);
-        this.times[1] = this.common.getTimes(this.endtime * 1000);
-        this.getHistoryInfo();
-      }
     },
 
     toExportExcel(){

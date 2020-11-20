@@ -1,55 +1,43 @@
 <template>
-  <div class="content">
-    <div class="top_title">用户管理</div>
-    <div class="seach">
-      <el-form ref="form" :model="form">
-        <el-row type="flex">
-          <!-- <div class="search-con">
-                      <i class="el-icon-search" @click="searchInfo" style="color:#606266"></i>
-                      <el-input class="search-input" v-model="searchText" maxlength="70" placeholder="用户ID,账号,手机号" @keyup.enter.native="searchInfo"></el-input>
-                  </div> -->
-          <el-input placeholder="用户ID,账号,手机号" style="width:200px;margin-right: 10px;" v-model="searchText" class="input-with-select" @keyup.enter.native="searchInfo" maxlength="70">
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-          </el-input>
-          <!-- <div @click="getShow()" class="div_show" style="color:#606266">
-            筛选
-            <i class="el-icon-caret-bottom" :class="[rotate?'fa fa-arrow-down go':'fa fa-arrow-down aa']"></i>
-          </div>
-        </el-row>
-        <el-row type="flex" class="row_activess" v-show="showState"> -->
-          <!-- <el-form-item label="状态" style="display: flex;"> -->
-            <el-select v-model="value" placeholder="请选择状态" @change="onChangeTab" style="width:200px;margin-right: 10px;">
+  <div>
+    <div class="top_title">注册用户</div>
+    <div class="content">
+      <div class="seach" style="margin-top: 0;">
+        <el-form ref="form" :model="form">
+          <el-row type="flex">
+            <el-input placeholder="请输入渠道ID、用户名、手机号" style="width: 20%;margin-right: 10px;" v-model="searchText" class="input-with-select" @keyup.enter.native="searchInfo" maxlength="70">
+              <i slot="suffix" class="el-input__icon el-icon-search"></i>
+            </el-input>
+            <el-select v-model="value" placeholder="请选择业务类型" @change="onChangeTab" style="width: 15%;margin-right: 10px;">
+              <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <el-select v-model="value" placeholder="请选择状态" @change="onChangeTab" style="width: 15%;margin-right: 10px;">
               <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
-          <!-- </el-form-item> -->
-          <!-- <el-form-item label="注册时间" style="display: flex;"> -->
             <el-date-picker style="margin-right:10px;" v-model="valueTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left"></el-date-picker>
-          <!-- </el-form-item> -->
-          <!-- <el-form-item>
-            <el-button type="primary" @click="searchInfo">确定</el-button>
-          </el-form-item>
-          <el-form-item> -->
-            <el-button type="primary" @click="reset()">重置</el-button>
-            
-          <!-- </el-form-item> -->
-        </el-row>
-      </el-form>
-    </div>
-    <div class="device_table">
-      <div class="operating">
-        <el-button style="margin-left: auto;" type="primary" @click="toexportExcel">导出</el-button>
+            <el-button type="primary" style="width: 120px;" @click="reset()">重置</el-button>
+          </el-row>
+        </el-form>
       </div>
-      <el-row type="flex" class="row_active">
-        <el-col :span="24">
-          <tableBarActive1 id="rebateSetTable" ref="table1" tooltip-effect="dark" @tableSortChange='tableSortChange' :tableData="tableData" :operatingStatus="operatingStatus" @handleSelectionChange="handleSelectionChange" :clomnSelection="clomnSelection" :rowHeader="rowHeader" :tableOption="tableOption" @disable="disable" @toChange="toChange"></tableBarActive1>
-        </el-col>
-      </el-row>
-      <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center;">
-        <div>
-          <el-button type="text" size="small" @click="allOn">启用</el-button>
-          <el-button type="text" size="small" style="color: red;" @click="allOff">冻结</el-button>
+      <div class="device_table">
+        <div class="operating" @click="toexportExcel">
+          <div style="margin-left: auto;display:flex;flex-direction: row; align-items: center;cursor: pointer;">
+            <img width="24px" height="22px" src="../../assets/img/export.png" alt="">
+            <span style="color: #644CF7;font-size: 16px;margin-left:8px;">导出</span>
+          </div>
         </div>
-        <pageNation :pager="pager" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange"></pageNation>
+        <el-row type="flex" class="row_active">
+          <el-col :span="24">
+            <tableBarActive1 id="rebateSetTable" ref="table1" tooltip-effect="dark" @tableSortChange='tableSortChange' :tableData="tableData" :operatingStatus="operatingStatus" @handleSelectionChange="handleSelectionChange" :clomnSelection="clomnSelection" :rowHeader="rowHeader" :tableOption="tableOption" @disable="disable" @toChange="toChange"></tableBarActive1>
+          </el-col>
+        </el-row>
+        <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center;">
+          <div>
+            <el-button type="text" size="small" @click="allOn">启用</el-button>
+            <el-button type="text" size="small" style="color: red;" @click="allOff">冻结</el-button>
+          </div>
+          <pageNation :pager="pager" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange"></pageNation>
+        </div>
       </div>
     </div>
   </div>
@@ -90,6 +78,20 @@ export default {
       value1: "",
       value2: "",
       value: "",
+      options1: [
+        {
+          value: "-1",
+          label: "全部",
+        },
+        {
+          value: "0",
+          label: "点播",
+        },
+        {
+          value: "1",
+          label: "直播",
+        },
+      ],
       options2: [
         {
           value: "-1",
@@ -148,6 +150,10 @@ export default {
         {
           prop: "email",
           label: "邮箱",
+        },
+        {
+          prop: "type",
+          label: "业务类型",
         },
         {
           prop: "dataFlow",
@@ -644,37 +650,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.addaccout {
-  .title {
-    width: 100%;
-    text-align: center;
-  }
-
-  .el-dialog__body {
-    padding: 0px;
-  }
-
-  .el-form-item {
-    display: flex;
-  }
-
-  .el-form--label-left .el-form-item__label {
-    text-align: right;
-    width: 90px;
-  }
-
-  .el-form-item__error {
-    margin-left: 80px;
-  }
-}
-
-//旋转
-.aa {
-  transition: all 1s;
-}
-
-.go {
-  transform: rotate(-180deg);
-  transition: all 1s;
+.top_title{
+  margin-top: 49px;
+  text-align: left;
+  font-size: 18px;
+  color: #333;
 }
 </style>

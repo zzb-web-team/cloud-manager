@@ -1,73 +1,78 @@
 <template>
-  <section class="myself-container content">
+  <div>
     <div class="top_title">直播加速管理</div>
-    <div class="seach" >
-      <el-input v-model="values" placeholder="请输入渠道ID、直播间ID、源站域名" style="width:18%;margin-right: 10px;" @keyup.enter.native="onChanges">
-        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
-      </el-input>
-      <el-select v-model="liveProto" placeholder="请选择回源协议" style="width: 12%;margin-right: 10px;" @change="onChanges">
-        <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
-      </el-select>
-      <el-select v-model="state" placeholder="请选择状态" style="width: 12%;margin-right: 10px;" @change="onChanges">
-        <el-option v-for="(item, index) in options1" :key="index" :label="item.label" :value="item.value"></el-option>
-      </el-select>
-      <el-date-picker style="margin-left:10px;" v-model="times" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-      <el-button style="margin-left: 10px;" type="primary" @click="reset">重置</el-button>
-    </div>
-    <div class="device_table">
-      <div class="operating">
-        <el-button style="margin-left: auto;" type="primary" @click="toExportExcel">导出</el-button>
+    <section class="content">
+      <div class="seach" style="margin-top: 0;">
+        <el-input v-model="values" placeholder="请输入渠道ID、直播间ID、源站域名" style="width:20%;margin-right: 10px;" @keyup.enter.native="onChanges">
+          <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+        </el-input>
+        <el-select v-model="liveProto" placeholder="请选择回源协议" style="width: 12%;margin-right: 10px;" @change="onChanges">
+          <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+        <el-select v-model="state" placeholder="请选择状态" style="width: 12%;margin-right: 10px;" @change="onChanges">
+          <el-option v-for="(item, index) in options1" :key="index" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+        <el-date-picker style="margin-left:10px;" v-model="times" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+        <el-button style="margin-left: 10px;" type="primary" @click="reset">重置</el-button>
       </div>
-      <el-row type="flex" class="row_active">
-        <el-col :span="24">
-          <el-table :data="datas" border max-height="560px" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass" @sort-change="changeSort">
-            <el-table-column label="渠道ID">
-              <template slot-scope="scope">
-                <div>{{ scope.row.ChanId }}</div>
-              </template>
-            </el-table-column>
+      <div class="device_table">
+        <div class="operating">
+          <div style="margin-left: auto;display:flex;flex-direction: row; align-items: center;cursor: pointer;" @click="toExportExcel">
+            <img width="24px" height="22px" src="../../assets/img/export.png" alt="">
+            <span style="color: #644CF7;font-size: 16px;margin-left:8px;">导出</span>
+          </div>
+        </div>
+        <el-row type="flex" class="row_active">
+          <el-col :span="24">
+            <el-table :data="datas" border max-height="560px" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass" @sort-change="changeSort">
+              <el-table-column label="渠道ID">
+                <template slot-scope="scope">
+                  <div>{{ scope.row.ChanId }}</div>
+                </template>
+              </el-table-column>
 
-            <el-table-column label="直播间ID">
-              <template slot-scope="scope">
-                <div>{{ scope.row.RoomId }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column label="源站域名">
-              <template slot-scope="scope">
-                <div style="display: flex;justify-content: center;">
-                  <div>{{ scope.row.Domain }}</div>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="回源协议" >
-              <template slot-scope="scope">
-                <div style="display: flex;justify-content: center;">
-                  <div>{{ scope.row.liveProto == 1 ? 'rtmp' : 'http' }}</div>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="状态" >
-              <template slot-scope="scope">
-                <div v-if="scope.row.state == 1">正常运行
-                  <span style="display:inline-block;line-height: 20px;width: 50px;height: 20px;background:#999;color:#fff;border-radius: 20px;font-size: 13px;">未加速</span>
-                </div>
-                <div v-else-if="scope.row.state == 2">正常运行
-                  <span style="display:inline-block;line-height: 20px;width: 50px;height: 20px;background:#644CF7;color:#fff;border-radius: 20px;font-size: 13px;">已加速</span>
-                </div>
-                <div style="color:#E54545;" v-else>回源失败</div>
-              </template>
-            </el-table-column>
-            <el-table-column label="创建日期" sortable="custom">
-              <template slot-scope="scope">
-                <div>{{ scope.row.createTime | settimes }}</div>
-              </template>
-            </el-table-column>
-          </el-table>
-          <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
-        </el-col>
-      </el-row>
-    </div>
-  </section>
+              <el-table-column label="直播间ID">
+                <template slot-scope="scope">
+                  <div>{{ scope.row.RoomId }}</div>
+                </template>
+              </el-table-column>
+              <el-table-column label="源站域名">
+                <template slot-scope="scope">
+                  <div style="display: flex;justify-content: center;">
+                    <div>{{ scope.row.Domain }}</div>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="回源协议" >
+                <template slot-scope="scope">
+                  <div style="display: flex;justify-content: center;">
+                    <div>{{ scope.row.liveProto == 1 ? 'rmtp' : 'http' }}</div>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="状态" >
+                <template slot-scope="scope">
+                  <div v-if="scope.row.state == 1">正常运行
+                    <span style="display:inline-block;line-height: 20px;width: 50px;height: 20px;background:#999;color:#fff;border-radius: 20px;font-size: 13px;">未加速</span>
+                  </div>
+                  <div v-else-if="scope.row.state == 2">正常运行
+                    <span style="display:inline-block;line-height: 20px;width: 50px;height: 20px;background:#644CF7;color:#fff;border-radius: 20px;font-size: 13px;">已加速</span>
+                  </div>
+                  <div style="color:#E54545;" v-else>回源失败</div>
+                </template>
+              </el-table-column>
+              <el-table-column label="创建日期" sortable="custom">
+                <template slot-scope="scope">
+                  <div>{{ scope.row.createTime | settimes }}</div>
+                </template>
+              </el-table-column>
+            </el-table>
+            <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage = "pageNo" :pagesa="total_cnt"></fenye>
+          </el-col>
+        </el-row>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -338,5 +343,11 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.top_title{
+  margin-top: 49px;
+  text-align: left;
+  font-size: 18px;
+  color: #333;
+}
 </style>
