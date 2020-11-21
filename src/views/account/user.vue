@@ -5,7 +5,7 @@
       <el-form ref="form" :model="form">
         <el-row type="flex">
           <el-input placeholder="账号" style="width:200px;margin-right: 10px;" v-model="searchText" @keyup.enter.native="searchInfo" maxlength="70">
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            <i slot="suffix" class="el-input__icon el-icon-search"></i>
           </el-input>
           <el-select v-model="value" placeholder="请选择状态" @change="onChangeTab" style="width:200px;margin-right: 10px;">
             <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>

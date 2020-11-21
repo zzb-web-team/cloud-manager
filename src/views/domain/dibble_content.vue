@@ -4,7 +4,7 @@
     <section class="content">
       <div class="seach" style="margin-top: 0;">
         <el-input v-model="values" placeholder="请输入渠道ID、直播间ID、源站域名" style="width:20%;margin-right: 10px;" @keyup.enter.native="onChanges">
-          <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+          <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
         </el-input>
         <el-select v-model="liveProto" placeholder="请选择回源协议" style="width: 12%;margin-right: 10px;" @change="onChanges">
           <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>

@@ -1,28 +1,29 @@
 <template>
   <div>
-    <section class="content">
-      <div class="top_title">统计分析
-        <div class="wrapperStyle">
-          <div class="itemStyle" :class="{ isSelected: accelerateType == 0 }" @click="changeType(0)">点播加速</div>
-          <div class="itemStyle" :class="{ isSelected: accelerateType == 1}" @click="changeType(1)">直播加速</div>
-        </div>
+    <div class="top_title">统计分析
+      <div class="wrapperStyle">
+        <div class="itemStyle" :class="{ isSelected: type == 0 }" @click="handleClick(0)">PV/UV</div>
+        <div class="itemStyle" :class="{ isSelected: type == 1}" @click="handleClick(1)">访问用户分布</div>
       </div>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+    </div>
+    <section class="content">
+      <!-- <el-tabs v-model="activeName" @tab-click="handleClick"> -->
+        <ChangeType @selectType="selectType" type style="margin: 0px 0 37px"/>
         <div class="seach">
           <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
-            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
           </el-input>
           <el-input v-show="accelerateType == 0" v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @change="onChanges">
-            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
           </el-input>
           <el-input v-show="accelerateType == 0" v-model="valueUrlName" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
-            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
           </el-input>
           <el-input v-show="accelerateType == 1" v-model="valueRoomId" placeholder="请输入直播间ID" style="width:160px;margin-right: 10px;" @change="onChanges">
-            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
           </el-input>
           <el-input v-show="accelerateType == 1" v-model="valueStreamName" placeholder="请输入直播流名称" style="width:160px;margin-right: 10px;" @change="onChanges">
-            <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+            <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
           </el-input>
           <el-select v-model="terminalName" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
             <el-option label="全部终端" value="-1"></el-option>
@@ -30,90 +31,84 @@
           </el-select>
           <SelectTime ref="selectTime" @selectTime="selectTime" :type="'daterange'" />
         </div>
-        <el-tab-pane label="PV/UV" name="first">
-          <div class="user_item">
-            <div class="item_left">
-              <div class="item_text">总访问次数(PV)</div>
-              <div class="item_count">
-                <span>{{ totalPV }}</span>
-              </div>
+        <!-- <el-tab-pane label="PV/UV" name="first"> -->
+          <div class="user_item" v-show="type==0">
+            <div class="items">
+              <p class="text">总访问次数(PV)</p>
+              <p class="count">{{ totalPV }}</p>
             </div>
-            <div class="item_right">
-              <div class="item_text">{{accelerateType==0 ? '独立IP访问数(UV)' : '独立IP访问数'}}</div>
-              <div class="item_count">
-                <span>{{ totalUV }}</span>
-              </div>
+            <div class="items">
+              <p class="text">{{accelerateType==0 ? '独立IP访问数(UV)' : '独立IP访问数'}}</p>
+              <p class="count">{{ totalUV }}</p>
             </div>
-            <div class="item_right" v-show="accelerateType==1">
-              <div class="item_text">并发连接数峰值</div>
-              <div class="item_count">
-                <span>{{ maxConnect }}</span>
-              </div>
+            <div class="items" v-show="accelerateType==1">
+              <p class="text">并发连接数峰值</p>
+              <p class="count">{{ maxConnect }}</p>
             </div>
-            <img v-show="accelerateType==0" src="../../assets/img/pic1.png" />
           </div>
-          <div style="margin-top: 40px;">
+          <div style="margin-top: 40px;" v-show="type==0">
             <div id="myChart" :style="{ height: '607px' }"></div>
           </div>
-        </el-tab-pane>
-        <el-tab-pane label="访问用户分布" name="second">
-          <div class="device_table">
-            <el-row type="flex" class="row_active">
-              <el-col :span="24" style="text-align:left; font-weight: bold; margin-bottom:10px;">{{exportTitle}}</el-col>
-            </el-row>
-            <el-row type="flex" class="row_active">
-              <el-col :span="24">
-                <el-table :data="tableData" border stripe max-height="530" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">
-                  <el-table-column :label="exportTitleTable">
-                    <template slot-scope="scope">
-                      <div v-if="scope.row.region">
-                        {{ scope.row.region }}
-                      </div>
-                      <div v-else>{{ scope.row.isp }}</div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="访问用户总数">
-                    <template slot-scope="scope">
-                      <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.sumCnt }}</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="有效访问用户数（%）">
-                    <template slot-scope="scope">
-                      <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.validCnt }}</div>
-                        <div>({{ scope.row.validPercent | percentss }})</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="无效访问用户数（%）">
-                    <template slot-scope="scope">
-                      <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.invalidCnt }}</div>
-                        <div>({{ scope.row.invalidPercent | percentss }})</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="pageNo" :pagesa="total_cnt"></fenye>
-              </el-col>
-            </el-row>
+        <!-- </el-tab-pane>
+        <el-tab-pane label="访问用户分布" name="second"> -->
+          <div class="device_form" v-show="type==1">
+            <el-radio-group
+              v-model="radios"
+              size="medium"
+              @change="select()"
+              style="display: flex;justify-content: center;"
+            >
+              <el-radio-button label="1">地区</el-radio-button >
+              <el-radio-button label="2">运营商</el-radio-button >
+            </el-radio-group>
+            <div id="myChart1" :style="{ height: '607px' }"></div>
           </div>
-        </el-tab-pane>
-      </el-tabs>
+          
+        <!-- </el-tab-pane>
+      </el-tabs> -->
     </section>
-    <div class="device_form" v-show="activeName=='second'">
-      <el-radio-group
-        v-model="radios"
-        size="medium"
-        @change="select()"
-        style="display: flex;justify-content: center;"
-      >
-        <el-radio-button label="1">地区</el-radio-button >
-        <el-radio-button label="2">运营商</el-radio-button >
-      </el-radio-group>
-      <div id="myChart1" :style="{ height: '607px' }"></div>
+    <div v-show="type==1" class="device_table">
+      <el-row type="flex" class="row_active">
+        <el-col :span="24" style="text-align:left; font-weight: bold; margin-bottom:10px;">{{exportTitle}}</el-col>
+      </el-row>
+      <el-row type="flex" class="row_active">
+        <el-col :span="24">
+          <el-table :data="tableData" border stripe max-height="530" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">
+            <el-table-column :label="exportTitleTable">
+              <template slot-scope="scope">
+                <div v-if="scope.row.region">
+                  {{ scope.row.region }}
+                </div>
+                <div v-else>{{ scope.row.isp }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="访问用户总数">
+              <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.sumCnt }}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="有效访问用户数（%）">
+              <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.validCnt }}</div>
+                  <div>({{ scope.row.validPercent | percentss }})</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="无效访问用户数（%）">
+              <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.invalidCnt }}</div>
+                  <div>({{ scope.row.invalidPercent | percentss }})</div>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+          <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="pageNo" :pagesa="total_cnt"></fenye>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
@@ -122,6 +117,7 @@
 import { dateToMs, getymdtime, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
 import SelectTime from "@/components/SelectTime";
+import ChangeType from "@/components/ChangeType";
 import {
   pv_uv_curve,
   query_topregion_accesscnt_curve,
@@ -139,6 +135,7 @@ import common from "../../comm/js/util";
 export default {
   data() {
     return {
+      type: 0,
       accelerateType: 0,
       hashidSets: [
         {
@@ -220,7 +217,7 @@ export default {
     },
   },
   components: {
-    fenye, SelectTime
+    fenye, SelectTime, ChangeType
   },
   mounted() {
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
@@ -237,9 +234,9 @@ export default {
     this.drawLine1();
   },
   methods: {
-    changeType(v){
-      this.accelerateType = v;
-      this.activeName = 'first';
+    selectType(v){
+      this.accelerateType = v.accelerateType;
+      // this.activeName = 'first';
       this.$refs.selectTime.resetTimes();
       this.reset();
       if(v==0){
@@ -258,7 +255,7 @@ export default {
     },
     changes(){
       if(this.accelerateType==0){
-        if(this.activeName == 'first'){
+        if(this.type == 0){
           this.pvuvCure();
         }else{
           if(this.radios == 1){
@@ -268,7 +265,7 @@ export default {
           }
         }
       }else{
-        if(this.activeName == 'first'){
+        if(this.type == 0){
           this.livePuVuCurve();
         }else{
           if(this.radios == 1){
@@ -531,18 +528,19 @@ export default {
       return "text-align: center;";
     },
     //选项卡
-    handleClick(tab, event) {
+    handleClick(val) {
+      this.type = val;
       this.reset();
       this.$refs.selectTime.resetTimes();
       this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.endtime = Date.parse(new Date()) / 1000;
-      if (tab.index == 0) {
+      if (val == 0) {
         if(this.accelerateType==0){
           this.pvuvCure();
         }else{
           this.livePuVuCurve();
         }
-      } else if (tab.index == 1) {
+      } else if (val == 1) {
         if(this.accelerateType==0){
           this.topregionCurve();
         }else{
@@ -741,38 +739,73 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.top_title{
+  text-align: left;
+  font-size: 18px;
+  color: #333;
+  margin-top: 48px;
+  .wrapperStyle{
+      display: inline;
+      margin-left: 54px;
+      .itemStyle {
+          font-weight: 500;
+          display: inline;
+          font-size: 16px;
+          color: #666;
+          margin-right: 48px;
+          cursor: pointer;
+          height: 20px;
+      }
+      .isSelected{
+          color: #644CF7;
+          border-bottom: 4px solid  #644CF7;
+      }
+  }
+}
+.device_table {
+  background: #fff;
+  padding: 72px 64px;
+  border-radius: 32px;
+  width: 100%;
+  height: auto;
+  .operating{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 20px;
+  }
+}
 .user_item {
   width: auto;
   height: auto;
-  background: #FDFBFB;
-  border-radius: 32px;
   margin-top: 20px;
   display: flex;
-  justify-content: space-around;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
-  padding: 36px 71px;
-  .item_left {
-    .item_text {
-      font-size: 14px;
+  padding: 56px 0;
+  .items{
+    width: 32%;
+    height: 128px;
+    background: #FDFBFB;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items: flex-start;
+    padding-left: 10%;
+    margin-right: 2%;
+    .text {
+      font-size: 16px;
       color: #333333;
+      font-weight: 400;
     }
-    .item_count {
-      line-height: 55px;
-      span {
-        font-size: 34px;
-      }
-    }
-  }
-  .item_right {
-    .item_text {
-      font-size: 14px;
+    .count {
       color: #333333;
-    }
-    .item_count {
-      line-height: 55px;
-      span {
-        font-size: 34px;
-      }
+      font-size: 40px;   
+      font-weight: bold;
     }
   }
 }

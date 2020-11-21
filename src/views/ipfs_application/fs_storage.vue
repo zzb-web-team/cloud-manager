@@ -14,13 +14,13 @@
     <div class="seach">
       <div class="seach_top">
         <el-input placeholder="视频ID" v-model="input" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70">
-          <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
+          <i slot="suffix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
         </el-input>
         <el-input placeholder="渠道ID" v-model="inputActive1" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px">
-          <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
+          <i slot="suffix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
         </el-input>
         <el-input placeholder="加速内容名称" v-model="inputActive2" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px">
-          <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
+          <i slot="suffix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
         </el-input>
         <div class="seach_top_right" @click="option_display()">
           筛选

@@ -4,7 +4,7 @@
     <div class="content">
       <div class="seach" style="margin-top: 0;">
         <el-input placeholder="包名、版本" v-model="input" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmitInput">
-            <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
+            <i slot="suffix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
         </el-input>
         <el-select v-model="valueActive" placeholder="请选择应用类型" @change="onchangeTab" style="width:200px;margin-right: 10px;">
             <el-option v-for="(item, index) in options" :key="index" :label="item" :value="item"></el-option>

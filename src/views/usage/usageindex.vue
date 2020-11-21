@@ -14,7 +14,7 @@
         style="width:10%;margin-right: 10px;"
         @keyup.enter.native="onChanges"
       >
-        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
       </el-input>
       <el-input
         v-show="accelerateType==1"
@@ -23,7 +23,7 @@
         style="width:10%;margin-right: 10px;"
         @keyup.enter.native="onChanges"
       >
-        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
       </el-input>
       <el-input
         v-show="accelerateType==1"
@@ -32,7 +32,7 @@
         style="width:10%;margin-right: 10px;"
         @keyup.enter.native="onChanges"
       >
-        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
       </el-input>
       <el-input
         v-show="accelerateType==0"
@@ -41,7 +41,7 @@
         style="width:10%;margin-right: 10px;"
         @keyup.enter.native="onChanges"
       >
-        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
       </el-input>
       <el-input
         v-show="accelerateType==0"
@@ -50,7 +50,7 @@
         style="width:10%;margin-right: 10px;"
         @keyup.enter.native="onChanges"
       >
-        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
       </el-input>
       <el-select
         v-model="valueIpfsChannel"

@@ -20,7 +20,7 @@
     </div>
     <div class="seach">
       <el-input v-model="values" placeholder="请输入直播流名称、直播流地址、直播间ID、渠道ID" style="width:24%;margin-right: 10px;" @keyup.enter.native="onChanges">
-        <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
       </el-input>
       <el-date-picker style="margin-left:10px;" v-model="times" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
       <el-button style="margin-left: 10px;" type="primary" @click="reset">重置</el-button>

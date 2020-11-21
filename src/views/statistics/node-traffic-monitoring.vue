@@ -31,7 +31,7 @@
               @keyup.enter.native="onChanges"
             >
               <i
-                slot="prefix"
+                slot="suffix"
                 class="el-input__icon el-icon-search"
                 @click="onChanges()"
               ></i>
@@ -44,7 +44,7 @@
               @keyup.enter.native="onChanges"
             >
               <i
-                slot="prefix"
+                slot="suffix"
                 class="el-input__icon el-icon-search"
                 @click="onChanges()"
               ></i>
@@ -57,7 +57,7 @@
               @keyup.enter.native="onChanges"
             >
               <i
-                slot="prefix"
+                slot="suffix"
                 class="el-input__icon el-icon-search"
                 @click="onChanges()"
               ></i>
@@ -70,7 +70,7 @@
               @keyup.enter.native="onChanges"
             >
               <i
-                slot="prefix"
+                slot="suffix"
                 class="el-input__icon el-icon-search"
                 @click="onChanges()"
               ></i>
@@ -83,7 +83,7 @@
               @keyup.enter.native="onChanges"
             >
               <i
-                slot="prefix"
+                slot="suffix"
                 class="el-input__icon el-icon-search"
                 @click="onChanges()"
               ></i>
@@ -115,7 +115,7 @@
               @keyup.enter.native="onChanges"
             >
               <i
-                slot="prefix"
+                slot="suffix"
                 class="el-input__icon el-icon-search"
                 @click="onChanges()"
               ></i>
@@ -128,7 +128,7 @@
               @keyup.enter.native="onChanges"
             >
               <i
-                slot="prefix"
+                slot="suffix"
                 class="el-input__icon el-icon-search"
                 @click="onChanges()"
               ></i>
@@ -141,7 +141,7 @@
               @keyup.enter.native="onChanges"
             >
               <i
-                slot="prefix"
+                slot="suffix"
                 class="el-input__icon el-icon-search"
                 @click="onChanges()"
               ></i>
@@ -154,7 +154,7 @@
               @keyup.enter.native="onChanges"
             >
               <i
-                slot="prefix"
+                slot="suffix"
                 class="el-input__icon el-icon-search"
                 @click="onChanges()"
               ></i>
@@ -1265,7 +1265,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .top_title{
   text-align: left;
   font-size: 18px;

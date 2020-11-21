@@ -11,13 +11,13 @@
     <div class="seach">
       <div class="seach_top" style="display: flex;justify-content: flex-start;">
         <!-- <el-input placeholder="点播IP" v-model="input" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70">
-                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                <i slot="suffix" class="el-input__icon el-icon-search"></i>
             </el-input> -->
         <el-input placeholder="渠道ID" v-model="inputActive1" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px;">
-          <i slot="prefix" class="el-input__icon el-icon-search"></i>
+          <i slot="suffix" class="el-input__icon el-icon-search"></i>
         </el-input>
         <el-input placeholder="加速内容名称" v-model="inputActive2" class="input-with-select" @keyup.enter.native="onSubmitKey" maxlength="70" style="margin-left:20px;">
-          <i slot="prefix" class="el-input__icon el-icon-search"></i>
+          <i slot="suffix" class="el-input__icon el-icon-search"></i>
         </el-input>
         <el-select v-model="inputActive3" placeholder="请选择" style="margin-left:20px;" @change="onTabchange">
           <el-option v-for="(item, index) in yewu" :key="index" :label="item.label" :value="item.value"></el-option>

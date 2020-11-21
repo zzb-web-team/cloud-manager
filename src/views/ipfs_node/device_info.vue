@@ -4,7 +4,7 @@
         <div class="content">
             <div class="seach" style="margin-top: 0;">
                 <el-input placeholder="请输入终端名称、渠道ID" v-model="input" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmitInput">
-                    <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
+                    <i slot="suffix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
                 </el-input>
                 <!-- <span>应用类型：</span> -->
                 <el-select v-model="valueActive" placeholder="请选择加速业务类型" @change="onchangeTab" style="width:200px;margin-right: 10px;">

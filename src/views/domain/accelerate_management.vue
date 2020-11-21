@@ -3,7 +3,7 @@
     <div class="top_title">域名管理</div>
     <div class="seach">
         <el-input placeholder="请输入渠道ID丶域名" v-model="input_text" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmit">
-          <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
+          <i slot="suffix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
         </el-input>
         <el-select v-model="value" placeholder="请选择状态" @change="getdata()" style="width:200px;margin-right: 10px;">
           <el-option v-for="(item, index) in options" :key="index + 'reat'" :label="item.label" :value="item.value"></el-option>

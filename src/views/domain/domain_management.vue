@@ -3,7 +3,7 @@
       <div class="top_title">点播加速管理</div>
       <div class="seach">
           <el-input placeholder="请输入渠道ID丶加速内容" v-model="input_text" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmitInput">
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            <i slot="suffix" class="el-input__icon el-icon-search"></i>
           </el-input>
           <el-select v-model="value" placeholder="请选择状态" @change="onchangeTab" style="width:200px;margin-right: 10px;">
             <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>

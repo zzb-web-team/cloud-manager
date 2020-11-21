@@ -1,29 +1,31 @@
 <template>
   <div>
-    <section class="myself-container content">
-      <div class="top_title">播放流量
-        <div class="wrapperStyle">
-          <div class="itemStyle" :class="{ isSelected: accelerateType == 0 }" @click="changeType(0)">点播加速</div>
-          <div class="itemStyle" :class="{ isSelected: accelerateType == 1}" @click="changeType(1)">直播加速</div>
-        </div>
+    <div class="top_title">播放流量
+      <div class="wrapperStyle">
+        <div class="itemStyle" :class="{ isSelected: type == 0 }" @click="handleClick(0)">播放流量统计</div>
+        <div style="display: none;" class="itemStyle" :class="{ isSelected: type == 2}" @click="handleClick(1)">播放流量分布</div>
+        <div class="itemStyle" :class="{ isSelected: type == 1}" @click="handleClick(1)">播放流量终端</div>
       </div>
-      <el-tabs v-model="activeName" @tab-click="handleClick" ref="tabs">
-        <el-tab-pane label="播放流量占比" name="threed" :lazy="true">
-          <div class="seach">
+    </div>
+    <section class="content">
+      <!-- <el-tabs v-model="activeName" @tab-click="handleClick" ref="tabs">
+        <el-tab-pane label="播放流量占比" name="threed" :lazy="true"> -->
+          <ChangeType @selectType="selectType" type style="margin: 0px 0 37px"/>
+          <div v-show="type==0" class="seach">
             <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width: 10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
             <el-input v-show="accelerateType==0" v-model="valueDomain" placeholder="请输入域名" style="width: 10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
             <el-input v-show="accelerateType==0" v-model="valueUrlName" placeholder="请输入加速内容名称" style="width: 10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
             <el-input v-show="accelerateType==1" v-model="valueRoomId" placeholder="请输入直播间ID" style="width: 10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
             <el-input v-show="accelerateType==1" v-model="valueStreamName" placeholder="请输入直播流名称" style="width: 10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
             <el-select v-model="valueTerminalName" placeholder="全部终端类型" style="width: 10%;margin-right: 10px;" @change="onChanges">
               <el-option label="全部终端" value="-1"></el-option>
@@ -35,89 +37,38 @@
             </el-select>
             <SelectTime ref="selectTime" @selectTime="selectTime" :type="'daterange'" />
           </div>
-          <div class="user_item">
-            <div class="item_left">
-              <div class="item_count" style="text-align:center;">
-                <span>{{totalp2p |setbytes}}</span>
+          <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div v-show="type==0" class="user_item">
+              <div class="items">
+                <img width="111px" height="111px" src="../../assets/img/p2pflow.png" alt="">
+                <div>
+                  <p class="text">P2P播放流量</p>
+                  <p class="count">{{totalp2p |setnum}}<span class="text">{{totalp2p |setunit}}</span></p>
+                </div>
               </div>
-              <div class="item_text" style="text-align:center;">P2P播放流量</div>
-            </div>
-            <div class="item_right">
-              <div class="item_count" style="text-align:center;">
-                <span v-if="accelerateType==0">{{totalcdn |setbytes}}</span>
-                <span v-else>{{validCnt}}</span>
+              <div class="items">
+                <img width="111px" height="111px" src="../../assets/img/accesscnt.png" alt="">
+                <div>
+                  <p class="text" v-if="accelerateType==0">CDN播放流量</p>
+                  <p class="text" v-else>有效访问次数</p>
+                  <p class="count" v-if="accelerateType==0">{{totalcdn |setnum}}<span class="text">{{totalcdn |setunit}}</span></p>
+                  <p class="count" v-else>{{validCnt}}</p>
+                </div>
               </div>
-              <div v-show="accelerateType==0" class="item_text" style="text-align:center;">CDN播放流量</div>
-              <div v-show="accelerateType==1" class="item_text" style="text-align:center;">有效访问次数</div>
             </div>
-            <img src="../../assets/img/pic1.png" />
+            <div v-show="type==0" style="flex: 1; min-width: 400px;">
+              <div id="myChartMap2" :style="{ height: '500px' }"></div>
+            </div>
           </div>
-          <div class="device_table">
-            <el-row type="flex" class="row_active">
-              <el-col :span="24">
-                <el-table v-show="accelerateType==0" :data="tableData" border max-height="750" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">
-                  <el-table-column label="加速内容名称" prop="urlname"></el-table-column>
-                  <el-table-column label="播放URL" width="250" prop="playurl"></el-table-column>
-                  <el-table-column label="P2P播放流量（%）">
-                    <template slot-scope="scope">
-                      <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.p2pflow | setbytes }}</div>
-                        <div>({{ scope.row.p2ppercent | percentss }})</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="CDN播放流量（%）">
-                    <template slot-scope="scope">
-                      <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.cdnflow | setbytes }}</div>
-                        <div>({{ scope.row.cdnpercent | percentss }})</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column :render-header="renderHeader" label="节点有资源时CDN播放流量（%）" >
-                    <template slot-scope="scope">
-                      <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.cdnactiveflow | setbytes }}</div>
-                        <div>({{ scope.row.cdnactivepercent | percentss }})</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column :render-header="renderHeader" label="节点无资源时CDN播放流量（%）">
-                    <template slot-scope="scope">
-                      <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.cdnpassiveflow | setbytes }}</div>
-                        <div>({{ scope.row.cdnpassivepercent | percentss }})</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="加速播放次数" prop="times"></el-table-column>
-                  <el-table-column label="时间" prop="stime" :formatter="timeFormatter"></el-table-column>
-                </el-table>
-                <el-table v-show="accelerateType==1" :data="tableData" border max-height="750" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">
-                  <el-table-column label="直播间ID" prop="roomId"></el-table-column>
-                  <el-table-column label="P2P播放流量">
-                    <template slot-scope="scope">
-                      <div style="display: flex;justify-content: center;">
-                        <div>{{ scope.row.sumFlow | setbytes }}</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="有效访问次数" prop="sumCnt"></el-table-column>
-                  <el-table-column label="时间" prop="stime" :formatter="timeFormatter"></el-table-column>
-                </el-table>
-                <fenye style="float:right;margin:10px 0 0 0;" :currentPage="pageNo" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :pagesa="total_cnt"></fenye>
-              </el-col>
-            </el-row>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="播放流量分布" name="second" :lazy="true">
-          <div style="display: flex;align-items: center; flex-flow: row; margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+        <!-- </el-tab-pane>
+        <el-tab-pane label="播放流量分布" name="second" :lazy="true"> -->
+          <div v-show="type==2" style="display: flex;align-items: center; flex-flow: row; margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
             <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
             <SelectTime @selectTime="selectTime" :type="'daterange'" />
           </div>
-          <div class="device_form">
+          <div v-show="type==2" class="device_form">
             <el-row type="flex" class="row_active">
               <el-col :span="24" style="text-align:left;font-weight: bold;margin-bottom:30px;">播放流量地域分布</el-col>
             </el-row>
@@ -129,8 +80,7 @@
             </el-radio-group>
             <div id="myChartMap1" :style="{ height: '607px' }"></div>
           </div>
-          
-          <div class="devide_table">
+          <div v-show="type==2" class="devide_table">
             <el-row type="flex" class="row_active">
               <el-col :span="24" style="text-align:left;font-weight: bold;margin-bottom:20px;">省/市流量统计</el-col>
             </el-row>
@@ -174,23 +124,23 @@
               </el-row>
             </div>
           </div>
-        </el-tab-pane>
-        <el-tab-pane label="播放流量终端" name="four" :lazy="true">
-          <div class="seach">
+        <!-- </el-tab-pane>
+        <el-tab-pane label="播放流量终端" name="four" :lazy="true"> -->
+          <div v-show="type==1" class="seach">
             <el-input v-model="valueChannelId" placeholder="请输入渠道ID" @change="onChanges" style="width:160px;margin-right: 10px;">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
             <el-input v-show="accelerateType==0" v-model="valueDomain" placeholder="请输入域名" style="width:160px;margin-right: 10px;" @keyup.enter.native="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
             <el-input v-show="accelerateType==0" v-model="valueUrlName" placeholder="请输入加速内容名称" @change="onChanges" style="width:160px;margin-right: 10px;">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
             <el-input v-show="accelerateType==1" v-model="valueRoomId" placeholder="请输入直播间ID" style="width: 10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
             <el-input v-show="accelerateType==1" v-model="valueStreamName" placeholder="请输入直播流名称" style="width: 10%;margin-right: 10px;" @keyup.enter.native="onChanges">
-              <i slot="prefix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
+              <i slot="suffix" class="el-input__icon el-icon-search" @click="onChanges()"></i>
             </el-input>
             <el-select v-model="valueChanel" placeholder="全部节点渠道" @change="onChanges" style="width: 10%;margin-right: 10px;">
               <el-option label="全部" value="*"></el-option>
@@ -198,15 +148,69 @@
             </el-select>
             <SelectTime @selectTime="selectTime" :type="'daterange'" />
           </div>
-          <div>
+          <div v-show="type==1">
             <div v-show="accelerateType==0" id="myChartMap3" :style="{ height: '607px' }"></div>
             <div v-show="accelerateType==1" id="myChartMap4" :style="{ height: '607px' }"></div>
           </div>
-        </el-tab-pane>
-      </el-tabs>
+        <!-- </el-tab-pane>
+      </el-tabs> -->
     </section>
-    <div class="device_form" v-show="activeName=='threed'">
-      <div id="myChartMap2" :style="{ height: '650px' }"></div>
+    <div v-show="type==0" class="device_table">
+      <el-row type="flex" class="row_active">
+        <el-col :span="24">
+          <el-table v-show="accelerateType==0" :data="tableData" border max-height="750" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">
+            <el-table-column label="加速内容名称" prop="urlname"></el-table-column>
+            <el-table-column label="播放URL" width="250" prop="playurl"></el-table-column>
+            <el-table-column label="P2P播放流量（%）">
+              <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.p2pflow | setbytes }}</div>
+                  <div>({{ scope.row.p2ppercent | percentss }})</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="CDN播放流量（%）">
+              <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.cdnflow | setbytes }}</div>
+                  <div>({{ scope.row.cdnpercent | percentss }})</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column :render-header="renderHeader" label="节点有资源时CDN播放流量（%）" >
+              <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.cdnactiveflow | setbytes }}</div>
+                  <div>({{ scope.row.cdnactivepercent | percentss }})</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column :render-header="renderHeader" label="节点无资源时CDN播放流量（%）">
+              <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.cdnpassiveflow | setbytes }}</div>
+                  <div>({{ scope.row.cdnpassivepercent | percentss }})</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="加速播放次数" prop="times"></el-table-column>
+            <el-table-column label="时间" prop="stime" :formatter="timeFormatter"></el-table-column>
+          </el-table>
+          <el-table v-show="accelerateType==1" :data="tableData" border max-height="750" style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">
+            <el-table-column label="直播间ID" prop="roomId"></el-table-column>
+            <el-table-column label="P2P播放流量">
+              <template slot-scope="scope">
+                <div style="display: flex;justify-content: center;">
+                  <div>{{ scope.row.sumFlow | setbytes }}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="有效访问次数" prop="sumCnt"></el-table-column>
+            <el-table-column label="时间" prop="stime" :formatter="timeFormatter"></el-table-column>
+          </el-table>
+          <fenye style="float:right;margin:10px 0 0 0;" :currentPage="pageNo" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :pagesa="total_cnt"></fenye>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
@@ -215,6 +219,7 @@
 import { dateToMs, getymdtime, getymdtime1, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
 import SelectTime from "@/components/SelectTime";
+import ChangeType from "@/components/ChangeType";
 import {
   sdk_flow,
   sdk_flow_table,
@@ -237,6 +242,7 @@ import _ from "lodash";
 export default {
   data() {
     return {
+      type: 0,
       accelerateType: 0,
       dataAry: [],
       dataAry1: [],
@@ -305,6 +311,12 @@ export default {
     setbytes(data) {
       return common.formatByteActive(data);
     },
+    setunit(data) {
+      return common.formatByteActiveunit(data, 0);
+    },
+    setnum(data) {
+      return common.formatByteNum(data, common.formatByteActiveunit(data, 0));
+    },
     percentss(data) {
       if (data == 0) {
         return 0 + "%";
@@ -313,7 +325,7 @@ export default {
     },
   },
   components: {
-    fenye, SelectTime
+    fenye, SelectTime, ChangeType
   },
   mounted() {
     this.$nextTick(function () {
@@ -334,9 +346,9 @@ export default {
 
   },
   methods: {
-    changeType(v){
-      this.accelerateType = v;
-      this.activeName = 'threed';
+    selectType(v){
+      this.accelerateType = v.accelerateType;
+      // this.activeName = 'threed';
       this.reset();
       if(v==0){
         this.querySdkflow();
@@ -843,23 +855,24 @@ export default {
       return "text-align: center;";
     },
     //选项卡
-    handleClick(tab, event) {
+    handleClick(val) {
+      this.type = val; 
       this.reset();
       this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
       this.endtime = Date.parse(new Date()) / 1000;
-      if (tab.index == 0) {
+      if (val == 0) {
         if(this.accelerateType == 0){
           this.querySdkflow();
           this.querySdkflowTable();
         }else{
           this.liveQuerySdkFlow();
         }
-      } else if(tab.index == 1){
+      } else if(val == 2){
         this.queryDataFlowLocation();
         this.$nextTick(() => {
           this.drawLine();
         });
-      } else if (tab.index == 2) {
+      } else if (val == 1) {
         if(this.accelerateType==0){
           this.querySdkflowControl();
         }else{
@@ -1495,40 +1508,67 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user_item {
-  width: auto;
+.top_title{
+  text-align: left;
+  font-size: 18px;
+  color: #333;
+  margin-top: 48px;
+  .wrapperStyle{
+      display: inline;
+      margin-left: 54px;
+      .itemStyle {
+          font-weight: 500;
+          display: inline;
+          font-size: 16px;
+          color: #666;
+          margin-right: 48px;
+          cursor: pointer;
+          height: 20px;
+      }
+      .isSelected{
+          color: #644CF7;
+          border-bottom: 4px solid  #644CF7;
+      }
+  }
+}
+.device_table {
+  background: #fff;
+  padding: 72px 64px;
+  border-radius: 32px;
+  width: 100%;
   height: auto;
-  background: #FDFBFB;
+  .operating{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 20px;
+  }
+}
+.user_item {
+  width: 400px;
+  height: auto;
   border-radius: 32px;
   margin-bottom: 50px;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 36px 71px;
-  .item_left {
-    width: 33%;
-    .item_text {
-      font-size: 14px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  .items {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    .text {
+      font-size: 16px;
       color: #333333;
+      font-weight: 400;
     }
-    .item_count {
-      line-height: 55px;
-      span {
-        font-size: 34px;
-      }
-    }
-  }
-  .item_right {
-    width: 33%;
-    .item_text {
-      font-size: 14px;
+    .count {
       color: #333333;
-    }
-    .item_count {
-      line-height: 55px;
-      span {
-        font-size: 34px;
-      }
+      font-size: 40px;   
+      font-weight: bold;
     }
   }
 }

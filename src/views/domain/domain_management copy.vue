@@ -8,7 +8,7 @@
         <div class="seach">
             <div class="seach_top">
                 <el-input placeholder="URL、渠道ID" v-model="input" class="input-with-select" @keyup.enter.native="onSubmitInput" maxlength="70">
-                    <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                    <i slot="suffix" class="el-input__icon el-icon-search"></i>
                 </el-input>
                 <div class="seach_top_right" @click="option_display()">
                     筛选

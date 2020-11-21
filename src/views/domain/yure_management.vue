@@ -4,7 +4,7 @@
       <div class="top_title">刷新预热管理</div>
       <div class="seach">
         <el-input placeholder="操作内容、渠道ID" v-model="input" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmit">
-            <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
+            <i slot="suffix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
         </el-input>
         <el-select v-model="value" placeholder="请选择操作类型" @change="onchangeTab1" style="width:160px;margin-right: 10px;">
             <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
