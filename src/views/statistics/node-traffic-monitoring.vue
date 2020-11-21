@@ -1,28 +1,29 @@
 <template>
   <div>
-    <section class="content">
-      <div class="top_title">
-        节点流量监控
-        <div class="wrapperStyle">
-          <div
-            class="itemStyle"
-            :class="{ isSelected: accelerateType == 0 }"
-            @click="changeType(0)"
-          >
-            点播加速
-          </div>
-          <div
-            class="itemStyle"
-            :class="{ isSelected: accelerateType == 1 }"
-            @click="changeType(1)"
-          >
-            直播加速
-          </div>
+    <div class="top_title">
+      节点流量监控
+      <div class="wrapperStyle">
+        <div
+          class="itemStyle"
+          :class="{ isSelected: type == 0 }"
+          @click="handleClick(0)"
+        >
+          节点流量
+        </div>
+        <div
+          class="itemStyle"
+          :class="{ isSelected: type == 1 }"
+          @click="handleClick(1)"
+        >
+          加速排行
         </div>
       </div>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="节点流量" name="first" :lazy="true">
-          <div class="seach">
+    </div>
+    <section class="content">
+      <!-- <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="节点流量" name="first" :lazy="true"> -->
+          <ChangeType @selectType="selectType" type style="margin: 0px 0 37px"/>
+          <div class="seach" v-show="type==0">
             <el-input
               v-model="valueChannelId"
               placeholder="请输入渠道ID"
@@ -103,87 +104,10 @@
             </el-select>
             <SelectTime ref="selectTime" @selectTime="selectTime" :type="'datetimerange'" />
           </div>
-          <div class="device_table">
-            <el-row type="flex" class="row_active">
-              <el-col :span="24">
-                <el-table
-                  v-show="accelerateType==0"
-                  :data="tableData"
-                  border
-                  max-height="560px"
-                  style="width: 100%;"
-                  :cell-style="rowClass"
-                  :header-cell-style="headClass"
-                >
-                  <el-table-column label="渠道ID" prop="channelid"></el-table-column>
-                  <el-table-column label="P2P播放流量">
-                    <template slot-scope="scope">
-                      <div>{{ scope.row.p2pflow | setbytes }}</div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="下行CDN回源流量">
-                    <template slot-scope="scope">
-                      <div style="display: flex; justify-content: center">
-                        <div>{{ scope.row.downcdnflow | setbytes }}</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="下行节点回源流量">
-                    <template slot-scope="scope">
-                      <div style="display: flex; justify-content: center">
-                        <div>{{ scope.row.downbackflow | setbytes }}</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="统计时间">
-                    <template slot-scope="scope">
-                      <div>{{ scope.row.stime | settimes }}</div>
-                      <div>{{ scope.row.etime | settimes }}</div>
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <el-table
-                  v-show="accelerateType==1"
-                  :data="tableData"
-                  border
-                  max-height="560px"
-                  style="width: 100%;"
-                  :cell-style="rowClass"
-                  :header-cell-style="headClass"
-                >
-                  <el-table-column label="渠道ID" prop="channelid"></el-table-column>
-                  <el-table-column label="P2P播放流量">
-                    <template slot-scope="scope">
-                      <div>{{ scope.row.p2pflow | setbytes }}</div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="直播源流量">
-                    <template slot-scope="scope">
-                      <div style="display: flex; justify-content: center">
-                        <div>{{ scope.row.liveflow | setbytes }}</div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="统计时间">
-                    <template slot-scope="scope">
-                      <div>{{ scope.row.stime | settimes }}</div>
-                      <div>{{ scope.row.etime | settimes }}</div>
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <fenye
-                  style="float: right; margin: 10px 0 0 0"
-                  @handleCurrentChange="handleCurrentChange"
-                  @handleSizeChange="handleSizeChange"
-                  :currentPage="pageNo"
-                  :pagesa="total_cnt"
-                ></fenye>
-              </el-col>
-            </el-row>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="加速排行" name="second" :lazy="true">
-          <div class="seach">
+          <div v-show="type==0" id="myChartMap2" :style="{ height: '700px' }"></div>
+        <!-- </el-tab-pane> -->
+        <!-- <el-tab-pane label="加速排行" name="second" :lazy="true"> -->
+          <div class="seach" v-show="type==1">
             <el-input
               v-model="valueChannelId"
               placeholder="请输入渠道ID"
@@ -246,7 +170,7 @@
               @change="gettimes"
             ></el-date-picker>
           </div>
-          <div class="device_table">
+          <div class="device_table" style="padding: 0;" v-show="type==1">
             <div v-show="accelerateType == 0" class="operating">
               <el-radio-group v-model="radioTop" @change="handleClick1">
                 <el-radio-button label="1">TOP加速次数排行</el-radio-button>
@@ -404,11 +328,86 @@
               </el-col>
             </el-row>
           </div>
-        </el-tab-pane>
-      </el-tabs>
+        <!-- </el-tab-pane> -->
+      <!-- </el-tabs> -->
     </section>
-    <div class="device_form" v-show="activeName == 'first'">
-      <div id="myChartMap2" :style="{ height: '700px' }"></div>
+    <div class="device_table" v-show="type==0">
+      <el-row type="flex" class="row_active">
+        <el-col :span="24">
+          <el-table
+            v-show="accelerateType==0"
+            :data="tableData"
+            border
+            max-height="560px"
+            style="width: 100%;"
+            :cell-style="rowClass"
+            :header-cell-style="headClass"
+          >
+            <el-table-column label="渠道ID" prop="channelid"></el-table-column>
+            <el-table-column label="P2P播放流量">
+              <template slot-scope="scope">
+                <div>{{ scope.row.p2pflow | setbytes }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="下行CDN回源流量">
+              <template slot-scope="scope">
+                <div style="display: flex; justify-content: center">
+                  <div>{{ scope.row.downcdnflow | setbytes }}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="下行节点回源流量">
+              <template slot-scope="scope">
+                <div style="display: flex; justify-content: center">
+                  <div>{{ scope.row.downbackflow | setbytes }}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="统计时间">
+              <template slot-scope="scope">
+                <div>{{ scope.row.stime | settimes }}</div>
+                <div>{{ scope.row.etime | settimes }}</div>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-table
+            v-show="accelerateType==1"
+            :data="tableData"
+            border
+            max-height="560px"
+            style="width: 100%;"
+            :cell-style="rowClass"
+            :header-cell-style="headClass"
+          >
+            <el-table-column label="渠道ID" prop="channelid"></el-table-column>
+            <el-table-column label="P2P播放流量">
+              <template slot-scope="scope">
+                <div>{{ scope.row.p2pflow | setbytes }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="直播源流量">
+              <template slot-scope="scope">
+                <div style="display: flex; justify-content: center">
+                  <div>{{ scope.row.liveflow | setbytes }}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="统计时间">
+              <template slot-scope="scope">
+                <div>{{ scope.row.stime | settimes }}</div>
+                <div>{{ scope.row.etime | settimes }}</div>
+              </template>
+            </el-table-column>
+          </el-table>
+          <fenye
+            style="float: right; margin: 10px 0 0 0"
+            @handleCurrentChange="handleCurrentChange"
+            @handleSizeChange="handleSizeChange"
+            :currentPage="pageNo"
+            :pagesa="total_cnt"
+          ></fenye>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
@@ -422,6 +421,7 @@ import {
 } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
 import SelectTime from "@/components/SelectTime";
+import ChangeType from "@/components/ChangeType"
 import {
   node_traffic_curve,
   node_traffic_table,
@@ -442,6 +442,7 @@ import _ from "lodash";
 export default {
   data() {
     return {
+      type: 0,
       accelerateType: 0,
       dataAry: [],
       dataAry1: [],
@@ -497,6 +498,7 @@ export default {
   components: {
     fenye,
     SelectTime,
+    ChangeType
   },
   mounted() {
     let monitorUrlname = this.$route.query.monitorUrlname;
@@ -531,6 +533,16 @@ export default {
     this.drawLine2();
   },
   methods: {
+    selectType(v){
+      console.log(v)
+      this.accelerateType = v.accelerateType;
+      // this.type = 0;
+      if (v == 0) {
+        this.getNodeTraffic();
+      } else {
+        this.liveIpfsFlow();
+      }
+    },
     changeType(v) {
       this.accelerateType = v;
       this.activeName = 'first';
@@ -958,15 +970,16 @@ export default {
       return "text-align: center;";
     },
     //选项卡
-    handleClick(tab, event) {
+    handleClick(val) {
+      this.type = val;
       this.reset()
-      if (tab.index == 0) {
+      if (val == 0) {
         if(this.accelerateType==0){
           this.getNodeTraffic();
         }else{
           this.liveIpfsFlow()
         }
-      } else if (tab.index == 1) {
+      } else if (val == 1) {
         this.val3 = [];
         this.val3[0] = this.common.getTimes(this.starttime * 1000);
         this.val3[1] = this.common.getTimes(this.endtime * 1000);
@@ -1253,74 +1266,42 @@ export default {
 </script>
 
 <style lang="scss">
-.myself-container {
+.top_title{
+  text-align: left;
+  font-size: 18px;
+  color: #333;
+  margin-top: 48px;
+  .wrapperStyle{
+      display: inline;
+      margin-left: 54px;
+      .itemStyle {
+          font-weight: 500;
+          display: inline;
+          font-size: 16px;
+          color: #666;
+          margin-right: 48px;
+          cursor: pointer;
+          height: 20px;
+      }
+      .isSelected{
+          color: #644CF7;
+          border-bottom: 4px solid  #644CF7;
+      }
+  }
+}
+.device_table {
+  background: #fff;
+  padding: 72px 64px;
+  border-radius: 32px;
   width: 100%;
-  //min-width: 1600px;
-
-  .device_form {
-    width: auto;
-    height: auto;
-    margin-top: 20px;
-    background: #ffffff;
-    padding: 15px 30px;
-    box-sizing: border-box;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 2px;
-
-    .bottom {
-      margin-top: 20px;
-    }
-
-    .el-form-item__label {
-      white-space: nowrap;
-    }
-
-    .el-form-item {
-      margin-bottom: 0px;
-      margin-left: 10px;
-    }
-
-    .div_show {
-      width: auto;
+  height: auto;
+  .operating{
+      width: 100%;
       display: flex;
-      height: 40px;
-      justify-content: center;
+      flex-direction: row;
       align-items: center;
-      color: #409eff;
-      cursor: pointer;
-      margin-left: 20px;
-    }
-  }
-
-  .devide_table {
-    padding: 35px;
-    height: auto;
-    margin-top: 20px;
-    background: #ffffff;
-    border-radius: 2px;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 2px;
-    .el-table::before {
-      z-index: inherit;
-    }
-    .el-table td,
-    .el-table th {
-      padding: 6px 0px;
-    }
-    .tab_top_btn {
-      text-align: left;
-      margin-left: 10px;
-    }
-  }
-
-  .devide_pageNation {
-    width: 100%;
-    height: auto;
-    // overflow: hidden;
-    margin-top: 20px;
-    .devide_pageNation_active {
-      float: right;
-    }
+      justify-content: flex-start;
+      margin-bottom: 20px;
   }
 }
 </style>

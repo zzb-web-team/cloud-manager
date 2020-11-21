@@ -7,7 +7,7 @@
         <div class="itemStyle" :class="{ isSelected: accelerateType == 1}" @click="changeType(1)">直播加速</div>
       </div>
     </div>
-    <div class="seach">
+    <div class="seach" style="margin-bottom: 40px;">
       <el-input
         v-model="valueChannelId"
         placeholder="请输入渠道ID"
@@ -68,8 +68,8 @@
       </el-select>
       <SelectTime ref="selectTime" @selectTime="selectTime" :type="'daterange'" />
     </div>
-    <div class="device_table" style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; flex-wrap: wrap;">
-      <div class="user_item" style="margin-right: 100px;">
+    <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; margin-bottom: 30px">
+      <div class="user_item" style="margin-right: 95px;margin-bottom: 30px;">
         <div class="item_left" style="margin: 0 30px 22px 0;">
           <div class="item_text" style="text-align:left;">总流量</div>
           <div class="item_count" style="text-align:center;">
@@ -78,70 +78,73 @@
         </div>
         <img width="83px" height="260px" src="../../assets/img/backfemale.png" /> 
       </div>
-      <div style="flex: 1; min-width: 400px;">
-        <el-row type="flex" class="row_active">
-          <el-col :span="23">
-            <el-table
-              :data="tablecdn"
-              border
-              style="width: 100%; max-height: 530px; overflow-y: auto;"
-              :cell-style="rowClass"
-              :header-cell-style="headClass"
-            >
-              <el-table-column label="总流量">
-                <template slot-scope="scope">
-                  <div>{{ scope.row.dataFlow | setbytes }}</div>
-                </template>
-              </el-table-column>
-              <el-table-column label="时间" prop="time" :formatter="timeFormatter"></el-table-column>
-            </el-table>
-            <fenye
-              style="float:right;margin:10px 0 0 0;"
-              @handleCurrentChange="handleCurrentChange"
-              @handleSizeChange="handleSizeChange"
-              :pagesa="total_cnt"
-              :currentPage="pageNo"
-            ></fenye>
-          </el-col>
-        </el-row>
+      <div style="flex: 1; min-width: 400px; margin-bottom: 30px;">
+        <!-- <div class="device_form"> -->
+          <div id="myChartMap" :style="{ height: '438px' }"></div>
+          <div style=" display: flex; justify-content: flex-start;position: relative; ">
+              <div style="width: 150px;height: 40px;border: 1px solid #C0C4CC;color: #000;text-align:center;line-height:40px;margin-right:30px;border-radius: 28px;">用户对比</div>
+              <el-button type="primary" style="height: 40px;" icon="el-icon-plus" id="sellineName" @click="showduibi">添加对比</el-button>
+              <div
+                v-show="duibi"
+                style="width: 234px; position: absolute; left: 300px; z-index: 100;height: 350px;border-radius: 5px;box-shadow: -1px 5px 10px -3px;"
+                class="shopw"
+                id="shopw"
+              >
+                <el-table
+                  ref="multipleTable"
+                  :data="optionssearch"
+                  tooltip-effect="dark"
+                  :header-cell-class-name="cellClass"
+                  style="width:234px;background:#fff;"
+                  height="350"
+                  @selection-change="handleSelectionChange"
+                >
+                  <el-table-column type="selection" width="30"></el-table-column>
+                  <el-table-column align="right" width="200">
+                    <template slot="header" slot-scope="scope">
+                      <el-input
+                        v-model="search"
+                        size="mini"
+                        placeholder="输入用户id"
+                        @keyup.enter.native="searchid"
+                      />
+                    </template>
+                    <template slot-scope="scope">{{ scope.row.label }}</template>
+                  </el-table-column>
+                </el-table>
+              </div>
+          </div>
+          
+        <!-- </div> -->
       </div>
     </div>
   </section>
-  <div class="device_form">
-    <div style=" display: flex; justify-content: flex-start;position: relative;margin-bottom: 30px;">
-        <div style="width: 150px;height: 40px;border: 1px solid #C0C4CC;color: #000;text-align:center;line-height:40px;margin-right:30px;border-radius: 28px;">用户对比</div>
-        <el-button type="primary" style="height: 40px;" icon="el-icon-plus" id="sellineName" @click="showduibi">添加对比</el-button>
-        <div
-          v-show="duibi"
-          style="width: 234px; position: absolute; left: 300px;height: 350px;border-radius: 5px;box-shadow: -1px 5px 10px -3px;"
-          class="shopw"
-          id="shopw"
+  <div class="device_table">
+    <el-row type="flex" class="row_active">
+      <el-col :span="23">
+        <el-table
+          :data="tablecdn"
+          border
+          style="width: 100%; max-height: 530px; overflow-y: auto;"
+          :cell-style="rowClass"
+          :header-cell-style="headClass"
         >
-          <el-table
-            ref="multipleTable"
-            :data="optionssearch"
-            tooltip-effect="dark"
-            :header-cell-class-name="cellClass"
-            style="width:234px;"
-            height="350"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column type="selection" width="30"></el-table-column>
-            <el-table-column align="right" width="200">
-              <template slot="header" slot-scope="scope">
-                <el-input
-                  v-model="search"
-                  size="mini"
-                  placeholder="输入用户id"
-                  @keyup.enter.native="searchid"
-                />
-              </template>
-              <template slot-scope="scope">{{ scope.row.label }}</template>
-            </el-table-column>
-          </el-table>
-        </div>
-    </div>
-    <div id="myChartMap" :style="{ height: '607px' }"></div>
+          <el-table-column label="总流量">
+            <template slot-scope="scope">
+              <div>{{ scope.row.dataFlow | setbytes }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="时间" prop="time" :formatter="timeFormatter"></el-table-column>
+        </el-table>
+        <fenye
+          style="float:right;margin:10px 0 0 0;"
+          @handleCurrentChange="handleCurrentChange"
+          @handleSizeChange="handleSizeChange"
+          :pagesa="total_cnt"
+          :currentPage="pageNo"
+        ></fenye>
+      </el-col>
+    </el-row>
   </div>
 </div>
 </template>
@@ -900,7 +903,7 @@ export default {
         },
         legend: {
           data: list,
-          bottom: 50,
+          bottom: 20,
         },
         grid: {
           left: "3%", // 默认10%，给24就挺合适的。
@@ -960,7 +963,7 @@ export default {
 .user_item {
   background: #FDFBFB;
   width: 324px;
-  height: auto;
+  height: 438px;
   border-radius: 32px;
   display: flex;
   flex-direction: column;
@@ -996,6 +999,21 @@ export default {
         font-size: 34px;
       }
     }
+  }
+}
+.device_table {
+  background: #fff;
+  padding: 72px 64px;
+  border-radius: 32px;
+  width: 100%;
+  height: auto;
+  .operating{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 20px;
   }
 }
 </style>
