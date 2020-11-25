@@ -136,6 +136,7 @@
               </el-radio-group>
               <div style="display: flex;justify-content: flex-end;margin-right: 6px;">
                 <el-button type="primary" @click="toExportExcel">导出</el-button>
+                <Download ref="download" />
               </div>
               <el-row v-show="radioTop == 1" type="flex" class="row_active">
                 <el-col :span="24">
@@ -224,6 +225,7 @@
 <script>
 import { dateToMs, getymdtime, getymdtime1, splitTimes } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
+import Download from "@/components/download";
 import {
   node_traffic_curve,
   node_traffic_table,
@@ -359,6 +361,7 @@ export default {
   },
   components: {
     fenye,
+    Download
   },
   mounted() {
     let monitorUrlname = this.$route.query.monitorUrlname;
@@ -844,64 +847,6 @@ export default {
         });
     },
 
-    download(url, filename) {
-      this.getBlob(url).then(blob => {
-        this.saveAs(blob, filename);
-      });
-    },
-    getBlob(url) {
-      return new Promise(resolve => {
-          let that = this; // 创建XMLHttpRequest，会让this指向XMLHttpRequest，所以先接收一下this
-          const xhr = new XMLHttpRequest();
-
-          xhr.open("GET", url, true);
-
-          //监听进度事件
-          xhr.addEventListener(
-              "progress",
-              function(evt) {
-                  if (evt.lengthComputable) {
-                      let percentComplete = evt.loaded / evt.total;
-                      that.percentage = percentComplete * 100;
-                  }
-              },
-              false
-          );
-
-          xhr.responseType = "blob";
-          xhr.onload = () => {
-              if (xhr.status === 200) {
-                  resolve(xhr.response);
-              }
-          };
-          
-          xhr.send();
-      });
-    },
-
-    saveAs(blob,  string) {
-    // ie的下载
-      if (window.navigator.msSaveOrOpenBlob) {
-          navigator.msSaveBlob(blob, filename);
-      } else {
-          // 非ie的下载
-          const link = document.createElement("a");
-          const body = document.querySelector("body");
-
-          link.href = window.URL.createObjectURL(blob);
-          link.download = filename;
-
-          // fix Firefox
-          link.style.display = "none";
-          body.appendChild(link);
-
-          link.click();
-          body.removeChild(link);
-
-          window.URL.revokeObjectURL(link.href);
-      }
-    },
-
     toExportDataflowExcel() {
       let params = new Object();
       params.startTs = this.starttime;
@@ -929,7 +874,9 @@ export default {
       );
       export_dataflow_ranking_table_file(params).then(res => {
           if (res.status == 0) {
-            window.open(res.msg, "_blank");
+            // window.open(res.msg, "_blank");
+            this.$refs.download.download(res.msg, 'export_dataflow_ranking_table_file-20201124.csv')
+            // this.download(res.msg, 'export_dataflow_ranking_table_file-20201124.csv')
           }
         })
         .catch(error => {
