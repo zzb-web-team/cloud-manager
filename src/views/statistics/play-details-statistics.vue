@@ -495,12 +495,22 @@ export default {
   methods: {
     selectType(v){
       this.accelerateType = v.accelerateType;
-      if(v==0){
-        this.dibbleData = [];
-        this.videoInfoStatistics();
+      if(v.accelerateType==0){
+        if(this.type==0){
+          this.dibbleData = [];
+          this.videoInfoStatistics();
+        }else{
+          this.dibbleExceptionData = [];
+          this.videoExceptionStatistics();
+        }
       }else{
-        this.liveData = [];
-        this.liveInfoStatistics();
+        if(this.type==0){
+          this.liveData = [];
+          this.liveInfoStatistics();
+        }else{
+          this.liveExceptionData = [];
+          this.liveExceptionStatistics();
+        } 
       }
     },
     ternimalFormatter (row, column) {
