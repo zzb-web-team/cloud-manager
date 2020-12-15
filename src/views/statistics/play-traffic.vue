@@ -806,6 +806,7 @@ export default {
         this.activeName == 'second' ? this.thirtyday(2) : this.activeName == 'threed' ? this.thirtyday(3) : this.thirtyday(4);
 			} else if (this.radio == 5) {
         this.showzdy = true;
+        this.val2=[];
 			}
     },
 

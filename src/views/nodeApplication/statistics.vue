@@ -646,7 +646,8 @@ export default {
         this.showzdy = false;
         this.activeName == 'first' ? this.thirtyday(0) : this.thirtyday(1);
 			} else if (this.radio == 5) {
-				this.showzdy = true;
+        this.showzdy = true;
+        this.val2=[];
 			}
     },
     setZdy() {

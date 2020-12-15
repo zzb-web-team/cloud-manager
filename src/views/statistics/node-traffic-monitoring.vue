@@ -492,7 +492,8 @@ export default {
 				this.showzdy = false;
 				this.thirtyday();
 			} else if (this.radio == 5) {
-				this.showzdy = true;
+        this.showzdy = true;
+        this.val2=[];
 			}
     },
     onChanges() {
