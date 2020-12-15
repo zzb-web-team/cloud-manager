@@ -634,18 +634,18 @@ export default {
             type: "line",
             smooth: true,
             lineStyle: {
-              color: "#A7D5FF",
+              color: "#644CF7",
             },
             areaStyle: {
               normal: {
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   {
                     offset: 0,
-                    color: "#A7D5FF",
+                    color: "#644CF7",
                   },
                   {
                     offset: 0.5,
-                    color: "#D0E8FF",
+                    color: "#F0EEFE",
                   },
                   {
                     offset: 1,
@@ -661,22 +661,22 @@ export default {
             type: "line",
             smooth: true,
             lineStyle: {
-              color: "#BEA7FF",
+              color: "#FFB630",
             },
             areaStyle: {
               normal: {
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   {
                     offset: 0,
-                    color: "#BEA7FF",
+                    color: "#FFB630",
                   },
                   {
                     offset: 0.5,
-                    color: "#D2D0FF",
+                    color: "#FEF9F0",
                   },
                   {
                     offset: 1,
-                    color: "#ffffff",
+                    color: "#FEFDFD",
                   },
                 ]),
               },
@@ -748,6 +748,9 @@ export default {
             type: "bar",
             barWidth: 30, //柱图宽度
             data: a,
+            itemStyle: {
+              normal: { color: "#644CF7" },
+            },
           },
         ],
       };

@@ -68,7 +68,7 @@
       </el-select>
       <SelectTime ref="selectTime" @selectTime="selectTime" :type="'daterange'" />
     </div>
-    <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; margin-bottom: 30px">
+    <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; flex-wrap: wrap;">
       <div class="user_item" style="margin-right: 95px;margin-bottom: 30px;">
         <div class="item_left" style="margin: 0 30px 22px 0;">
           <div class="item_text" style="text-align:left;">总流量</div>
@@ -78,10 +78,10 @@
         </div>
         <img width="83px" height="260px" src="../../assets/img/backfemale.png" /> 
       </div>
-      <div style="flex: 1; min-width: 400px; margin-bottom: 30px;">
+      <div style="flex: 1; min-width: 400px;">
         <!-- <div class="device_form"> -->
           <div id="myChartMap" :style="{ height: '438px' }"></div>
-          <div style=" display: flex; justify-content: flex-start;position: relative; ">
+          <div style=" display: flex; justify-content: flex-start;position: relative; margin-top:40px;">
               <div style="width: 150px;height: 40px;border: 1px solid #C0C4CC;color: #000;text-align:center;line-height:40px;margin-right:30px;border-radius: 28px;">用户对比</div>
               <el-button type="primary" style="height: 40px;" icon="el-icon-plus" id="sellineName" @click="showduibi">添加对比</el-button>
               <div
@@ -849,11 +849,11 @@ export default {
       let options = {
         color: [
           "#644CF7",
-          "#ffa726",
-          "#f65f54",
-          "#67bb6a",
-          "#42a6f5",
-          "#5eb2f6",
+          "#FFBA19",
+          "#8FDD21",
+          "#3292D6",
+          "#FF6E51",
+          "#FF517F",
         ],
         tooltip: {
           trigger: "axis",
@@ -915,7 +915,7 @@ export default {
           left: "3%", // 默认10%，给24就挺合适的。
           top: 60, // 默认60
           right: 35, // 默认10%
-          bottom: 150, // 默认60
+          bottom: 30, // 默认60
         },
         xAxis: [
           {

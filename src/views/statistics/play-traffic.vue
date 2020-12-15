@@ -1043,7 +1043,7 @@ export default {
           left: "3%", // 默认10%，给24就挺合适的。
           top: 60, // 默认60
           right: 35, // 默认10%
-          bottom: 100, // 默认60
+          bottom: 60, // 默认60
         },
         xAxis: {
           data: x,
@@ -1064,7 +1064,7 @@ export default {
             data: a,
             barMaxWidth: 30, //柱图宽度
             itemStyle: {
-              normal: {  color: '#D2E9FF' },
+              normal: {  color: '#644CF7' },
             },
             label: {
               normal: {
@@ -1090,7 +1090,7 @@ export default {
             barMaxWidth: 30, //柱图宽度
             itemStyle: {
               normal: {
-                color: '#84C1FF',
+                color: '#FFB630',
               },
             },
           
@@ -1118,7 +1118,7 @@ export default {
             barMaxWidth: 30, //柱图宽度
             itemStyle: {
               normal: {
-                color: '#2894FF',
+                color: '#FF7847',
               },
             },
             label: {
@@ -1223,7 +1223,7 @@ export default {
             barMaxWidth: 30, //柱图宽度
             itemStyle: {
               normal: {  
-                color: '#2894FF',
+                color: '#644CF7',
                 label: {
                   show: false
                 } 
@@ -1332,7 +1332,7 @@ export default {
             symbol: "star", //拐点样式
             symbolSize: 8, //拐点大小
             itemStyle: {
-              normal: { color: "#E8505B" },
+              normal: { color: "#644CF7" },
             },
             label: {
               normal: {
@@ -1350,7 +1350,7 @@ export default {
             symbol: "triangle", //拐点样式
             symbolSize: 8, //拐点大小
             itemStyle: {
-              normal: { color: "#14B1AB" },
+              normal: { color: "#FFAF4F" },
             },
             label: {
               normal: {
@@ -1368,7 +1368,7 @@ export default {
             symbol: "pin", //拐点样式
             symbolSize: 8, //拐点大小
             itemStyle: {
-              normal: { color: "#F2C33C" },
+              normal: { color: "#FF5A1E" },
             },
             label: {
               normal: {
@@ -1384,7 +1384,7 @@ export default {
             data: e,
             smooth: false,
             itemStyle: {
-              normal: { color: "#5970CC" },
+              normal: { color: "#5ED82D" },
             },
             label: {
               normal: {
@@ -1493,7 +1493,7 @@ export default {
             symbol: "star", //拐点样式
             symbolSize: 8, //拐点大小
             itemStyle: {
-              normal: { color: "#E8505B" },
+              normal: { color: "#644CF7" },
             },
             label: {
               normal: {
@@ -1510,7 +1510,7 @@ export default {
             symbol: "pin", //拐点样式
             symbolSize: 8, //拐点大小
             itemStyle: {
-              normal: { color: "#F2C33C" },
+              normal: { color: "#FF5A1E" },
             },
             label: {
               normal: {

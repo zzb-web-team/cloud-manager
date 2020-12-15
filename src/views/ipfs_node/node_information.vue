@@ -427,12 +427,14 @@ export default {
                   message: "删除成功",
                   type: "success",
                 });
+                this.common.monitoringLogs("删除", "删除SDK", 1);
                 this.querySdkList();
               } else {
                 this.$message({
                   message: "删除失败",
                   type: "error",
                 });
+                this.common.monitoringLogs("删除", "删除SDK", 0);
               }
             }
           )

@@ -104,7 +104,26 @@
             </el-select>
             <SelectTime ref="selectTime" @selectTime="selectTime" :type="'datetimerange'" />
           </div>
-          <div v-show="type==0" id="myChartMap2" :style="{ height: '700px' }"></div>
+          <div v-show="type==0&&accelerateType==0" style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; flex-wrap: wrap;">
+            <div class="user_item">
+              <div class="items">
+                  <p class="text">P2P播放流量</p>
+                  <p class="count">{{sump2p |setnum}}<span class="text" style="color:#333;">{{sump2p |setunit}}</span></p>
+              </div>
+              <div class="items">
+                  <p class="text">节点扩散流量</p>
+                  <p class="count">{{sumnode |setnum}}<span class="text" style="color:#333;">{{sumnode |setunit}}</span></p>
+              </div>
+              <div class="items">
+                  <p class="text">CDN回源流量</p>
+                  <p class="count">{{sumcdn |setnum}}<span class="text" style="color:#333;">{{sumcdn |setunit}}</span></p>
+              </div>
+            </div>
+            <div style="flex: 1; min-width: 400px;">
+              <div id="myChartMap2" :style="{ height: '516px' }"></div>
+            </div>
+          </div>
+          <div v-show="type==0&&accelerateType==1" id="myChartMap1" :style="{ height: '600px' }"></div>
         <!-- </el-tab-pane> -->
         <!-- <el-tab-pane label="加速排行" name="second" :lazy="true"> -->
           <div class="seach" v-show="type==1">
@@ -171,20 +190,19 @@
             ></el-date-picker>
           </div>
           <div class="device_table" style="padding: 0;" v-show="type==1">
-            <div v-show="accelerateType == 0" class="operating">
+            <!-- <div v-show="accelerateType == 0" class="operating">
               <el-radio-group v-model="radioTop" @change="handleClick1">
                 <el-radio-button label="1">TOP加速次数排行</el-radio-button>
                 <el-radio-button label="2">TOP加速流量排行</el-radio-button>
               </el-radio-group>
-            </div>
-            <div
-              style="
-                display: flex;
-                justify-content: flex-end;
-                margin-left: auto;
-              "
-            >
-              <el-button type="primary" @click="toExportExcel">导出</el-button>
+            </div> -->
+            <SelectType v-show="accelerateType == 0" :names="names" @chooseType="chooseType"/>
+            <div class="operating">
+              <div style="margin-left: auto;display:flex;flex-direction: row; align-items: center;cursor: pointer;"  @click="toExportExcel">
+                <img width="24px" height="22px" src="../../assets/img/export.png" alt="" />
+                <span style="color: #644CF7;font-size: 16px;margin-left:8px;">导出</span>
+                <Download ref="download" />
+              </div>
             </div>
             <el-row v-show="radioTop == 1 && accelerateType ==0" type="flex" class="row_active">
               <el-col :span="24">
@@ -349,17 +367,17 @@
                 <div>{{ scope.row.p2pflow | setbytes }}</div>
               </template>
             </el-table-column>
-            <el-table-column label="下行CDN回源流量">
-              <template slot-scope="scope">
-                <div style="display: flex; justify-content: center">
-                  <div>{{ scope.row.downcdnflow | setbytes }}</div>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="下行节点回源流量">
+            <el-table-column label="下行节点扩散流量">
               <template slot-scope="scope">
                 <div style="display: flex; justify-content: center">
                   <div>{{ scope.row.downbackflow | setbytes }}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="CDN回源流量">
+              <template slot-scope="scope">
+                <div style="display: flex; justify-content: center">
+                  <div>{{ scope.row.downcdnflow | setbytes }}</div>
                 </div>
               </template>
             </el-table-column>
@@ -421,7 +439,9 @@ import {
 } from "../../servers/sevdate";
 import fenye from "@/components/fenye";
 import SelectTime from "@/components/SelectTime";
-import ChangeType from "@/components/ChangeType"
+import ChangeType from "@/components/ChangeType";
+import SelectType from "@/components/SelectType";
+import Download from "@/components/Download";
 import {
   node_traffic_curve,
   node_traffic_table,
@@ -442,6 +462,16 @@ import _ from "lodash";
 export default {
   data() {
     return {
+      names: [
+        {
+          key: 1,
+          value: "TOP加速次数排行",
+        },
+        {
+          key: 2,
+          value: "TOP加速流量排行",
+        },
+      ],
       type: 0,
       accelerateType: 0,
       dataAry: [],
@@ -477,7 +507,10 @@ export default {
       timeArrayZb: [],
       radioTop: 1,
       sortName: 'dataflow',  //sortName dataflow/ acc_cnt  
-      sortType: 'desc' // sortType  asc/desc
+      sortType: 'desc', // sortType  asc/desc
+      sump2p: 0,
+      sumnode: 0,
+      sumcdn: 0
     };
   },
   filters: {
@@ -487,6 +520,12 @@ export default {
     },
     setbytes(data) {
       return common.formatByteActive(data);
+    },
+    setunit(data) {
+      return common.formatByteActiveunit(data, 0);
+    },
+    setnum(data) {
+      return common.formatByteNum(data, common.formatByteActiveunit(data, 0));
     },
     percentss(data) {
       if (data == 0) {
@@ -498,7 +537,9 @@ export default {
   components: {
     fenye,
     SelectTime,
-    ChangeType
+    ChangeType,
+    SelectType,
+    Download
   },
   mounted() {
     let monitorUrlname = this.$route.query.monitorUrlname;
@@ -678,7 +719,9 @@ export default {
             }
             this.timeArrayZb = [];
             this.curveData = res.data;
-
+            this.sump2p = res.data.sump2p;
+            this.sumnode = res.data.sumnode;
+            this.sumcdn = res.data.sumcdn;
             if (
               res.data.p2parray.length == 0 &&
               res.data.downbackarray.length == 0 &&
@@ -925,7 +968,8 @@ export default {
       export_accelcnt_ranking_table_file(params)
         .then((res) => {
           if (res.status == 0) {
-            window.open(res.msg, "_blank");
+            // window.open(res.msg, "_blank");
+            this.$refs.download.download(res.msg, 'export_accelcnt_ranking_table_file-20201201.csv')
           }
         })
         .catch((error) => {
@@ -938,7 +982,8 @@ export default {
       export_dataflow_ranking_table_file(params)
         .then((res) => {
           if (res.status == 0) {
-            window.open(res.msg, "_blank");
+            // window.open(res.msg, "_blank");
+            this.$refs.download.download(res.msg, 'export_dataflow_ranking_table_file-20201201.csv')
           }
         })
         .catch((error) => {
@@ -1000,11 +1045,13 @@ export default {
       }
     },
 
-    handleClick1() {
+    chooseType(val) {
       this.reset();
       // this.endtime = Date.parse(new Date()) / 1000;
       // this.val3[0] = this.common.getTimes(this.starttime * 1000);
       // this.val3[1] = this.common.getTimes(this.endtime * 1000);
+      console.log(val.type)
+      this.radioTop = val.type;
       if (this.radioTop == 1) {
         this.topAccelcntRanking();
       } else {
@@ -1053,7 +1100,7 @@ export default {
           x: "center", //可设定图例在左、右、居中
           y: "bottom", //可设定图例在上、下、居中
           padding: [0, 0, 0, 0], //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
-          data: ["P2P播放流量", "下行节点回源流量", "下行CDN回源流量"],
+          data: ["P2P播放流量", "下行节点扩散流量", "CDN回源流量"],
         },
         tooltip: {
           trigger: "axis",
@@ -1066,18 +1113,18 @@ export default {
               common.formatByteActive(
                 Number(_this.curveData.p2parray[params[0].dataIndex])
               ) +
+              // "</br>" +
+              // "<div style='backgroundColor: rgba(0, 0, 0, 0.5); height: 20px;z-index: 99999999;'></div>" +
+              // params[0].axisValue +
               "</br>" +
-              "<div style='backgroundColor: rgba(0, 0, 0, 0.5); height: 20px;z-index: 99999999;'></div>" +
-              params[0].axisValue +
-              "</br>" +
-              "下行CDN回源流量:" +
-              common.formatByteActive(
-                Number(_this.curveData.downcdnarray[params[0].dataIndex])
-              ) +
-              "</br>" +
-              "下行节点回源流量:" +
+              "下行节点扩散流量:" +
               common.formatByteActive(
                 Number(_this.curveData.downbackarray[params[0].dataIndex])
+              ) +
+              "</br>" +
+              "CDN回源流量:" +
+              common.formatByteActive(
+                Number(_this.curveData.downcdnarray[params[0].dataIndex])
               ) +
               "<br>"
             );
@@ -1087,7 +1134,7 @@ export default {
           left: "3%", // 默认10%，给24就挺合适的。
           top: 60, // 默认60
           right: 35, // 默认10%
-          bottom: 100, // 默认60
+          bottom: 60, // 默认60
         },
         xAxis: {
           data: x,
@@ -1111,18 +1158,18 @@ export default {
             data: a,
             barMaxWidth: 30, //柱图宽度
             itemStyle: {
-              normal: { color: "#8FC0FF" },
+              normal: { color: "#4C60F0"},
             },
           },
           {
-            name: "下行节点回源流量",
+            name: "下行节点扩散流量",
             type: "bar",
-            stack: "使用情况",
+            // stack: "使用情况",
             data: z,
             barMaxWidth: 30, //柱图宽度
             itemStyle: {
               normal: {
-                color: "#FFB430",
+                color: "#F6B656",
               },
             },
             label: {
@@ -1134,15 +1181,35 @@ export default {
               },
             },
           },
+          // {
+          //   name: "上行节点扩散流量",
+          //   type: "bar",
+          //   stack: "使用情况",
+          //   data: y,
+          //   barMaxWidth: 30, //柱图宽度
+          //   itemStyle: {
+          //     normal: {
+          //       color: "#FCD742",
+          //     },
+          //   },
+          //   label: {
+          //     normal: {
+          //       show: false,
+          //       position: "inside",
+          //       color: "#333333",
+          //       fontSize: 10,
+          //     },
+          //   },
+          // },
           {
-            name: "下行CDN回源流量",
+            name: "CDN回源流量",
             type: "bar",
-            stack: "使用情况",
+            // stack: "使用情况",
             data: y,
             barMaxWidth: 30, //柱图宽度
             itemStyle: {
               normal: {
-                color: "#FFD800",
+                color: "#FF7F44",
               },
             },
             label: {
@@ -1161,7 +1228,7 @@ export default {
     drawLiveLine2(x, y, z) {
       let _this = this;
       // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById("myChartMap2"));
+      let myChart = this.$echarts.init(document.getElementById("myChartMap1"));
       window.onresize = myChart.resize;
       // 绘制图表
       let options = {
@@ -1227,7 +1294,7 @@ export default {
           left: "3%", // 默认10%，给24就挺合适的。
           top: 60, // 默认60
           right: 35, // 默认10%
-          bottom: 100, // 默认60
+          bottom: 60, // 默认60
         },
         xAxis: {
           data: x,
@@ -1251,18 +1318,18 @@ export default {
             data: y,
             barMaxWidth: 30, //柱图宽度
             itemStyle: {
-              normal: { color: "#8FC0FF" },
+              normal: { color: "#4C60F0" },
             },
           },
           {
             name: "直播源流量",
             type: "bar",
-            stack: "使用情况",
+            // stack: "使用情况",
             data: z,
             barMaxWidth: 30, //柱图宽度
             itemStyle: {
               normal: {
-                color: "#FFB430",
+                color: "#FFBB00",
               },
             },
             label: {
@@ -1308,7 +1375,7 @@ export default {
 }
 .device_table {
   background: #fff;
-  padding: 72px 64px;
+  padding: 59px 72px 47px;
   border-radius: 32px;
   width: 100%;
   height: auto;
@@ -1319,6 +1386,35 @@ export default {
       align-items: center;
       justify-content: flex-start;
       margin-bottom: 20px;
+  }
+}
+.user_item {
+  width: 359px;
+  height: 516px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #FDFBFB;
+  margin-right: 56px;
+  padding: 92px 71px;
+  .items {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    .text {
+      font-size: 16px;
+      color: #999;
+      font-weight: 400;
+    }
+    .count {
+      color: #333;
+      font-size: 36px;   
+      font-weight: bold;
+      margin-top: 10px;
+    }
   }
 }
 </style>

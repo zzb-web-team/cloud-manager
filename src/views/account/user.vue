@@ -30,7 +30,7 @@
         <div>
           <el-button  type="text" size="small" @click="allOn">启用</el-button>
           <el-button  style="margin-left:30px;color:red;" type="text" size="small" @click="allOff">禁用</el-button>
-          <el-button  style="margin-left:30px;" type="text" size="small" @click="allDelete">删除</el-button>
+          <el-button  style="margin-left:30px;color:red;" type="text" size="small" @click="allDelete">删除</el-button>
         </div>
         <pageNation :pager="pager" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange"></pageNation>
       </div>

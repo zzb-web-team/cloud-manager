@@ -8,6 +8,10 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     var serverUrl = 'http://service.kclgames.com'; //PHP服务URL
 } else if (href.indexOf('zzb.stguarantee.com') >= 0) {
     var serverUrl = 'http://zzb.stguarantee.com'; //阿里云服务URL
+} else if (href.indexOf('www.luqikang.com') >= 0) {
+    var serverUrl = 'http://www.luqikang.com'; 
+} else if (href.indexOf('service.luqikang.com') >= 0) {
+    var serverUrl = 'http://service.luqikang.com'; 
 } else {
     var serverUrl = 'http://zzb.stguarantee.com';
     // var serverUrl = 'http://service.kclgames.com';

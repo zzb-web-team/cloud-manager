@@ -20,8 +20,8 @@
         </el-form>
       </div>
       <div class="device_table">
-        <div class="operating" @click="toexportExcel">
-          <div style="margin-left: auto;display:flex;flex-direction: row; align-items: center;cursor: pointer;">
+        <div class="operating">
+          <div style="margin-left: auto;display:flex;flex-direction: row; align-items: center;cursor: pointer;"  @click="toexportExcel">
             <img width="24px" height="22px" src="../../assets/img/export.png" alt="">
             <span style="color: #644CF7;font-size: 16px;margin-left:8px;">导出</span>
           </div>

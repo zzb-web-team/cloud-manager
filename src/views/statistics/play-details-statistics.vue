@@ -35,7 +35,10 @@
             </div>
             <div v-show="type==0" class="device_table">
               <div class="operating">
-                <el-button style="margin-left: auto;" type="primary" @click="toExportVideoInfoExcel">导出</el-button>
+                <div style="margin-left: auto;display:flex;flex-direction: row; align-items: center;cursor: pointer;"  @click="toExportExcel">
+                  <img width="24px" height="22px" src="../../assets/img/export.png" alt="">
+                  <span style="color: #644CF7;font-size: 16px;margin-left:8px;">导出</span>
+                </div>
               </div>
               <el-row type="flex" class="row_active">
                 <el-col :span="24">
@@ -126,7 +129,10 @@
             </div>
             <div v-show="type==1" class="device_table">
               <div class="operating">
-                <el-button style="margin-left: auto;" type="primary" @click="toExportVideoExceptionExcel">导出</el-button>
+                <div style="margin-left: auto;display:flex;flex-direction: row; align-items: center;cursor: pointer;"  @click="toExportExcel">
+                  <img width="24px" height="22px" src="../../assets/img/export.png" alt="">
+                  <span style="color: #644CF7;font-size: 16px;margin-left:8px;">导出</span>
+                </div>
               </div>
               <el-row type="flex" class="row_active">
                 <el-col :span="24">
@@ -191,7 +197,7 @@ export default {
       accelerateType: 0,
       hashidSets: [
         {
-          value: "全部",
+          value: "*",
           label: "全部",
         },
         {
@@ -644,46 +650,40 @@ export default {
         }
       }
     },
-    //点播播放信息统计
-    videoInfoStatistics() {
+    //参数处理
+    getParams(){
       let params = new Object();
       params.pageNo = this.pageNo - 1;
       params.pageSize = this.pageSize;
       params.startTs = this.starttime;
       params.endTs = this.endtime;
-      if (this.valueContent) {
-        params.urlName = this.valueContent;
-      } else {
-        params.urlName = "*";
+      params.channelId = this.valueChannelId ? this.valueChannelId : "*";
+      if(this.type==0&&this.accelerateType==0){
+        params.playUrl = this.valuePlayUrl ? this.valuePlayUrl : "*";
+        params.urlName = this.valueContent ? this.valueContent : "*";
+        params.region = this.valueRegion[1] ? this.valueRegion[1] : "*";
+        params.isp = this.valueIsp ? this.valueIsp : "*";
+      }else if(this.type==0&&this.accelerateType==1){
+        params.roomId = this.valueRoomId ? this.valueRoomId : "*";
+        params.streamName = this.valueStreamName ? this.valueStreamName : "*";
+        params.region = this.valueRegion[1] ? this.valueRegion[1] : "*";
+      }else if(this.type==1&&this.accelerateType==0){
+        params.playUrl = this.valuePlayUrl ? this.valuePlayUrl : "*";
+        params.urlName = this.valueContent ? this.valueContent : "*";
+        params.exceptionType = parseInt(this.exceptionType) ? parseInt(this.exceptionType) : -1;
+        params.exceptionStatus = parseInt(this.exceptionStatus) ? parseInt(this.exceptionStatus) : -1;
+      }else{
+        params.roomId = this.valueRoomId ? this.valueRoomId : "*";
+        params.streamName = this.valueStreamName ? this.valueStreamName : "*";
+        params.exceptionType = parseInt(this.exceptionType) ? parseInt(this.exceptionType) : -1;
+        params.exceptionStatus = parseInt(this.exceptionStatus) ? parseInt(this.exceptionStatus) : -1;
       }
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valueRegion[1]) {
-        params.region = this.valueRegion[1];
-      } else {
-        params.region = "*";
-      }
-
-      if (this.valueIsp != "" && this.valueIsp != "全部") {
-        params.isp = this.valueIsp;
-      } else {
-        params.isp = "*";
-      }
-      if (this.valuePlayUrl !== "") {
-        params.playUrl = this.valuePlayUrl;
-      } else {
-        params.playUrl = "*";
-      }
-
       params.timeUnit = 60;
-      this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
-
+      return params;
+    },
+    //点播播放信息统计
+    videoInfoStatistics() {
+      let params = this.getParams();
       video_info_statistics(params)
         .then(res => {
             this.dibbleData = res.data.data;
@@ -695,43 +695,7 @@ export default {
     },
     //点播播放异常统计
     videoExceptionStatistics(){
-      let params = new Object();
-      params.pageNo = this.pageNo - 1;
-      params.pageSize = this.pageSize;
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      if (this.valueContent) {
-        params.urlName = this.valueContent;
-      } else {
-        params.urlName = "*";
-      }
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valuePlayUrl) {
-        params.playUrl = this.valuePlayUrl;
-      } else {
-        params.playUrl = "*";
-      }
-      if (this.exceptionType != "") {
-        params.exceptionType = parseInt(this.exceptionType);
-      } else {
-        params.exceptionType = -1;
-      }
-      if (this.exceptionStatus != "") {
-        params.exceptionStatus = parseInt(this.exceptionStatus);
-      } else {
-        params.exceptionStatus = -1;
-      }
-
-      params.timeUnit = 60;
-      this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
-
+      let params = this.getParams();
       video_exception_statistics(params)
         .then(res => {
             this.dibbleExceptionData = res.data.data;
@@ -743,38 +707,7 @@ export default {
     },
     //直播播放信息统计
     liveInfoStatistics() {
-      let params = new Object();
-      params.pageNo = this.pageNo - 1;
-      params.pageSize = this.pageSize;
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valueRoomId !== "") {
-        params.roomId = this.valueRoomId;
-      } else {
-        params.roomId = "*";
-      }
-      if (this.valueStreamName !== "") {
-        params.streamName = this.valueStreamName;
-      } else {
-        params.streamName = "*";
-      }
-      if (this.valueRegion[1]) {
-        params.region = this.valueRegion[1];
-      } else {
-        params.region = "*";
-      }
-
-      params.timeUnit = 60;
-      this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
-
+      let params = this.getParams();
       live_info_statistics(params)
         .then(res => {
             this.liveData = res.data.data.data;
@@ -787,41 +720,7 @@ export default {
 
     //直播播放异常统计
     liveExceptionStatistics() {
-      let params = new Object();
-      params.pageNo = this.pageNo - 1;
-      params.pageSize = this.pageSize;
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valueRoomId) {
-        params.roomId = this.valueRoomId;
-      } else {
-        params.roomId = "*";
-      }
-      if (this.valueStreamName) {
-        params.streamName = this.valueStreamName;
-      } else {
-        params.streamName = "*";
-      }
-      if (this.exceptionType != "") {
-        params.exceptionType = parseInt(this.exceptionType);
-      } else {
-        params.exceptionType = -1;
-      }
-      if (this.exceptionStatus != "") {
-        params.exceptionStatus = parseInt(this.exceptionStatus);
-      } else {
-        params.exceptionStatus = -1;
-      }
-      params.timeUnit = 60;
-      this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
+      let params = this.getParams();
       live_exception_statistics(params)
         .then(res => {
             this.liveExceptionData = res.data.data.data;
@@ -831,45 +730,10 @@ export default {
           console.log(error);
         });
     },
-    //导出播放信息统计
-    toExportVideoInfoExcel(){
-      let params = new Object();
-      params.pageNo = this.pageNo - 1;
-      params.pageSize = this.pageSize;
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      if (this.valueContent) {
-        params.urlName = this.valueContent;
-      } else {
-        params.urlName = "*";
-      }
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valueRegion[1]) {
-        params.region = this.valueRegion[1];
-      } else {
-        params.region = "*";
-      }
 
-      if (this.valueIsp != "" && this.valueIsp != "全部") {
-        params.isp = this.valueIsp;
-      } else {
-        params.isp = "*";
-      }
-      if (this.valuePlayUrl !== "") {
-        params.playUrl = this.valuePlayUrl;
-      } else {
-        params.playUrl = "*";
-      }
-
-      params.timeUnit = 60;
-      this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
+    //导出直播播放信息统计
+    toExportLiveVideoInfoExcel(){
+      let params = this.getParams();
       export_video_info_statistics_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -879,48 +743,27 @@ export default {
         .catch(err => {
           console.log(err);
         });
-
     },
 
-    //导出播放异常统计
-    toExportVideoExceptionExcel(){
-      let params = new Object();
-      params.pageNo = this.pageNo1 - 1;
-      params.pageSize = this.pageSize1;
-      params.startTs = this.starttime;
-      params.endTs = this.endtime;
-      if (this.valueContent) {
-        params.urlName = this.valueContent;
-      } else {
-        params.urlName = "*";
+    toExportExcel(){
+      if(this.type==0){
+        if(this.accelerateType==0){
+          this.toExportVideoInfoExcel();
+        }else{
+          this.toExportLiveVideoInfoExcel();
+        } 
+      }else{
+        if(this.accelerateType==0){
+          this.toExportVideoExceptionExcel();
+        }else{
+          this.toExportLiveVideoExceptionExcel();
+        } 
       }
-      if (this.valueChannelId !== "") {
-        params.channelId = this.valueChannelId;
-      } else {
-        params.channelId = "*";
-      }
-      if (this.valuePlayUrl) {
-        params.playUrl = this.valuePlayUrl;
-      } else {
-        params.playUrl = "*";
-      }
-      if (this.exceptionType != "") {
-        params.exceptionType = parseInt(this.exceptionType);
-      } else {
-        params.exceptionType = -1;
-      }
-      if (this.exceptionStatus != "") {
-        params.exceptionStatus = parseInt(this.exceptionStatus);
-      } else {
-        params.exceptionStatus = -1;
-      }
+    },
 
-      params.timeUnit = 60;
-      this.common.timeUnitActive(
-        this.starttime,
-        this.endtime
-      );
-
+    //导出直播播放异常统计
+    toExportLiveVideoExceptionExcel(){
+      let params = this.getParams();
       export_video_exception_statistics_file(params)
         .then(res => {
           if (res.status == 0) {
@@ -930,7 +773,34 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
 
+    //导出播放信息统计
+    toExportVideoInfoExcel(){
+      let params = this.getParams();
+      export_video_info_statistics_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
+    //导出播放异常统计
+    toExportVideoExceptionExcel(){
+      let params = this.getParams();
+      export_video_exception_statistics_file(params)
+        .then(res => {
+          if (res.status == 0) {
+            window.open(res.msg, "_blank");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     //选项卡
     handleClick(val) {

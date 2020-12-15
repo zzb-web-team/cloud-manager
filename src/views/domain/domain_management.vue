@@ -22,7 +22,8 @@
             <span class="el-icon-circle-plus-outline"></span>
           </el-button>
           <el-button plain @click="onImport">批量导入加速内容</el-button>
-          <el-button style="margin-left: auto;" type="primary" @click="toexportExcel">导出</el-button>
+          <img width="24px" height="22px" style="margin-left: auto;cursor:pointer;" src="../../assets/img/export.png" alt="" @click="toexportExcel">
+          <!-- <el-button style="margin-left: auto;" type="primary" >导出</el-button> -->
         </div>
 
         <!-- 表格 -->
