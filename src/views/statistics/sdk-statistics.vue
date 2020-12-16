@@ -118,7 +118,7 @@ export default {
     fenye,
   },
   created() {
-    let times = new Date(new Date().toLocaleDateString()).getTime() / 1000;
+    let times = new Date().getTime() / 1000;
     this.starttime = times - 24 * 60 * 60 * 29;
     this.endtime = times;
     this.val2[0] = this.common.getTimess(this.starttime*1000);
