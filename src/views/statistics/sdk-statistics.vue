@@ -94,7 +94,9 @@ export default {
       tableZb: [],
       dialogTableVisible: false,
       title: '',
-      tableData: []
+      tableData: [],
+      androidData: [],
+      iosData: []
     };
   },
   filters: {
@@ -208,8 +210,10 @@ export default {
     //android,ios
     select(){
       if (this.radios == 0) {
+        this.tableZb = this.androidData;
         this.drawLine(this.androidUsers, this.androidVersions);
       }else{
+        this.tableZb = this.iosData;
         this.drawLine(this.iosUsers, this.iosVersions);
       }
     },
@@ -230,14 +234,14 @@ export default {
 
       query_sdk_version_curve(params)
         .then(res => {
-            let androidData = res.data.data.filter(v=>v.sdkType == 0);
-            this.androidUsers = androidData.map(v=>v.userCnt);
-            this.androidVersions = androidData.map(v => v.sdkVersion);
-            let iosData = res.data.data.filter(v=>v.sdkType == 1);
-            this.iosUsers = iosData.map(v=>v.userCnt);
-            this.iosVersions = iosData.map(v => v.sdkVersion)
-            this.drawLine(this.androidUsers, this.androidVersions);
-            this.tableZb = res.data.data;
+            this.androidData = res.data.data.filter(v=>v.sdkType == 0);
+            this.androidUsers = this.androidData.map(v=>v.userCnt);
+            this.androidVersions = this.androidData.map(v => v.sdkVersion);
+            this.iosData = res.data.data.filter(v=>v.sdkType == 1);
+            this.iosUsers = this.iosData.map(v=>v.userCnt);
+            this.iosVersions = this.iosData.map(v => v.sdkVersion)
+            this.radios == 0 ? this.drawLine(this.androidUsers, this.androidVersions) : this.drawLine(this.iosUsers, this.iosVersions);
+            this.tableZb = this.radios == 0 ? this.androidData : this.iosData;
             // this.total_cnt = res.data.totalCnt;
         })
         .catch(error => {
@@ -252,6 +256,8 @@ export default {
       let params = new Object();
       params.sdkType = sdkType;
       params.sdkVersion = sdkVersion;
+      params.startTs = this.starttime;
+      params.endTs = this.endtime;
       query_sdk_version_userList(params)
         .then(res => {
           this.tableData = res.data.data;
