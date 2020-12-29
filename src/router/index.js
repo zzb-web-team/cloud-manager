@@ -60,6 +60,7 @@ import sdkStatistics from "@/views/statistics/sdk-statistics";
 //直播加速
 import dibbleContent from "@/views/domain/dibble_content";
 import dibbleInfo from "@/views/domain/dibble_info";
+import serviceMonitoring from "@/views/statistics/service-monitoring";
 
 
 Vue.use(Router);
@@ -308,6 +309,11 @@ export default new Router({
           path: "/sdkStatistics",
           name: "SDK统计",
           component: sdkStatistics,
+        },
+        {
+          path: "/serviceMonitoring",
+          name: "服务监控",
+          component: serviceMonitoring,
         },
       ],
     },

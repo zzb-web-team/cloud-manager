@@ -1,253 +1,454 @@
 <template>
-  <div class="content">
-      <div class="top_title">点播加速管理</div>
+  <div>
+    <div class="top_title">点播加速管理
+      <div class="wrapperStyle">
+        <div
+          class="itemStyle"
+          :class="{ isSelected: type == 0 }"
+          @click="changeType(0)"
+        >
+          加速内容管理
+        </div>
+        <div
+          class="itemStyle"
+          :class="{ isSelected: type == 1 }"
+          @click="changeType(1)"
+        >
+          点播回源
+        </div>
+      </div>
+    </div>
+    <div class="content">
       <div class="seach">
-          <el-input placeholder="请输入渠道ID丶加速内容" v-model="input_text" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmitInput">
-            <i slot="suffix" class="el-input__icon el-icon-search"></i>
-          </el-input>
-          <el-select v-model="value" placeholder="请选择状态" @change="onchangeTab" style="width:200px;margin-right: 10px;">
-            <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+        <el-input placeholder="请输入渠道ID丶加速内容" v-model="input_text" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmitInput">
+          <i slot="suffix" class="el-input__icon el-icon-search"></i>
+        </el-input>
+        <el-select v-model="value" placeholder="请选择状态" @change="onchangeTab" style="width:200px;margin-right: 10px;">
+          <el-option v-for="(item, index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
+        </el-select>
 
-          <!-- <span>创建日期：</span> -->
-          <el-date-picker v-model="value1" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="gettimes"></el-date-picker>
-          <!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
-          <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
+        <!-- <span>创建日期：</span> -->
+        <el-date-picker v-model="value1" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="gettimes"></el-date-picker>
+        <!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
+        <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
       </div>
       <!-- 表格 -->
-      <div class="device_table">
-        <div class="operating">
-          <el-button type="primary" @click="addUrl">
-            创建加速内容
-            <span class="el-icon-circle-plus-outline"></span>
-          </el-button>
-          <el-button plain @click="onImport">批量导入加速内容</el-button>
-          <img width="24px" height="22px" style="margin-left: auto;cursor:pointer;" src="../../assets/img/export.png" alt="" @click="toexportExcel">
-          <!-- <el-button style="margin-left: auto;" type="primary" >导出</el-button> -->
-        </div>
+      <div v-show="type==0" class="device_table">
+          <div class="operating">
+            <el-button type="primary" @click="addUrl">
+              创建加速内容
+              <span class="el-icon-circle-plus-outline"></span>
+            </el-button>
+            <el-button plain @click="onImport">批量导入加速内容</el-button>
+            <img width="24px" height="22px" style="margin-left: auto;cursor:pointer;" src="../../assets/img/export.png" alt="" @click="toexportExcel">
+            <!-- <el-button style="margin-left: auto;" type="primary" >导出</el-button> -->
+          </div>
 
-        <!-- 表格 -->
-        <el-table stripe ref="multipleTable" border @selection-change="handleSelectionChange" @sort-change="tableSortChange" :data="tableData" tooltip-effect="dark" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
-          <el-table-column type="selection" width="55"> </el-table-column>
-          <el-table-column prop="buser_id" label="渠道ID"> </el-table-column>
-          <el-table-column prop="url_name" label="加速内容名称">
-          </el-table-column>
-          <el-table-column prop="domain" label="源站域名">
+          <!-- 表格 -->
+          <el-table stripe ref="multipleTable" border @selection-change="handleSelectionChange" @sort-change="tableSortChange" :data="tableData" tooltip-effect="dark" style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass">
+            <el-table-column type="selection" width="55"> </el-table-column>
+            <el-table-column prop="buser_id" label="渠道ID"> </el-table-column>
+            <el-table-column prop="url_name" label="加速内容名称">
+            </el-table-column>
+            <el-table-column prop="domain" label="源站域名">
+              <template slot-scope="scope">
+                <div style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-break:keep-all;margin:0 auto;">{{scope.row.domain}}</div>
+
+              </template>
+            </el-table-column>
+            <el-table-column prop="host_url" label="回源路径">
+              <template slot-scope="scope">
+                <div style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-break:keep-all;margin:0 auto;">{{scope.row.host_url}}</div>
+
+              </template>
+            </el-table-column>
+            <el-table-column prop="url" label="播放路径">
+              <template slot-scope="scope">
+                <div style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-break:keep-all;margin:0 auto;">{{scope.row.url}}</div>
+
+              </template>
+            </el-table-column>
+            <el-table-column prop="state" label="状态">
+              <template slot-scope="scope">
+                <span
+                style="color:#0ABF5B;"
+                v-if="scope.row.state == 1"
+                >正常运行</span>
+                <span
+                style="color:#E54545;"
+                v-else-if="scope.row.state == 0"
+                >已停止</span>
+                <span style="color:#E54545;" v-else
+                >回源失败</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="create_time" label="创建时间" sortable="custom"></el-table-column>
+            <el-table-column label="操作" width="350">
+              <template slot-scope="scope">
+                <el-button @click="Configuration(scope.row)" type="text" size="small">配置</el-button>
+                <el-button type="text" size="small" @click="updatauser(scope.row)">复制配置</el-button>
+                <el-button type="text" size="small" @click="monitor(scope.row)">监控</el-button>
+                <el-button type="text" size="small" @click="onDisable(scope.row)">{{ scope.row.state == 1 ? "停用" : "启用" }}</el-button>
+                <!-- <el-button type="text" size="small" @click="handleClick(scope.row)">详情</el-button> -->
+                <el-button type="text" size="small" @click="deleateuser1(scope.row)" style="color:red;">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <!-- 按钮 -->
+          <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center;">
+            <div>
+              <el-button @click="enableuser()" type="text">启用</el-button>
+              <el-button @click="disableuser()" type="text" style="margin-left:30px;color:red;">停用</el-button>
+              <el-button @click="deleateuser()" type="text" style="margin-left:30px;">删除</el-button>
+            </div>
+            <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
+          </div>
+        
+      </div>
+      <div v-show="type==1" class="device_table">
+        <el-table
+          :data="demotableData"
+          :span-method="arraySpanMethod"
+          style="width: 100%;margin-bottom: 20px;"
+          row-key="id"
+          border
+          :cell-style="rowClass"
+          :header-cell-style="headClass"
+        >
+          <el-table-column type="expand">
             <template slot-scope="scope">
-              <div style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-break:keep-all;margin:0 auto;">{{scope.row.domain}}</div>
-
+              <el-table
+                :data="scope.row.childrens"
+                border
+                style="width: 100%"
+                :cell-style="rowClass"
+                :header-cell-style="headClass"
+              >
+                <el-table-column
+                  prop="acce"
+                  label="操作内容"
+                ></el-table-column>
+                <el-table-column
+                  prop="start_time"
+                  label="回源开始时间"
+                ></el-table-column>
+                <el-table-column
+                  prop="end_time"
+                  label="回源结束时间"
+                ></el-table-column>
+                <el-table-column
+                  prop="state"
+                  label="状态"
+                >
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        scope.row.state == 0
+                      "
+                      >进行中</span
+                    >
+                    <span
+                      v-else-if="
+                        scope.row.state == 1
+                      "
+                      style="color:#E54545;"
+                      >已关闭</span
+                    >
+                    <span
+                      v-else-if="
+                        scope.row.state == 2
+                      "
+                      style="color:#E54545;"
+                      >回源失败</span
+                    >
+                    <span
+                      v-else-if="
+                        scope.row.state == 3
+                      "
+                      style="color:#0abf5b;"
+                      >完成</span
+                    >
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="jingdu"
+                  label="进度"
+                >
+                  <template slot-scope="scope">
+                    <el-progress
+                      :percentage="
+                        scope.row.jingdu
+                      "
+                    ></el-progress> </template
+                ></el-table-column>
+                <el-table-column label="操作">
+                  <template slot-scope="scope">
+                    <el-button
+                      type="text"
+                      size="small"
+                      :disabled="
+                        scope.row.state ==
+                          1 ||
+                          scope.row
+                            .state == 2
+                      "
+                    >
+                      关闭回源
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
             </template>
           </el-table-column>
-          <el-table-column prop="host_url" label="回源路径">
-            <template slot-scope="scope">
-              <div style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-break:keep-all;margin:0 auto;">{{scope.row.host_url}}</div>
-
-            </template>
+          <el-table-column type="selection" width="55">
           </el-table-column>
-          <el-table-column prop="url" label="播放路径">
-            <template slot-scope="scope">
-              <div style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;word-break:keep-all;margin:0 auto;">{{scope.row.url}}</div>
-
-            </template>
+          <el-table-column
+            prop="acce"
+            label="加速内容名称"
+          >
           </el-table-column>
-          <el-table-column prop="state" label="状态">
+          <el-table-column
+            prop="hui_url"
+            label="回源地址"
+          >
+          </el-table-column>
+          <el-table-column prop="ip" label="点播IP">
+          </el-table-column>
+          <el-table-column
+            prop="start_time"
+            label="回源开始时间"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="end_time"
+            label="回源结束时间"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="state"
+            label="状态"
+            width="100"
+          >
             <template slot-scope="scope">
+              <span v-if="scope.row.state == 0"
+                >进行中</span
+              >
               <span
-              style="color:#0ABF5B;"
-              v-if="scope.row.state == 1"
-              >正常运行</span>
+                v-else-if="scope.row.state == 1"
+                style="color:#E54545;"
+                >已关闭</span
+              >
               <span
-              style="color:#E54545;"
-              v-else-if="scope.row.state == 0"
-              >已停止</span>
-              <span style="color:#E54545;" v-else
-              >回源失败</span>
+                v-else-if="scope.row.state == 2"
+                style="color:#E54545;"
+                >回源失败</span
+              >
+              <span
+                v-else-if="scope.row.state == 3"
+                style="color:#0abf5b;"
+                >完成</span
+              >
             </template>
           </el-table-column>
-          <el-table-column prop="create_time" label="创建时间" sortable="custom"></el-table-column>
-          <el-table-column label="操作" width="350">
+          <el-table-column prop="jingdu" label="回源进度">
             <template slot-scope="scope">
-              <el-button @click="Configuration(scope.row)" type="text" size="small">配置</el-button>
-              <el-button type="text" size="small" @click="updatauser(scope.row)">复制配置</el-button>
-              <el-button type="text" size="small" @click="monitor(scope.row)">监控</el-button>
-              <el-button type="text" size="small" @click="onDisable(scope.row)">{{ scope.row.state == 1 ? "停用" : "启用" }}</el-button>
-              <!-- <el-button type="text" size="small" @click="handleClick(scope.row)">详情</el-button> -->
-              <el-button type="text" size="small" @click="deleateuser1(scope.row)" style="color:red;">删除</el-button>
+              <el-progress
+                :percentage="scope.row.jingdu"
+              ></el-progress>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button
+                type="text"
+                size="small"
+                :disabled="
+                  scope.row.state == 1 ||
+                    scope.row.state == 2
+                "
+                @click="closehost(scope.row)"
+              >
+                关闭回源
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
-
-        <!-- 按钮 -->
-        <div style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center;">
+        <div
+          style="margin-top: 20px;display: flex;justify-content: space-between;align-items: center;"
+        >
           <div>
-            <el-button @click="enableuser()" type="text">启用</el-button>
-            <el-button @click="disableuser()" type="text" style="margin-left:30px;color:red;">停用</el-button>
-            <el-button @click="deleateuser()" type="text" style="margin-left:30px;">删除</el-button>
+            <el-button
+              type="text"
+              size="small"
+              @click="closehost"
+              >关闭回源</el-button
+            >
           </div>
           <fenye style="float:right;margin:10px 0 0 0;" @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange" :currentPage="currentPage" :pagesa="total_cnt"></fenye>
         </div>
-      
-    </div>
-    <!-- 弹窗 -->
-    <el-dialog title="添加域名" :visible.sync="dialogFormVisible" custom-class="customWidth" class="domain_dialog">
-      <el-form :model="dynamicValidateForm" ref="dynamicValidateForm">
-        <el-form-item label="渠道ID:" :label-width="formLabelWidth" prop="account" :rules="{
-            required: true,
-            message: '渠道ID不能为空',
-            trigger: 'blur',
-          }">
-          <el-input v-model="dynamicValidateForm.buser_id" placeholder="请输入渠道ID" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="URL:" :label-width="formLabelWidth" prop="pwd" placeholder="请输入单个URL" :rules="{
-            required: true,
-            message: '域名不能为空',
-            trigger: 'blur',
-          }">
-          <el-input v-model="dynamicValidateForm.url" placeholder="请输入渠道域名" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="视频名称:" :label-width="formLabelWidth" prop="conpwd" :rules="{
-            required: true,
-            message: '视频名称不能为空',
-            trigger: 'blur',
-          }">
-          <el-input v-model="dynamicValidateForm.url_name" placeholder="请输入主标签" autocomplete="off"></el-input>
-        </el-form-item>
-
-        <el-form-item label="视频格式" :label-width="formLabelWidth" prop="radio" :rules="{
-            required: true,
-            message: '业务类型不能为空',
-            trigger: 'blur',
-          }">
-          <el-select v-model="dynamicValidateForm.url_type" placeholder="请选择" style="width:100%;">
-            <el-option v-for="(item, index) in videoArr" :key="index" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="主标签:" :label-width="formLabelWidth" prop="conpwd" :rules="{
-            required: true,
-            message: '主标签不能为空',
-            trigger: 'blur',
-          }">
-          <el-input v-model="dynamicValidateForm.label" placeholder="请输入主标签" autocomplete="off"></el-input>
-        </el-form-item>
-
-        <el-form-item label="副标签" :label-width="formLabelWidth" prop="radio" :rules="{
-            required: true,
-            message: '业务类型不能为空',
-            trigger: 'blur',
-          }">
-          <el-select v-model="dynamicValidateForm.label2" placeholder="请选择" style="width:100%;">
-            <el-option v-for="(item, index) in yewu" :key="index" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-
-      <div slot="footer" class="dialog-footer" style="text-align:center;">
-        <el-button @click="dialogFormVisibles">取 消</el-button>
-        <el-button type="primary" @click="onSubmitAdd">确 定</el-button>
       </div>
-    </el-dialog>
-    <!-- 详情弹窗 -->
-    <el-dialog title="域名详情" :visible.sync="dialog" custom-class="customWidth" width="50%" style="width:100%:background:red;">
-      <el-table ref="multipleTable" :data="tableData">
-        <el-table-column prop="dominds" label="配置项"></el-table-column>
-        <el-table-column prop="camesd" label="当前配置"></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button @click="handleClicks(scope.row)" type="text" size="small">操作</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <!-- 弹窗 -->
+      <el-dialog title="添加域名" :visible.sync="dialogFormVisible" custom-class="customWidth" class="domain_dialog">
+        <el-form :model="dynamicValidateForm" ref="dynamicValidateForm">
+          <el-form-item label="渠道ID:" :label-width="formLabelWidth" prop="account" :rules="{
+              required: true,
+              message: '渠道ID不能为空',
+              trigger: 'blur',
+            }">
+            <el-input v-model="dynamicValidateForm.buser_id" placeholder="请输入渠道ID" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="URL:" :label-width="formLabelWidth" prop="pwd" placeholder="请输入单个URL" :rules="{
+              required: true,
+              message: '域名不能为空',
+              trigger: 'blur',
+            }">
+            <el-input v-model="dynamicValidateForm.url" placeholder="请输入渠道域名" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="视频名称:" :label-width="formLabelWidth" prop="conpwd" :rules="{
+              required: true,
+              message: '视频名称不能为空',
+              trigger: 'blur',
+            }">
+            <el-input v-model="dynamicValidateForm.url_name" placeholder="请输入主标签" autocomplete="off"></el-input>
+          </el-form-item>
 
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialog = false">确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- 复制配置弹窗 -->
-    <el-dialog title="添加用户" :visible.sync="dialupdata" custom-class="customWidth" width="900px">
-      <p style="text-align: left;margin: 10px 0;">
-        复制配置允许将一个域名的配置项复制到多个域名，帮助您对域名进行批量配置
-      </p>
-      <el-steps :active="actives" finish-status="success" align-center>
-        <el-step title="选择配置项"></el-step>
-        <el-step title="选择域名"></el-step>
-        <el-step title="完成"></el-step>
-      </el-steps>
+          <el-form-item label="视频格式" :label-width="formLabelWidth" prop="radio" :rules="{
+              required: true,
+              message: '业务类型不能为空',
+              trigger: 'blur',
+            }">
+            <el-select v-model="dynamicValidateForm.url_type" placeholder="请选择" style="width:100%;">
+              <el-option v-for="(item, index) in videoArr" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="主标签:" :label-width="formLabelWidth" prop="conpwd" :rules="{
+              required: true,
+              message: '主标签不能为空',
+              trigger: 'blur',
+            }">
+            <el-input v-model="dynamicValidateForm.label" placeholder="请输入主标签" autocomplete="off"></el-input>
+          </el-form-item>
 
-      <div v-if="actives === 1">
-        <el-table ref="multipleTable" :data="futableData" tooltip-effect="dark" border style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column prop="configuration" label="配置项"></el-table-column>
-          <el-table-column prop="nowconfiguration" label="当前配置" show-overflow-tooltip></el-table-column>
-        </el-table>
-        <el-button style="margin-top: 12px;" type="primary" @click="next">下一步</el-button>
-        <el-button style="margin-top: 12px;" @click="fureset">取消</el-button>
-      </div>
-      <div v-else-if="actives === 2">
-        <div style="display: flex;justify-content: space-between;align-items: center;margin: 10px 0">
-          <span style="font-weight: 600;">域名列表</span>
-          <div>
-            已选择
-            <span>{{ nums }}</span>个域名，最多允许50个
-          </div>
-          <el-input placeholder="请输入域名" v-model="fuinput" style=" width:300px" class="input-with-select" @keyup.enter.native="onSubmit"></el-input>
-        </div>
-        <div>
-          <el-table ref="multipleTable" :data="urllist" tooltip-effect="dark" border style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="url" label="URL"></el-table-column>
-          </el-table>
-        </div>
-        <el-button style="margin-top: 12px;" type="primary" @click="last">上一步</el-button>
-        <el-button style="margin-top: 12px;" type="primary" @click="next">下一步</el-button>
-        <el-button style="margin-top: 12px;" @click="fureset">取消</el-button>
-      </div>
-      <!-- <div v-else>
-            <el-button style="margin-top: 12px;" type="primary" @click="last">上一步</el-button>
-            <el-button style="margin-top: 12px;"  @click="fureset">取消</el-button>
-          </div>-->
-    </el-dialog>
-    <!--详情弹窗-->
-    <el-dialog :visible.sync="dialogVisible4" width="25%">
-      <div class="addaccout">
-        <el-form :model="ruleForm5" ref="ruleForm5" label-position="left" class="demo-ruleForm">
-          <h3 class="title">详细信息</h3>
-          <el-form-item>
-            <el-form-item label="加速内容名称:">
-              <el-input v-model="ruleForm5.url_name" :disabled="true"></el-input>
-            </el-form-item>
-          </el-form-item>
-          <el-form-item>
-            <el-form-item label="源站域名:">
-              <el-input v-model="ruleForm5.url" :disabled="true"></el-input>
-            </el-form-item>
-          </el-form-item>
-          <el-form-item>
-            <el-form-item label="回源路径:">
-              <el-input v-model="ruleForm5.host_url" :disabled="true"></el-input>
-            </el-form-item>
-          </el-form-item>
-          <el-form-item prop="phone">
-            <el-form-item label="渠道ID:">
-              <el-input v-model="ruleForm5.buser_id" :disabled="true"></el-input>
-            </el-form-item>
-          </el-form-item>
-          <el-form-item prop="phone">
-            <el-form-item label="状态:">
-              <el-input v-model="ruleForm5.state" :disabled="true"></el-input>
-            </el-form-item>
-          </el-form-item>
-          <el-form-item prop="phone">
-            <el-form-item label="创建时间:">
-              <el-input v-model="ruleForm5.create_time" :disabled="true"></el-input>
-            </el-form-item>
-          </el-form-item>
-          <el-form-item style="width:100%;display: flex;justify-content:center;">
-            <el-button type="primary" @click="dialogVisible4 = false">确定</el-button>
-            <el-button @click="dialogVisible4 = false">取消</el-button>
+          <el-form-item label="副标签" :label-width="formLabelWidth" prop="radio" :rules="{
+              required: true,
+              message: '业务类型不能为空',
+              trigger: 'blur',
+            }">
+            <el-select v-model="dynamicValidateForm.label2" placeholder="请选择" style="width:100%;">
+              <el-option v-for="(item, index) in yewu" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select>
           </el-form-item>
         </el-form>
-      </div>
-    </el-dialog>
+
+        <div slot="footer" class="dialog-footer" style="text-align:center;">
+          <el-button @click="dialogFormVisibles">取 消</el-button>
+          <el-button type="primary" @click="onSubmitAdd">确 定</el-button>
+        </div>
+      </el-dialog>
+      <!-- 详情弹窗 -->
+      <el-dialog title="域名详情" :visible.sync="dialog" custom-class="customWidth" width="50%" style="width:100%:background:red;">
+        <el-table ref="multipleTable" :data="tableData">
+          <el-table-column prop="dominds" label="配置项"></el-table-column>
+          <el-table-column prop="camesd" label="当前配置"></el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button @click="handleClicks(scope.row)" type="text" size="small">操作</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialog = false">确 定</el-button>
+        </div>
+      </el-dialog>
+      <!-- 复制配置弹窗 -->
+      <el-dialog title="添加用户" :visible.sync="dialupdata" custom-class="customWidth" width="900px">
+        <p style="text-align: left;margin: 10px 0;">
+          复制配置允许将一个域名的配置项复制到多个域名，帮助您对域名进行批量配置
+        </p>
+        <el-steps :active="actives" finish-status="success" align-center>
+          <el-step title="选择配置项"></el-step>
+          <el-step title="选择域名"></el-step>
+          <el-step title="完成"></el-step>
+        </el-steps>
+
+        <div v-if="actives === 1">
+          <el-table ref="multipleTable" :data="futableData" tooltip-effect="dark" border style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column prop="configuration" label="配置项"></el-table-column>
+            <el-table-column prop="nowconfiguration" label="当前配置" show-overflow-tooltip></el-table-column>
+          </el-table>
+          <el-button style="margin-top: 12px;" type="primary" @click="next">下一步</el-button>
+          <el-button style="margin-top: 12px;" @click="fureset">取消</el-button>
+        </div>
+        <div v-else-if="actives === 2">
+          <div style="display: flex;justify-content: space-between;align-items: center;margin: 10px 0">
+            <span style="font-weight: 600;">域名列表</span>
+            <div>
+              已选择
+              <span>{{ nums }}</span>个域名，最多允许50个
+            </div>
+            <el-input placeholder="请输入域名" v-model="fuinput" style=" width:300px" class="input-with-select" @keyup.enter.native="onSubmit"></el-input>
+          </div>
+          <div>
+            <el-table ref="multipleTable" :data="urllist" tooltip-effect="dark" border style="width: 100%" :cell-style="rowClass" :header-cell-style="headClass" @selection-change="handleSelectionChange">
+              <el-table-column type="selection" width="55"></el-table-column>
+              <el-table-column prop="url" label="URL"></el-table-column>
+            </el-table>
+          </div>
+          <el-button style="margin-top: 12px;" type="primary" @click="last">上一步</el-button>
+          <el-button style="margin-top: 12px;" type="primary" @click="next">下一步</el-button>
+          <el-button style="margin-top: 12px;" @click="fureset">取消</el-button>
+        </div>
+        <!-- <div v-else>
+              <el-button style="margin-top: 12px;" type="primary" @click="last">上一步</el-button>
+              <el-button style="margin-top: 12px;"  @click="fureset">取消</el-button>
+            </div>-->
+      </el-dialog>
+      <!--详情弹窗-->
+      <el-dialog :visible.sync="dialogVisible4" width="25%">
+        <div class="addaccout">
+          <el-form :model="ruleForm5" ref="ruleForm5" label-position="left" class="demo-ruleForm">
+            <h3 class="title">详细信息</h3>
+            <el-form-item>
+              <el-form-item label="加速内容名称:">
+                <el-input v-model="ruleForm5.url_name" :disabled="true"></el-input>
+              </el-form-item>
+            </el-form-item>
+            <el-form-item>
+              <el-form-item label="源站域名:">
+                <el-input v-model="ruleForm5.url" :disabled="true"></el-input>
+              </el-form-item>
+            </el-form-item>
+            <el-form-item>
+              <el-form-item label="回源路径:">
+                <el-input v-model="ruleForm5.host_url" :disabled="true"></el-input>
+              </el-form-item>
+            </el-form-item>
+            <el-form-item prop="phone">
+              <el-form-item label="渠道ID:">
+                <el-input v-model="ruleForm5.buser_id" :disabled="true"></el-input>
+              </el-form-item>
+            </el-form-item>
+            <el-form-item prop="phone">
+              <el-form-item label="状态:">
+                <el-input v-model="ruleForm5.state" :disabled="true"></el-input>
+              </el-form-item>
+            </el-form-item>
+            <el-form-item prop="phone">
+              <el-form-item label="创建时间:">
+                <el-input v-model="ruleForm5.create_time" :disabled="true"></el-input>
+              </el-form-item>
+            </el-form-item>
+            <el-form-item style="width:100%;display: flex;justify-content:center;">
+              <el-button type="primary" @click="dialogVisible4 = false">确定</el-button>
+              <el-button @click="dialogVisible4 = false">取消</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -287,6 +488,7 @@ export default {
       }
     };
     return {
+      type: 0,
       actives: 1,
       input_text: "",
       nums: 12,
@@ -456,6 +658,84 @@ export default {
       },
       buser_id_active: "158000000011",
       tempArray: {},
+      demotableData: [
+				{
+					id: 1,
+					start_time: '2016-05-02',
+					end_time: '2019-06-30',
+					acce: '南方网佛偈♂',
+					hui_url: 'http://www.gogogo.com',
+					ip: '39.27.10.36',
+					state: 3,
+					jingdu: 99,
+					hasChildren: false,
+					childrens: [
+						{
+							id: 103,
+							acce: 'eos fjid nfn nfdjs',
+							start_time: '2016-05-02',
+							end_time: '2019-06-30',
+							state: 3,
+							jingdu: 0,
+						},
+						{
+							id: 104,
+							acce: 'eos fjid nfn nfdjs',
+							start_time: '2016-05-02',
+							end_time: '2019-06-30',
+							state: 3,
+							jingdu: 89,
+						},
+						{
+							id: 105,
+							acce: 'eos fjid nfn nfdjs',
+							start_time: '2016-05-02',
+							end_time: '2019-06-30',
+							state: 3,
+							jingdu: 3,
+						},
+						{
+							id: 106,
+							acce: 'eos fjid nfn nfdjs',
+							start_time: '2016-05-02',
+							end_time: '2019-06-30',
+							state: 3,
+							jingdu: 0,
+						},
+					],
+				},
+				{
+					id: 2,
+					start_time: '2016-05-04',
+					end_time: '2019-06-30',
+					acce: '粉底霜粉第三方',
+					hui_url: 'http://www.gogogo.com',
+					ip: '39.27.10.36',
+					state: 2,
+					jingdu: 5,
+				},
+				{
+					id: 3,
+					start_time: '2016-05-01',
+					end_time: '2019-06-30',
+					acce: '管理破壳浮动',
+					hui_url: 'http://www.gogogo.com',
+					ip: '39.27.10.36',
+					state: 0,
+					jingdu: 27,
+				},
+				{
+					id: 4,
+					start_time: '2016-05-03',
+					end_time: '2019-06-30',
+					acce: '看法颇为灭口',
+					hui_url: 'http://www.gogogo.com',
+					ip: '39.27.10.36',
+					state: 1,
+					jingdu: 100,
+				},
+			],
+			expands: [],
     };
   },
   components: {
@@ -466,6 +746,14 @@ export default {
     this.queryUrlList();
   },
   methods: {
+    changeType(v) {
+      this.type = v;
+      if (v == 0) {
+        // this.getNodeTraffic();
+      } else {
+        // this.liveIpfsFlow();
+      }
+    },
     //监控
     monitor(row) {
       console.log(row)
@@ -488,6 +776,27 @@ export default {
         this.currentPage = 1;
       this.queryUrlList();
     },
+    //展开
+		toggleRowExpansion(row) {
+			// console.log(row);
+			this.expands = [];
+			this.expands.push(row.id); //展开当前行的信息
+		},
+		//合并
+		arraySpanMethod({ row, column, rowIndex, columnIndex }) {
+			// console.log(row, column, rowIndex, columnIndex);
+			if (row.id > 100) {
+				if (columnIndex === 2) {
+					return [1, 3];
+				} else if (columnIndex === 3 || columnIndex === 4) {
+					return [0, 0];
+				}
+			}
+		},
+		//关闭回源按钮
+		closehost(row) {
+			if (row) console.log(row);
+		},
     //排序
     //排序
     tableSortChange(column) {
@@ -1295,4 +1604,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.top_title{
+  text-align: left;
+  font-size: 18px;
+  color: #333;
+  margin-top: 48px;
+  .wrapperStyle{
+      display: inline;
+      margin-left: 54px;
+      .itemStyle {
+          font-weight: 500;
+          display: inline;
+          font-size: 16px;
+          color: #666;
+          margin-right: 48px;
+          cursor: pointer;
+          height: 20px;
+      }
+      .isSelected{
+          color: #644CF7;
+          border-bottom: 4px solid  #644CF7;
+      }
+  }
+}
 </style>
