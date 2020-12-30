@@ -39,7 +39,7 @@ var toHideLoading = _.debounce(() => {
         loading = null;
     }
 }, 300);
-axios.defaults.timeout = 15000
+axios.defaults.timeout = 45000
 // axios.defaults.baseURL = ''
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 
@@ -83,6 +83,7 @@ axios.interceptors.response.use(
         if (error.config.headers.showLoading !== false) {
             hideLoading();
         }
+        Message.error('请求数据超时！');
         return Promise.reject(error)
     }
 )
