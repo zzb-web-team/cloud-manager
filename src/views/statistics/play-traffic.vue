@@ -64,7 +64,7 @@
             <div class="device_form" style>
               <div id="myChartMap2" :style="{ height: '607px' }"></div>
             </div>
-            <div class="devide_table">
+            <!-- <div class="devide_table">
 
               <el-row type="flex" class="row_active">
                 <el-col :span="24">
@@ -126,12 +126,12 @@
                         <!-- <div>{{ scope.row.stime | settimes }}</div> -->
                         <!-- <div>{{ common.getTimess(scope.row.etime * 1000) }}</div>
                       </template> -->
-                    </el-table-column>
+                    <!-- </el-table-column>
                   </el-table>
                   <fenye style="float:right;margin:10px 0 0 0;" :currentPage="pageNo1" @handleCurrentChange="handleCurrentChange1" @handleSizeChange="handleSizeChange1" :pagesa="total_cnt1"></fenye>
                 </el-col>
               </el-row>
-            </div>
+            </div> -->
           </el-tab-pane>
           <el-tab-pane label="播放流量分布" name="second" :lazy="true">
             <div style="display: flex;align-items: center; flex-flow: row; margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
@@ -706,7 +706,7 @@ export default {
     this.starttime = new Date(new Date().toLocaleDateString()).getTime() / 1000;
     this.endtime = Date.parse(new Date()) / 1000;
     this.querySdkflow();
-    this.querySdkflowTable();
+    // this.querySdkflowTable();
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -767,7 +767,7 @@ export default {
     },
     handleCurrentChange1(pages) {
       this.pageNo1 = pages;
-      this.querySdkflowTable();
+    //   this.querySdkflowTable();
     },
     //获取页码
     handleCurrentChange(pages) {
@@ -785,7 +785,7 @@ export default {
       }else if(this.activeName == 'threed'){
         this.pageNo1 = 1;
         this.querySdkflow();
-        this.querySdkflowTable();
+        // this.querySdkflowTable();
       }else{
         this.querySdkflowControl();
       }
@@ -1290,7 +1290,7 @@ export default {
         this.queryDataFlowLocation();
       }else if (data == 3) {
         this.querySdkflow();
-        this.querySdkflowTable();
+        // this.querySdkflowTable();
       } else if (data == 4) {
         this.querySdkflowControl();
       }
@@ -1306,7 +1306,7 @@ export default {
         this.queryDataFlowLocation();
       }else if (data == 3) {
         this.querySdkflow();
-        this.querySdkflowTable();
+        // this.querySdkflowTable();
       } else if (data == 4) {
         this.querySdkflowControl();
       }
@@ -1322,7 +1322,7 @@ export default {
         this.queryDataFlowLocation();
       }else if (data == 3) {
         this.querySdkflow();
-        this.querySdkflowTable();
+        // this.querySdkflowTable();
       } else if (data == 4) {
         this.querySdkflowControl();
       }
@@ -1338,7 +1338,7 @@ export default {
         this.queryDataFlowLocation();
       }else if (data == 3) {
         this.querySdkflow();
-        this.querySdkflowTable();
+        // this.querySdkflowTable();
       } else if (data == 4) {
         this.querySdkflowControl();
       }
@@ -1354,7 +1354,7 @@ export default {
         this.queryDataFlowLocation();
       }else if (data == 3) {
         this.querySdkflow();
-        this.querySdkflowTable();
+        // this.querySdkflowTable();
       } else if (data == 4) {
         this.querySdkflowControl();
       }
@@ -1385,7 +1385,7 @@ export default {
         this.queryDataFlowLocation();
       }else if(this.activeName == 'threed'){
         this.querySdkflow();
-        this.querySdkflowTable();
+        // this.querySdkflowTable();
       }else{
         this.querySdkflowControl();
       }
@@ -1422,7 +1422,7 @@ export default {
         let _this = this;
         this.$nextTick(() => {
           _this.querySdkflow();
-          _this.querySdkflowTable();
+        //   _this.querySdkflowTable();
           // console.log(this.$refs['hello']);
         });
       } else if(tab.index == 1){
