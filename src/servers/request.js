@@ -40,19 +40,19 @@ var toHideLoading = _.debounce(() => {
     }
 }, 300);
 axios.defaults.timeout = 45000
-// axios.defaults.baseURL = ''
+    // axios.defaults.baseURL = ''
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 
 // http request 拦截器
 axios.interceptors.request.use(
-    
+
     config => {
-        
+
         config.data = JSON.stringify(config.data)
-       
-            if (config.headers.showLoading !== false) {
-                showLoading(config.headers.loadingTarget);
-            }
+
+        if (config.headers.showLoading !== false) {
+            showLoading(config.headers.loadingTarget);
+        }
         return config
     },
     error => {
@@ -95,7 +95,7 @@ axios.interceptors.response.use(
  * @returns {Promise}
  */
 
-export function Get(url, params = {}) {
+export function get(url, params = {}) {
     return new Promise((resolve, reject) => {
         axios.get(url, {
                 params: params

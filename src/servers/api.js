@@ -1,15 +1,14 @@
-
 import axios from 'axios'
- import { get, post } from './request'
+import {get, post } from './request'
 var href = window.location.href
 if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     var serverUrl = 'http://xyj.grapefruitcloud.com'; //PHP服务URL
 } else if (href.indexOf('service.kclgames.com') >= 0) {
     var serverUrl = 'http://service.kclgames.com'; //PHP服务URL
 } else if (href.indexOf('www.luqikang.com') >= 0) {
-    var serverUrl = 'http://www.luqikang.com'; 
+    var serverUrl = 'http://www.luqikang.com';
 } else if (href.indexOf('service.luqikang.com') >= 0) {
-    var serverUrl = 'http://service.luqikang.com'; 
+    var serverUrl = 'http://service.luqikang.com';
 } else if (href.indexOf('zzb.stguarantee.com') >= 0) {
     var serverUrl = 'http://zzb.stguarantee.com'; //阿里云服务URL
 } else {
@@ -18,6 +17,7 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     // var serverUrl = 'http://xyj.grapefruitcloud.com';
 }
 
+const zzzUrl = "http://10.0.0.75:8090";
 export const hostUrl = serverUrl;
 
 //账户
@@ -25,14 +25,12 @@ export const hostUrl = serverUrl;
 export const requestLoginOwn = params => {
     return post(`${serverUrl}/cloud/system/login`, params);
 };
-
-
 //用户管理
 /** 获取用户列表*/
 export const userlist = params => {
-    return post(`${serverUrl}/cloud/system/userlist`, params)
-}
-//添加用户
+        return post(`${serverUrl}/cloud/system/userlist`, params)
+    }
+    //添加用户
 export const userinsert = params => {
     return post(`${serverUrl}/cloud/system/userinsert`, params)
 };
@@ -104,6 +102,11 @@ export const refresh_state = params => {
 //刷新预热管理员端
 export const refresh_state_admin = params => {
     return post(`${serverUrl}/node_mgmt/refresh_state_admin`, params)
+};
+
+//获取预热刷新列表
+export const video_refresh = params => {
+    return post(`${zzzUrl}/accel_manage/video_refresh`, params)
 };
 
 
@@ -208,6 +211,7 @@ export const getvideo = params => {
 /**流量占比图表 */
 export const sdk_flow = params => {
     return post(`${serverUrl}/resource_manage/sdk_flow`, params)
+        // return post(`http://10.0.0.128:8090/resource_manage/sdk_flow`, params)
 };
 /**流量占比列表 */
 export const sdk_flow_table = params => {
@@ -460,4 +464,3 @@ export const export_dataflow_curve_file = (params) => {
 export const export_topisp_accesscnt_curve_file = (params) => {
     return post(`${serverUrl}/file_download/export_topisp_accesscnt_curve_file`, params)
 };
-
