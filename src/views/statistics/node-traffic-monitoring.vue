@@ -533,7 +533,8 @@ export default {
     getNodeTrafficCurve() {
       let params = new Object();
       params.startTs = this.starttime;
-      params.endTs = this.endtime;
+      let nowtime = parseInt(new Date().getTime() / 1000);
+	    params.endTs = this.endtime < nowtime ? this.endtime : nowtime;
       if (this.valueContent) {
         params.urlName = this.valueContent;
       } else {
@@ -945,6 +946,7 @@ export default {
     },
     //自定义时间
     gettimes(cal) {
+        console.log(this.val2);
       // let times = parseInt(new Date(new Date()).getTime() / 1000);
       if(cal == 0){
         this.starttime = this.val2 ? dateToMs(this.val2[0]) : new Date(new Date().toLocaleDateString()).getTime() / 1000;
@@ -1024,6 +1026,7 @@ export default {
       let _this = this;
       // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById("myChartMap2"));
+        myChart.getZr().off('click');
       window.onresize = myChart.resize;
       // 绘制图表
       let options = {
@@ -1156,6 +1159,27 @@ export default {
         ],
       };
       myChart.setOption(options);
+      myChart.getZr().on('click',function(params){
+        //   myChart.getZr().off('click');
+        // 上面这一点是阻止点击事件重复触发
+        let point=[params.offsetX,params.offsetY];
+        if(myChart.containPixel('grid',point)){
+            let xIndex=myChart.convertFromPixel({seriesIndex:0},
+                point)[0];
+            let op=myChart.getOption();
+            let name=op.xAxis[0].data[xIndex];
+				let happynewyear = new Date().getFullYear();
+				let shold_time = name.split(' ')[0];
+				let happynewmonth = Number(shold_time.split('-')[0]) - 1;
+				let happynewday = Number(shold_time.split('-')[1]);
+				_this.showzdy = true;
+				_this.val2 = [
+					new Date(happynewyear, happynewmonth, happynewday, 0, 0),
+					new Date(happynewyear, happynewmonth, happynewday, 23, 59),
+				];
+				_this.gettimes(0);
+        }
+    })
     },
   },
 };

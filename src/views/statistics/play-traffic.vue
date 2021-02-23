@@ -85,7 +85,6 @@
 							</el-select>
 							<el-radio-group
 								v-model="radio"
-								size="medium"
 								@change="select_time()"
 								v-show="!showzdy"
 							>
@@ -108,7 +107,6 @@
 							<el-button
 								type="primary"
 								v-show="showzdy"
-								size="small"
 								style="background:#409EFF;border:#409EFF"
 								@click="setZdy"
 								>自定义</el-button
@@ -253,7 +251,6 @@
 							</el-input>
 							<el-radio-group
 								v-model="radio"
-								size="medium"
 								@change="select_time()"
 								v-show="!showzdy"
 							>
@@ -276,7 +273,6 @@
 							<el-button
 								type="primary"
 								v-show="showzdy"
-								size="small"
 								style="background:#409EFF;border:#409EFF"
 								@click="setZdy"
 								>自定义</el-button
@@ -509,7 +505,6 @@
 							</el-select>
 							<el-radio-group
 								v-model="radio"
-								size="medium"
 								@change="select_time()"
 								v-show="!showzdy"
 							>
@@ -532,7 +527,6 @@
 							<el-button
 								type="primary"
 								v-show="showzdy"
-								size="small"
 								style="background:#409EFF;border:#409EFF"
 								@click="setZdy"
 								>自定义</el-button
@@ -569,6 +563,7 @@ import {
 	getymdtime,
 	getymdtime1,
 	splitTimes,
+	settime,
 } from '../../servers/sevdate';
 import fenye from '@/components/fenye';
 import {
@@ -1183,8 +1178,9 @@ export default {
 		//流量占比图标
 		querySdkflow() {
 			let params = new Object();
+			let nowtime = parseInt(new Date().getTime() / 1000);
 			params.startTs = this.starttime;
-			params.endTs = this.endtime;
+			params.endTs = this.endtime < nowtime ? this.endtime : nowtime;
 			// params.chanId = this.chanid + "";
 			if (this.valuea1) {
 				params.urlName = this.valuea1;
@@ -1222,7 +1218,6 @@ export default {
 				this.starttime,
 				this.endtime
 			);
-
 			sdk_flow(params)
 				.then((res) => {
 					if (res.status == 0) {
@@ -1313,11 +1308,11 @@ export default {
 							this.dataZb4 = res.data.nodepercent
 								? res.data.nodepercent
 								: [];
-							this.dataZb5 = res.data.otherpercent
-								? res.data.otherpercent
-								: [];
-							this.dataZb6 = res.data.overtimepercent
+							this.dataZb5 = res.data.overtimepercent
 								? res.data.overtimepercent
+								: [];
+							this.dataZb6 = res.data.otherpercent
+								? res.data.otherpercent
 								: [];
 
 							this.dataAry = res.data.cdnaactivearray;
@@ -1326,35 +1321,41 @@ export default {
 							this.dataAry3 = res.data.nodearray
 								? res.data.nodearray
 								: [];
-							this.dataAry4 = res.data.otherarray
-								? res.data.otherarray
-								: [];
-							this.dataAry5 = res.data.overtimearray
+							this.dataAry4 = res.data.overtimearray
 								? res.data.overtimearray
 								: [];
+							this.dataAry5 = res.data.otherarray
+								? res.data.otherarray
+								: [];
 						}
-						if (res.data.nodearray) {
-							this.drawLine2(
-								this.timeArrayZb,
-								this.dataZb1,
-								this.dataZb2,
-								this.dataZb3,
-								this.dataZb4,
-								this.dataZb5,
-								this.dataZb6
-							);
-						} else {
-							this.drawLine2(
-								this.timeArrayZb,
-								this.dataZb1,
-								this.dataZb2,
-								this.dataZb3
-							);
-						}
+						this.drawLine2(
+							this.timeArrayZb,
+							this.dataZb1,
+							this.dataZb2,
+							this.dataZb3
+						);
+						//2021-01-27日之前数据格式不一样
+						// if (params.startTs < 1611676800) {
+						// 	this.drawLine2(
+						// 		this.timeArrayZb,
+						// 		this.dataZb1,
+						// 		this.dataZb2,
+						// 		this.dataZb3
+						// 	);
+						// } else {
+						// 	this.drawLine2(
+						// 		this.timeArrayZb,
+						// 		this.dataZb1,
+						// 		this.dataZb2,
+						// 		this.dataZb3,
+						// 		this.dataZb4,
+						// 		this.dataZb5,
+						// 		this.dataZb6
+						// 	);
+						// }
 					}
 				})
 				.catch((error) => {
-					console.log(error);
 				});
 		},
 		//流量占比表
@@ -1411,7 +1412,6 @@ export default {
 					}
 				})
 				.catch((error) => {
-					console.log(error);
 				});
 		},
 
@@ -1933,7 +1933,6 @@ export default {
 				document.getElementById('myChartMap1')
 			);
 			window.onresize = myChart.resize;
-			console.log(this.locationMax);
 			let options = {
 				tooltip: {
 					formatter: function(params, ticket, callback) {
@@ -2024,6 +2023,7 @@ export default {
 			let myChart = this.$echarts.init(
 				document.getElementById('myChartMap2')
 			);
+			myChart.off('click'); // 这里很重要！！！
 			window.onresize = myChart.resize;
 			// 绘制图表
 			let options = {
@@ -2082,15 +2082,11 @@ export default {
 				options.legend.data = [
 					'P2P播放流量',
 					'CDN播放有源流量',
-					'没有可用节点',
-					'打洞超时',
-					'其他',
+					'CDN播放无源流量(没有可用节点、打洞超时、其他)',
 				];
 				options.tooltip = {
 					trigger: 'axis',
 					formatter: function(params) {
-						//  console.log(_this.flowunit)
-						//  console.log(_this.dataAry)
 						//  for(var i=0;i<_this.dataAry.length;i++){
 						return (
 							params[0].axisValue +
@@ -2125,7 +2121,7 @@ export default {
 							'%' +
 							')' +
 							'</br>' +
-							params[3].marker +
+							'&nbsp;&nbsp;&nbsp;&nbsp;' +
 							'打洞超时:' +
 							_this.common.formatByteActive(
 								_this.dataAry4[params[0].dataIndex]
@@ -2135,7 +2131,7 @@ export default {
 							'%' +
 							')' +
 							'</br>' +
-							params[4].marker +
+							'&nbsp;&nbsp;&nbsp;&nbsp;' +
 							'其他:' +
 							_this.common.formatByteActive(
 								_this.dataAry5[params[0].dataIndex]
@@ -2156,7 +2152,11 @@ export default {
 						data: a,
 						barMaxWidth: 30, //柱图宽度
 						itemStyle: {
-							normal: { color: '#D2E9FF' },
+							normal: {
+								color: '#D2E9FF',
+								borderColor: '#fff',
+								borderWidth: 1,
+							},
 						},
 						label: {
 							normal: {
@@ -2183,6 +2183,8 @@ export default {
 						itemStyle: {
 							normal: {
 								color: '#84C1FF',
+								borderColor: '#fff',
+								borderWidth: 1,
 							},
 						},
 
@@ -2203,7 +2205,7 @@ export default {
 						},
 					},
 					{
-						name: '没有可用节点',
+						name: 'CDN播放无源流量(没有可用节点、打洞超时、其他)',
 						type: 'bar',
 						stack: '使用情况',
 						data: n,
@@ -2211,6 +2213,8 @@ export default {
 						itemStyle: {
 							normal: {
 								color: '#00a1ff',
+								borderColor: '#fff',
+								borderWidth: 1,
 							},
 						},
 						label: {
@@ -2230,14 +2234,16 @@ export default {
 						},
 					},
 					{
-						name: '打洞超时',
+						name: 'CDN播放无源流量(没有可用节点、打洞超时、其他)',
 						type: 'bar',
 						stack: '使用情况',
 						data: o,
 						barMaxWidth: 30, //柱图宽度
 						itemStyle: {
 							normal: {
-								color: '#2894FF',
+								color: '#00a1ff',
+								borderColor: '#fff',
+								borderWidth: 1,
 							},
 						},
 						label: {
@@ -2257,14 +2263,16 @@ export default {
 						},
 					},
 					{
-						name: '其他',
+						name: 'CDN播放无源流量(没有可用节点、打洞超时、其他)',
 						type: 'bar',
 						stack: '使用情况',
 						data: v,
 						barMaxWidth: 30, //柱图宽度
 						itemStyle: {
 							normal: {
-								color: '#4160fa',
+								color: '#00a1ff',
+								borderColor: '#fff',
+								borderWidth: 1,
 							},
 						},
 						label: {
@@ -2293,8 +2301,6 @@ export default {
 				options.tooltip = {
 					trigger: 'axis',
 					formatter: function(params) {
-						//  console.log(_this.flowunit)
-						//  console.log(_this.dataAry)
 						//  for(var i=0;i<_this.dataAry.length;i++){
 						return (
 							params[0].axisValue +
@@ -2415,15 +2421,24 @@ export default {
 					},
 				];
 			}
-
-			myChart.setOption(options, true);
+			myChart.setOption(options);
+			myChart.on('click', function(params) {
+				// myChart.off('click');
+				// 如果不加off事件，就会叠加触发
+				let happynewyear = new Date().getFullYear();
+				let shold_time = params.name.split(' ')[0];
+				let happynewmonth = Number(shold_time.split('-')[0]) - 1;
+				let happynewday = Number(shold_time.split('-')[1]);
+				_this.showzdy = true;
+				_this.val2 = [
+					new Date(happynewyear, happynewmonth, happynewday, 0, 0),
+					new Date(happynewyear, happynewmonth, happynewday, 0, 0),
+				];
+				_this.gettimes(0);
+			});
 		},
 
 		drawLine3(a, b, c, d, e) {
-			// console.log(b)
-			// console.log(c)
-			// console.log(d)
-			// console.log(e)
 			var dataTime = a;
 
 			let _this = this;
@@ -2469,7 +2484,6 @@ export default {
 				tooltip: {
 					trigger: 'axis',
 					formatter: function(params) {
-						console.log(_this.flowunit);
 						let str = '';
 						params.forEach((item, index) => {
 							if (index == 0) {

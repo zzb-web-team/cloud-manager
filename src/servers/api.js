@@ -106,7 +106,7 @@ export const refresh_state_admin = params => {
 
 //获取预热刷新列表
 export const video_refresh = params => {
-    return post(`${zzzUrl}/accel_manage/video_refresh`, params)
+    return post(`${serverUrl}/accel_manage/video_refresh`, params)
 };
 
 
