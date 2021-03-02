@@ -69,32 +69,16 @@
           </el-button-group> -->
 					<el-radio-group
 						v-model="radio"
-						size="medium"
 						@change="select_time()"
 						v-show="!showzdy"
 					>
-						<el-radio-button size="small" label="1"
-							>今天</el-radio-button
-						>
-						<el-radio-button size="small" label="2"
-							>昨天</el-radio-button
-						>
-						<el-radio-button size="small" label="3"
-							>近7天</el-radio-button
-						>
-						<el-radio-button size="small" label="4"
-							>近30天</el-radio-button
-						>
-						<el-radio-button size="small" label="5"
-							>自定义</el-radio-button
-						>
+						<el-radio-button label="1">今天</el-radio-button>
+						<el-radio-button label="2">昨天</el-radio-button>
+						<el-radio-button label="3">近7天</el-radio-button>
+						<el-radio-button label="4">近30天</el-radio-button>
+						<el-radio-button label="5">自定义</el-radio-button>
 					</el-radio-group>
-					<el-button
-						type="primary"
-						v-show="showzdy"
-						size="small"
-						style="background:#409EFF;border:#409EFF"
-						@click="setZdy"
+					<el-button type="primary" v-show="showzdy" @click="setZdy"
 						>自定义</el-button
 					>
 					<el-date-picker
@@ -108,7 +92,18 @@
 						align="left"
 						@change="gettimes"
 					></el-date-picker>
-					<!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button> -->
+					<el-button
+						style="margin-left:10px;"
+						type="primary"
+						@click="seachtu(1)"
+						>确定</el-button
+					>
+					<el-button
+						style="margin-left:10px;"
+						type="primary"
+						@click="reset()"
+						>重置</el-button
+					>
 				</div>
 				<div class="user_item">
 					<div class="item_left" style="width:100%;border:none;">
@@ -912,8 +907,7 @@ export default {
 						this.total_cnt = res.data.totalCnt;
 					}
 				})
-				.catch((err) => {
-				});
+				.catch((err) => {});
 		},
 
 		seachtu(data) {
@@ -927,6 +921,15 @@ export default {
 			this.pageNo = 1;
 			this.gettable1();
 			this.gettable2();
+		},
+		reset() {
+			this.value1Activechanid = '';
+			this.valuedomian = '';
+			this.value1 = '';
+			this.value1acce1 = '';
+			this.radio = 1;
+			this.pageNo = 1;
+			this.select_time();
 		},
 		//今天
 		today(data) {

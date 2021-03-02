@@ -23,17 +23,17 @@
 
           <!-- <span>创建日期：</span> -->
           <el-date-picker v-model="value1" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" @change="gettimes"></el-date-picker>
-          <!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
+          <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button>
           <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
         </div>
       </div>
       <!-- 表格 -->
       <div class="con_lable">
-        <div style="padding:10px;display: flex;justify-content: space-between;">
+        <div style="padding:10px 0;display: flex;justify-content: space-between;">
           <div>
             <el-button type="primary" @click="addUrl">
               创建加速内容
-              <span class="el-icon-circle-plus-outline"></span>
+              <!-- <span class="el-icon-circle-plus-outline"></span> -->
             </el-button>
             <el-button type="primary" plain @click="onImport">批量导入加速内容</el-button>
             <!-- <el-button type="primary" plain @click="setdomainlist">批量管理标签</el-button> -->

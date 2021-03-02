@@ -87,6 +87,7 @@
 								v-model="radio"
 								@change="select_time()"
 								v-show="!showzdy"
+								style="white-space:nowrap;"
 							>
 								<el-radio-button size="small" label="1"
 									>今天</el-radio-button
@@ -122,7 +123,18 @@
 								align="left"
 								@change="gettimes(0)"
 							></el-date-picker>
-							<!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button> -->
+							<el-button
+								style="margin-left:10px;"
+								type="primary"
+								@click="seachtu(3)"
+								>确定</el-button
+							>
+							<el-button
+								style="margin-left:10px;"
+								type="primary"
+								@click="reset_one"
+								>重置</el-button
+							>
 						</div>
 						<div class="user_item">
 							<div class="item_left">
@@ -542,7 +554,18 @@
 								align="left"
 								@change="gettimes(1)"
 							></el-date-picker>
-							<!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(4)">确定</el-button> -->
+							<el-button
+								style="margin-left:10px;"
+								type="primary"
+								@click="seachtu(4)"
+								>确定</el-button
+							>
+							<el-button
+								style="margin-left:10px;"
+								type="primary"
+								@click="reset_two"
+								>重置</el-button
+							>
 						</div>
 						<div class="device_form" style>
 							<div
@@ -1355,8 +1378,7 @@ export default {
 						// }
 					}
 				})
-				.catch((error) => {
-				});
+				.catch((error) => {});
 		},
 		//流量占比表
 		querySdkflowTable() {
@@ -1411,8 +1433,7 @@ export default {
 						this.total_cnt1 = res.data.totalCnt;
 					}
 				})
-				.catch((error) => {
-				});
+				.catch((error) => {});
 		},
 
 		//流量监控图表
@@ -1746,6 +1767,27 @@ export default {
 			} else if (data == 4) {
 				this.querySdkflowControl();
 			}
+		},
+		//重置--播放流量占比
+		reset_one() {
+			this.value1Activechanid = '';
+			this.value1Activechanidactive = '';
+			this.valuea1 = '';
+			this.value1acce1 = '';
+			this.valueChanel = '';
+			this.radio = 1;
+			this.pageNo = 1;
+			this.select_time();
+		},
+		//重置--播放流量占比
+		reset_two() {
+			this.value1Activechanid = '';
+			this.value1Activechanidactive = '';
+			this.valuea1 = '';
+			this.valueChanel1 = '';
+			this.radio = 1;
+            this.pageNo = 1;
+			this.select_time();
 		},
 		//今天
 		today(data) {

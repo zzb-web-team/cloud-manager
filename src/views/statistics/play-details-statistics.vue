@@ -20,6 +20,7 @@
                   <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>                
                 <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
+                <el-button type="primary" @click="onChanges">确认</el-button>
                 <el-button type="primary" @click="reset(0)">重置</el-button>
                 </div>
                 <div class="devide_table">
@@ -146,6 +147,7 @@
                             <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
                           </el-select>
                           <el-date-picker style="margin-right:10px;" v-model="val3" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
+                           <el-button type="primary" @click="onChanges">确认</el-button>
                           <el-button type="primary" @click="reset(1)">重置</el-button>
                         </el-row>
                     </el-form>

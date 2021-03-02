@@ -29,6 +29,7 @@
                         <el-button type="primary" @click="searchInfo">确定</el-button>
                     </el-form-item>
                     <el-form-item> -->
+                         <el-button type="primary" @click="searchInfo">确定</el-button>
                         <el-button type="primary" @click="reset()">重置</el-button>
                     <!-- </el-form-item> -->
                 </el-row>
@@ -39,7 +40,7 @@
                 <el-col :span="6">
                     <el-button type="primary" @click="addAccout">
                         新建
-                        <span class="el-icon-plus"></span>
+                        <!-- <span class="el-icon-plus"></span> -->
                     </el-button>
                 </el-col>
             </el-row>

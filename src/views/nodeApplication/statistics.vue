@@ -24,26 +24,24 @@
 
               <el-radio-group
                 v-model="radio"
-                size="medium"
                 @change="select_time()"
                 v-show="!showzdy"
               >
-                <el-radio-button size = "small" label="1">今天</el-radio-button >
-                <el-radio-button size = "small" label="2">昨天</el-radio-button >
-                <el-radio-button size = "small" label="3">近7天</el-radio-button >
-                <el-radio-button size = "small" label="4">近30天</el-radio-button >
-                <el-radio-button size = "small" label="5">自定义</el-radio-button >
+                <el-radio-button  label="1">今天</el-radio-button >
+                <el-radio-button  label="2">昨天</el-radio-button >
+                <el-radio-button  label="3">近7天</el-radio-button >
+                <el-radio-button  label="4">近30天</el-radio-button >
+                <el-radio-button  label="5">自定义</el-radio-button >
               </el-radio-group>
               <el-button
                 type="primary"
                 v-show="showzdy"
-                 size = "small"
-                style="background:#409EFF;border:#409EFF"
                 @click="setZdy"
                 >自定义</el-button
 						  >
               <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-              <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(0)">确定</el-button> -->
+              <el-button style="margin-left:10px;" type="primary" @click="onChanges">确定</el-button>
+            <el-button style="margin-left:10px;" type="primary" @click="reset_pvpu">重置</el-button>
             </div>
 
             <div class="user_item">
@@ -84,26 +82,24 @@
               </el-select>
               <el-radio-group
                 v-model="radio"
-                size="medium"
                 @change="select_time()"
                 v-show="!showzdy"
               >
-                <el-radio-button size = "small" label="1">今天</el-radio-button >
-                <el-radio-button size = "small" label="2">昨天</el-radio-button >
-                <el-radio-button size = "small" label="3">近7天</el-radio-button >
-                <el-radio-button size = "small" label="4">近30天</el-radio-button >
-                <el-radio-button size = "small" label="5">自定义</el-radio-button >
+                <el-radio-button  label="1">今天</el-radio-button >
+                <el-radio-button  label="2">昨天</el-radio-button >
+                <el-radio-button  label="3">近7天</el-radio-button >
+                <el-radio-button  label="4">近30天</el-radio-button >
+                <el-radio-button  label="5">自定义</el-radio-button >
               </el-radio-group>
               <el-button
                 type="primary"
                 v-show="showzdy"
-                 size = "small"
-                style="background:#409EFF;border:#409EFF"
                 @click="setZdy"
                 >自定义</el-button
 						  >
               <el-date-picker v-show="showzdy" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
-              <!-- <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button> -->
+              <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
+               <el-button style="margin-left:10px;" type="primary" @click="reset_map">重置</el-button>
             </div>
             <div class="device_form" style>
               <!-- <el-button-group style="display: flex;justify-content: center;">
@@ -669,6 +665,25 @@ export default {
           this.getcure(2)
         }
       }
+    },
+    reset_pvpu(){
+        this.value1Activechanid="";
+        this.valueDomain="";
+        this.value1fileName="";
+        this.valueacce="";
+        this.radio=1;
+        this.val2=[];
+        this.select_time();
+
+    },
+    reset_map(){
+         this.value1Activechanid="";
+        this.valueDomain="";
+        this.value1fileName="";
+        this.valueacce="";
+        this.radio=1;
+        this.val2=[];
+        this.select_time();
     },
     //获取页码
     handleCurrentChange1(pages) {

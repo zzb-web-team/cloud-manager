@@ -63,7 +63,7 @@
 						end-placeholder="结束日期"
 						@change="gettimes"
 					></el-date-picker>
-					<!-- <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button> -->
+					<el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button>
 					<el-button
 						type="primary"
 						@click="reset()"
@@ -74,7 +74,7 @@
 			</div>
 			<!-- 表格 -->
 			<div class="con_lable">
-				<div style="padding:10px;text-align: left;">
+				<div style="padding:10px 0;text-align: left;">
 					<el-button type="primary" @click="toLink('first')"
 						>刷新</el-button
 					>
