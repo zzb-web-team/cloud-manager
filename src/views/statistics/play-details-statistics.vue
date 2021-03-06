@@ -5,23 +5,32 @@
       <div class="resources_con">
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="播放信息统计" name="first">
-                <div style="display: flex;flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-                <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
-                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <el-input v-model="valuePlayUrl" placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" @change="onChanges">
-                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
-                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                </el-input>
-                <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="请选择播放区域" :options="hashidSet" ref="cascaderAddr" :show-all-levels="false" v-model="valueRegion" @change="onChanges"></el-cascader>
-                <el-select v-model="valueIsp" placeholder="请选择运营商网络" style="width: 10%;margin-right: 10px;" @change="onChanges">
-                  <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
-                </el-select>                
-                <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
-                <el-button type="primary" @click="onChanges">确认</el-button>
-                <el-button type="primary" @click="reset(0)">重置</el-button>
+                <div style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+                    <div>  
+                        <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                        </el-input>
+                        <el-input v-model="valuePlayUrl" placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" @change="onChanges">
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                        </el-input>
+                        <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                        </el-input>
+                        <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="请选择播放区域" :options="hashidSet" ref="cascaderAddr" :show-all-levels="false" v-model="valueRegion" @change="onChanges"></el-cascader>
+                        <el-select v-model="valueIsp" placeholder="请选择运营商网络" style="width: 10%;margin-right: 10px;" @change="onChanges">
+                        <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
+                        </el-select>                
+                        <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
+                        <el-button type="primary" @click="onChanges">确认</el-button>
+                        <el-button type="primary" @click="reset(0)">重置</el-button>
+                    </div>
+                <div style="display:flex;white-space:nowrap;">
+						<span style="margin-right:5px;">使用缓存</span>
+						<el-switch
+							v-model="useCache"
+							active-color="#297AFF"
+						></el-switch>
+				</div>
                 </div>
                 <div class="devide_table">
                   <div style="display: flex;justify-content: flex-end;margin-right: 6px;">
@@ -128,7 +137,8 @@
             <el-tab-pane label="播放异常统计" name="second">
                 <div class="device_form">
                     <el-form ref="form">
-                        <el-row type="flex">
+                        <el-row type="flex" justify="space-between" style="align-items: center;flex-wrap: nowrap;">
+                            <div>
                           <el-input placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" v-model="valueChannelId" @change="onChanges">
                               <i slot="prefix" class="el-input__icon el-icon-search"></i>
                           </el-input>
@@ -149,6 +159,14 @@
                           <el-date-picker style="margin-right:10px;" v-model="val3" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
                            <el-button type="primary" @click="onChanges">确认</el-button>
                           <el-button type="primary" @click="reset(1)">重置</el-button>
+                          </div>
+                             <div style="display:flex;white-space:nowrap;">
+						<span style="margin-right:5px;">使用缓存</span>
+						<el-switch
+							v-model="useCache"
+							active-color="#297AFF"
+						></el-switch>
+				</div>
                         </el-row>
                     </el-form>
                 </div>
@@ -511,6 +529,7 @@ export default {
       chanid: "",
       flowunit: "",
       timeArrayZb: [],
+      useCache:true,
     };
   },
   filters: {
@@ -684,6 +703,7 @@ export default {
     //播放信息统计
     videoInfoStatistics() {
       let params = new Object();
+      params.useCache = this.useCache == true ? 1 : 0;
       params.pageNo = this.pageNo - 1;
       params.pageSize = this.pageSize;
       params.startTs = this.starttime;
@@ -733,6 +753,7 @@ export default {
 
     videoExceptionStatistics(){
       let params = new Object();
+      params.useCache = this.useCache == true ? 1 : 0;
       params.pageNo = this.pageNo1 - 1;
       params.pageSize = this.pageSize1;
       params.startTs = this.starttime;
@@ -782,6 +803,7 @@ export default {
     //导出播放信息统计
     toExportVideoInfoExcel(){
       let params = new Object();
+      params.useCache = this.useCache == true ? 1 : 0;
       params.pageNo = this.pageNo - 1;
       params.pageSize = this.pageSize;
       params.startTs = this.starttime;
@@ -833,6 +855,7 @@ export default {
     //导出播放异常统计
     toExportVideoExceptionExcel(){
       let params = new Object();
+      params.useCache = this.useCache == true ? 1 : 0;
       params.pageNo = this.pageNo1 - 1;
       params.pageSize = this.pageSize1;
       params.startTs = this.starttime;
@@ -882,6 +905,7 @@ export default {
     },
     //选项卡
     handleClick(tab, event) {
+       this.useCache = true;
       this.valuePlayUrl = "";
       this.valueDomain = "";
       this.valueContent = "";

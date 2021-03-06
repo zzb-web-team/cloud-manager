@@ -4,60 +4,60 @@
 		<div class="user-title" style="display: flex;flex-flow: column;">
 			<div class="resources_con">
 				<div
-					style="display: flex;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;"
+					style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;"
 				>
-					<el-input
-						v-model="value1Activechanid"
-						placeholder="请输入渠道ID"
-						style="width:160px;margin-right: 10px;"
-						@keyup.enter.native="onChanges"
-					>
-						<i
-							slot="prefix"
-							class="el-input__icon el-icon-search"
-							@click="onChanges()"
-						></i>
-					</el-input>
-					<el-input
-						v-model="valuedomian"
-						placeholder="请输入域名"
-						style="width:160px;margin-right: 10px;"
-						@keyup.enter.native="onChanges"
-					>
-						<i
-							slot="prefix"
-							class="el-input__icon el-icon-search"
-							@click="onChanges()"
-						></i>
-					</el-input>
-					<el-input
-						v-model="value1"
-						placeholder="请输入加速内容名称"
-						style="width:160px;margin-right: 10px;"
-						@keyup.enter.native="onChanges"
-					>
-						<i
-							slot="prefix"
-							class="el-input__icon el-icon-search"
-							@click="onChanges()"
-						></i>
-					</el-input>
-					<el-select
-						v-model="value1acce1"
-						placeholder="全部节点渠道"
-						style="width: 10%;margin-right: 10px;"
-						@change="onChanges"
-					>
-						<el-option label="全部" value="*"></el-option>
-						<el-option
-							v-for="(item, index) in hashidSets"
-							:key="index"
-							:label="item.label"
-							:value="item.value"
-						></el-option>
-					</el-select>
-
-					<!-- <el-button-group>
+					<div>
+						<el-input
+							v-model="value1Activechanid"
+							placeholder="请输入渠道ID"
+							style="width:160px;margin-right: 10px;"
+							@keyup.enter.native="onChanges"
+						>
+							<i
+								slot="prefix"
+								class="el-input__icon el-icon-search"
+								@click="onChanges()"
+							></i>
+						</el-input>
+						<el-input
+							v-model="valuedomian"
+							placeholder="请输入域名"
+							style="width:160px;margin-right: 10px;"
+							@keyup.enter.native="onChanges"
+						>
+							<i
+								slot="prefix"
+								class="el-input__icon el-icon-search"
+								@click="onChanges()"
+							></i>
+						</el-input>
+						<el-input
+							v-model="value1"
+							placeholder="请输入加速内容名称"
+							style="width:160px;margin-right: 10px;"
+							@keyup.enter.native="onChanges"
+						>
+							<i
+								slot="prefix"
+								class="el-input__icon el-icon-search"
+								@click="onChanges()"
+							></i>
+						</el-input>
+						<el-select
+							v-model="value1acce1"
+							placeholder="全部节点渠道"
+							style="width: 10%;margin-right: 10px;"
+							@change="onChanges"
+						>
+							<el-option label="全部" value="*"></el-option>
+							<el-option
+								v-for="(item, index) in hashidSets"
+								:key="index"
+								:label="item.label"
+								:value="item.value"
+							></el-option>
+						</el-select>
+						<!-- <el-button-group>
             <el-button v-show="!shoudzyx" @click="today()" label="one">今天</el-button>
             <el-button v-show="!shoudzyx" @click="yesterday()" label="two">昨天</el-button>
             <el-button v-show="!shoudzyx" @click="sevendat()" label="three">近7天</el-button>
@@ -67,43 +67,54 @@
               <i class="el-icon-date"></i>
             </el-button>
           </el-button-group> -->
-					<el-radio-group
-						v-model="radio"
-						@change="select_time()"
-						v-show="!showzdy"
-					>
-						<el-radio-button label="1">今天</el-radio-button>
-						<el-radio-button label="2">昨天</el-radio-button>
-						<el-radio-button label="3">近7天</el-radio-button>
-						<el-radio-button label="4">近30天</el-radio-button>
-						<el-radio-button label="5">自定义</el-radio-button>
-					</el-radio-group>
-					<el-button type="primary" v-show="showzdy" @click="setZdy"
-						>自定义</el-button
-					>
-					<el-date-picker
-						v-show="showzdy"
-						style="margin-left:10px;"
-						v-model="val2"
-						type="daterange"
-						range-separator="至"
-						start-placeholder="开始日期"
-						end-placeholder="结束日期"
-						align="left"
-						@change="gettimes"
-					></el-date-picker>
-					<el-button
-						style="margin-left:10px;"
-						type="primary"
-						@click="seachtu(1)"
-						>确定</el-button
-					>
-					<el-button
-						style="margin-left:10px;"
-						type="primary"
-						@click="reset()"
-						>重置</el-button
-					>
+						<el-radio-group
+							v-model="radio"
+							@change="select_time()"
+							v-show="!showzdy"
+						>
+							<el-radio-button label="1">今天</el-radio-button>
+							<el-radio-button label="2">昨天</el-radio-button>
+							<el-radio-button label="3">近7天</el-radio-button>
+							<el-radio-button label="4">近30天</el-radio-button>
+							<el-radio-button label="5">自定义</el-radio-button>
+						</el-radio-group>
+						<el-button
+							type="primary"
+							v-show="showzdy"
+							@click="setZdy"
+							>自定义</el-button
+						>
+						<el-date-picker
+							v-show="showzdy"
+							style="margin-left:10px;"
+							v-model="val2"
+							type="daterange"
+							range-separator="至"
+							start-placeholder="开始日期"
+							end-placeholder="结束日期"
+							align="left"
+							@change="gettimes"
+						></el-date-picker>
+						<el-button
+							style="margin-left:10px;"
+							type="primary"
+							@click="seachtu(1)"
+							>确定</el-button
+						>
+						<el-button
+							style="margin-left:10px;"
+							type="primary"
+							@click="reset()"
+							>重置</el-button
+						>
+					</div>
+					<div style="display:flex;white-space:nowrap;">
+						<span style="margin-right:5px;">使用缓存</span>
+						<el-switch
+							v-model="useCache"
+							active-color="#297AFF"
+						></el-switch>
+					</div>
 				</div>
 				<div class="user_item">
 					<div class="item_left" style="width:100%;border:none;">
@@ -318,6 +329,7 @@ export default {
 			valuea4: '',
 			tablecdn: [],
 			activeName: 'first',
+			useCache: true,
 			pickerOptions: {
 				shortcuts: [
 					{
@@ -549,6 +561,7 @@ export default {
 			let params = new Object();
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
+			params.useCache = this.useCache == true ? 1 : 0;
 			// params.chanId = this.chanid + "";
 			if (this.value1) {
 				params.urlName = this.value1;
@@ -737,6 +750,7 @@ export default {
 			let params = new Object();
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
+			params.useCache = this.useCache == true ? 1 : 0;
 			// params.chanId = this.chanid + "";
 			if (this.value1) {
 				params.urlName = this.value1;
@@ -860,6 +874,7 @@ export default {
 			this.dataFlowArray = [];
 			this.timeArray = [];
 			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			let nowtime = parseInt(new Date().getTime() / 1000);
 			params.startTs = this.starttime;
 			params.endTs = this.endtime < nowtime ? this.endtime : nowtime;
