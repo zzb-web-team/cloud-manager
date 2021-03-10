@@ -581,6 +581,24 @@ body {
     box-shadow: -1px 0 0 0 #297AFF;
 }
 
+.unprocessed_dialog .el-dialog {
+    width: 320px !important;
+    margin-top: 34vh !important;
+    padding-right: 0;
+    border-radius: 8px;
+    p {
+        text-align: center;
+        font-weight: 600;
+    }
+    .dialog-footer {
+        margin-bottom: 20px;
+    }
+    .el-button {
+        border-radius: 8px;
+        padding: 9px 25px;
+    }
+}
+
 // //滚动条的宽度
 // ::-webkit-scrollbar {
 //     width: 5px;

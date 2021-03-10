@@ -59,243 +59,249 @@ import playDetails from "@/views/statistics/play-details-statistics";
 import sdkStatistics from "@/views/statistics/sdk-statistics";
 
 
+//未处理访问请求
+import unprocessedVisits from "@/views/utreated/unprocessed_visits.vue";
+import unprocessedTab from "@/views/utreated/unprocessed_tab.vue";
 
 
 Vue.use(Router);
 
 export default new Router({
-  routes: [
-    {
-      path: "/",
-      name: "登陆",
-      component: log,
-      hidden: true,
-    },
-    {
-      path: "/home_two",
-      name: "后台管理",
-      component: index,
-      hidden: true,
-      icon: "iconfont icon-guanxiaobaotubiao09",
-      children: [
-        {
-          path: "/user",
-          name: "后台账户",
-          component: user,
+    routes: [{
+            path: "/",
+            name: "登陆",
+            component: log,
+            hidden: true,
         },
         {
-          path: "/userli",
-          name: "用户列表",
-          component: userli,
-          hidden: true,
-        },
-        {
-          path: "/user_center",
-          name: "用户列表",
-          component: user_center,
-          hidden: true,
-        },
-        
-      ],
-    },
-    {
-      path: "/a",
-      name: "用户管理",
-      component: index,
-      icon: "iconfont icon-guanxiaobaotubiao09",
-      children: [
-        {
-          path: "/operating_user",
-          name: "注册用户",
-          component: operating_user,
-        },
-        {
-          path: "/useInfo",
-          name: "用户详情",
-          component: useInfo,
-          hidden: true,
-        },
-      ],
-    },
-    {
-      path: "/b",
-      name: "加速配置管理",
-      component: index,
-      icon: "iconfont icon-jiankong",
-      children: [
-        {
-          path: "/accelerate_management",
-          name: "域名管理",
-          component: accelerate_management,
-          // hidden: true
-        },
-        {
-          path: "/domain_management",
-          name: "点播加速管理",
-          component: domain_management,
-          // hidden: true
-        },
-
-        {
-          path: "/batch_management",
-          name: "批量管理",
-          component: batch_management,
-          hidden: true,
-        },
-        {
-          path: "/back_source",
-          name: "URL配置",
-          component: back_source,
-          hidden: true,
-        },
-        {
-          path: "/add_url",
-          name: "添加URL",
-          component: add_url,
-          hidden: true,
-        },
-        {
-          path: "/copy",
-          name: "复制配置",
-
-          component: copy,
-          hidden: true,
-        },
-        {
-          path: "/upload",
-          name: "文件上传",
-          component: upload,
-          hidden: true,
-        },
-        {
-          path: "/yure_management",
-          name: "刷新预热管理",
-          component: yure_management,
-        },
-        {
-          path: "/yure_management1",
-          name: "预热/管理",
-          component: yure_management1,
-          hidden: true,
-        },
-      ],
-    },
-    {
-      path: "/c",
-      name: "点播 SDK管理",
-      icon: "iconfont icon-jiedian1",
-      component: index,
-      children: [
-        {
-          path: "/node_information",
-          name: "点播SDK发布",
-          component: node_information,
-        },
-      ],
-    },
-
-    {
-      path: "/home_fosdr",
-      name: "数据中心",
-      component: index,
-      icon: "iconfont icon-tongji",
-      children: [
-        {
-          path: "/gewsrg",
-          name: "监控统计",
-          component: home_two,
-          hidden: true,
-          children: [
-            {
-              path: "/nodeMap1",
-              name: "资源监控",
-              component: nodeMap1,
-            },    
-          ],
-        },
-        {
-          path: "/gewsrg2",
-          name: "节点流量统计",
-          component: home_two,
-          children: [
-            {
-              path: "/usageindex",
-              name: "节点流量用量",
-              component: usageindex,
-            },
-            {
-              path: "/trafficMonitor",
-              name: "节点流量监控",
-              component: trafficMonitor,
-            },
-          ],
-        },
-        {
-          path: "/gewsrg3",
-          name: "播放统计",
-          component: home_two,
-          children: [
-            {
-              path: "/playTraffic",
-              name: "播放流量",
-              component: playTraffic,
-            },
-            {
-              path: "/statistics",
-              name: "访问统计",
-              component: statistics,
-            },
-            {
-              path: "/playDetails",
-              name: "播放详情统计",
-              component: playDetails,
-              // hidden: true,
-            },
-          ],
-        },
-        {
-          path: "/gewsrg1",
-          name: "加速日志",
-          component: home_three,
-          hidden: true,
-          children: [
-              {
-                path: "/ipflow",
-                name: "点播加速日志",
-                component: ipflow,
-              },
+            path: "/home_two",
+            name: "后台管理",
+            component: index,
+            hidden: true,
+            icon: "iconfont icon-guanxiaobaotubiao09",
+            children: [{
+                    path: "/user",
+                    name: "后台账户",
+                    component: user,
+                },
                 {
-                path: "/fs_storage",
-                name: "视频点播日志",
-                  component: fs_storage,
-              },
-          ],
+                    path: "/userli",
+                    name: "用户列表",
+                    component: userli,
+                    hidden: true,
+                },
+                {
+                    path: "/user_center",
+                    name: "用户列表",
+                    component: user_center,
+                    hidden: true,
+                },
+
+            ],
         },
         {
-          path: "/sdkStatistics",
-          name: "SDK统计",
-          // hidden: true,
-          component: sdkStatistics,
+            path: "/a",
+            name: "用户管理",
+            component: index,
+            icon: "iconfont icon-guanxiaobaotubiao09",
+            children: [{
+                    path: "/operating_user",
+                    name: "注册用户",
+                    component: operating_user,
+                },
+                {
+                    path: "/useInfo",
+                    name: "用户详情",
+                    component: useInfo,
+                    hidden: true,
+                },
+            ],
         },
-      ],
-    },
-    {
-      path: "/f",
-      name: "后台管理",
-      component: index,
-      icon: "iconfont icon-guanli",
-      children: [
         {
-          path: "/user",
-          name: "后台账户",
-          component: user,
+            path: "/b",
+            name: "加速配置管理",
+            component: index,
+            icon: "iconfont icon-jiankong",
+            children: [{
+                    path: "/accelerate_management",
+                    name: "域名管理",
+                    component: accelerate_management,
+                    // hidden: true
+                },
+                {
+                    path: "/domain_management",
+                    name: "点播加速管理",
+                    component: domain_management,
+                    // hidden: true
+                },
+
+                {
+                    path: "/batch_management",
+                    name: "批量管理",
+                    component: batch_management,
+                    hidden: true,
+                },
+                {
+                    path: "/back_source",
+                    name: "URL配置",
+                    component: back_source,
+                    hidden: true,
+                },
+                {
+                    path: "/add_url",
+                    name: "添加URL",
+                    component: add_url,
+                    hidden: true,
+                },
+                {
+                    path: "/copy",
+                    name: "复制配置",
+
+                    component: copy,
+                    hidden: true,
+                },
+                {
+                    path: "/upload",
+                    name: "文件上传",
+                    component: upload,
+                    hidden: true,
+                },
+                {
+                    path: "/yure_management",
+                    name: "刷新预热管理",
+                    component: yure_management,
+                },
+                {
+                    path: "/yure_management1",
+                    name: "预热/管理",
+                    component: yure_management1,
+                    hidden: true,
+                },
+            ],
         },
         {
-          path: "/operation_management",
-          name: "操作日志",
-          component: operation_management,
+            path: "/c",
+            name: "点播 SDK管理",
+            icon: "iconfont icon-jiedian1",
+            component: index,
+            children: [{
+                path: "/node_information",
+                name: "点播SDK发布",
+                component: node_information,
+            }, ],
         },
-      ],
-    },
-  ],
+
+        {
+            path: "/home_fosdr",
+            name: "数据中心",
+            component: index,
+            icon: "iconfont icon-tongji",
+            children: [{
+                    path: "/gewsrg",
+                    name: "监控统计",
+                    component: home_two,
+                    hidden: true,
+                    children: [{
+                        path: "/nodeMap1",
+                        name: "资源监控",
+                        component: nodeMap1,
+                    }, ],
+                },
+                {
+                    path: "/gewsrg2",
+                    name: "节点流量统计",
+                    component: home_two,
+                    children: [{
+                            path: "/usageindex",
+                            name: "节点流量用量",
+                            component: usageindex,
+                        },
+                        {
+                            path: "/trafficMonitor",
+                            name: "节点流量监控",
+                            component: trafficMonitor,
+                        },
+                    ],
+                },
+                {
+                    path: "/gewsrg3",
+                    name: "播放统计",
+                    component: home_two,
+                    children: [{
+                            path: "/playTraffic",
+                            name: "播放流量",
+                            component: playTraffic,
+                        },
+                        {
+                            path: "/statistics",
+                            name: "访问统计",
+                            component: statistics,
+                        },
+                        {
+                            path: "/playDetails",
+                            name: "播放详情统计",
+                            component: playDetails,
+                            // hidden: true,
+                        },
+                    ],
+                },
+                {
+                    path: "/gewsrg1",
+                    name: "加速日志",
+                    component: home_three,
+                    hidden: true,
+                    children: [{
+                            path: "/ipflow",
+                            name: "点播加速日志",
+                            component: ipflow,
+                        },
+                        {
+                            path: "/fs_storage",
+                            name: "视频点播日志",
+                            component: fs_storage,
+                        },
+                    ],
+                },
+                {
+                    path: "/sdkStatistics",
+                    name: "SDK统计",
+                    // hidden: true,
+                    component: sdkStatistics,
+                },
+            ],
+        },
+        {
+            path: "/g",
+            name: "未处理访问请求",
+            component: index,
+            icon: "iconfont icon-guanli",
+            children: [{
+                path: "/unprocessedVisits",
+                name: "未处理访问请求",
+                component: unprocessedVisits,
+            }, {
+                path: "/unprocessedTab",
+                name: "未处理访问列表",
+                component: unprocessedTab,
+                hidden: true,
+            }],
+        },
+        {
+            path: "/f",
+            name: "后台管理",
+            component: index,
+            icon: "iconfont icon-guanli",
+            children: [{
+                    path: "/user",
+                    name: "后台账户",
+                    component: user,
+                },
+                {
+                    path: "/operation_management",
+                    name: "操作日志",
+                    component: operation_management,
+                },
+            ],
+        },
+    ],
 });

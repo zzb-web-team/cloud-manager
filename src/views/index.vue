@@ -405,7 +405,7 @@ export default {
       //margin-top: -60px;
     }
     .content-container {
-      // background: #f1f2f7;
+      background: #ffffff;
       flex: 1;
       // position: absolute;
       // right: 0px;
