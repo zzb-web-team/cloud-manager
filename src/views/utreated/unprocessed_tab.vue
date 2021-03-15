@@ -5,19 +5,19 @@
 			<div class="title_seach">
 				<div class="title_seach_left">
 					<el-input
-						v-model="Activechanid"
+						v-model="channeld"
 						placeholder="请输入渠道ID"
 						size="small"
 						@change="onChanges"
 					></el-input>
 					<el-input
-						v-model="jiasu"
+						v-model="domain"
 						placeholder="请输入加速内容名称"
 						size="small"
 						@change="onChanges"
 					></el-input>
 					<el-input
-						v-model="cdnurl"
+						v-model="urlName"
 						placeholder="请输入CDN地址"
 						size="small"
 						@change="onChanges"
@@ -52,37 +52,48 @@
 					<el-button type="primary" size="small" @click="onChanges"
 						>查询</el-button
 					>
-					<el-button size="small">重置</el-button>
+					<el-button size="small" @click="reset">重置</el-button>
 				</div>
 			</div>
 		</div>
-		<div class="content" ref="scrollerHeight">
+		<div class="content" ref="box_rHeight">
 			<div class="content_top">
 				<el-button size="small" type="text" @click="export_exc"
 					><img src="../../assets/img/btn_img.png" alt=""
 				/></el-button>
 			</div>
-			<el-table :data="tableData" stripe style="width: 100%">
+			<el-table
+				:data="tableData"
+				stripe
+				style="width: 100%"
+				:cell-style="rowClass"
+				:header-cell-style="headClass"
+			>
 				<el-table-column
 					type="index"
 					width="50"
 					label="序号"
 				></el-table-column>
-				<el-table-column prop="date" label="访问总次数" width="180">
-				</el-table-column>
-				<el-table-column prop="name" label="渠道ID" width="220">
-				</el-table-column>
 				<el-table-column
-					prop="address"
-					label="加速内容名称"
-					width="220"
+					prop="visit_cnt"
+					label="访问总次数"
+					width="180"
 				>
 				</el-table-column>
-				<el-table-column prop="address" label="CDN地址">
+				<el-table-column prop="channelId" label="渠道ID" width="220">
+				</el-table-column>
+				<el-table-column prop="domain" label="加速内容名称" width="220">
+				</el-table-column>
+				<el-table-column prop="urlName" label="CDN地址">
 				</el-table-column>
 			</el-table>
 			<div class="content_bottom">
-				<fenye></fenye>
+				<fenye
+					:currentPage="pageNo"
+					@handleCurrentChange="handleCurrentChange"
+					@handleSizeChange="handleSizeChange"
+					:pagesa="total_cnt"
+				></fenye>
 			</div>
 		</div>
 		<!-- 弹窗 -->
@@ -106,38 +117,52 @@
 </template>
 
 <script>
+import { ipfs_unhandle_req_list } from '../../servers/api';
 import fenye from '@/components/fenye';
 export default {
 	data() {
 		return {
 			clientHeight: '',
-			Activechanid: '',
-			jiasu: '',
-			cdnurl: '',
+			channeld: '',
+			domain: '',
+			urlName: '',
 			radio: '今天',
 			search_time: '',
 			show_time: false,
 			dialogVisible: false,
+			starttime: '',
+			endtime: '',
+			pageNo: 1, //当前页码
+			pageSize: 10, //每页数量
+			total_cnt: 0, //数据总量
 			tableData: [
 				{
-					date: '2016-05-02',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1518 弄',
+					f_date: '2016-05-02',
+					visit_cnt: 150,
+					domain: '我的加速1',
+					channelId: '王小虎',
+					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
 				},
 				{
-					date: '2016-05-04',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1517 弄',
+					f_date: '2016-05-04',
+					visit_cnt: 366,
+					domain: '我的加速8',
+					channelId: '王小虎',
+					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
 				},
 				{
-					date: '2016-05-01',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1519 弄',
+					f_date: '2016-05-01',
+					visit_cnt: 2,
+					domain: '我的加速6',
+					channelId: '王小虎',
+					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
 				},
 				{
-					date: '2016-05-03',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1516 弄',
+					f_date: '2016-05-03',
+					visit_cnt: 32,
+					domain: '我的加速3',
+					channelId: '王小虎',
+					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
 				},
 			],
 		};
@@ -153,22 +178,75 @@ export default {
 	},
 	mounted() {
 		let that = this;
-		this.clientHeight = `${document.documentElement.clientHeight}`; //获取浏览器可视区域高度
+		that.clientHeight = `${document.documentElement.clientHeight ||
+			document.documentElement.offsetHeight}`; //获取浏览器可视区域高度
 		window.onresize = function() {
-			that.clientHeight = `${document.documentElement.clientHeight}`;
-			if (that.$refs.scrollerHeight) {
-				that.$refs.scrollerHeight.style.height =
-					clientHeight - 334 + 'px';
-				this.$refs.scrollerHeight.style.minHeight = 500 + 'px';
-			}
+			that.clientHeight = `${document.documentElement.clientHeight ||
+				document.documentElement.offsetHeight}`;
 		};
+		if (that.$refs.box_rHeight) {
+			that.$refs.box_rHeight.style.height =
+				that.clientHeight - 334 + 'px';
+			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
+		}
+
+		this.starttime =
+			new Date(new Date().toLocaleDateString()).getTime() / 1000;
+		this.endtime = Date.parse(new Date()) / 1000;
+		this.onChanges();
 	},
 	methods: {
-		onChanges() {},
+		//搜索--获取数据
+		onChanges() {
+			if (this.radio == '自定义') {
+				this.starttime = this.common.setbatime(this.search_time);
+				this.endtime = this.common.setbatime(this.search_time) + 86400;
+			}
+			let params = new Object();
+			params.channeld = this.channeld;
+			params.domain = this.domain;
+			params.urlName = this.urlName;
+			params.startTs = this.starttime;
+			params.endTs = this.endtime;
+			params.page = this.pageNo;
+			params.pagesize = this.pageSize;
+			ipfs_unhandle_req_list(params)
+				.then((res) => {
+					console.log(res);
+					if (res.status == 200) {
+					} else {
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		},
+		//重置
+		reset() {
+			this.channeld = '';
+			this.domain = '';
+			this.urlName = '';
+			this.show_time = false;
+			this.radio = '今天';
+			this.starttime =
+				new Date(new Date().toLocaleDateString()).getTime() / 1000;
+			this.endtime = Date.parse(new Date()) / 1000;
+			this.onChanges();
+		},
 		set_search_time() {
 			if (this.radio == '自定义') {
 				this.show_time = true;
+			} else if (this.radio == '今天') {
+				this.starttime =
+					new Date(new Date().toLocaleDateString()).getTime() / 1000;
+				this.endtime = Date.parse(new Date()) / 1000;
+				this.show_time = false;
 			} else {
+				this.endtime =
+					new Date(new Date().toLocaleDateString()).getTime() / 1000;
+				this.endtime =
+					new Date(new Date().toLocaleDateString()).getTime() / 1000 -
+					86400;
 				this.show_time = false;
 			}
 		},
@@ -179,17 +257,24 @@ export default {
 		export_exc() {
 			this.dialogVisible = !this.dialogVisible;
 		},
+		//获取页码
+		handleCurrentChange(pages) {
+			this.pageNo = pages;
+			this.onChanges();
+		},
+		handleSizeChange(pagesize) {
+			this.pageSize = pagesize;
+		},
 		//查询屏幕高度自适应
-		changeFixed(clientHeight) {
-			if (this.$refs.scrollerHeight) {
-				this.$refs.scrollerHeight.style.height =
-					clientHeight - 334 + 'px';
-				this.$refs.scrollerHeight.style.minHeight = 500 + 'px';
+		changeFixed(data) {
+			if (this.$refs.box_rHeight) {
+				this.$refs.box_rHeight.style.height = data - 334 + 'px';
+				this.$refs.box_rHeight.style.minHeight = 500 + 'px';
 			}
 		},
 		// 表头样式设置
 		headClass() {
-			return 'text-align: center;background:#F3F6FB;';
+			return 'text-align: center;background:#E8F3FF;';
 		},
 		// 表格样式设置
 		rowClass() {
@@ -202,6 +287,7 @@ export default {
 <style lang="scss" scoped>
 .unprocessed_tab {
 	width: 100%;
+	min-width: 1170px;
 	height: 100px;
 	background-color: #fff;
 	text-align: left;
@@ -224,6 +310,7 @@ export default {
 			justify-content: space-between;
 			align-items: center;
 			line-height: 100px;
+			white-space: nowrap;
 			.title_seach_left {
 				display: flex;
 				align-items: center;

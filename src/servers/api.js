@@ -13,11 +13,10 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     var serverUrl = 'http://zzb.stguarantee.com'; //阿里云服务URL
 } else {
     // var serverUrl = 'http://zzb.stguarantee.com';
-    var serverUrl = 'http://service.kclgames.com';
+    var serverUrl = 'http://www.forteatime.com';
     // var serverUrl = 'http://xyj.grapefruitcloud.com';
 }
 
-const zzzUrl = "http://10.0.0.75:8090";
 export const hostUrl = serverUrl;
 
 //账户
@@ -426,8 +425,6 @@ export const url_export_for_admin = params => {
 
 
 
-
-
 //pvuv导出
 export const export_pv_uv_curve_file = (params) => {
     return post(`${serverUrl}/file_download/export_pv_uv_curve_file`, params)
@@ -463,4 +460,17 @@ export const export_dataflow_curve_file = (params) => {
 //运营商访问次数导出
 export const export_topisp_accesscnt_curve_file = (params) => {
     return post(`${serverUrl}/file_download/export_topisp_accesscnt_curve_file`, params)
+};
+
+
+
+
+
+//未处理播放请求
+export const ipfs_unhandle_req_list = (params) => {
+    return post(`${serverUrl}/resource_manage/ipfs_unhandle_req_list`, params)
+};
+//首页概览数据
+export const home_page = (params) => {
+    return post(`${serverUrl}/resource_manage/home_page`, params)
 };

@@ -2,13 +2,13 @@
 	<div class="content">
 		<div class="content_top">
 			<div class="content_top_left">
-				<p class="more" @click="go_trafficMonitor">more <i class="el-icon-arrow-right"></i></p>
+				<p class="more" @click="go_trafficMonitor">More <i class="el-icon-arrow-right"></i></p>
 				<div class="content_top_left_con_top">
 					<div class="content_top_left_con_img">
 						<img src="../../assets/img/un_img.png" alt="" />
 						<div>
 							<p>
-								124.79 <span>TB</span
+								{{todayTotal|setbytes}} <span>{{todayTotal|set_bkb}}</span
 								><img src="../../assets/img/fall.png" alt="" />
 							</p>
 							<p>今日节点总流量</p>
@@ -16,26 +16,26 @@
 					</div>
 					<div class="content_top_left_con_top_vertical">
 						<div>
-							<p>88.64 <span>TB</span></p>
-							<p>P2P播放流量</p>
+							<p>{{yesterdayTotal}} <span>{{yesterdayTotal|set_bkb}}</span></p>
+							<p>昨日节点总流量</p>
 						</div>
 						<div>
-							<p>5.12 <span>TB</span></p>
-							<p>CDN回源流量</p>
+							<p>{{sevenDayTotal |setbytes}} <span>{{sevenDayTotal|set_bkb}}</span></p>
+							<p>近7日节点总流量</p>
 						</div>
 					</div>
 				</div>
 				<div class="content_top_left_con_bottom">
 					<div>
-						<p>88.64 <span>TB</span></p>
+						<p>{{sump2p |setbytes}} <span>{{sump2p|set_bkb}}</span></p>
 						<p>P2P播放流量</p>
 					</div>
 					<div>
-						<p>5.12 <span>TB</span></p>
+						<p>{{sumcdn |setbytes}} <span>{{sumcdn|set_bkb}}</span></p>
 						<p>CDN回源流量</p>
 					</div>
 					<div>
-						<p>31.02 <span>TB</span></p>
+						<p>{{sumnode|setbytes}} <span>{{sumnode|set_bkb}}</span></p>
 						<p>下行节点扩散流量</p>
 					</div>
 				</div>
@@ -44,52 +44,52 @@
 				<div class="content_top_right_text">
 					<div>
 						<p class="all_f">
-							987,284,324 <img src="../../assets/img/fall.png" alt="" /></i>
+							{{todayPV}} <img src="../../assets/img/fall.png" alt="" /></i>
 						</p>
 						<p>今日访问总次数(PV)</p>
-						<p>951,753,147</p>
+						<p>{{yesterdayPV}}</p>
 						<p>昨日访问总次数(PV)</p>
 					</div>
 					<div>
 						<p class="all_f">
-							987,284,324 <img src="../../assets/img/xiajiang.png" alt="" /></i>
+							{{todayUV}} <img src="../../assets/img/xiajiang.png" alt="" /></i>
 						</p>
 						<p>今日独立IP访问数(UV)</p>
-						<p>875,684,351</p>
+						<p>{{yesterdayUV}}</p>
 						<p>昨日独立IP访问数(UV)</p>
 					</div>
 				</div>
 				<div ref="pupvEcharts_con" class="content_top_right_echarts">
-					<p class="more" @click="go_pupv">more <i class="el-icon-arrow-right"></i></p>
+					<p class="more" @click="go_pupv">More <i class="el-icon-arrow-right"></i></p>
 					<div id="pupv_echarts" :style="{ height: pvpu_e_h }"></div>
 				</div>
 			</div>
 		</div>
 		<div class="content_bottom" ref="scrollerHeight">
-			<div class="content_bottom_left">
+			<div class="content_bottom_left" >
 				<div class="content_bottom_left_text">
 					<div>
 						<img src="../../assets/img/bgc_left_one.png" alt="" />
 					</div>
 					<div>
 						<p class="content_bottom_left_title">
-							214,214,232 <img src="../../assets/img/fall.png" alt="" /></i>
+							{{todayUnhandleReq}} <img src="../../assets/img/fall.png" alt="" /></i>
 						</p>
 						<p>今日未处理访问总次数</p>
 					</div>
 					<div>
-						<p>210,214,210</p>
+						<p>{{yesterdayUnhandleReq}}</p>
 						<p>昨日未处理访问总次数</p>
 					</div>
 				</div>
 				<div class="content_bottom_left_echarts">
-					<p class="more" @click="go_playTraffic">more <i class="el-icon-arrow-right"></i></p>
-					<div id="p2p_echarts"></div>
+					<p class="more" @click="go_playTraffic">More <i class="el-icon-arrow-right"></i></p>
+					<div id="p2p_echarts" :style="{ height: p2p_e_h }"></div>
 				</div>
 			</div>
 			<div class="content_bottom_right">
 				<p class="more" @click="go_unprocessedTab">
-					more <i class="el-icon-arrow-right"></i>
+					More <i class="el-icon-arrow-right"></i>
 				</p>
 				<p class="table_text">未处理播放请求</p>
 				<div>
@@ -104,17 +104,17 @@
                             type="index"
                             width="50"
                             label="序号"></el-table-column>
-                        <el-table-column prop="date" label="访问总次数" width="180">
+                        <el-table-column prop="visit_cnt" label="访问总次数" width="120">
                         </el-table-column>
-                        <el-table-column prop="name" label="渠道ID" width="220">
+                        <el-table-column prop="channelId" label="渠道ID" width="120">
                         </el-table-column>
                         <el-table-column
-                            prop="address"
+                            prop="domain"
                             label="加速内容名称"
-                            width="220"
+                            width="120"
                         >
                         </el-table-column>
-                        <el-table-column prop="address" label="CDN地址">
+                        <el-table-column prop="urlName" label="CDN地址">
                         </el-table-column>
 					</el-table>
 				</div>
@@ -126,14 +126,15 @@
 <script>
 import { dateToMs, getymdtime, getymdtime1 } from '../../servers/sevdate';
 import fenye from '@/components/fenye';
-import { pv_uv_curve } from '../../servers/api';
+import { home_page } from '../../servers/api';
 import echarts from 'echarts';
 import common from '../../comm/js/util';
 export default {
 	data() {
 		return {
 			clientHeight: '',
-			pvpu_e_h: '',
+            pvpu_e_h: '',
+            p2p_e_h:'',
 			chanid: '',
 			useCache: true,
 			starttime: '',
@@ -141,35 +142,118 @@ export default {
 			timeUnit: 60,
 			value1fileName: '',
 			valueDomain: '',
-			value1Activechanid: '',
+            value1Activechanid: '',
+            sumcdn:0,
+            sump2p:0,
+            sumnode:0,
+            todayTotal:0,
+            todayPV:'',
+            todayUV:0,
+            yesterdayPV:0,
+            yesterdayUV:0,
+            todayUnhandleReq:0,
+            yesterdayUnhandleReq:0,
+            yesterdayTotal:0,
+            sevenDayTotal:0,
 			valueacce: '',
 			uvArray: [], //图一y1
 			pvArray: [], //图一y2
 			timeArray: [], //图一x
 			tableData: [
 				{
-					date: '2016-05-02',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1518 弄',
+                	f_date: '2016-05-02',
+                    visit_cnt:150,
+                    domain:"我的加速1",
+					channelId: '王小虎',
+					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
 				},
 				{
-					date: '2016-05-04',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1518 弄',
+                	f_date: '2016-05-04',
+                    visit_cnt:366,
+                    domain:"我的加速8",
+					channelId: '王小虎',
+					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
 				},
 				{
-					date: '2016-05-01',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1518 弄',
+                	f_date: '2016-05-01',
+                    visit_cnt:2,
+                    domain:"我的加速6",
+					channelId: '王小虎',
+					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
 				},
 				{
-					date: '2016-05-03',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1518 弄',
+                	f_date: '2016-05-03',
+                    visit_cnt:32,
+                    domain:"我的加速3",
+					channelId: '王小虎',
+					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
 				},
-			],
+            ],
+            flowunit: '',
+            timeArrayZb: [],
+            timeArrayZb1: [],
+            dataZb1: [],
+			dataZb3: [],
+			dataZb2: [],
+			dataZb4: [],
+			dataZb5: [],
+            dataZb6: [],
+            dataAry: [],
+			dataAry1: [],
+			dataAry2: [],
+			dataAry3: [],
+			dataAry4: [],
+			dataAry5: [],
 		};
-	},
+    },
+    filters:{
+        setbytes(data) {
+        let limit = parseInt(data);
+        let size = 0;
+        if (limit < 1024) {
+            //小于0.1KB，则转化成B
+            size = limit.toFixed(2);
+        } else if (limit < 1024 * 1024) {
+            //小于0.1MB，则转化成KB
+            size = (limit / 1024).toFixed(2);
+        } else if (limit < 1024 * 1024 * 1024) {
+            //小于0.1GB，则转化成MB
+            size = (limit / (1024 * 1024)).toFixed(2);
+        } else if (limit < 1024 * 1024 * 1024 * 1024) {
+            //小于0.1GB，则转化成GB
+            size = (limit / (1024 * 1024 * 1024)).toFixed(2);
+        } else {
+            //其他转化成TB
+            size = (limit / (1024 * 1024 * 1024 * 1024)).toFixed(2);
+        }
+
+        let sizeStr = size + ""; //转成字符串
+        let index = sizeStr.indexOf("."); //获取小数点处的索引
+        let dou = sizeStr.substr(index + 1, 2); //获取小数点后两位的值
+        return size;
+        },
+        set_bkb(data){
+            let limit = parseInt(data);
+            let size = "B";
+            if (limit < 1024) {
+                //小于0.1KB，则转化成B
+                size = "B";
+            } else if (limit < 1024 * 1024) {
+                //小于0.1MB，则转化成KB
+                size = "KB";
+            } else if (limit < 1024 * 1024 * 1024) {
+                //小于0.1GB，则转化成MB
+                size = "MB";
+            } else if (limit < 1024 * 1024 * 1024 * 1024) {
+                //小于0.1GB，则转化成GB
+                size = "GB";
+            } else {
+                //其他转化成TB
+                size = "TB";
+            }
+            return size;
+        }
+    },
 	watch: {
 		clientHeight() {
 			//如果clientHeight 发生改变，这个函数就会运行
@@ -178,96 +262,214 @@ export default {
 	},
 	mounted() {
 		let that = this;
-		this.clientHeight = `${document.documentElement.clientHeight}`; //获取浏览器可视区域高度
+		this.clientHeight = `${document.documentElement.clientHeight||document.documentElement.offsetHeight}`; //获取浏览器可视区域高度
 		window.onresize = function() {
-			that.clientHeight = `${document.documentElement.clientHeight}`;
+			that.clientHeight = `${document.documentElement.clientHeight||document.documentElement.offsetHeight}`;
 			if (that.$refs.scrollerHeight) {
 				that.$refs.scrollerHeight.style.height =
-					clientHeight - 575 + 'px';
-				this.$refs.scrollerHeight.style.minHeight = 500 + 'px';
+					that.clientHeight - 605 + 'px';
+				that.$refs.scrollerHeight.style.minHeight = 500 + 'px';
 			}
 		};
-		this.pvpu_e_h = `${this.$refs.pupvEcharts_con.clientHeight - 60}px`;
+        this.pvpu_e_h = `${this.$refs.pupvEcharts_con.clientHeight - 60}px`;
+        this.p2p_e_h = `${this.clientHeight-835}px`;
 		this.starttime =
 			new Date(new Date().toLocaleDateString()).getTime() / 1000;
-		this.endtime = Date.parse(new Date()) / 1000;
-		this.get_pupv();
+        this.endtime = Date.parse(new Date()) / 1000;
+        this.get_data();
+        // this.querySdkflow();
 	},
 	methods: {
-		get_pupv() {
-			let params = new Object();
-			params.useCache = this.useCache == true ? 1 : 0;
-			params.chanId = this.chanid + '';
-			params.timeUnit = this.timeUnit;
+        get_data(){
+            let params = new Object();
+			home_page(params)
+				.then((res) => {
+                    console.log(res);
+                    if(res.data.status==0){
+                        this.sump2p=res.data.sump2p;//p2p播放流量
+                        this.sumcdn=res.data.sumcdn;//cdn播放流量
+                        this.sumnode=res.data.sumnode;//下行节点扩散流量
+                        this.todayTotal=res.data.todayTotal;//今日节点总流量
+                        this.yesterdayTotal=res.data.yesterdayTotal;//昨日节点总流量
+                        this.sevenDayTotal=res.data.sevenDayTotal;//7天节点总流量
+                        this.yesterdayPV=res.data.yesterdayPV;//昨日访问总次数PV
+                        this.yesterdayUV=res.data.yesterdayUV;//昨日访问总次数UV
+                        this.todayUV=res.data.todayUV;//今日访问总次数UV
+                        this.todayPV=res.data.todayPV;//今日访问总次数PV
+                        this.todayUnhandleReq=res.data.todayUnhandleReq;//今日未处理访问总数
+                        this.yesterdayUnhandleReq=res.data.yesterdayUnhandleReq;//昨日未处理访问总数
+                        //pu/pv图表数据
+                        this.timeArray="";
+                        this.uvArray =res.data.uvArray;
+                        this.pvArray =res.data.pvArray;
+                        this.drawLine();
+                        //p2p图表数据
+                        this.timeArrayZb =res.data.timeArray;
+                        this.p2parray=res.data.p2parray;//每个时刻p2p播放流量
+                        this.downcdnarray=res.data.downcdnarray;//每个时刻cdn回源流量
+                        this.downbackarray=res.data.downbackarray;//每个时刻下行节点扩散流量
+
+                        if (
+							[
+								...res.data.p2parray,
+								...res.data.downcdnarray,
+								...res.data.downbackarray,
+							].length == 0
+						) {
+							this.flowunit = 'B';
+						} else {
+							var max = _.max([
+								...res.data.p2parray,
+								...res.data.downcdnarray,
+								...res.data.downbackarray,
+							]);
+							this.flowunit = this.common.formatByteActiveunit(
+								max
+							);
+                        }
+
+
+
+                        this.drawLine2(res.data.timeArray,res.data.p2parray,res.data.downcdnarray.data.downbackarray);
+                        //表格
+                        this.tableData=res.data.unhandleReqLogs;
+
+                    }
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+        },
+
+        //流量占比图标
+		querySdkflow() {
+            let params = new Object();
+            params.useCache = this.useCache == true ? 1 : 0;
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
-			if (this.value1fileName) {
-				params.fileName = this.value1fileName;
-			} else {
-				params.fileName = '*';
-			}
-			params.region = '*';
-			params.isp = '*';
-			if (this.valueDomain) {
-				params.domain = this.valueDomain;
-			} else {
-				params.domain = '*';
-			}
-			if (this.value1Activechanid !== '') {
-				params.chanId = this.value1Activechanid;
-			} else {
-				params.chanId = '*';
-			}
-			if (this.valueacce !== '') {
-				params.terminalName = parseInt(this.valueacce);
-			} else {
-				params.terminalName = -1;
-			}
-
-			this.uvArray = [];
-			this.pvArray = [];
-			this.timeArray = [];
-
-			params.timeUnit = this.common.timeUnitActive2(
+			params.urlName = '*';
+			params.channelId = '*';
+			params.terminalName = -1;
+			params.ipfsChannel = '*';
+			params.domain = '*';
+			params.timeUnit = this.common.timeUnitActive(
 				this.starttime,
 				this.endtime
 			);
-			pv_uv_curve(params)
+			sdk_flow(params)
 				.then((res) => {
-					this.totalPV = res.data.totalPV;
-					this.totalUV = res.data.totalUV;
-					if (
-						res.data.uvArray.length == 0 &&
-						res.data.pvArray.length == 0
-					) {
-						let arr = splitTimes(this.starttime, this.endtime, 60);
-						arr.forEach((item, index) => {
-							this.timeArray.push(getymdtime(item));
-						});
-						this.uvArray = _.fill(Array(arr.length), 0);
-						this.pvArray = _.fill(Array(arr.length), 0);
-					} else {
-						if (res.data.uvArray) {
-							res.data.uvArray.forEach((item, index) => {
-								this.uvArray.push(Math.floor(item));
-							});
+					if (res.status == 0) {
+						if (
+							[
+								...res.data.pdataArray,
+								...res.data.cdnpassivearray,
+								...res.data.cdnaactivearray,
+							].length == 0
+						) {
+							this.flowunit = 'B';
+						} else {
+							var max = _.max([
+								...res.data.pdataArray,
+								...res.data.cdnpassivearray,
+								...res.data.cdnaactivearray,
+							]);
+							this.flowunit = this.common.formatByteActiveunit(
+								max
+							);
+                        }
+                        this.totalp2p=res.data.totalp2p;
+                        this.totalcdn=res.data.totalcdn;
+						this.timeArrayZb = [];
+						this.timeArrayZb1 = [];
+						this.dataZb1 = [];
+						this.dataZb2 = [];
+						this.dataZb3 = [];
+						this.dataZb4 = [];
+						this.dataZb5 = [];
+						this.dataZb6 = [];
+						if (
+							res.data.pdataArray.length == 0 &&
+							res.data.cdnpassivearray.length == 0 &&
+							res.data.cdnaactivearray.length == 0
+						) {
+							let arr = splitTimes(
+								this.starttime,
+								this.endtime,
+								params.timeUnit
+							);
+							if (params.timeUnit == 120) {
+								arr.forEach((item, index) => {
+									this.timeArrayZb.push(getymdtime1(item));
+								});
+							} else {
+								arr.forEach((item, index) => {
+									this.timeArrayZb.push(getymdtime1(item, 1));
+								});
+							}
+							this.dataZb1 = _.fill(Array(arr.length), 0);
+							this.dataZb2 = _.fill(Array(arr.length), 0);
+							this.dataZb3 = _.fill(Array(arr.length), 0);
+							this.dataZb4 = _.fill(Array(arr.length), 0);
+							this.dataZb5 = _.fill(Array(arr.length), 0);
+							this.dataZb6 = _.fill(Array(arr.length), 0);
+							this.dataAry = _.fill(Array(arr.length), 0);
+							this.dataAry1 = _.fill(Array(arr.length), 0);
+							this.dataAry2 = _.fill(Array(arr.length), 0);
+							this.dataAry3 = _.fill(Array(arr.length), 0);
+							this.dataAry4 = _.fill(Array(arr.length), 0);
+							this.dataAry5 = _.fill(Array(arr.length), 0);
+						} else {
+							if (params.timeUnit == 120) {
+								res.data.timearray.forEach((item, index) => {
+									this.timeArrayZb.push(getymdtime1(item));
+								});
+							} else {
+								res.data.timearray.forEach((item, index) => {
+									this.timeArrayZb.push(
+										getymdtime1(item, 11)
+									);
+								});
+							}
+
+							this.dataZb1 = res.data.cdnaactivepercent;
+							this.dataZb2 = res.data.cdnpassivepercent;
+							this.dataZb3 = res.data.p2parray;
+							this.dataZb4 = res.data.nodepercent
+								? res.data.nodepercent
+								: [];
+							this.dataZb5 = res.data.overtimepercent
+								? res.data.overtimepercent
+								: [];
+							this.dataZb6 = res.data.otherpercent
+								? res.data.otherpercent
+								: [];
+
+							this.dataAry = res.data.cdnaactivearray;
+							this.dataAry1 = res.data.cdnpassivearray;
+							this.dataAry2 = res.data.pdataArray;
+							this.dataAry3 = res.data.nodearray
+								? res.data.nodearray
+								: [];
+							this.dataAry4 = res.data.overtimearray
+								? res.data.overtimearray
+								: [];
+							this.dataAry5 = res.data.otherarray
+								? res.data.otherarray
+								: [];
 						}
-						if (res.data.pvArray) {
-							res.data.pvArray.forEach((item, index) => {
-								this.pvArray.push(Math.floor(item));
-							});
-						}
-						res.data.timeArray.forEach((item, index) => {
-							this.timeArray.push(getymdtime(item));
-						});
+						this.drawLine2(
+							this.timeArrayZb,
+							this.dataZb1,
+							this.dataZb2,
+							this.dataZb3
+						);
 					}
-					this.drawLine();
 				})
-				.catch((err) => {});
+				.catch((error) => {});
 		},
 		drawLine() {
 			let _this = this;
-			// 基于准备好的dom，初始化echarts实例
+			// 初始化echarts实例
 			let myChart = this.$echarts.init(
 				document.getElementById('pupv_echarts')
 			);
@@ -378,6 +580,181 @@ export default {
 			};
 			myChart.setOption(options);
         },
+        		drawLine2(x, y, z, a,) {
+			for (var i = 0; i < y.length; i++) {
+				y[i] = (y[i] * 100).toFixed(2);
+			}
+			for (var i = 0; i < z.length; i++) {
+				z[i] = (z[i] * 100).toFixed(2);
+			}
+			for (var i = 0; i < a.length; i++) {
+				a[i] = (a[i] * 100).toFixed(2);
+			}
+			
+			let _this = this;
+			// 基于准备好的dom，初始化echarts实例
+			let myChart = this.$echarts.init(
+				document.getElementById('p2p_echarts')
+			);
+			myChart.off('click'); // 这里很重要！！！
+			window.onresize = myChart.resize;
+			// 绘制图表
+			let options = {
+				legend: {
+					top:10,
+					data: ['P2P播放流量',
+					'CDN播放有源流量',
+					'CDN播放无源流量',],
+				},
+				grid: {
+					left: '5%', // 默认10%，给24就挺合适的。
+					top: 50, // 默认60
+					right: "5%", // 默认10%
+					bottom: "6%", // 默认60
+				},
+				xAxis: {
+					data: x,
+					splitLine: {
+						show: false,
+					},
+				},
+				yAxis: {
+					splitLine: {
+						show: false,
+					},
+				},
+				series: [],
+			};
+				options.tooltip = {
+                    trigger: 'axis',
+                    axisPointer: {
+						type: 'cross',
+						label: {
+							backgroundColor: '#6a7985',
+						},
+					},
+					formatter: function(params) {
+						//  for(var i=0;i<_this.dataAry.length;i++){
+						return (
+							params[0].axisValue +
+							'</br>' +
+							params[0].marker +
+							'P2P播放流量:' +
+							_this.common.formatByteActive(
+								_this.dataAry2[params[0].dataIndex]
+							) +
+							'(' +
+							_this.dataZb3[params[0].dataIndex] +
+							'%' +
+							')' +
+							'<br>' +
+							params[1].marker +
+							'CDN播放有源流量:' +
+							_this.common.formatByteActive(
+								_this.dataAry[params[0].dataIndex]
+							) +
+							'(' +
+							_this.dataZb1[params[0].dataIndex] +
+							'%' +
+							')' +
+							'</br>' +
+							params[2].marker +
+							'CDN播放无源流量:' +
+							_this.common.formatByteActive(
+								_this.dataAry1[params[0].dataIndex]
+							) +
+							'(' +
+							_this.dataZb2[params[0].dataIndex] +
+							'%' +
+							')'
+						);
+						// }
+					},
+				};
+				options.series = [
+					{
+						name: 'P2P播放流量',
+						type: 'bar',
+						stack: '使用情况',
+						data: a,
+						barMaxWidth: 30, //柱图宽度
+						itemStyle: {
+							normal: { color: '#D2E9FF' },
+						},
+						label: {
+							normal: {
+								show: true,
+								position: 'inside',
+								color: '#333333',
+								fontSize: 10,
+								formatter: function(params) {
+									if (params.value > 0) {
+										return params.value;
+									} else {
+										return ' ';
+									}
+								},
+							},
+						},
+					},
+					{
+						name: 'CDN播放有源流量',
+						type: 'bar',
+						stack: '使用情况',
+						data: y,
+						barMaxWidth: 30, //柱图宽度
+						itemStyle: {
+							normal: {
+								color: '#84C1FF',
+							},
+						},
+
+						label: {
+							normal: {
+								show: true,
+								position: 'inside',
+								color: '#333333',
+								fontSize: 10,
+								formatter: function(params) {
+									if (params.value > 0) {
+										return params.value;
+									} else {
+										return ' ';
+									}
+								},
+							},
+						},
+					},
+					{
+						name: 'CDN播放无源流量',
+						type: 'bar',
+						stack: '使用情况',
+						data: z,
+						barMaxWidth: 30, //柱图宽度
+						itemStyle: {
+							normal: {
+								color: '#2894FF',
+							},
+						},
+						label: {
+							normal: {
+								show: true,
+								position: 'inside',
+								color: '#333333',
+								fontSize: 10,
+								formatter: function(params) {
+									if (params.value > 0) {
+										return params.value;
+									} else {
+										return ' ';
+									}
+								},
+							},
+						},
+					},
+				];
+			myChart.setOption(options);
+		},
         go_trafficMonitor(){
             this.$router.push({ path: '/trafficMonitor' });
         },
@@ -391,16 +768,16 @@ export default {
 			this.$router.push({ path: '/playTraffic' });
 		},
 		//查询屏幕高度自适应
-		changeFixed(clientHeight) {
+		changeFixed(data) {
 			if (this.$refs.scrollerHeight) {
 				this.$refs.scrollerHeight.style.height =
-					clientHeight - 575 + 'px';
+					data - 575 + 'px';
 				this.$refs.scrollerHeight.style.minHeight = 500 + 'px';
 			}
 		},
 		// 表头样式设置
 		headClass() {
-			return 'text-align: center;background:#F3F6FB;';
+			return 'text-align: center;background:#E8F3FF;';
 		},
 		// 表格样式设置
 		rowClass() {
@@ -565,7 +942,7 @@ export default {
 					position: absolute;
 					left: 0;
 					bottom: 0;
-					width: calc(100% - 60px);
+					width: 100%;
 					height: 0;
 					border-bottom: solid #dddddd 1px;
 				}
@@ -609,7 +986,8 @@ export default {
 				width: 100%;
 				height: 160px;
 				margin-bottom: 30px;
-				padding: 30px;
+                padding: 30px;
+                background:#F8F9FB;
 				box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 				display: flex;
 				justify-content: space-between;
