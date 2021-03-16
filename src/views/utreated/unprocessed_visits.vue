@@ -633,43 +633,41 @@ export default {
 							backgroundColor: '#6a7985',
 						},
 					},
-					formatter: function(params) {
-						//  for(var i=0;i<_this.dataAry.length;i++){
-						return (
-							params[0].axisValue +
-							'</br>' +
-							params[0].marker +
-							'P2P播放流量:' +
-							_this.common.formatByteActive(
-								_this.dataAry2[params[0].dataIndex]
-							) +
-							'(' +
-							_this.dataZb3[params[0].dataIndex] +
-							'%' +
-							')' +
-							'<br>' +
-							params[1].marker +
-							'CDN播放有源流量:' +
-							_this.common.formatByteActive(
-								_this.dataAry[params[0].dataIndex]
-							) +
-							'(' +
-							_this.dataZb1[params[0].dataIndex] +
-							'%' +
-							')' +
-							'</br>' +
-							params[2].marker +
-							'CDN播放无源流量:' +
-							_this.common.formatByteActive(
-								_this.dataAry1[params[0].dataIndex]
-							) +
-							'(' +
-							_this.dataZb2[params[0].dataIndex] +
-							'%' +
-							')'
-						);
-						// }
-					},
+					// formatter: function(params) {
+					// 	return (
+					// 		params[0].axisValue +
+					// 		'</br>' +
+					// 		params[0].marker +
+					// 		'P2P播放流量:' +
+					// 		_this.common.formatByteActive(
+					// 			_this.dataAry2[params[0].dataIndex]
+					// 		) +
+					// 		'(' +
+					// 		_this.dataZb3[params[0].dataIndex] +
+					// 		'%' +
+					// 		')' +
+					// 		'<br>' +
+					// 		params[1].marker +
+					// 		'CDN播放有源流量:' +
+					// 		_this.common.formatByteActive(
+					// 			_this.dataAry[params[0].dataIndex]
+					// 		) +
+					// 		'(' +
+					// 		_this.dataZb1[params[0].dataIndex] +
+					// 		'%' +
+					// 		')' +
+					// 		'</br>' +
+					// 		params[2].marker +
+					// 		'CDN播放无源流量:' +
+					// 		_this.common.formatByteActive(
+					// 			_this.dataAry1[params[0].dataIndex]
+					// 		) +
+					// 		'(' +
+					// 		_this.dataZb2[params[0].dataIndex] +
+					// 		'%' +
+					// 		')'
+					// 	);
+					// },
 				};
 				options.series = [
 					{

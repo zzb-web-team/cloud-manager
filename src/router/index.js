@@ -270,38 +270,38 @@ export default new Router({
                 },
             ],
         },
-        // {
-        //     path: "/g",
-        //     name: "未处理访问请求",
-        //     component: index,
-        //     icon: "iconfont icon-guanli",
-        //     children: [{
-        //         path: "/unprocessedVisits",
-        //         name: "未处理访问请求",
-        //         component: unprocessedVisits,
-        //     }, {
-        //         path: "/unprocessedTab",
-        //         name: "未处理访问列表",
-        //         component: unprocessedTab,
-        //         hidden: true,
-        //     }],
-        // },
-        // {
-        //     path: "/f",
-        //     name: "后台管理",
-        //     component: index,
-        //     icon: "iconfont icon-guanli",
-        //     children: [{
-        //             path: "/user",
-        //             name: "后台账户",
-        //             component: user,
-        //         },
-        //         {
-        //             path: "/operation_management",
-        //             name: "操作日志",
-        //             component: operation_management,
-        //         },
-        //     ],
-        // },
+        {
+            path: "/g",
+            name: "未处理访问请求",
+            component: index,
+            icon: "iconfont icon-guanli",
+            children: [{
+                path: "/unprocessedVisits",
+                name: "未处理访问请求",
+                component: unprocessedVisits,
+            }, {
+                path: "/unprocessedTab",
+                name: "未处理访问列表",
+                component: unprocessedTab,
+                hidden: true,
+            }],
+        },
+        {
+            path: "/f",
+            name: "后台管理",
+            component: index,
+            icon: "iconfont icon-guanli",
+            children: [{
+                    path: "/user",
+                    name: "后台账户",
+                    component: user,
+                },
+                {
+                    path: "/operation_management",
+                    name: "操作日志",
+                    component: operation_management,
+                },
+            ],
+        },
     ],
 });
