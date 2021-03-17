@@ -26,7 +26,7 @@
                   <i class="el-icon-date"></i>
                 </el-button>
               </el-button-group>
-              <el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
             </div>
             <div class="device_form">
@@ -84,7 +84,7 @@
                   <i class="el-icon-date"></i>
                 </el-button>
               </el-button-group>
-              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(2)">确定</el-button>
             </div>
             <div class="device_form" style>
@@ -109,7 +109,7 @@
                   <i class="el-icon-date"></i>
                 </el-button>
               </el-button-group>
-              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="daterange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(3)">确定</el-button>
             </div>
             <div class="user_item">
@@ -212,7 +212,7 @@
                   <i class="el-icon-date"></i>
                 </el-button>
               </el-button-group>
-              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+              <el-date-picker v-show="showzdyz" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
               <el-button style="margin-left:10px;" type="primary" @click="seachtu(4)">确定</el-button>
             </div>
             <div class="device_form" style>

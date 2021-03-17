@@ -13,7 +13,7 @@
 								<el-input
 									v-model="value1Activechanid"
 									placeholder="请输入渠道ID"
-									style="width:160px;margin-right: 10px;"
+									style="width: 10%;margin-right: 10px;"
 									@change="onChanges"
 								>
 									<i
@@ -25,7 +25,7 @@
 								<el-input
 									v-model="valueDomain"
 									placeholder="请输入域名"
-									style="width:160px;margin-right: 10px;"
+									style="width: 10%;margin-right: 10px;"
 									@change="onChanges"
 								>
 									<i
@@ -37,7 +37,7 @@
 								<el-input
 									v-model="value1fileName"
 									placeholder="请输入加速内容名称"
-									style="width:160px;margin-right: 10px;"
+									style="width: 10%;margin-right: 10px;"
 									@change="onChanges"
 								>
 									<i
@@ -96,7 +96,7 @@
 									style="margin-left:10px;"
 									v-model="val2"
 									type="datetimerange"
-									range-separator="至"
+									range-separator="~"
 									start-placeholder="开始日期"
 									end-placeholder="结束日期"
 									align="left"
@@ -154,7 +154,7 @@
 								<el-input
 									v-model="value1Activechanid"
 									placeholder="请输入渠道ID"
-									style="width:160px;margin-right: 10px;"
+									style="width: 10%;margin-right: 10px;"
 									@change="onChanges"
 								>
 									<i
@@ -166,7 +166,7 @@
 								<el-input
 									v-model="valueDomain"
 									placeholder="请输入域名"
-									style="width:160px;margin-right: 10px;"
+									style="width: 10%;margin-right: 10px;"
 									@change="onChanges"
 								>
 									<i
@@ -178,7 +178,7 @@
 								<el-input
 									v-model="value1fileName"
 									placeholder="请输入加速内容名称"
-									style="width:160px;margin-right: 10px;"
+									style="width: 10%;margin-right: 10px;"
 									@change="onChanges"
 								>
 									<i
@@ -236,7 +236,7 @@
 									style="margin-left:10px;"
 									v-model="val2"
 									type="datetimerange"
-									range-separator="至"
+									range-separator="~"
 									start-placeholder="开始日期"
 									end-placeholder="结束日期"
 									align="left"
@@ -1184,9 +1184,11 @@ export default {
 		},
 		//七天
 		sevendat(data) {
-			let times = parseInt(new Date(new Date()).getTime() / 1000);
-			this.starttime = times - 24 * 60 * 60 * 7;
-			this.endtime = times;
+			let times = parseInt(
+				new Date(new Date().toLocaleDateString()).getTime() / 1000
+			);
+			this.endtime = parseInt(new Date(new Date()).getTime() / 1000);
+			this.starttime = times - 24 * 60 * 60 * 6;
 			this.timeUnit = 60 * 24;
 			if (data == 0) {
 				this.getcure(0);
@@ -1198,9 +1200,11 @@ export default {
 		},
 		//三十天
 		thirtyday(data) {
-			let times = parseInt(new Date(new Date()).getTime() / 1000);
-			this.starttime = times - 24 * 60 * 60 * 30;
-			this.endtime = times;
+		let times = parseInt(
+				new Date(new Date().toLocaleDateString()).getTime() / 1000
+			);
+			this.endtime = parseInt(new Date(new Date()).getTime() / 1000);
+			this.starttime = times - 24 * 60 * 60 * 29;
 			this.timeUnit = 60 * 24;
 			if (data == 0) {
 				this.getcure(0);
@@ -1455,7 +1459,7 @@ export default {
 				},
 				grid: {
 					// 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
-					left: '3%', // 默认10%，给24就挺合适的。
+					left: '5%', // 默认10%，给24就挺合适的。
 					top: 60, // 默认60
 					right: 35, // 默认10%
 					bottom: 60, // 默认60
@@ -1531,7 +1535,7 @@ export default {
 				},
 				grid: {
 					// 间距是 根据x、y轴计算的；假如都是0，x、y轴的label汉字就隐藏掉了。
-					left: '3%', // 默认10%，给24就挺合适的。
+					left: '5%', // 默认10%，给24就挺合适的。
 					top: 60, // 默认60
 					right: 35, // 默认10%
 					bottom: 60, // 默认60
@@ -1601,7 +1605,7 @@ export default {
 <style lang="scss">
 .myself-container {
 	width: 100%;
-	//min-width: 1600px;
+	min-width: 1250px;
 
 	.device_form {
 		width: auto;

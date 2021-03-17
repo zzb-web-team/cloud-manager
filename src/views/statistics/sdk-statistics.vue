@@ -4,7 +4,7 @@
     <div class="user-title" style="display: flex;flex-flow: column; margin-top: 20px;">
       <div class="resources_con">
         <div style="display: flex;flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
-            <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
+            <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
         </div>
         <div class="device_form" style>
           <!-- <el-button-group style="display: flex;justify-content: center;">

@@ -5,7 +5,7 @@
     <div class="log_download_con">
       <div class="log_download_con_top">
         <span>日期：</span>
-        <el-date-picker style="margin-left:10px;" v-model="value2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+        <el-date-picker style="margin-left:10px;" v-model="value2" type="datetimerange" :picker-options="pickerOptions" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
       </div>
 
       <el-table :data="tablecdn" stripe style="width: 100%;" :cell-style="rowClass" :header-cell-style="headClass">

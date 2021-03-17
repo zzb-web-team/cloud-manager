@@ -24,7 +24,7 @@
                         <el-option v-for="(item, index) in options" :key="index" :label="item" :value="item"></el-option>
                     </el-select>
                     <!-- <span>日期：</span> -->
-                    <el-date-picker v-model="valueTime" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+                    <el-date-picker v-model="valueTime" type="datetimerange" :picker-options="pickerOptions" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
                     <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button>
                     <el-button type="primary" @click="reset()" style="margin-left:10px;">重置</el-button>
 

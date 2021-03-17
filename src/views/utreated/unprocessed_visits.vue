@@ -160,34 +160,34 @@ export default {
 			pvArray: [], //图一y2
 			timeArray: [], //图一x
 			tableData: [
-				{
-                	f_date: '2016-05-02',
-                    visit_cnt:150,
-                    domain:"我的加速1",
-					channelId: '王小虎',
-					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
-				},
-				{
-                	f_date: '2016-05-04',
-                    visit_cnt:366,
-                    domain:"我的加速8",
-					channelId: '王小虎',
-					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
-				},
-				{
-                	f_date: '2016-05-01',
-                    visit_cnt:2,
-                    domain:"我的加速6",
-					channelId: '王小虎',
-					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
-				},
-				{
-                	f_date: '2016-05-03',
-                    visit_cnt:32,
-                    domain:"我的加速3",
-					channelId: '王小虎',
-					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
-				},
+				// {
+                // 	f_date: '2016-05-02',
+                //     visit_cnt:150,
+                //     domain:"我的加速1",
+				// 	channelId: '王小虎',
+				// 	urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
+				// },
+				// {
+                // 	f_date: '2016-05-04',
+                //     visit_cnt:366,
+                //     domain:"我的加速8",
+				// 	channelId: '王小虎',
+				// 	urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
+				// },
+				// {
+                // 	f_date: '2016-05-01',
+                //     visit_cnt:2,
+                //     domain:"我的加速6",
+				// 	channelId: '王小虎',
+				// 	urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
+				// },
+				// {
+                // 	f_date: '2016-05-03',
+                //     visit_cnt:32,
+                //     domain:"我的加速3",
+				// 	channelId: '王小虎',
+				// 	urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
+				// },
             ],
             flowunit: '',
             timeArrayZb: [],
@@ -327,9 +327,6 @@ export default {
 								max
 							);
                         }
-
-
-
                         this.drawLine2(res.data.timeArray,res.data.p2parray,res.data.downcdnarray.data.downbackarray);
                         //表格
                         this.tableData=res.data.unhandleReqLogs;
@@ -340,133 +337,6 @@ export default {
 					console.log(error);
 				});
         },
-
-        //流量占比图标
-		querySdkflow() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
-			params.startTs = this.starttime;
-			params.endTs = this.endtime;
-			params.urlName = '*';
-			params.channelId = '*';
-			params.terminalName = -1;
-			params.ipfsChannel = '*';
-			params.domain = '*';
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
-			sdk_flow(params)
-				.then((res) => {
-					if (res.status == 0) {
-						if (
-							[
-								...res.data.pdataArray,
-								...res.data.cdnpassivearray,
-								...res.data.cdnaactivearray,
-							].length == 0
-						) {
-							this.flowunit = 'B';
-						} else {
-							var max = _.max([
-								...res.data.pdataArray,
-								...res.data.cdnpassivearray,
-								...res.data.cdnaactivearray,
-							]);
-							this.flowunit = this.common.formatByteActiveunit(
-								max
-							);
-                        }
-                        this.totalp2p=res.data.totalp2p;
-                        this.totalcdn=res.data.totalcdn;
-						this.timeArrayZb = [];
-						this.timeArrayZb1 = [];
-						this.dataZb1 = [];
-						this.dataZb2 = [];
-						this.dataZb3 = [];
-						this.dataZb4 = [];
-						this.dataZb5 = [];
-						this.dataZb6 = [];
-						if (
-							res.data.pdataArray.length == 0 &&
-							res.data.cdnpassivearray.length == 0 &&
-							res.data.cdnaactivearray.length == 0
-						) {
-							let arr = splitTimes(
-								this.starttime,
-								this.endtime,
-								params.timeUnit
-							);
-							if (params.timeUnit == 120) {
-								arr.forEach((item, index) => {
-									this.timeArrayZb.push(getymdtime1(item));
-								});
-							} else {
-								arr.forEach((item, index) => {
-									this.timeArrayZb.push(getymdtime1(item, 1));
-								});
-							}
-							this.dataZb1 = _.fill(Array(arr.length), 0);
-							this.dataZb2 = _.fill(Array(arr.length), 0);
-							this.dataZb3 = _.fill(Array(arr.length), 0);
-							this.dataZb4 = _.fill(Array(arr.length), 0);
-							this.dataZb5 = _.fill(Array(arr.length), 0);
-							this.dataZb6 = _.fill(Array(arr.length), 0);
-							this.dataAry = _.fill(Array(arr.length), 0);
-							this.dataAry1 = _.fill(Array(arr.length), 0);
-							this.dataAry2 = _.fill(Array(arr.length), 0);
-							this.dataAry3 = _.fill(Array(arr.length), 0);
-							this.dataAry4 = _.fill(Array(arr.length), 0);
-							this.dataAry5 = _.fill(Array(arr.length), 0);
-						} else {
-							if (params.timeUnit == 120) {
-								res.data.timearray.forEach((item, index) => {
-									this.timeArrayZb.push(getymdtime1(item));
-								});
-							} else {
-								res.data.timearray.forEach((item, index) => {
-									this.timeArrayZb.push(
-										getymdtime1(item, 11)
-									);
-								});
-							}
-
-							this.dataZb1 = res.data.cdnaactivepercent;
-							this.dataZb2 = res.data.cdnpassivepercent;
-							this.dataZb3 = res.data.p2parray;
-							this.dataZb4 = res.data.nodepercent
-								? res.data.nodepercent
-								: [];
-							this.dataZb5 = res.data.overtimepercent
-								? res.data.overtimepercent
-								: [];
-							this.dataZb6 = res.data.otherpercent
-								? res.data.otherpercent
-								: [];
-
-							this.dataAry = res.data.cdnaactivearray;
-							this.dataAry1 = res.data.cdnpassivearray;
-							this.dataAry2 = res.data.pdataArray;
-							this.dataAry3 = res.data.nodearray
-								? res.data.nodearray
-								: [];
-							this.dataAry4 = res.data.overtimearray
-								? res.data.overtimearray
-								: [];
-							this.dataAry5 = res.data.otherarray
-								? res.data.otherarray
-								: [];
-						}
-						this.drawLine2(
-							this.timeArrayZb,
-							this.dataZb1,
-							this.dataZb2,
-							this.dataZb3
-						);
-					}
-				})
-				.catch((error) => {});
-		},
 		drawLine() {
 			let _this = this;
 			// 初始化echarts实例
@@ -519,12 +389,7 @@ export default {
 						},
 						areaStyle: {
 							normal: {
-								color: new echarts.graphic.LinearGradient(
-									0,
-									0,
-									0,
-									1,
-									[
+								color: new echarts.graphic.LinearGradient(0,0,0,1,[
 										{
 											offset: 0,
 											color: '#A7D5FF',
@@ -552,12 +417,7 @@ export default {
 						},
 						areaStyle: {
 							normal: {
-								color: new echarts.graphic.LinearGradient(
-									0,
-									0,
-									0,
-									1,
-									[
+								color: new echarts.graphic.LinearGradient(0,0,0,1,[
 										{
 											offset: 0,
 											color: '#BEA7FF',
@@ -633,41 +493,6 @@ export default {
 							backgroundColor: '#6a7985',
 						},
 					},
-					// formatter: function(params) {
-					// 	return (
-					// 		params[0].axisValue +
-					// 		'</br>' +
-					// 		params[0].marker +
-					// 		'P2P播放流量:' +
-					// 		_this.common.formatByteActive(
-					// 			_this.dataAry2[params[0].dataIndex]
-					// 		) +
-					// 		'(' +
-					// 		_this.dataZb3[params[0].dataIndex] +
-					// 		'%' +
-					// 		')' +
-					// 		'<br>' +
-					// 		params[1].marker +
-					// 		'CDN播放有源流量:' +
-					// 		_this.common.formatByteActive(
-					// 			_this.dataAry[params[0].dataIndex]
-					// 		) +
-					// 		'(' +
-					// 		_this.dataZb1[params[0].dataIndex] +
-					// 		'%' +
-					// 		')' +
-					// 		'</br>' +
-					// 		params[2].marker +
-					// 		'CDN播放无源流量:' +
-					// 		_this.common.formatByteActive(
-					// 			_this.dataAry1[params[0].dataIndex]
-					// 		) +
-					// 		'(' +
-					// 		_this.dataZb2[params[0].dataIndex] +
-					// 		'%' +
-					// 		')'
-					// 	);
-					// },
 				};
 				options.series = [
 					{

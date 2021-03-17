@@ -10,7 +10,7 @@
 						<el-input
 							v-model="value1Activechanid"
 							placeholder="请输入渠道ID"
-							style="width:160px;margin-right: 10px;"
+							style="width:160px;margin-right: 10px;margin-top: 20px;"
 							@keyup.enter.native="onChanges"
 						>
 							<i
@@ -22,7 +22,7 @@
 						<el-input
 							v-model="valuedomian"
 							placeholder="请输入域名"
-							style="width:160px;margin-right: 10px;"
+							style="width:160px;margin-right: 10px;margin-top: 20px;"
 							@keyup.enter.native="onChanges"
 						>
 							<i
@@ -34,7 +34,7 @@
 						<el-input
 							v-model="value1"
 							placeholder="请输入加速内容名称"
-							style="width:160px;margin-right: 10px;"
+							style="width:160px;margin-right: 10px;margin-top: 20px;"
 							@keyup.enter.native="onChanges"
 						>
 							<i
@@ -43,10 +43,10 @@
 								@click="onChanges()"
 							></i>
 						</el-input>
-						<el-select
+						<!-- <el-select
 							v-model="value1acce1"
 							placeholder="全部节点渠道"
-							style="width: 10%;margin-right: 10px;"
+							style="width: 10%;margin-right: 10px;margin-top: 20px;"
 							@change="onChanges"
 						>
 							<el-option label="全部" value="*"></el-option>
@@ -56,7 +56,7 @@
 								:label="item.label"
 								:value="item.value"
 							></el-option>
-						</el-select>
+						</el-select> -->
 						<!-- <el-button-group>
             <el-button v-show="!shoudzyx" @click="today()" label="one">今天</el-button>
             <el-button v-show="!shoudzyx" @click="yesterday()" label="two">昨天</el-button>
@@ -82,33 +82,36 @@
 							type="primary"
 							v-show="showzdy"
 							@click="setZdy"
+							tyle="margin-top: 20px;"
 							>自定义</el-button
 						>
 						<el-date-picker
 							v-show="showzdy"
-							style="margin-left:10px;"
+							style="margin-left:10px;margin-top: 20px;"
 							v-model="val2"
 							type="daterange"
-							range-separator="至"
+							range-separator="~"
 							start-placeholder="开始日期"
 							end-placeholder="结束日期"
 							align="left"
 							@change="gettimes"
 						></el-date-picker>
 						<el-button
-							style="margin-left:10px;"
+							style="margin-left:10px;margin-top: 20px;"
 							type="primary"
 							@click="seachtu(1)"
 							>确定</el-button
 						>
 						<el-button
-							style="margin-left:10px;"
+							style="margin-left:10px;margin-top: 20px;"
 							type="primary"
 							@click="reset()"
 							>重置</el-button
 						>
 					</div>
-					<div style="display:flex;white-space:nowrap;">
+					<div
+						style="display:flex;white-space:nowrap;margin-top: 20px;"
+					>
 						<span style="margin-right:5px;">使用缓存</span>
 						<el-switch
 							v-model="useCache"
@@ -975,9 +978,11 @@ export default {
 		//七天
 		sevendat(data) {
 			this.plain = 'plain';
-			let times = parseInt(new Date(new Date()).getTime() / 1000);
+			let times = parseInt(
+				new Date(new Date().toLocaleDateString()).getTime() / 1000
+			);
 			this.starttime = times - 24 * 60 * 60 * 6;
-			this.endtime = times;
+			this.endtime = parseInt(new Date(new Date()).getTime() / 1000);
 			this.timeUnit = 60 * 24;
 			this.pageNo = 1;
 			this.gettable1();
@@ -987,9 +992,11 @@ export default {
 		//三十天
 		thirtyday(data) {
 			this.plain = 'plain';
-			let times = parseInt(new Date(new Date()).getTime() / 1000);
+			let times = parseInt(
+				new Date(new Date().toLocaleDateString()).getTime() / 1000
+			);
+			this.endtime = parseInt(new Date(new Date()).getTime() / 1000);
 			this.starttime = times - 24 * 60 * 60 * 29;
-			this.endtime = times;
 			this.timeUnit = 60 * 24;
 			this.pageNo = 1;
 			this.gettable1();
@@ -1276,7 +1283,7 @@ export default {
 }
 .myself-container {
 	width: 100%;
-	//min-width: 1600px;
+	min-width: 1250px;
 
 	.device_form {
 		width: auto;

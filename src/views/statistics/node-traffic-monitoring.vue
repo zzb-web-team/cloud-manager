@@ -6,7 +6,7 @@
 				<el-tabs v-model="activeName" @tab-click="handleClick">
 					<el-tab-pane label="节点流量" name="first" :lazy="true">
 						<div
-							style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;"
+							style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;white-space:nowrap;"
 						>
 							<div>
 								<el-input
@@ -45,7 +45,7 @@
 										@click="onChanges()"
 									></i>
 								</el-input>
-								<el-select
+								<!-- <el-select
 									v-model="valueChanel"
 									placeholder="全部节点渠道"
 									style="width: 10%;margin-right: 10px;"
@@ -61,7 +61,7 @@
 										:label="item.label"
 										:value="item.value"
 									></el-option>
-								</el-select>
+								</el-select> -->
 								<el-radio-group
 									v-model="radio"
 									@change="select_time()"
@@ -94,7 +94,7 @@
 									style="margin-left:10px;"
 									v-model="val2"
 									type="datetimerange"
-									range-separator="至"
+									range-separator="~"
 									start-placeholder="开始日期"
 									end-placeholder="结束日期"
 									align="left"
@@ -272,7 +272,7 @@
 					</el-tab-pane>
 					<el-tab-pane label="TOP加速流量" name="second" :lazy="true">
 						<div
-							style="display: flex;justify-content: space-between;align-items: center; flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;"
+							style="display: flex;justify-content: space-between;align-items: center; flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;white-space:nowrap;"
 						>
 							<div>
 								<el-input
@@ -315,7 +315,7 @@
 									style="margin-left:10px;"
 									v-model="val3"
 									type="daterange"
-									range-separator="至"
+									range-separator="~"
 									start-placeholder="开始日期"
 									end-placeholder="结束日期"
 									align="left"
@@ -1320,9 +1320,11 @@ export default {
 		},
 		//七天
 		sevendat(data) {
-			let times = parseInt(new Date(new Date()).getTime() / 1000);
+            let times = parseInt(
+				new Date(new Date().toLocaleDateString()).getTime() / 1000
+			);
+			this.endtime = parseInt(new Date(new Date()).getTime() / 1000);
 			this.starttime = times - 24 * 60 * 60 * 6;
-			this.endtime = times;
 			this.timeUnit = 60 * 24;
 			this.pageNo2 = 1;
 			this.getNodeTrafficCurve();
@@ -1330,9 +1332,11 @@ export default {
 		},
 		//三十天
 		thirtyday(data) {
-			let times = parseInt(new Date(new Date()).getTime() / 1000);
+			let times = parseInt(
+				new Date(new Date().toLocaleDateString()).getTime() / 1000
+			);
+			this.endtime = parseInt(new Date(new Date()).getTime() / 1000);
 			this.starttime = times - 24 * 60 * 60 * 29;
-			this.endtime = times;
 			this.timeUnit = 60 * 24;
 			this.pageNo2 = 1;
 			this.getNodeTrafficCurve();
@@ -1632,7 +1636,7 @@ export default {
 <style lang="scss">
 .myself-container {
 	width: 100%;
-	//min-width: 1600px;
+	min-width: 1250px;
 
 	.device_form {
 		width: auto;

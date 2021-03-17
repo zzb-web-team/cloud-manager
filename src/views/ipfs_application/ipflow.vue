@@ -29,7 +29,7 @@
       </div>
       <div v-if="optiondisplay" class="seach_bottom">
         <span>启用时间：</span>
-        <el-date-picker v-model="value1" type="datetimerange" range-separator="至" :picker-options="pickerOptions" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+        <el-date-picker v-model="value1" type="datetimerange" range-separator="~" :picker-options="pickerOptions" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
         <el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button>
         <el-button type="primary" @click="reset()">重置</el-button>
       </div>

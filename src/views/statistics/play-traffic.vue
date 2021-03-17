@@ -20,7 +20,7 @@
 								<el-input
 									v-model="value1Activechanid"
 									placeholder="请输入渠道ID"
-									style="width:160px;margin-right: 10px;"
+									style="width: 10%;margin-right: 10px;"
 									@keyup.enter.native="onChanges"
 								>
 									<i
@@ -32,7 +32,7 @@
 								<el-input
 									v-model="value1Activechanidactive"
 									placeholder="请输入域名"
-									style="width:160px;margin-right: 10px;"
+									style="width: 10%;margin-right: 10px;"
 									@keyup.enter.native="onChanges"
 								>
 									<i
@@ -44,7 +44,7 @@
 								<el-input
 									v-model="valuea1"
 									placeholder="请输入加速内容名称"
-									style="width:160px;margin-right: 10px;"
+									style="width: 10%;margin-right: 10px;"
 									@keyup.enter.native="onChanges"
 								>
 									<i
@@ -70,7 +70,7 @@
 										:value="item.value"
 									></el-option>
 								</el-select>
-								<el-select
+								<!-- <el-select
 									v-model="valueChanel"
 									placeholder="全部节点渠道"
 									style="width: 10%;margin-right: 10px;"
@@ -86,7 +86,7 @@
 										:label="item.label"
 										:value="item.value"
 									></el-option>
-								</el-select>
+								</el-select> -->
 								<el-radio-group
 									v-model="radio"
 									@change="select_time()"
@@ -121,7 +121,7 @@
 									style="margin-left:10px;"
 									v-model="val2"
 									type="daterange"
-									range-separator="至"
+									range-separator="~"
 									start-placeholder="开始日期"
 									end-placeholder="结束日期"
 									align="left"
@@ -306,7 +306,7 @@
 								style="margin-left:10px;"
 								v-model="val2"
 								type="daterange"
-								range-separator="至"
+								range-separator="~"
 								start-placeholder="开始日期"
 								end-placeholder="结束日期"
 								align="left"
@@ -478,7 +478,7 @@
 									v-model="value1Activechanid"
 									placeholder="请输入渠道ID"
 									@change="onChanges"
-									style="width:160px;margin-right: 10px;"
+									style="width: 12%;margin-right: 10px;"
 								>
 									<i
 										slot="prefix"
@@ -489,7 +489,7 @@
 								<el-input
 									v-model="value1Activechanidactive"
 									placeholder="请输入域名"
-									style="width:160px;margin-right: 10px;"
+									style="width: 12%;margin-right: 10px;"
 									@keyup.enter.native="onChanges"
 								>
 									<i
@@ -502,7 +502,7 @@
 									v-model="valuea1"
 									placeholder="请输入加速内容名称"
 									@change="onChanges"
-									style="width:160px;margin-right: 10px;"
+									style="width: 12%;margin-right: 10px;"
 								>
 									<i
 										slot="prefix"
@@ -514,7 +514,7 @@
                 <el-option label="全部终端" value="-1"></el-option>
                 <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
               </el-select> -->
-								<el-select
+								<!-- <el-select
 									v-model="valueChanel1"
 									placeholder="全部节点渠道"
 									@change="onChanges"
@@ -530,7 +530,7 @@
 										:label="item.label"
 										:value="item.value"
 									></el-option>
-								</el-select>
+								</el-select> -->
 								<el-radio-group
 									v-model="radio"
 									@change="select_time()"
@@ -564,7 +564,7 @@
 									style="margin-left:10px;"
 									v-model="val2"
 									type="datetimerange"
-									range-separator="至"
+									range-separator="~"
 									start-placeholder="开始日期"
 									end-placeholder="结束日期"
 									align="left"
@@ -887,8 +887,8 @@ export default {
 			valuea4: '',
 			tablecdn: [],
 			tableZb: [],
-            activeName: 'threed',
-            useCache:true,
+			activeName: 'threed',
+			useCache: true,
 			pickerOptions: {
 				shortcuts: [
 					{
@@ -1225,8 +1225,8 @@ export default {
 		},
 		//流量占比图标
 		querySdkflow() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			let nowtime = parseInt(new Date().getTime() / 1000);
 			params.startTs = this.starttime;
 			params.endTs = this.endtime < nowtime ? this.endtime : nowtime;
@@ -1408,8 +1408,8 @@ export default {
 		},
 		//流量占比表
 		querySdkflowTable() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
 			// params.chanId = this.chanid + "";
@@ -1465,8 +1465,8 @@ export default {
 
 		//流量监控图表
 		querySdkflowControl() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
 			// params.chanId = this.chanid + "";
@@ -1625,8 +1625,8 @@ export default {
 
 		//播放流量分布图
 		queryDataFlowLocation() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
 
@@ -1676,8 +1676,8 @@ export default {
 		},
 		//流量监控导出
 		exoprtant_Ll() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
 			// params.chanId = this.chanid + "";
@@ -1728,8 +1728,8 @@ export default {
 
 		//流量占比导出
 		exoprtant_Zb() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
 			// params.chanId = this.chanid + "";
@@ -1856,9 +1856,11 @@ export default {
 		},
 		//七天
 		sevendat(data) {
-			let times = parseInt(new Date(new Date()).getTime() / 1000);
-			this.starttime = times - 24 * 60 * 60 * 6;
-			this.endtime = times;
+			let times = parseInt(
+				new Date(new Date().toLocaleDateString()).getTime() / 1000
+			);
+			this.endtime = parseInt(new Date(new Date()).getTime() / 1000);
+			this.starttime = times - 24 * 60 * 60 *6;
 			this.timeUnit = 60 * 24;
 			this.pageNo = 1;
 			if (data == 2) {
@@ -1872,9 +1874,11 @@ export default {
 		},
 		//三十天
 		thirtyday(data) {
-			let times = parseInt(new Date(new Date()).getTime() / 1000);
+			let times = parseInt(
+				new Date(new Date().toLocaleDateString()).getTime() / 1000
+			);
+			this.endtime = parseInt(new Date(new Date()).getTime() / 1000);
 			this.starttime = times - 24 * 60 * 60 * 29;
-			this.endtime = times;
 			this.timeUnit = 60 * 24;
 			this.pageNo = 1;
 			if (data == 2) {
@@ -1934,7 +1938,7 @@ export default {
 		//选项卡
 
 		handleClick(tab, event) {
-            this.useCache = true;
+			this.useCache = true;
 			this.val2 = [];
 			this.radio = 1;
 			this.hashidSet = [];
@@ -2146,6 +2150,7 @@ export default {
 					},
 				},
 				yAxis: {
+					max: 100,
 					splitLine: {
 						show: false,
 					},
@@ -2678,7 +2683,7 @@ export default {
 <style lang="scss">
 .myself-container {
 	width: 100%;
-	//min-width: 1600px;
+	min-width: 1250px;
 
 	.device_form {
 		width: auto;

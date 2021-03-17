@@ -24,7 +24,7 @@
             <el-button>昨天</el-button>
             <el-button>近7天</el-button>
             <el-button>近30天</el-button>
-            <el-date-picker style="margin-left:10px;" v-model="value2" type="datetimerange" :picker-options="pickerOptions" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left"></el-date-picker>
+            <el-date-picker style="margin-left:10px;" v-model="value2" type="datetimerange" :picker-options="pickerOptions" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" align="left"></el-date-picker>
             <el-button style="margin-left:10px;" type="primary">确定</el-button>
         </div>
         <div style="margin-top:10px;">

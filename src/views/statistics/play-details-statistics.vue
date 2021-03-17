@@ -7,20 +7,20 @@
             <el-tab-pane label="播放信息统计" name="first">
                 <div style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
                     <div>  
-                        <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" @change="onChanges">
+                        <el-input v-model="valueChannelId" placeholder="请输入渠道ID" style="width: 10%;margin-right: 10px;" @change="onChanges">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                         </el-input>
-                        <el-input v-model="valuePlayUrl" placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" @change="onChanges">
+                        <el-input v-model="valuePlayUrl" placeholder="请输入播放URL" style="width: 10%;margin-right: 10px;" @change="onChanges">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                         </el-input>
-                        <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" @change="onChanges">
+                        <el-input v-model="valueContent" placeholder="请输入加速内容名称" style="width: 10%;margin-right: 10px;" @change="onChanges">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                         </el-input>
                         <el-cascader style="width: 10%;margin-right: 10px;line-height: 36px;" placeholder="请选择播放区域" :options="hashidSet" ref="cascaderAddr" :show-all-levels="false" v-model="valueRegion" @change="onChanges"></el-cascader>
                         <el-select v-model="valueIsp" placeholder="请选择运营商网络" style="width: 10%;margin-right: 10px;" @change="onChanges">
                         <el-option v-for="(item, index) in hashidSets" :key="index" :label="item.label" :value="item.value"></el-option>
                         </el-select>                
-                        <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
+                        <el-date-picker style="margin-right:10px;width: 25%;" v-model="val2" type="daterange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
                         <el-button type="primary" @click="onChanges">确认</el-button>
                         <el-button type="primary" @click="reset(0)">重置</el-button>
                     </div>
@@ -139,24 +139,24 @@
                     <el-form ref="form">
                         <el-row type="flex" justify="space-between" style="align-items: center;flex-wrap: nowrap;">
                             <div>
-                          <el-input placeholder="请输入渠道ID" style="width:160px;margin-right: 10px;" v-model="valueChannelId" @change="onChanges">
+                          <el-input placeholder="请输入渠道ID" style="width: 10%;margin-right: 10px;" v-model="valueChannelId" @change="onChanges">
                               <i slot="prefix" class="el-input__icon el-icon-search"></i>
                           </el-input>
-                          <el-input placeholder="请输入加速内容名称" style="width:160px;margin-right: 10px;" v-model="valueContent" @change="onChanges">
+                          <el-input placeholder="请输入加速内容名称" style="width: 10%;margin-right: 10px;" v-model="valueContent" @change="onChanges">
                               <i slot="prefix" class="el-input__icon el-icon-search"></i>
                           </el-input>
-                          <el-input placeholder="请输入播放URL" style="width:160px;margin-right: 10px;" v-model="valuePlayUrl" @change="onChanges">
+                          <el-input placeholder="请输入播放URL" style="width: 10%;margin-right: 10px;" v-model="valuePlayUrl" @change="onChanges">
                               <i slot="prefix" class="el-input__icon el-icon-search"></i>
                           </el-input>
-                          <el-select v-model="exceptionType" style="margin-right: 10px;" placeholder="请选择播放异常类型" @change="onChanges">
+                          <el-select v-model="exceptionType" style="margin-right: 10px;width: 10%;" placeholder="请选择播放异常类型" @change="onChanges">
                             <el-option label="全部" value="-1"></el-option>
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                           </el-select>
-                          <el-select v-model="exceptionStatus" style="margin-right: 10px;" placeholder="请选择播放异常原因" @change="onChanges">
+                          <el-select v-model="exceptionStatus" style="margin-right: 10px;width: 10%;" placeholder="请选择播放异常原因" @change="onChanges">
                             <el-option label="全部" value="-1"></el-option>
                             <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
                           </el-select>
-                          <el-date-picker style="margin-right:10px;" v-model="val3" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
+                          <el-date-picker style="margin-right:10px;width: 25%;" v-model="val3" type="daterange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(1)"></el-date-picker>
                            <el-button type="primary" @click="onChanges">确认</el-button>
                           <el-button type="primary" @click="reset(1)">重置</el-button>
                           </div>
@@ -943,7 +943,7 @@ export default {
 <style lang="scss">
 .myself-container {
   width: 100%;
-  //min-width: 1600px;
+ min-width: 1250px;
 
   .device_form {
     width: auto;

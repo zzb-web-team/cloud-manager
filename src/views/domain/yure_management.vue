@@ -57,7 +57,7 @@
 					<el-date-picker
 						v-model="value1"
 						type="datetimerange"
-						range-separator="至"
+						range-separator="~"
 						:picker-options="pickerOptions"
 						start-placeholder="开始日期"
 						end-placeholder="结束日期"
