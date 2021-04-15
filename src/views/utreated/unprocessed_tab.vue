@@ -7,19 +7,19 @@
 					<el-input
 						v-model="channeld"
 						placeholder="请输入渠道ID"
-						size="small"
+						size="medium"
 						@change="onChanges"
 					></el-input>
 					<el-input
 						v-model="domain"
 						placeholder="请输入加速内容名称"
-						size="small"
+						size="medium"
 						@change="onChanges"
 					></el-input>
 					<el-input
 						v-model="urlName"
 						placeholder="请输入CDN地址"
-						size="small"
+						size="medium"
 						@change="onChanges"
 					></el-input>
 				</div>
@@ -212,7 +212,6 @@ export default {
 			params.pagesize = this.pageSize;
 			ipfs_unhandle_req_list(params)
 				.then((res) => {
-					console.log(res);
 					if (res.status == 200) {
 					} else {
 					}
@@ -274,7 +273,7 @@ export default {
 		},
 		// 表头样式设置
 		headClass() {
-			return 'text-align: center;background:#E8F3FF;';
+			return 'text-align: center;background:#E8F3FF;color:#333333;';
 		},
 		// 表格样式设置
 		rowClass() {
@@ -314,7 +313,7 @@ export default {
 			.title_seach_left {
 				display: flex;
 				align-items: center;
-				.el-input--small {
+				.el-input--medium {
 					width: 200px;
 					margin-right: 20px;
 				}

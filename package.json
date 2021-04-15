@@ -22,6 +22,7 @@
     "vue": "^2.5.2",
     "vue-baidu-map": "^0.21.22",
     "vue-cookies": "^1.5.13",
+    "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.1",
     "vue-simple-uploader": "^0.7.4",
     "xlsx": "^0.15.2"

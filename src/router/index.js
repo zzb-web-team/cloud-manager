@@ -63,7 +63,22 @@ import sdkStatistics from "@/views/statistics/sdk-statistics";
 import unprocessedVisits from "@/views/utreated/unprocessed_visits.vue";
 import unprocessedTab from "@/views/utreated/unprocessed_tab.vue";
 
+//流量包管理
+import traffic_list from "@/views/traffic_package/traffic_list.vue";
+import traffic_configuration from "@/views/traffic_package/traffic_configuration.vue";
 
+
+//订单管理
+import order_list from "@/views/order/order_list.vue";
+import order_detil from "@/views/order/order_detil.vue";
+
+//营销管理
+import marketing_list from "@/views/marketing/marketing_list.vue";
+import maketing_edit from "@/views/marketing/maketing_edit.vue";
+
+//帮助中心
+import help_list from "@/views/help/help_list.vue";
+import help_edit from "@/views/help/help_edit.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -74,6 +89,27 @@ export default new Router({
             hidden: true,
         },
         {
+            path: "/home_two",
+            name: "点播管理后台",
+            component: index,
+            hidden: true,
+            mate: {
+                title: '点播管理后台'
+            },
+            children: [{
+                path: "/unprocessedVisits",
+                name: "未处理访问请求",
+                component: unprocessedVisits,
+            }]
+        },
+        {
+            path: "/unprocessedVisits",
+            name: "概览",
+            component: unprocessedVisits,
+            mate: {
+                title: '点播管理后台'
+            },
+        }, {
             path: "/home_two",
             name: "后台管理",
             component: index,
@@ -104,6 +140,10 @@ export default new Router({
             name: "用户管理",
             component: index,
             icon: "iconfont icon-guanxiaobaotubiao09",
+            hidden: true,
+            mate: {
+                title: '用户管理'
+            },
             children: [{
                     path: "/operating_user",
                     name: "注册用户",
@@ -118,10 +158,22 @@ export default new Router({
             ],
         },
         {
+            path: "/operating_user",
+            name: "注册用户",
+            component: operating_user,
+            mate: {
+                title: '用户管理'
+            },
+        },
+        {
             path: "/b",
             name: "加速配置管理",
             component: index,
             icon: "iconfont icon-jiankong",
+            mate: {
+                title: '加速配置管理'
+            },
+            hidden: true,
             children: [{
                     path: "/accelerate_management",
                     name: "域名管理",
@@ -180,22 +232,49 @@ export default new Router({
             ],
         },
         {
+            path: "/accelerate_management",
+            name: "域名管理",
+            component: accelerate_management,
+            mate: {
+                title: '加速配置管理'
+            },
+        },
+        {
+            path: "/domain_management",
+            name: "点播加速管理",
+            component: domain_management,
+            // hidden: true
+        }, {
+            path: "/yure_management",
+            name: "刷新预热管理",
+            component: yure_management,
+        },
+        {
             path: "/c",
             name: "点播 SDK管理",
             icon: "iconfont icon-jiedian1",
             component: index,
+            hidden: true,
             children: [{
                 path: "/node_information",
                 name: "点播SDK发布",
                 component: node_information,
             }, ],
         },
-
+        {
+            path: "/node_information",
+            name: "点播SDK发布",
+            component: node_information,
+        },
         {
             path: "/home_fosdr",
             name: "数据中心",
             component: index,
             icon: "iconfont icon-tongji",
+            // hidden: true,
+            mate: {
+                title: '数据中心'
+            },
             children: [{
                     path: "/gewsrg",
                     name: "监控统计",
@@ -268,29 +347,149 @@ export default new Router({
                     // hidden: true,
                     component: sdkStatistics,
                 },
+                {
+                    path: "/unprocessedTab",
+                    name: "未处理访问列表",
+                    component: unprocessedTab,
+                }
             ],
         },
         {
-            path: "/g",
-            name: "未处理访问请求",
+            path: "/h",
+            name: "管理中心",
             component: index,
             icon: "iconfont icon-guanli",
+            hidden: true,
+            mate: {
+                title: '流量包管理'
+            },
             children: [{
-                path: "/unprocessedVisits",
-                name: "未处理访问请求",
-                component: unprocessedVisits,
+                path: "/traffic_list",
+                name: "流量包管理",
+                component: traffic_list,
             }, {
-                path: "/unprocessedTab",
-                name: "未处理访问列表",
-                component: unprocessedTab,
+                path: "/traffic_configuration",
+                name: "流量包配置",
+                component: traffic_configuration,
+                // hidden: true,
+            }],
+        },
+        {
+            path: "/traffic_list",
+            name: "流量包管理",
+            component: traffic_list,
+            mate: {
+                title: '流量包管理'
+            },
+        }, {
+            path: "/traffic_configuration",
+            name: "流量包配置",
+            component: traffic_configuration,
+            // hidden: true,
+        },
+        {
+            path: "/j",
+            name: "订单管理",
+            component: index,
+            icon: "iconfont icon-guanli",
+            hidden: true,
+            mate: {
+                title: '订单管理'
+            },
+            children: [{
+                path: "/order_list",
+                name: "订单管理",
+                component: order_list,
+            }, {
+                path: "/order_detil",
+                name: "订单详情",
+                component: order_detil,
                 hidden: true,
             }],
+        },
+        {
+            path: "/order_list",
+            name: "订单管理",
+            component: order_list,
+            mate: {
+                title: '订单管理'
+            },
+        },
+        {
+            path: "/l",
+            name: "营销管理",
+            component: index,
+            icon: "iconfont icon-guanli",
+            hidden: true,
+            mate: {
+                title: '营销管理'
+            },
+            children: [{
+                    path: "/marketing_list",
+                    name: "营销管理",
+                    component: marketing_list,
+                },
+                {
+                    path: "/maketing_edit",
+                    name: "添加营销",
+                    component: maketing_edit,
+                    hidden: true,
+                }
+            ],
+        },
+        {
+            path: "/marketing_list",
+            name: "营销管理",
+            component: marketing_list,
+            mate: {
+                title: '营销管理'
+            },
+        },
+        {
+            path: "/m",
+            name: "帮助中心",
+            component: index,
+            icon: "iconfont icon-guanli",
+            hidden: true,
+            mate: {
+                title: '帮助中心'
+            },
+            children: [{
+                    path: "/help_list",
+                    name: "帮助中心",
+                    component: help_list,
+                },
+                {
+                    path: "/help_edit",
+                    name: "添加文档",
+                    component: help_edit,
+                    hidden: true,
+                }
+            ],
+        },
+        {
+            path: "/help_list",
+            name: "帮助中心",
+            component: help_list,
+            mate: {
+                title: '帮助中心'
+            },
+        },
+        {
+            path: "/help_edit",
+            name: "添加文档",
+            component: help_edit,
+            hidden: true,
         },
         {
             path: "/f",
             name: "后台管理",
             component: index,
             icon: "iconfont icon-guanli",
+            hidden: true,
+            mate: {
+                title: '终端管理'
+            },
             children: [{
                     path: "/user",
                     name: "后台账户",
@@ -302,6 +501,19 @@ export default new Router({
                     component: operation_management,
                 },
             ],
+        },
+        {
+            path: "/user",
+            name: "后台账户",
+            component: user,
+            mate: {
+                title: '终端管理'
+            },
+        },
+        {
+            path: "/operation_management",
+            name: "操作日志",
+            component: operation_management,
         },
     ],
 });

@@ -11,11 +11,13 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     var serverUrl = 'http://service.luqikang.com';
 } else if (href.indexOf('zzb.stguarantee.com') >= 0) {
     var serverUrl = 'http://zzb.stguarantee.com'; //阿里云服务URL
+} else if (href.indexOf('test.zzb.com') >= 0) {
+    var serverUrl = 'http://test.zzb.com'; //测试
 } else {
     // var serverUrl = 'http://zzb.stguarantee.com';
-    var serverUrl = 'http://www.forteatime.com';
+    // var serverUrl = 'http://www.forteatime.com';
     // var serverUrl = 'http://xyj.grapefruitcloud.com';
-    // var serverUrl = 'http://service.kclgames.com';
+    var serverUrl = 'http://service.kclgames.com';
 }
 
 export const hostUrl = serverUrl;

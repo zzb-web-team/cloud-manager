@@ -1232,23 +1232,28 @@ export default {
 						type: 'value',
 					},
 				],
-				dataZoom: [
-					{
-						type: 'slider',
-						xAxisIndex: 0,
-						start: 0,
-						end: 50,
-						throttle: 10,
-						zoomLock: false,
-						show: false,
-					},
-					{
-						type: 'inside',
-						realtime: true,
-						start: 0,
-						end: 50,
-					},
-				],
+				// dataZoom: [
+				// 	{
+				// 		show: false,
+				// 		start: 0,
+				// 		end: 100,
+				// 	},
+				// 	{
+				// 		type: 'slider',
+				// 		xAxisIndex: 0,
+				// 		start: 0,
+				// 		end: 50,
+				// 		throttle: 10,
+				// 		zoomLock: false,
+				// 		show: false,
+				// 	},
+				// 	{
+				// 		type: 'inside',
+				// 		realtime: true,
+				// 		start: 0,
+				// 		end: 50,
+				// 	},
+				// ],
 				series: x,
 			};
 			myChart.clear();
