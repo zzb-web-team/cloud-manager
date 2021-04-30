@@ -246,7 +246,9 @@ import {
   delete_url,
   change_state
 } from "../../servers/api";
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     //过滤状态
 

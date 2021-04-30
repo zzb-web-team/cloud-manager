@@ -105,7 +105,9 @@ import {
   query_config,
 } from "../../servers/api";
 import { dateToMs, getymdtime } from "../../servers/sevdate";
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     return {
       actives: 1,

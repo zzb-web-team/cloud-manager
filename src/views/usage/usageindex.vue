@@ -1,49 +1,52 @@
 <template>
 	<section class="myself-container content" @click="closeSel">
-		<div class="top_title">节点流量用量</div>
 		<div class="user-title" style="display: flex;flex-flow: column;">
 			<div class="resources_con">
 				<div
-					style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;"
+					style="background:rgba(255,255,255,1);box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);border-radius:2px;padding:30px 25px;"
 				>
-					<div>
-						<el-input
-							v-model="value1Activechanid"
-							placeholder="请输入渠道ID"
-							style="width:160px;margin-right: 10px;margin-top: 20px;"
-							@keyup.enter.native="onChanges"
-						>
-							<i
-								slot="prefix"
-								class="el-input__icon el-icon-search"
-								@click="onChanges()"
-							></i>
-						</el-input>
-						<el-input
-							v-model="valuedomian"
-							placeholder="请输入域名"
-							style="width:160px;margin-right: 10px;margin-top: 20px;"
-							@keyup.enter.native="onChanges"
-						>
-							<i
-								slot="prefix"
-								class="el-input__icon el-icon-search"
-								@click="onChanges()"
-							></i>
-						</el-input>
-						<el-input
-							v-model="value1"
-							placeholder="请输入加速内容名称"
-							style="width:160px;margin-right: 10px;margin-top: 20px;"
-							@keyup.enter.native="onChanges"
-						>
-							<i
-								slot="prefix"
-								class="el-input__icon el-icon-search"
-								@click="onChanges()"
-							></i>
-						</el-input>
-						<!-- <el-select
+					<div class="top_title">节点流量用量</div>
+					<div
+						style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;"
+					>
+						<div>
+							<el-input
+								v-model="value1Activechanid"
+								placeholder="请输入渠道ID"
+								style="width:160px;margin-right: 10px;margin-top: 20px;"
+								@keyup.enter.native="onChanges"
+							>
+								<i
+									slot="prefix"
+									class="el-input__icon el-icon-search"
+									@click="onChanges()"
+								></i>
+							</el-input>
+							<el-input
+								v-model="valuedomian"
+								placeholder="请输入域名"
+								style="width:160px;margin-right: 10px;margin-top: 20px;"
+								@keyup.enter.native="onChanges"
+							>
+								<i
+									slot="prefix"
+									class="el-input__icon el-icon-search"
+									@click="onChanges()"
+								></i>
+							</el-input>
+							<el-input
+								v-model="value1"
+								placeholder="请输入加速内容名称"
+								style="width:160px;margin-right: 10px;margin-top: 20px;"
+								@keyup.enter.native="onChanges"
+							>
+								<i
+									slot="prefix"
+									class="el-input__icon el-icon-search"
+									@click="onChanges()"
+								></i>
+							</el-input>
+							<!-- <el-select
 							v-model="value1acce1"
 							placeholder="全部节点渠道"
 							style="width: 10%;margin-right: 10px;margin-top: 20px;"
@@ -57,7 +60,7 @@
 								:value="item.value"
 							></el-option>
 						</el-select> -->
-						<!-- <el-button-group>
+							<!-- <el-button-group>
             <el-button v-show="!shoudzyx" @click="today()" label="one">今天</el-button>
             <el-button v-show="!shoudzyx" @click="yesterday()" label="two">昨天</el-button>
             <el-button v-show="!shoudzyx" @click="sevendat()" label="three">近7天</el-button>
@@ -67,56 +70,67 @@
               <i class="el-icon-date"></i>
             </el-button>
           </el-button-group> -->
-						<el-radio-group
-							v-model="radio"
-							@change="select_time()"
-							v-show="!showzdy"
+							<el-radio-group
+								v-model="radio"
+								@change="select_time()"
+								v-show="!showzdy"
+							>
+								<el-radio-button label="1"
+									>今天</el-radio-button
+								>
+								<el-radio-button label="2"
+									>昨天</el-radio-button
+								>
+								<el-radio-button label="3"
+									>近7天</el-radio-button
+								>
+								<el-radio-button label="4"
+									>近30天</el-radio-button
+								>
+								<el-radio-button label="5"
+									>自定义</el-radio-button
+								>
+							</el-radio-group>
+							<el-button
+								type="primary"
+								v-show="showzdy"
+								@click="setZdy"
+								tyle="margin-top: 20px;"
+								>自定义</el-button
+							>
+							<el-date-picker
+								v-show="showzdy"
+								style="margin-left:10px;margin-top: 20px;"
+								v-model="val2"
+								type="daterange"
+								range-separator="~"
+								start-placeholder="开始日期"
+								end-placeholder="结束日期"
+								align="left"
+								@change="gettimes"
+							></el-date-picker>
+							<el-button
+								style="margin-left:10px;margin-top: 20px;"
+								type="primary"
+								@click="seachtu(1)"
+								>确定</el-button
+							>
+							<el-button
+								style="margin-left:10px;margin-top: 20px;"
+								type="primary"
+								@click="reset()"
+								>重置</el-button
+							>
+						</div>
+						<div
+							style="display:flex;white-space:nowrap;margin-top: 20px;"
 						>
-							<el-radio-button label="1">今天</el-radio-button>
-							<el-radio-button label="2">昨天</el-radio-button>
-							<el-radio-button label="3">近7天</el-radio-button>
-							<el-radio-button label="4">近30天</el-radio-button>
-							<el-radio-button label="5">自定义</el-radio-button>
-						</el-radio-group>
-						<el-button
-							type="primary"
-							v-show="showzdy"
-							@click="setZdy"
-							tyle="margin-top: 20px;"
-							>自定义</el-button
-						>
-						<el-date-picker
-							v-show="showzdy"
-							style="margin-left:10px;margin-top: 20px;"
-							v-model="val2"
-							type="daterange"
-							range-separator="~"
-							start-placeholder="开始日期"
-							end-placeholder="结束日期"
-							align="left"
-							@change="gettimes"
-						></el-date-picker>
-						<el-button
-							style="margin-left:10px;margin-top: 20px;"
-							type="primary"
-							@click="seachtu(1)"
-							>确定</el-button
-						>
-						<el-button
-							style="margin-left:10px;margin-top: 20px;"
-							type="primary"
-							@click="reset()"
-							>重置</el-button
-						>
-					</div>
-					<div
-						style="display:flex;white-space:nowrap;margin-top: 20px;"
-					>
-						<span style="margin-right:5px;">使用缓存</span>
-						<el-switch
-							v-model="useCache"
-							active-color="#297AFF"
-						></el-switch>
+							<span style="margin-right:5px;">使用缓存</span>
+							<el-switch
+								v-model="useCache"
+								active-color="#297AFF"
+							></el-switch>
+						</div>
 					</div>
 				</div>
 				<div class="user_item">
@@ -287,7 +301,9 @@ import echarts from 'echarts';
 import common from '../../comm/js/util';
 import _ from 'lodash';
 
+import base from '../../components/base';
 export default {
+	mixins: [base],
 	data() {
 		return {
 			radio1: 'one',
@@ -1287,17 +1303,17 @@ export default {
 	right: 11px;
 }
 .myself-container {
-	width: 100%;
+	// width: 100%;
 	min-width: 1250px;
 
 	.device_form {
 		width: auto;
 		height: auto;
-		margin-top: 20px;
+		margin-top: 15px;
 		background: #ffffff;
 		padding: 15px 30px;
 		box-sizing: border-box;
-		box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
 
 		.bottom {
@@ -1333,9 +1349,9 @@ export default {
 			width: auto;
 			height: 130px;
 			background: rgba(255, 255, 255, 1);
-			box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+			box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 			border-radius: 2px;
-			margin-top: 20px;
+			margin-top: 15px;
 
 			display: flex;
 			justify-content: flex-start;
@@ -1386,10 +1402,10 @@ export default {
 	.devide_table {
 		padding: 35px;
 		height: auto;
-		margin-top: 20px;
+		margin-top: 15px;
 		background: #ffffff;
 		border-radius: 2px;
-		box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
 
 		.el-table td,
@@ -1424,9 +1440,9 @@ export default {
 	width: auto;
 	height: 130px;
 	background: rgba(255, 255, 255, 1);
-	box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+	box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 	border-radius: 2px;
-	margin-top: 20px;
+	margin-top: 15px;
 
 	display: flex;
 	justify-content: flex-start;

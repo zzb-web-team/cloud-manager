@@ -7,25 +7,21 @@
 					<el-input
 						v-model="channeld"
 						placeholder="请输入渠道ID"
-						size="medium"
 						@change="onChanges"
 					></el-input>
 					<el-input
 						v-model="domain"
 						placeholder="请输入加速内容名称"
-						size="medium"
 						@change="onChanges"
 					></el-input>
 					<el-input
 						v-model="urlName"
 						placeholder="请输入CDN地址"
-						size="medium"
 						@change="onChanges"
 					></el-input>
 				</div>
 				<div class="title_seach_right">
 					<el-radio-group
-						size="medium"
 						v-model="radio"
 						@change="set_search_time"
 						v-show="!show_time"
@@ -42,23 +38,22 @@
 						>自定义</el-button
 					>
 					<el-date-picker
-						size="medium"
 						v-show="show_time"
 						v-model="search_time"
 						type="date"
 						placeholder="选择日期"
 					>
 					</el-date-picker>
-					<el-button type="primary" size="small" @click="onChanges"
+					<el-button type="primary" @click="onChanges"
 						>查询</el-button
 					>
-					<el-button size="small" @click="reset">重置</el-button>
+					<el-button @click="reset">重置</el-button>
 				</div>
 			</div>
 		</div>
-		<div class="content" ref="box_rHeight">
+		<div class="tab_content" ref="box_rHeight">
 			<div class="content_top">
-				<el-button size="small" type="text" @click="export_exc"
+				<el-button type="text" @click="export_exc"
 					><img src="../../assets/img/btn_img.png" alt=""
 				/></el-button>
 			</div>
@@ -119,7 +114,9 @@
 <script>
 import { ipfs_unhandle_req_list } from '../../servers/api';
 import fenye from '@/components/fenye';
+import base from '../../components/base';
 export default {
+	mixins: [base],
 	data() {
 		return {
 			clientHeight: '',
@@ -186,7 +183,7 @@ export default {
 		};
 		if (that.$refs.box_rHeight) {
 			that.$refs.box_rHeight.style.height =
-				that.clientHeight - 334 + 'px';
+				that.clientHeight - 324 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
 
@@ -267,7 +264,7 @@ export default {
 		//查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data - 334 + 'px';
+				this.$refs.box_rHeight.style.height = data - 324 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 500 + 'px';
 			}
 		},
@@ -291,11 +288,12 @@ export default {
 	background-color: #fff;
 	text-align: left;
 	.title {
-		width: 100%;
 		height: 184px;
 		margin-top: 30px;
-		margin-bottom: 30px;
+		margin-bottom: 15px;
 		box-sizing: border-box;
+		margin-left: 25px;
+		margin-right: 25px;
 		padding: 30px;
 		display: flex;
 		flex-direction: column;
@@ -312,8 +310,8 @@ export default {
 			white-space: nowrap;
 			.title_seach_left {
 				display: flex;
-				align-items: center;
-				.el-input--medium {
+                align-items: center;
+				.el-input {
 					width: 200px;
 					margin-right: 20px;
 				}
@@ -322,16 +320,17 @@ export default {
 				.el-date-editor--date {
 					margin: 0 10px;
 				}
-				.el-button--small {
-					border-radius: 8px;
-					padding: 9px 25px;
+				.el-button {
+					// border-radius: 5px;
+					// padding: 9px 25px;
 					margin: 0 10px;
 				}
 			}
 		}
 	}
-	.content {
-		flex: 1;
+	.tab_content {
+        flex: 1;
+        margin-left: 25px;margin-right: 25px;
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		padding: 30px;
 		.content_top {

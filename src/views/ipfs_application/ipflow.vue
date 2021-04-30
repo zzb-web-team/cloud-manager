@@ -69,7 +69,9 @@ import {
 } from "../../servers/api";
 import common from "../../comm/js/util";
 import { fail } from 'assert';
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     return {
       accelType: "0",

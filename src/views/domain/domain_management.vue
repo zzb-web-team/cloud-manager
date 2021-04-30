@@ -1,11 +1,11 @@
 <template>
   <div class="content">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item>点播加速管理</el-breadcrumb-item>
-    </el-breadcrumb>
     <div>
       <!-- 搜索 -->
       <div class="seach">
+    <el-breadcrumb separator="/">
+      <el-breadcrumb-item>点播加速管理</el-breadcrumb-item>
+    </el-breadcrumb>
         <div class="seach_top">
           <el-input placeholder="请输入渠道ID丶加速内容" v-model="input_text" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmitInput">
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
@@ -28,7 +28,7 @@
         </div>
       </div>
       <!-- 表格 -->
-      <div class="con_lable">
+      <div class="con_lable" :style="{ height: clientHeight - 265 + 'px' }">
         <div style="padding:10px 0;display: flex;justify-content: space-between;">
           <div>
             <el-button type="primary" @click="addUrl">
@@ -279,7 +279,9 @@ import {
   query_url_for_admin,
   url_export_for_admin,
 } from "../../servers/api";
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     //过滤状态
 
@@ -1314,11 +1316,11 @@ export default {
 <style lang="scss" scoped>
 .seach {
   width: 100%;
-  margin: 30px 0 30px 0;
+  margin: 30px 0 15px 0;
   background: #ffffff;
   border-radius: 2px;
   padding: 21px 37px;
-  box-shadow: 0px 0px 7px 0px rgba(41, 108, 171, 0.1);
+ box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
   .seach_top {
     width: 100%;
     height: 60px;

@@ -6,7 +6,7 @@
 				<el-tabs v-model="activeName" @tab-click="handleClick">
 					<el-tab-pane label="节点流量" name="first" :lazy="true">
 						<div
-							style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;white-space:nowrap;"
+							style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1); box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);border-radius:2px;white-space:nowrap;"
 						>
 							<div>
 								<el-input
@@ -550,7 +550,9 @@ import echarts from 'echarts';
 import common from '../../comm/js/util';
 import _ from 'lodash';
 
+import base from "../../components/base"
 export default {
+    mixins:[base],
 	data() {
 		return {
 			dataAry: [],
@@ -1635,17 +1637,17 @@ export default {
 
 <style lang="scss">
 .myself-container {
-	width: 100%;
+	// width: 100%;
 	min-width: 1250px;
 
 	.device_form {
 		width: auto;
 		height: auto;
-		margin-top: 20px;
+		margin-top: 15px;
 		background: #ffffff;
 		padding: 15px 30px;
 		box-sizing: border-box;
-		box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+		 box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
 
 		.bottom {
@@ -1676,10 +1678,10 @@ export default {
 	.devide_table {
 		padding: 35px;
 		height: auto;
-		margin-top: 20px;
+		margin-top: 15px;
 		background: #ffffff;
 		border-radius: 2px;
-		box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+		 box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
 		.el-table::before {
 			z-index: inherit;
@@ -1708,9 +1710,9 @@ export default {
 		width: auto;
 		height: 130px;
 		background: rgba(255, 255, 255, 1);
-		box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+		 box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
-		margin: 20px 0;
+		margin: 15px 0;
 		display: flex;
 		justify-content: flex-start;
 		align-items: center;

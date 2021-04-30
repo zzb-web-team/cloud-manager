@@ -1,10 +1,12 @@
 <template>
 	<div class="content">
-		<el-breadcrumb separator="/">
-			<el-breadcrumb-item>用户管理</el-breadcrumb-item>
-		</el-breadcrumb>
 		<section class="myself-container">
 			<div class="device_form">
+				<el-breadcrumb separator="/">
+					<el-breadcrumb-item
+						>用户管理</el-breadcrumb-item
+					>
+				</el-breadcrumb>
 				<el-form ref="form" :model="form">
 					<el-row type="flex">
 						<!-- <div class="search-con">
@@ -71,7 +73,7 @@
 					</el-row>
 				</el-form>
 			</div>
-			<div class="devide_table">
+			<div class="devide_table" :style="{ height: clientHeight - 260 + 'px' }">
 				<div style="    display: flex;justify-content: flex-end;">
 					<el-button type="primary" @click="toexportExcel"
 						>导出</el-button
@@ -95,37 +97,37 @@
 						></tableBarActive1>
 					</el-col>
 				</el-row>
-			</div>
-			<div
-				class="devide_pageNation"
-				style="display: flex;justify-content: space-between;"
-			>
-				<el-row type="flex">
-					<el-col
-						:span="6"
-						style="display: flex;justify-content: justify-content: flex-start;"
-					>
-						<el-button type="text" size="small" @click="allOn"
-							>启用</el-button
+				<div
+					class="devide_pageNation"
+					style="display: flex;justify-content: space-between;"
+				>
+					<el-row type="flex">
+						<el-col
+							:span="6"
+							style="display: flex;justify-content: justify-content: flex-start;"
 						>
-						<el-button
-							type="text"
-							size="small"
-							style="margin-left:30px;"
-							@click="allOff"
-							>冻结</el-button
-						>
-					</el-col>
-				</el-row>
-				<el-row type="flex">
-					<el-col :span="6">
-						<pageNation
-							:pager="pager"
-							@handleSizeChange="handleSizeChange"
-							@handleCurrentChange="handleCurrentChange"
-						></pageNation>
-					</el-col>
-				</el-row>
+							<el-button type="text" size="small" @click="allOn"
+								>启用</el-button
+							>
+							<el-button
+								type="text"
+								size="small"
+								style="margin-left:30px;"
+								@click="allOff"
+								>冻结</el-button
+							>
+						</el-col>
+					</el-row>
+					<el-row type="flex">
+						<el-col :span="6">
+							<pageNation
+								:pager="pager"
+								@handleSizeChange="handleSizeChange"
+								@handleCurrentChange="handleCurrentChange"
+							></pageNation>
+						</el-col>
+					</el-row>
+				</div>
 			</div>
 		</section>
 	</div>
@@ -147,9 +149,10 @@ import {
 } from '../../servers/api';
 import common from '../../comm/js/util.js';
 import VueCookies from 'vue-cookies';
-
+import base from "../../components/base"
 import { Stats } from 'fs';
 export default {
+    mixins:[base],
 	data() {
 		return {
 			form: {},
@@ -815,8 +818,9 @@ export default {
 		overflow: hidden;
 		margin-top: 20px;
 		background: #ffffff;
-		padding: 15px 30px;
+		padding: 25px 30px;
 		box-sizing: border-box;
+		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 
 		.el-form-item__label {
 			white-space: nowrap;
@@ -848,10 +852,9 @@ export default {
 	.devide_table {
 		padding: 35px;
 		height: auto;
-		margin: 20px 0;
+		margin: 15px 0;
 		background: #fff;
-		-webkit-box-shadow: 0 2px 3px 0 rgba(6, 17, 36, 0.14);
-		box-shadow: 0 2px 3px 0 rgba(6, 17, 36, 0.14);
+		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
 
 		.el-table td,

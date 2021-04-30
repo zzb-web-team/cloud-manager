@@ -1,6 +1,8 @@
 <template>
 	<div ref="box_rHeight" class="help_edit">
-		<div class="top_title">帮助中心 > 添加帮助文档</div>
+		<div class="top_title">
+			<span @click="go_back">帮助中心</span> > 添加帮助文档
+		</div>
 		<el-form
 			:model="ruleForm"
 			:rules="rules"
@@ -76,7 +78,9 @@ import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
 
 import { quillEditor } from 'vue-quill-editor';
+import base from '../../components/base';
 export default {
+	mixins: [base],
 	data() {
 		return {
 			clientHeight: '',
@@ -167,6 +171,9 @@ export default {
 		}
 	},
 	methods: {
+		go_back() {
+			this.$router.go(-1);
+		},
 		onEditorChange({ editor, html, text }) {
 			this.ruleForm.content = html;
 		},
@@ -193,7 +200,7 @@ export default {
 		//查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data - 140 + 'px';
+				this.$refs.box_rHeight.style.height = data - 120 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 850 + 'px';
 			}
 		},
@@ -203,9 +210,8 @@ export default {
 
 <style lang="scss" scoped>
 .help_edit {
-	width: 100%;
 	text-align: left;
-	margin-top: 36px;
+	margin: 30px 25px;
 	box-sizing: border-box;
 	padding: 40px;
 	box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);

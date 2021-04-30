@@ -1,9 +1,9 @@
 <template>
   <section class="myself-container content">
-    <div class="top_title">SDK版本统计</div>
     <div class="user-title" style="display: flex;flex-flow: column; margin-top: 20px;">
       <div class="resources_con">
-        <div style="display: flex;flex-flow: row;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;">
+        <div style="padding:20px 37px;background:rgba(255,255,255,1);box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);border-radius:2px;">
+            <div class="top_title">SDK版本统计</div>
             <el-date-picker style="margin-right:10px;" v-model="val2" type="daterange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes(0)"></el-date-picker>
         </div>
         <div class="device_form" style>
@@ -79,7 +79,9 @@ import {
 import echarts from "echarts";
 import common from "../../comm/js/util";
 
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     return {
       val2: [],
@@ -331,17 +333,17 @@ export default {
 
 <style lang="scss">
 .myself-container {
-  width: 100%;
+//   width: 100%;
   //min-width: 1600px;
 
   .device_form {
     width: auto;
     height: auto;
-    margin-top: 20px;
+    margin-top: 15px;
     background: #ffffff;
     padding: 15px 30px;
     box-sizing: border-box;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+   box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
     border-radius: 2px;
 
     .bottom {
@@ -378,10 +380,10 @@ export default {
   .devide_table {
     padding: 35px;
     height: auto;
-    margin: 20px 0;
+    margin: 15px 0;
     background: #ffffff;
     border-radius: 2px;
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+    box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
     border-radius: 2px;
 
     .el-table td,

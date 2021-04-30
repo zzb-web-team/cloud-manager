@@ -6,21 +6,19 @@
 				<el-input
 					v-model="val_name"
 					placeholder="请输入标题"
-					size="medium"
 					@change="onChanges"
-					style="width:10%;max-width:300px;"
+					style="width:20%;max-width:300px;"
 				></el-input>
 				<el-select
 					v-model="mark_state"
 					placeholder="请选择状态"
-					style="width:10%;max-width:300px;margin-left:10px"
+					style="width:20%;max-width:300px;margin-left:10px"
 				>
 					<el-option label="全部" value=""></el-option>
 					<el-option label="状态一" value="1"></el-option>
 					<el-option label="状态二" value="2"></el-option>
 				</el-select>
 				<el-date-picker
-					size="medium"
 					v-model="search_time"
 					type="daterange"
 					placeholder="选择日期"
@@ -30,15 +28,15 @@
 					style="width:16%;max-width:340px;margin:0 10px"
 				>
 				</el-date-picker>
-				<el-button type="primary" size="small" @click="onChanges"
+				<el-button type="primary" @click="onChanges"
 					>查询</el-button
 				>
-				<el-button size="small" @click="reset">重置</el-button>
+				<el-button @click="reset">重置</el-button>
 			</div>
 		</div>
 		<div class="table_con" ref="box_rHeight">
 			<div class="content_top">
-				<el-button size="small" type="primary" @click="handleClick(1)"
+				<el-button type="primary" @click="handleClick(1)"
 					>添加</el-button
 				>
 			</div>
@@ -108,7 +106,9 @@
 
 <script>
 import fenye from '@/components/fenye';
+import base from "../../components/base"
 export default {
+    mixins:[base],
 	data() {
 		return {
 			clientHeight: '',
@@ -175,7 +175,7 @@ export default {
 		};
 		if (that.$refs.box_rHeight) {
 			that.$refs.box_rHeight.style.height =
-				that.clientHeight - 334 + 'px';
+				that.clientHeight - 290 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
 	},
@@ -213,7 +213,7 @@ export default {
 		//查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data - 334 + 'px';
+				this.$refs.box_rHeight.style.height = data - 290 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 500 + 'px';
 			}
 		},
@@ -231,8 +231,7 @@ export default {
 
 <style lang="scss" scoped>
 .con {
-	width: 100%;
-	margin: 40px 0;
+	margin: 30px 25px;
 	text-align: left;
 	background-color: #fff;
 	.con_top {
@@ -248,7 +247,7 @@ export default {
 		}
 	}
 	.table_con {
-		margin-top: 30px;
+		margin-top: 15px;
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		flex: 1;
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);

@@ -60,7 +60,9 @@ import fenye from "@/components/fenye";
 import { query_videoplay_log, export_videoplay_file } from "../../servers/api";
 import common from "../../comm/js/util";
 
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     return {
       pickerOptions: {

@@ -64,7 +64,9 @@
 <script>
 import { query_url_for_admin } from "../../servers/api";
 import common from "../../comm/js/util.js";
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     return {
       ids: "",

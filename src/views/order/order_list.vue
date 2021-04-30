@@ -16,9 +16,8 @@
 							<el-input
 								v-model="order_id"
 								placeholder="请输入订单号"
-								size="medium"
 								@change="onChanges"
-								style="width:60%;max-width:300px;"
+								style="width:80%;max-width:300px;"
 							></el-input>
 						</el-col>
 						<el-col>
@@ -26,18 +25,16 @@
 							<el-input
 								v-model="order_id"
 								placeholder="请输入商品名称"
-								size="medium"
 								@change="onChanges"
-								style="width:60%;max-width:300px;"
+								style="width:80%;max-width:300px;"
 							></el-input>
 						</el-col>
 						<el-col>
 							<span class="item_title">支付方式</span>
 							<el-select
-								size="medium"
 								v-model="pay_type"
 								placeholder="请选择活动区域"
-								style="width:60%;max-width:300px;height:auto;"
+								style="width:80%;max-width:300px;height:auto;"
 							>
 								<el-option label="全部" value="*"></el-option>
 								<el-option
@@ -61,18 +58,16 @@
 							<el-input
 								v-model="order_id"
 								placeholder="请输入用户信息"
-								size="medium"
 								@change="onChanges"
-								style="width:60%;max-width:300px;"
+								style="width:80%;max-width:300px;"
 							></el-input>
 						</el-col>
 						<el-col>
 							<span class="item_title">产品类型</span>
 							<el-select
-								size="medium"
 								v-model="pay_type"
 								placeholder="请选择活动区域"
-								style="width:60%;max-width:300px;height:auto;"
+								style="width:80%;max-width:300px;height:auto;"
 							>
 								<el-option label="全部" value="*"></el-option>
 								<el-option
@@ -88,24 +83,23 @@
 						<el-col>
 							<span class="item_title">创建时间</span>
 							<el-date-picker
-								size="medium"
 								v-model="search_time"
 								type="daterange"
 								placeholder="选择日期"
 								range-separator="~"
 								start-placeholder="开始日期"
 								end-placeholder="结束日期"
-								style="width:60%;max-width:300px;"
+								style="width:80%;max-width:300px;"
 							>
 							</el-date-picker>
 						</el-col>
 					</el-row>
 				</div>
 				<div class="search_right">
-					<el-button type="primary" size="small" @click="onChanges"
+					<el-button type="primary"  @click="onChanges"
 						>查询</el-button
 					>
-					<el-button size="small" @click="reset">重置</el-button>
+					<el-button  @click="reset">重置</el-button>
 				</div>
 			</div>
 		</div>
@@ -143,10 +137,7 @@
 						<p>{{ scope.row.tel | formatTel }}</p>
 					</template>
 				</el-table-column>
-				<el-table-column
-					prop="create_time"
-					label="创建订单时间"
-				>
+				<el-table-column prop="create_time" label="创建订单时间">
 				</el-table-column>
 				<el-table-column prop="pay_type" label="支付方式" width="80">
 					<template slot-scope="scope">
@@ -198,7 +189,9 @@
 
 <script>
 import fenye from '@/components/fenye';
+import base from '../../components/base';
 export default {
+	mixins: [base],
 	data() {
 		return {
 			clientHeight: '',
@@ -299,7 +292,7 @@ export default {
 		};
 		if (that.$refs.box_rHeight) {
 			that.$refs.box_rHeight.style.height =
-				that.clientHeight - 334 + 'px';
+				that.clientHeight - 330 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
 	},
@@ -358,7 +351,7 @@ export default {
 		//查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data - 374 + 'px';
+				this.$refs.box_rHeight.style.height = data - 330 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 500 + 'px';
 			}
 		},
@@ -376,10 +369,9 @@ export default {
 
 <style lang="scss" scoped>
 .order_list_com {
-	width: 100%;
 	text-align: left;
+	margin: 30px 25px;
 	box-sizing: border-box;
-	padding: 40px 0;
 	.con_top {
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		box-sizing: border-box;
@@ -395,7 +387,7 @@ export default {
 			align-items: center;
 			white-space: nowrap;
 			.search_left {
-				width: 65%;
+				width: 85%;
 				.title_seach_item {
 					margin-bottom: 20px;
 					.item_title {
@@ -412,7 +404,7 @@ export default {
 		}
 	}
 	.con_table {
-		margin-top: 36px;
+		margin-top: 15px;
 		flex: 1;
 
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);

@@ -267,7 +267,7 @@ export default {
 			that.clientHeight = `${document.documentElement.clientHeight||document.documentElement.offsetHeight}`;
 			if (that.$refs.scrollerHeight) {
 				that.$refs.scrollerHeight.style.height =
-					that.clientHeight - 605 + 'px';
+					that.clientHeight - 580 + 'px';
 				that.$refs.scrollerHeight.style.minHeight = 500 + 'px';
 			}
 		};
@@ -594,7 +594,7 @@ export default {
 		changeFixed(data) {
 			if (this.$refs.scrollerHeight) {
 				this.$refs.scrollerHeight.style.height =
-					data - 575 + 'px';
+					data - 560 + 'px';
 				this.$refs.scrollerHeight.style.minHeight = 500 + 'px';
 			}
 		},
@@ -613,8 +613,10 @@ export default {
 <style lang="scss" scoped>
 .content {
 	background-color: #fff;
-    width: 100%;
-    min-width: 1500px;
+    // width: 100%;
+    min-width: 1250px;
+    margin-left: 25px;
+    margin-right: 25px;
 	.more {
 		text-align: right;
 		color: #297aff;
@@ -633,7 +635,7 @@ export default {
 		justify-content: space-between;
 		.content_top_left {
 			width: 38%;
-			margin-right: 30px;
+			margin-right: 15px;
 			padding: 30px;
 			box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 			.content_top_left_con_top {
@@ -682,7 +684,7 @@ export default {
 						height: 40%;
 						box-sizing: border-box;
 						padding-top: 20px;
-						border-radius: 8px;
+						border-radius: 5px;
 						background: #f8f9fb;
 						margin-top: 15px;
 						p {
@@ -750,7 +752,7 @@ export default {
 			.content_top_right_text {
 				width: 250px;
 				// background: #fcb2f2;
-				margin-right: 30px;
+				margin-right: 15px;
 				padding: 30px;
 				box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 				display: flex;
@@ -795,20 +797,20 @@ export default {
 	}
 	.content_bottom {
 		width: 100%;
-		margin-top: 30px;
+		margin-top: 15px;
 		margin-bottom: 30px;
 		display: flex;
 		justify-content: space-between;
 		.content_bottom_left {
           	width: 38%;
             min-width: 645px;
-			margin-right: 30px;
+			margin-right: 15px;
 			display: flex;
 			flex-direction: column;
 			.content_bottom_left_text {
 				width: 100%;
 				height: 160px;
-				margin-bottom: 30px;
+				margin-bottom: 15px;
                 padding: 30px;
                 background:#F8F9FB;
 				box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
@@ -846,7 +848,8 @@ export default {
 		}
 		.content_bottom_right {
 			flex: 1;
-			// background: #f9fab4;
+            // background: #f9fab4;
+            box-sizing: border-box;
 			padding: 30px;
 			box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 			.table_text {

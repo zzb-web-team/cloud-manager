@@ -77,7 +77,9 @@ import {
   query_domain,
   query_domain_for_admin,
 } from "../../servers/api";
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     return {
       inputStatus: true,

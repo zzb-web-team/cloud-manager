@@ -88,11 +88,11 @@ li {
 
 .content {
     // max-width: 2200px;
-    height: 100%;
-    margin: 30px;
+    // height: 100%;
+    // margin: 30px;
+    background-color: rgb(255, 255, 255);
     box-sizing: border-box;
-    margin: 0 auto;
-    padding-top: 30px;
+    margin: 30px 25px;
 }
 
 //登录框样式
@@ -169,7 +169,7 @@ li {
             text-align: left;
             height: auto;
             background: #f0f5f5;
-            border-radius: 10px;
+            border-radius: 5px;
             padding: 10px 15px;
             margin-top: 10px;
             .el-select {
@@ -183,9 +183,19 @@ li {
     .con_lable {
         width: 100%;
         background: #ffffff;
-        margin-top: 20px;
+        // margin-top: 20px;
         padding: 20px;
+        box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
     }
+}
+
+.el-breadcrumb {
+    margin-bottom: 20px;
+}
+
+.seach,
+.con_lable {
+    box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 }
 
 //旋转
@@ -211,9 +221,7 @@ li {
 .content .con_lable {
     width: 100%;
     background: #ffffff;
-    background: #fff;
-    -webkit-box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+    box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
     border-radius: 2px;
     padding: 8px 37px 0;
     padding-bottom: 30px;
@@ -283,7 +291,7 @@ li {
 }
 
 .yure_content .el-tabs__header {
-    padding-left: 45px;
+    // padding-left: 45px;
     margin-top: -4px;
     background: #ffffff;
     font-size: 20px;
@@ -299,7 +307,7 @@ li {
 }
 
 .statisics_con .el-tabs__header {
-    padding-left: 45px;
+    // padding-left: 45px;
     margin-top: 25px;
     background: #ffffff;
     font-size: 20px;
@@ -316,7 +324,7 @@ li {
 }
 
 .resources_con .el-tabs__header {
-    padding-left: 45px;
+    // padding-left: 45px;
     margin-top: 25px;
     background: #ffffff;
     font-size: 20px;
@@ -326,11 +334,11 @@ li {
     width: 1240px;
     margin: auto;
     box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
-    border-radius: 6px;
+    border-radius: 5px;
 }
 
 .termail_con .el-tabs__header {
-    padding-left: 45px;
+    // padding-left: 45px;
     margin-top: -10px;
     background: #ffffff;
     font-size: 20px;
@@ -611,7 +619,7 @@ li {
     width: 320px !important;
     margin-top: 34vh !important;
     padding-right: 0;
-    border-radius: 8px;
+    border-radius: 5px;
     p {
         text-align: center;
         font-weight: 600;
@@ -620,7 +628,7 @@ li {
         margin-bottom: 20px;
     }
     .el-button {
-        border-radius: 8px;
+        border-radius: 5px;
         padding: 9px 25px;
     }
 }
@@ -642,11 +650,11 @@ li {
     .el-radio {
         margin-right: 0;
         position: relative;
-        border-radius: 8px;
+        border-radius: 5px;
     }
     .el-radio.is-bordered.is-checked {
         border: 2px solid #409EFF;
-        border-radius: 8px;
+        border-radius: 5px;
     }
     .el-radio__label {
         display: flex;
@@ -666,14 +674,14 @@ li {
 }
 
 .el-input__inner {
-    border-radius: 8px;
+    border-radius: 5px;
 }
 
 // .el-button--small
 .el-button--primary,
 .el-button--default {
-    border-radius: 8px;
-    padding: 9px 25px;
+    border-radius: 5px;
+    // padding: 9px 25px;
 }
 
 .el-button--text {
@@ -734,4 +742,8 @@ li {
     i {
         padding-left: 15px;
     }
+}
+
+.top_title {
+    margin-bottom: 10px;
 }

@@ -1,7 +1,8 @@
 <template>
 <div class="con" ref="box_rHeight">
+    <div class="con_title"><span @click="go_back">流量包管理</span> > 流量包配置</div>
 	<div class="configuration">
-            <div class="top_title">流量包管配置</div>
+            <div class="top_title">流量包配置</div>
 			<el-form
 				:model="ruleForm"
 				:rules="rules"
@@ -74,7 +75,9 @@
 </template>
 
 <script>
+import base from "../../components/base"
 export default {
+    mixins:[base],
 	data() {
 		return {
             clientHeight: '',
@@ -201,6 +204,9 @@ export default {
         }
     },
 	methods: {
+        go_back(){
+            this.$router.go(-1);
+        },
 		submitForm(formName) {
 			this.$refs[formName].validate((valid) => {
 				if (valid) {
@@ -217,7 +223,7 @@ export default {
         	//查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data -140 + 'px';
+				this.$refs.box_rHeight.style.height = data -130 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 850 + 'px';
 			}
 		},
@@ -231,10 +237,16 @@ i{
     margin-right: 5px;
 }
 .con{
-width: 100%;
 height: 100%;
-margin-top: 40px;
+margin-top: 30px;
+margin-left: 25px;margin-right: 25px;
     box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
+    .con_title{
+        padding-top: 25px;
+        padding-left: 25px;
+        margin-bottom: 20px;
+        text-align: left;
+    }
     .configuration{
         width: 600px;
         margin: auto;

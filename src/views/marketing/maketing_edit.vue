@@ -1,6 +1,6 @@
 <template>
 	<div class="configuration" ref="box_rHeight">
-            <div class="top_title">营销管理 > 添加营销</div>
+            <div class="top_title"><span @click="go_back">营销管理</span> > 添加营销</div>
 			<el-form
 				:model="ruleForm"
 				:rules="rules"
@@ -47,7 +47,9 @@
 </template>
 
 <script>
+import base from "../../components/base"
 export default {
+    mixins:[base],
 	data() {
 		return {
             clientHeight: '',
@@ -122,6 +124,9 @@ export default {
         }
     },
 	methods: {
+        go_back(){
+            this.$router.go(-1);
+        },
 		submitForm(formName) {
 			this.$refs[formName].validate((valid) => {
 				if (valid) {
@@ -161,8 +166,9 @@ i{
     margin-right: 5px;
 }
 .configuration{
-    width: 100%;
+    // width: 100%;
     text-align: left;
+    margin-left: 25px;margin-right: 25px;
     box-sizing: border-box;
     padding: 40px;
     box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);

@@ -105,7 +105,10 @@
 <script>
 import { userupdate, bind_login, bind_login2,qrcode } from "../../servers/api";
 import { getymdtime } from "../../servers/sevdate";
+import base from "../../components/base"
+
 export default {
+    mixins:[base],
   data() {
     return {
       title: "个人中心",

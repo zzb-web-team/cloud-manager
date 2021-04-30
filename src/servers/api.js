@@ -475,5 +475,5 @@ export const ipfs_unhandle_req_list = (params) => {
 };
 //首页概览数据
 export const home_page = (params) => {
-    return post(`${serverUrl}/resource_manage/home_page`, params)
+    return post(`10.0.0.128:8090/resource_manage/home_page`, params)
 };

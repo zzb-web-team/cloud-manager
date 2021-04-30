@@ -40,7 +40,9 @@
 import { query_logfile_table, download_logfile } from "../../servers/api";
 import fenye from "@/components/fenye";
 import { dateToMs, getymdtime } from "../../servers/sevdate";
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     return {
       currentPage: 1,

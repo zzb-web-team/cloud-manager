@@ -7,7 +7,7 @@
 				<el-tabs v-model="activeName" @tab-click="handleClick">
 					<el-tab-pane label="PV/UV" name="first">
 						<div
-							style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;"
+							style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1); box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);border-radius:2px;"
 						>
 							<div>
 								<el-input
@@ -148,7 +148,7 @@
 
 					<el-tab-pane label="访问用户分布" name="second">
 						<div
-							style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1);box-shadow:0px 2px 3px 0px rgba(6,17,36,0.14);border-radius:2px;"
+							style="display: flex;justify-content: space-between;align-items: center;flex-flow: row;margin-top: 20px;padding:20px 37px;background:rgba(255,255,255,1); box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);border-radius:2px;"
 						>
 							<div>
 								<el-input
@@ -413,7 +413,9 @@ import {
 import echarts from 'echarts';
 import common from '../../comm/js/util';
 
+import base from "../../components/base"
 export default {
+    mixins:[base],
 	data() {
 		return {
 			hashidSets: [
@@ -1604,7 +1606,7 @@ export default {
 
 <style lang="scss">
 .myself-container {
-	width: 100%;
+	// width: 100%;
 	min-width: 1250px;
 
 	.device_form {
@@ -1612,11 +1614,11 @@ export default {
 		height: auto;
 
 		overflow: hidden;
-		margin-top: 20px;
+		margin-top: 15px;
 		background: #ffffff;
 		padding: 15px 30px;
 		box-sizing: border-box;
-		box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+		 box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
 
 		.bottom {
@@ -1655,10 +1657,10 @@ export default {
 
 		height: auto;
 		overflow: hidden;
-		margin-top: 20px;
+		margin-top: 15px;
 		background: #ffffff;
 		padding: 37px;
-		box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+		 box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
 
 		.el-table td,
@@ -1698,9 +1700,9 @@ export default {
 	width: auto;
 	height: 130px;
 	background: rgba(255, 255, 255, 1);
-	box-shadow: 0px 2px 3px 0px rgba(6, 17, 36, 0.14);
+	 box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 	border-radius: 2px;
-	margin-top: 20px;
+	margin-top: 15px;
 
 	display: flex;
 	justify-content: flex-start;

@@ -1,14 +1,14 @@
 <template>
     <div class="content">
+        <div>
+            <!-- 搜索 -->
+            <div class="seach">
         <el-breadcrumb separator="/">
             <el-breadcrumb-item>点播 SDK发布</el-breadcrumb-item>
             <!-- <el-breadcrumb-item>
         <a href="/">注册用户</a>
       </el-breadcrumb-item> -->
         </el-breadcrumb>
-        <div>
-            <!-- 搜索 -->
-            <div class="seach">
                 <div class="seach_top">
                     <el-input placeholder="包名、版本" v-model="input" style="width:200px;margin-right: 10px;" @keyup.enter.native="onSubmitInput">
                         <i slot="prefix" class="el-input__icon el-icon-search" @click="seachuser()"></i>
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <!-- 表格 -->
-            <div class="con_lable">
+            <div class="con_lable" :style="{ height: clientHeight - 275 + 'px' }">
                 <div style="text-align: left;margin-bottom:20px;margin-top:20px;">
                     <el-button type="primary" @click="addSdk()">新增发布</el-button>
                 </div>
@@ -177,7 +177,9 @@ import {
   hostUrl,
   delsdk,
 } from "../../servers/api";
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     return {
       input: "", //搜索输入框
@@ -797,7 +799,7 @@ export default {
 <style lang="scss" scoped>
 .seach {
   width: 100%;
-  margin: 30px 0 30px 0;
+  margin: 30px 0 15px 0;
   background: #ffffff;
   border-radius: 2px;
   padding: 21px 37px;

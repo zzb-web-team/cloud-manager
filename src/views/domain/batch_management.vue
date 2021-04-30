@@ -59,7 +59,9 @@ import {
   getterminal,
   check_label
 } from "../../servers/api";
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     return {
       pivalue: "",

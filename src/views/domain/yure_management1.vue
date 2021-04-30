@@ -47,7 +47,9 @@
 <script>
 import fenye from "@/components/fenye";
 import { resource_refresh, refresh_state } from "../../servers/api";
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     return {
       errarr: "",

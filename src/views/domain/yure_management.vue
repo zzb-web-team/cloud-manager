@@ -1,11 +1,11 @@
 <template>
 	<div class="content">
-		<el-breadcrumb separator="/">
-			<el-breadcrumb-item>刷新预热管理</el-breadcrumb-item>
-		</el-breadcrumb>
 		<div>
 			<!-- 搜索 -->
 			<div class="seach">
+				<el-breadcrumb separator="/">
+					<el-breadcrumb-item>刷新预热管理</el-breadcrumb-item>
+				</el-breadcrumb>
 				<div class="seach_top">
 					<el-input
 						placeholder="操作内容、渠道ID"
@@ -63,7 +63,12 @@
 						end-placeholder="结束日期"
 						@change="gettimes"
 					></el-date-picker>
-					<el-button type="primary" @click="seachuser()" style="margin-left:8px;">确定</el-button>
+					<el-button
+						type="primary"
+						@click="seachuser()"
+						style="margin-left:8px;"
+						>确定</el-button
+					>
 					<el-button
 						type="primary"
 						@click="reset()"
@@ -73,7 +78,10 @@
 				</div>
 			</div>
 			<!-- 表格 -->
-			<div class="con_lable">
+			<div
+				class="con_lable"
+				:style="{ height: clientHeight - 275 + 'px' }"
+			>
 				<div style="padding:10px 0;text-align: left;">
 					<el-button type="primary" @click="toLink('first')"
 						>刷新</el-button
@@ -266,7 +274,9 @@
 import fenye from '@/components/fenye';
 import { refresh_state_admin, video_refresh } from '../../servers/api';
 import { getymdtime } from '../../servers/sevdate';
+import base from '../../components/base';
 export default {
+	mixins: [base],
 	data() {
 		return {
 			valueStatus: '',
@@ -693,7 +703,7 @@ export default {
 <style lang="scss" scoped>
 .seach {
 	width: 100%;
-	margin: 30px 0 30px 0;
+	margin: 30px 0 15px 0;
 	background: #ffffff;
 	border-radius: 2px;
 	padding: 21px 37px;

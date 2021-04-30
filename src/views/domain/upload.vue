@@ -124,7 +124,9 @@
 
 <script>
 import { query_url, add_url, hostUrl } from "../../servers/api";
+import base from "../../components/base"
 export default {
+    mixins:[base],
   inject: ["reload"],
   data() {
     return {

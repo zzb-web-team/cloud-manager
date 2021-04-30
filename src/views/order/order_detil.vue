@@ -111,7 +111,9 @@
 
 <script>
 import PayDia from '../../components/payment_panel';
+import base from "../../components/base"
 export default {
+    mixins:[base],
 	data() {
 		return {
 			clientHeight: '',

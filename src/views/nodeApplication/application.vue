@@ -71,7 +71,9 @@
 
 <script>
 import echarts from "echarts";
+import base from "../../components/base"
 export default {
+    mixins:[base],
     data() {
         return {
             options1: [{

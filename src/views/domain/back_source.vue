@@ -266,7 +266,9 @@ import {
   query_domain,
 } from "../../servers/api";
 import { dateToMs, getymdtime, setbatime } from "../../servers/sevdate";
+import base from "../../components/base"
 export default {
+    mixins:[base],
   // inject: ["reload"],
   data() {
     return {

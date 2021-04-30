@@ -1,11 +1,11 @@
 <template>
     <div class="content">
+        <section class="myself-container">
+            <div class="device_form">
         <el-breadcrumb separator="/">
             <el-breadcrumb-item>操作日志</el-breadcrumb-item>
 
         </el-breadcrumb>
-        <section class="myself-container">
-            <div class="device_form">
                 <el-form ref="form" :model="form">
                     <el-row type="flex">
                         <!-- <div class="search-con">
@@ -45,13 +45,12 @@
                     </el-row>
                 </el-form>
             </div>
-            <div class="devide_table">
+            <div class="devide_table" :style="{ height: clientHeight - 250 + 'px' }">
                 <el-row type="flex" class="row_active">
                     <el-col :span="24">
                         <tableBarActive1 id="rebateSetTable" ref="table1" tooltip-effect="dark" :tableData="tableData" :operatingStatus="operatingStatus" :clomnSelection="clomnSelection" :rowHeader="rowHeader" :tableOption="tableOption" @disable="disable" @toChange="toChange"></tableBarActive1>
                     </el-col>
                 </el-row>
-            </div>
             <div class="devide_pageNation" style="display: flex;justify-content: flex-end;">
 
                 <el-row type="flex">
@@ -59,6 +58,7 @@
                         <pageNation :pager="pager" @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange"></pageNation>
                     </el-col>
                 </el-row>
+            </div>
             </div>
         </section>
     </div>
@@ -72,7 +72,9 @@ import pageNation from "../../comm/pageNation";
 import { actionlog } from "../../servers/api";
 import common from "../../comm/js/util.js";
 import { Stats } from "fs";
+import base from "../../components/base"
 export default {
+    mixins:[base],
   data() {
     return {
       pickerOptions: {
@@ -469,10 +471,11 @@ export default {
     width: 100%;
     height: auto;
     overflow: hidden;
-    margin-top: 20px;
+    margin-top: 30px;
     background: #ffffff;
     padding: 15px 30px;
     box-sizing: border-box;
+     box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 
     .el-form-item__label {
       white-space: nowrap;
@@ -505,7 +508,6 @@ export default {
     width: 100%;
     height: auto;
     overflow: hidden;
-    margin-top: 20px;
 
     .el-table td,
     .el-table th {

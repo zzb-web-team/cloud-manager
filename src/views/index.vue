@@ -17,7 +17,7 @@
 					<el-radio-group
 						v-model="menu_type"
 						class="my_radio"
-						@change="change_tab"
+						@change="change_tab('lable')"
 					>
 						<el-radio-button label="管理中心"></el-radio-button>
 						<el-radio-button label="数据中心"></el-radio-button>
@@ -52,7 +52,7 @@
 					>
 						<!-- 一级菜单 -->
 						<template v-for="item in menu_list" v-if="!item.hidden">
-							<p v-if="item.mate" class="menus_title">
+							<p v-if="item.mate&&item.mate.title!='点播管理后台'" class="menus_title">
 								{{ item.mate.title }}
 							</p>
 							<el-submenu
@@ -137,7 +137,8 @@
 								:key="item.path"
 							>
 								<!-- <i :class="item.icon"></i> -->
-								<span slot="title">{{ item.name }}</span>
+                                <span slot="title" v-if="item.name=='概览'" style="font-weight: 600;color: #6a6a6c;margin-left: 0;">概览</span>
+								<span slot="title" v-else>{{ item.name }}</span>
 							</el-menu-item>
 						</template>
 						<p class="last_boder"></p>
@@ -146,7 +147,7 @@
 				<section class="content-container">
 					<div
 						class="grid-content bg-purple-light"
-						style="width: 95%;margin: 0 auto;"
+						style="width: 100%;margin: 0 auto;"
 					>
 						<el-col :span="24" class="content-wrapper">
 							<transition name="fade" mode="out-in">
@@ -187,26 +188,29 @@ export default {
 					}
 					return item.hidden != true;
 				});
-			}
+            }
 			if (elem.hidden != true && elem.name != '数据中心') {
-				return elem;
+                return elem;
 			}
 		});
+            console.log(this.data_list);
 		this.change_tab();
 		var user = localStorage.getItem('adminuser');
 		if (user) {
 			this.sysUserName = user || '';
 		}
-		console.log('11111');
 	},
 	methods: {
-		change_tab() {
+		change_tab(label) {
 			if (this.menu_type == '管理中心') {
-				this.menu_list = this.manage_list;
+                this.menu_list = this.manage_list;
 			} else {
 				this.menu_list = this.data_list;
-			}
-			localStorage.setItem('menu_type', this.menu_type);
+            }
+            localStorage.setItem('menu_type', this.menu_type);
+            if(label){
+                this.$router.push(this.menu_list[0].path);
+            }
 		},
 		handleopen() {},
 		handleclose() {},
@@ -235,7 +239,6 @@ export default {
 					_this.$router.push('/');
 				})
 				.catch((error) => {
-					console.log(error);
 				});
 		},
 		//折叠导航栏
@@ -398,6 +401,7 @@ export default {
 			box-sizing: border-box;
 			padding-left: 40px;
 			position: relative;
+            color: #6a6a6c;
 		}
 		.menus_title::before {
 			content: ''; /*CSS伪类用法*/

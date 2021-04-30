@@ -88,7 +88,9 @@ import {
     hostUrl
 
 } from "../../servers/api";
+import base from "../../components/base"
 export default {
+    mixins:[base],
     data() {
         return {
             buttonActive:false,

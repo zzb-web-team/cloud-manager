@@ -118,7 +118,7 @@ export default {
         padding:25px 15px;
         background: #fff;
         border: 1px solid #eee;
-        border-radius: 8px;
+        border-radius: 5px;
         width: 200px;
         position: absolute;
         right: -60px;

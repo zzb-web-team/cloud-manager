@@ -7,13 +7,11 @@
 					<el-input
 						v-model="val_name"
 						placeholder="请输入渠道ID"
-						size="medium"
 						@change="onChanges"
 						style="width:100%;max-width:300px;margin-right:10px;"
 					></el-input>
 					<span>添加时间</span>
 					<el-date-picker
-						size="medium"
 						v-model="search_time"
 						type="daterange"
 						placeholder="选择日期"
@@ -26,17 +24,16 @@
 					</el-date-picker>
 				</div>
 				<div>
-					<el-button type="primary" size="small" @click="onChanges"
+					<el-button type="primary"  @click="onChanges"
 						>查询</el-button
 					>
-					<el-button size="small" @click="reset">重置</el-button>
+					<el-button  @click="reset">重置</el-button>
 				</div>
 			</div>
 		</div>
 		<div class="table_con" ref="box_rHeight">
 			<div class="content_top">
 				<el-button
-					size="small"
 					type="primary"
 					@click="go_traffic_configuration"
 					>添加</el-button
@@ -109,7 +106,9 @@
 
 <script>
 import fenye from '@/components/fenye';
+import base from "../../components/base"
 export default {
+    mixins:[base],
 	data() {
 		return {
 			clientHeight: '',
@@ -195,7 +194,7 @@ export default {
 		};
 		if (that.$refs.box_rHeight) {
 			that.$refs.box_rHeight.style.height =
-				that.clientHeight - 334 + 'px';
+				that.clientHeight - 320 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
 	},
@@ -251,7 +250,7 @@ export default {
 		//查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data - 334 + 'px';
+				this.$refs.box_rHeight.style.height = data - 320 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 500 + 'px';
 			}
 		},
@@ -269,8 +268,7 @@ export default {
 
 <style lang="scss" scoped>
 .con {
-	width: 100%;
-	margin: 40px 0;
+	margin: 30px 25px;
 	text-align: left;
 	background-color: #fff;
 	.con_top {
@@ -290,7 +288,7 @@ export default {
 				justify-content: start;
 				align-items: center;
 				line-height: 100px;
-				margin-bottom: 10px;
+				// margin-bottom: 10px;
 				span {
 					margin-left: 20px;
 					margin-right: 10px;
@@ -300,7 +298,7 @@ export default {
 		}
 	}
 	.table_con {
-		margin-top: 36px;
+		margin-top: 15px;
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		flex: 1;
 		padding: 40px;

@@ -259,7 +259,10 @@ import {
   userctrl
 } from "../../servers/api";
 import common from "../../comm/js/util.js";
+import base from "../../components/base"
+
 export default {
+    mixins:[base],
   data() {
     var validatePass = (rule, value, callback) => {
       if (value === "") {
