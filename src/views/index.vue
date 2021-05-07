@@ -52,7 +52,13 @@
 					>
 						<!-- 一级菜单 -->
 						<template v-for="item in menu_list" v-if="!item.hidden">
-							<p v-if="item.mate&&item.mate.title!='点播管理后台'" class="menus_title">
+							<p
+								v-if="
+									item.mate &&
+										item.mate.title != '点播管理后台'
+								"
+								class="menus_title"
+							>
 								{{ item.mate.title }}
 							</p>
 							<el-submenu
@@ -137,7 +143,12 @@
 								:key="item.path"
 							>
 								<!-- <i :class="item.icon"></i> -->
-                                <span slot="title" v-if="item.name=='概览'" style="font-weight: 600;color: #6a6a6c;margin-left: 0;">概览</span>
+								<span
+									slot="title"
+									v-if="item.name == '概览'"
+									style="font-weight: 600;color: #6a6a6c;margin-left: 0;"
+									>概览</span
+								>
 								<span slot="title" v-else>{{ item.name }}</span>
 							</el-menu-item>
 						</template>
@@ -188,12 +199,12 @@ export default {
 					}
 					return item.hidden != true;
 				});
-            }
+			}
 			if (elem.hidden != true && elem.name != '数据中心') {
-                return elem;
+				return elem;
 			}
 		});
-            console.log(this.data_list);
+		console.log(this.data_list);
 		this.change_tab();
 		var user = localStorage.getItem('adminuser');
 		if (user) {
@@ -203,14 +214,14 @@ export default {
 	methods: {
 		change_tab(label) {
 			if (this.menu_type == '管理中心') {
-                this.menu_list = this.manage_list;
+				this.menu_list = this.manage_list;
 			} else {
 				this.menu_list = this.data_list;
-            }
-            localStorage.setItem('menu_type', this.menu_type);
-            if(label){
-                this.$router.push(this.menu_list[0].path);
-            }
+			}
+			localStorage.setItem('menu_type', this.menu_type);
+			if (label) {
+				this.$router.push(this.menu_list[0].path);
+			}
 		},
 		handleopen() {},
 		handleclose() {},
@@ -228,8 +239,8 @@ export default {
 			})
 				.then(() => {
 					sessionStorage.removeItem('user');
-                    sessionStorage.removeItem('id');
-                    localStorage.removeItem('menu_type');
+					sessionStorage.removeItem('id');
+					localStorage.removeItem('menu_type');
 					_this.$cookies.remove('adminuser');
 					_this.$cookies.remove('adminid');
 					_this.$cookies.remove('clouduser');
@@ -238,8 +249,7 @@ export default {
 					// _this.$cookies.set("adminid", "", 0);
 					_this.$router.push('/');
 				})
-				.catch((error) => {
-				});
+				.catch((error) => {});
 		},
 		//折叠导航栏
 		collapse: function() {
@@ -251,6 +261,7 @@ export default {
 
 <style scoped lang="scss">
 // @import "../assets/css/style/newstyle";
+
 .container {
 	position: absolute;
 	top: 0px;
@@ -259,7 +270,6 @@ export default {
 	right: 0;
 	width: 100%;
 	margin: 0 auto;
-
 	.header {
 		height: 60px;
 		line-height: 60px;
@@ -322,7 +332,8 @@ export default {
 		position: absolute;
 		top: 60px;
 		bottom: 0px;
-		// overflow: hidden;
+        // overflow: hidden;
+        min-height: 1080px;
 		aside {
 			flex: 0 0 230px;
 			width: 230px;
@@ -359,6 +370,10 @@ export default {
 			flex: 0 0 230px;
 			width: 230px;
 			//margin-top: -60px;
+
+			.el-menu-vertical-demo::-webkit-scrollbar {
+				display: none;
+			}
 		}
 		.content-container {
 			background: #ffffff;
@@ -401,7 +416,7 @@ export default {
 			box-sizing: border-box;
 			padding-left: 40px;
 			position: relative;
-            color: #6a6a6c;
+			color: #6a6a6c;
 		}
 		.menus_title::before {
 			content: ''; /*CSS伪类用法*/

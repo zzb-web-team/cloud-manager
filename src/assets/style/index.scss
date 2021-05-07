@@ -51,6 +51,11 @@ body {
     height: 100%;
 }
 
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+}
+
 ol,
 ul,
 li {
@@ -746,4 +751,8 @@ li {
 
 .top_title {
     margin-bottom: 10px;
+}
+
+.container::-webkit-scrollbar {
+    display: none;
 }
