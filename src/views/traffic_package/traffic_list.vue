@@ -194,7 +194,7 @@ export default {
 		};
 		if (that.$refs.box_rHeight) {
 			that.$refs.box_rHeight.style.height =
-				that.clientHeight - 320 + 'px';
+				that.clientHeight - 270 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
 	},
@@ -250,7 +250,7 @@ export default {
 		//查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data - 320 + 'px';
+				this.$refs.box_rHeight.style.height = data - 270 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 500 + 'px';
 			}
 		},
@@ -274,9 +274,10 @@ export default {
 	.con_top {
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		box-sizing: border-box;
-		padding: 40px 40px 0 40px;
+		padding: 21px 40px 0 40px;
 		.top_title {
-			font-size: 16px;
+            font-size: 16px;
+            margin-bottom: -10px;
 		}
 		.title_seach {
 			display: flex;

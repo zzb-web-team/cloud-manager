@@ -246,6 +246,8 @@ margin-left: 25px;margin-right: 25px;
         padding-left: 25px;
         margin-bottom: 20px;
         text-align: left;
+        font-size: 16px;
+        span{font-size: 16px;}
     }
     .configuration{
         width: 600px;

@@ -215,8 +215,11 @@ export default {
 	box-sizing: border-box;
 	padding: 40px;
 	box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
-	// .top_title {
-	// }
+	.top_title {
+        span{
+            font-size: 16px;
+        }
+	}
 	.con_ruleForm {
 		width: 1100px;
 		margin: auto;

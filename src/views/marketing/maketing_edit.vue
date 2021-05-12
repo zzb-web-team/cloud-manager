@@ -173,6 +173,11 @@ i{
     padding: 40px;
     box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
     margin-top: 36px;
+    .top_title{
+        span{
+            font-size: 16px;
+        }
+    }
     .con_ruleForm{
     margin: auto;
         width: 800px;

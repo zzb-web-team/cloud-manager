@@ -1386,8 +1386,7 @@ export default {
 		background: #ffffff;
 		border-radius: 2px;
 		padding: 21px 37px;
-		-webkit-box-shadow: 0px 0px 7px 0px rgba(41, 108, 171, 0.1);
-		box-shadow: 0px 0px 7px 0px rgba(41, 108, 171, 0.1);
+		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51,0.16);
 
 		.el-form-item__label {
 			white-space: nowrap;

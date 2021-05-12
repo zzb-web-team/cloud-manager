@@ -79,6 +79,11 @@ import maketing_edit from "@/views/marketing/maketing_edit.vue";
 //帮助中心
 import help_list from "@/views/help/help_list.vue";
 import help_edit from "@/views/help/help_edit.vue";
+
+// 财务管理
+import financial_management from "@/views/financial/financial_management.vue";
+import arrears_management from "@/views/financial/arrears_management.vue";
+
 Vue.use(Router);
 
 export default new Router({
@@ -472,6 +477,40 @@ export default new Router({
             mate: {
                 title: '营销管理'
             },
+        },
+        {
+            path: '/kfpew',
+            name: '财务管理',
+            component: index,
+            icon: "iconfont icon-guanli",
+            hidden: true,
+            mate: {
+                title: '财务管理'
+            },
+            children: [{
+                path: '/financial_management',
+                name: "财务管理",
+                component: financial_management,
+            }, {
+                path: '/arrears_management',
+                name: "欠款管理",
+                component: arrears_management,
+            }]
+        },
+        {
+            path: "/financial_management",
+            name: "财务管理",
+            component: financial_management,
+            mate: {
+                title: '财务管理'
+            },
+        },
+        {
+
+            path: '/arrears_management',
+            name: "欠款管理",
+            component: arrears_management,
+
         },
         {
             path: "/m",

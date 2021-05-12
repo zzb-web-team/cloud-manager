@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content domain_management">
     <div>
       <!-- 搜索 -->
       <div class="seach">

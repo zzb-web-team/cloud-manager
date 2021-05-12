@@ -1,7 +1,7 @@
 <template>
 	<div class="order_list_com">
 		<div class="con_top">
-			<div class="top_title">订单管理</div>
+			<div class="top_title">财务管理</div>
 			<div class="title_seach">
 				<div class="search_left">
 					<el-row
@@ -11,41 +11,32 @@
 					>
 						<el-col>
 							<span class="item_title"
-								>&nbsp;&nbsp;&nbsp;&nbsp;订单号</span
+								>&nbsp;&nbsp;&nbsp;&nbsp;用户信息</span
 							>
 							<el-input
 								v-model="order_id"
-								placeholder="请输入订单号"
+								placeholder="输入用户ID、账号、手机号"
 								@change="onChanges"
-								style="width:80%;max-width:300px;"
+								style="width:80%;max-width:260px;"
 							></el-input>
 						</el-col>
 						<el-col>
-							<span class="item_title">商品名称</span>
+							<span class="item_title">交易单号</span>
 							<el-input
 								v-model="order_id"
-								placeholder="请输入商品名称"
+								placeholder="输入交易单号"
 								@change="onChanges"
-								style="width:80%;max-width:300px;"
+								style="width:80%;max-width:260px;"
 							></el-input>
 						</el-col>
 						<el-col>
-							<span class="item_title">支付方式</span>
-							<el-select
-								v-model="pay_type"
-								placeholder="请选择活动区域"
-								style="width:80%;max-width:300px;height:auto;"
-							>
-								<el-option label="全部" value="*"></el-option>
-								<el-option
-									label="区域一"
-									value="shanghai"
-								></el-option>
-								<el-option
-									label="区域二"
-									value="beijing"
-								></el-option>
-							</el-select>
+							<span class="item_title">渠道流水号</span>
+							<el-input
+								v-model="order_id"
+								placeholder="请输入用户信息"
+								@change="onChanges"
+								style="width:80%;max-width:260px;"
+							></el-input>
 						</el-col>
 					</el-row>
 					<el-row
@@ -54,20 +45,11 @@
 						class="title_seach_item"
 					>
 						<el-col>
-							<span class="item_title">用户信息</span>
-							<el-input
-								v-model="order_id"
-								placeholder="请输入用户信息"
-								@change="onChanges"
-								style="width:80%;max-width:300px;"
-							></el-input>
-						</el-col>
-						<el-col>
-							<span class="item_title">产品类型</span>
+							<span class="item_title">支付方式</span>
 							<el-select
 								v-model="pay_type"
 								placeholder="请选择活动区域"
-								style="width:80%;max-width:300px;height:auto;"
+								style="width:80%;max-width:260px;height:auto;"
 							>
 								<el-option label="全部" value="*"></el-option>
 								<el-option
@@ -81,7 +63,25 @@
 							</el-select>
 						</el-col>
 						<el-col>
-							<span class="item_title">创建时间</span>
+							<span class="item_title">交易类型</span>
+							<el-select
+								v-model="pay_type"
+								placeholder="请选择活动区域"
+								style="width:80%;max-width:260px;height:auto;"
+							>
+								<el-option label="全部" value="*"></el-option>
+								<el-option
+									label="区域一"
+									value="shanghai"
+								></el-option>
+								<el-option
+									label="区域二"
+									value="beijing"
+								></el-option>
+							</el-select>
+						</el-col>
+						<el-col>
+							<span class="item_title">交易时间</span>
 							<el-date-picker
 								v-model="search_time"
 								type="daterange"
@@ -89,90 +89,54 @@
 								range-separator="~"
 								start-placeholder="开始日期"
 								end-placeholder="结束日期"
-								style="width:80%;max-width:300px;"
+								style="width:80%;max-width:260px;"
 							>
 							</el-date-picker>
 						</el-col>
 					</el-row>
 				</div>
 				<div class="search_right">
-					<el-button type="primary"  @click="onChanges"
+					<el-button type="primary" @click="onChanges"
 						>查询</el-button
 					>
-					<el-button  @click="reset">重置</el-button>
+					<el-button @click="reset">重置</el-button>
 				</div>
 			</div>
 		</div>
 		<div class="con_table" ref="box_rHeight">
 			<el-table
 				:data="tableData"
-				stripe
 				style="width: 100%"
 				:cell-style="rowClass"
 				:header-cell-style="headClass"
 			>
-				<el-table-column type="selection" width="55"> </el-table-column>
-				<el-table-column prop="order_id" label="订单号" width="220">
-				</el-table-column>
-				<el-table-column prop="name" label="产品名称">
-				</el-table-column>
-				<el-table-column prop="specification" label="规格" width="120">
-				</el-table-column>
-				<el-table-column
-					prop="product_type"
-					label="产品类型"
-					width="80"
-				>
-				</el-table-column>
-				<el-table-column prop="num" label="数量" width="80">
-					<template slot-scope="scope"
-						><span>*{{ scope.row.num }}</span></template
-					>
-				</el-table-column>
-				<el-table-column prop="money" label="订单金额" width="100">
-				</el-table-column>
 				<el-table-column label="用户信息">
 					<template slot-scope="scope">
 						<p>{{ scope.row.user_information }}</p>
 						<p>{{ scope.row.tel | formatTel }}</p>
 					</template>
 				</el-table-column>
-				<el-table-column prop="create_time" label="创建订单时间">
+				<el-table-column prop="order_id" label="交易单号">
 				</el-table-column>
-				<el-table-column prop="pay_type" label="支付方式" width="80">
+				<el-table-column prop="create_time" label="交易时间">
+				</el-table-column>
+				<el-table-column prop="product_type" label="交易类型">
+				</el-table-column>
+				<el-table-column prop="num" label="金额">
 					<template slot-scope="scope">
-						<span v-if="scope.row.order_type == 1">--</span>
-						<span v-else-if="scope.row.order_type == 2">--</span>
-						<span v-else>{{ scope.row.pay_type }}</span>
+						<span v-if="scope.row.product_type == '充值'">+</span
+						><span v-else>-</span>
+						<span>￥{{ scope.row.num }}</span></template
+					>
+				</el-table-column>
+				<el-table-column prop="money" label="余额"> </el-table-column>
+
+				<el-table-column prop="pay_type" label="交易渠道">
+					<template slot-scope="scope">
+						<span>{{ scope.row.pay_type }}</span>
 					</template>
 				</el-table-column>
-				<el-table-column prop="order_type" label="订单状态" width="80">
-					<template slot-scope="scope">
-						<p
-							style="color:orange;"
-							v-if="scope.row.order_type == 1"
-						>
-							待支付
-						</p>
-						<p v-else-if="scope.row.order_type == 2">已过期</p>
-						<p v-else>完成</p>
-					</template>
-				</el-table-column>
-				<el-table-column fixed="right" label="操作" width="160">
-					<template slot-scope="scope">
-						<el-button
-							@click="handleClick(scope.row)"
-							type="text"
-							size="small"
-							>查看详情</el-button
-						>
-						<el-button
-							@click="deleteRow(scope.row)"
-							type="text"
-							size="small"
-							>删除</el-button
-						>
-					</template>
+				<el-table-column prop="serial_number" label="渠道流水号">
 				</el-table-column>
 			</el-table>
 			<div class="content_bottom">
@@ -210,13 +174,13 @@ export default {
 					name: '新用户超值体验包',
 					user_information: '王小虎',
 					tel: 15913124680,
-					product_type: '流量包',
+					product_type: '充值',
 					num: 12,
 					money: 10,
 					specification: 3,
 					pay_type: '微信',
 					create_time: '2021-08-03 11:30:00',
-					order_type: 1,
+					serial_number: 465464684984641,
 				},
 				{
 					order_id: 15049156402,
@@ -224,13 +188,13 @@ export default {
 					name: '流量包（冰点划算）',
 					user_information: '王小虎',
 					tel: 15913124680,
-					product_type: '流量包',
+					product_type: '扣费',
 					num: 12,
 					money: 10,
 					specification: 3,
 					pay_type: '支付宝',
 					create_time: '2021-08-03 11:30:00',
-					order_type: 1,
+					serial_number: 465464684984641,
 				},
 				{
 					order_id: 15049156946,
@@ -238,13 +202,13 @@ export default {
 					name: '流量包（冰点划算）',
 					user_information: '王小虎',
 					tel: 15913124680,
-					product_type: '流量包',
+					product_type: '扣费',
 					num: 12,
 					money: 10,
 					specification: 3,
 					pay_type: '支付宝',
 					create_time: '2021-08-03 11:30:00',
-					order_type: 3,
+					serial_number: 465464684984643,
 				},
 				{
 					order_id: 15049156033,
@@ -252,13 +216,13 @@ export default {
 					name: '国庆超值包',
 					user_information: '王小虎',
 					tel: 15913124680,
-					product_type: '流量包',
+					product_type: '充值',
 					num: 12,
 					money: 10,
 					specification: 3,
 					pay_type: '微信',
 					create_time: '2021-08-03 11:30:00',
-					order_type: 2,
+					serial_number: 465464684984642,
 				},
 			],
 		};
@@ -299,47 +263,6 @@ export default {
 	methods: {
 		onChanges() {},
 		reset() {},
-		handleClick(row) {
-			console.log(row);
-			this.$router.push({
-				path: '/order_detil',
-				query: {
-					data: JSON.stringify(row),
-				},
-			});
-		},
-		//删除
-		/**
-		 * 修改按钮样式，设计图左边是确定，右边是取消，
-		 */
-		deleteRow(rows) {
-			console.log(rows);
-			this.$confirm(
-				`<p>是否删除订单${rows.order_id}</p><p>删除后无法查看订单信息</p>`,
-				'提示',
-				{
-					cancelButtonText: '确定',
-					confirmButtonText: '取消',
-					type: 'warning',
-					dangerouslyUseHTMLString: true,
-					center: true,
-					cancelButtonClass: 'no_btn',
-					confirmButtonClass: 'ok_btn',
-				}
-			)
-				.then(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消删除',
-					});
-				})
-				.catch(() => {
-					this.$message({
-						type: 'success',
-						message: '删除成功!',
-					});
-				});
-		},
 		//获取页码
 		handleCurrentChange(pages) {
 			this.pageNo = pages;
@@ -392,6 +315,9 @@ export default {
 					.item_title {
 						margin-right: 5px;
 						font-size: 14px;
+						display: inline-block;
+						width: 70px;
+						text-align: right;
 					}
 				}
 			}

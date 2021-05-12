@@ -473,7 +473,7 @@ export default {
     overflow: hidden;
     margin-top: 30px;
     background: #ffffff;
-    padding: 15px 30px;
+    padding: 21px 30px;
     box-sizing: border-box;
      box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 

@@ -1302,6 +1302,7 @@ export default {
 	position: absolute;
 	right: 11px;
 }
+
 .myself-container {
 	// width: 100%;
 	min-width: 1250px;

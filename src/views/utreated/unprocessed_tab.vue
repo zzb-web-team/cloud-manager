@@ -183,7 +183,7 @@ export default {
 		};
 		if (that.$refs.box_rHeight) {
 			that.$refs.box_rHeight.style.height =
-				that.clientHeight - 324 + 'px';
+				that.clientHeight - 270 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
 
@@ -264,7 +264,7 @@ export default {
 		//查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data - 324 + 'px';
+				this.$refs.box_rHeight.style.height = data - 270 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 500 + 'px';
 			}
 		},
@@ -288,19 +288,19 @@ export default {
 	background-color: #fff;
 	text-align: left;
 	.title {
-		height: 184px;
+		// height: 184px;
 		margin-top: 30px;
 		margin-bottom: 15px;
 		box-sizing: border-box;
 		margin-left: 25px;
 		margin-right: 25px;
-		padding: 30px;
+		padding:21px 30px 0 30px;
 		display: flex;
 		flex-direction: column;
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		p {
-			font-size: 16px;
-			font-weight: 600;
+            font-size: 16px;
+            margin-bottom: -10px;
 		}
 		.title_seach {
 			display: flex;
