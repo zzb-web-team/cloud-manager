@@ -16,13 +16,13 @@
 					<el-radio-group v-model="radio1" @change="onchangeTab">
 						<el-radio-button @click="today()" label="one">今天</el-radio-button>
 						<el-radio-button @click="yesterday()" label="two">昨天</el-radio-button>
-						<el-radio-button @click="sevendat()" label="three">近7天</el-radio-button>
-						<el-radio-button @click="thirtyday()" label="four">近30天</el-radio-button>
+						<!-- <el-radio-button @click="sevendat()" label="three">近7天</el-radio-button>
+						<el-radio-button @click="thirtyday()" label="four">近30天</el-radio-button> -->
 						<el-radio-button @click="showzdyx">自定义
 							<i class="el-icon-date"></i>
 						</el-radio-button>
 					</el-radio-group>
-					<el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="datetimerange" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
+					<el-date-picker v-show="shoudzyx" style="margin-left:10px;" v-model="val2" type="date" range-separator="~" start-placeholder="开始日期" end-placeholder="结束日期" align="left" @change="gettimes"></el-date-picker>
 					<el-button style="margin-left:10px;" type="primary" @click="seachtu(1)">确定</el-button>
 				</div>
 				<div class="user_item">
@@ -246,7 +246,7 @@ export default {
         },
       },
       // value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-      val2: [],
+      val2: "",
 
       timeUnit: 60,
       starttime: "",
@@ -773,18 +773,9 @@ export default {
     },
     //自定义时间
     gettimes(cal) {
-      this.starttime = dateToMs(this.val2[0]);
-      this.endtime = dateToMs(this.val2[1]);
-      if (this.endtime - this.starttime < 21600) {
-        this.timeUnit = 60;
-      } else if (
-        this.endtime - this.starttime >= 21600 &&
-        this.endtime - this.starttime < 86400
-      ) {
-        this.timeUnit = 60;
-      } else if (this.endtime - this.starttime >= 86400) {
-        this.timeUnit = 60 * 24;
-      }
+      this.starttime = dateToMs(this.val2);
+      this.endtime = this.starttime+86399;
+      this.timeUnit = 5;
       this.$refs.multipleTable.clearSelection();
     },
 

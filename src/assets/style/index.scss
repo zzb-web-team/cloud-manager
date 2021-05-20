@@ -438,7 +438,9 @@ li {
 // .el-submenu .el-menu-item {
 //   padding-left: 90px !important;
 // }
-.el-menu {
+.el-menu,
+.menus_title,
+.el-menu-item {
     background-color: #F5F5F5;
 }
 
@@ -704,6 +706,7 @@ li {
 }
 
 .my_radio {
+    overflow: hidden;
     .el-radio-button:first-child .el-radio-button__inner {
         border: none;
     }

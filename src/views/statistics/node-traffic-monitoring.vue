@@ -73,12 +73,12 @@
 									<el-radio-button label="2"
 										>昨天</el-radio-button
 									>
-									<el-radio-button label="3"
+									<!-- <el-radio-button label="3"
 										>近7天</el-radio-button
 									>
 									<el-radio-button label="4"
 										>近30天</el-radio-button
-									>
+									> -->
 									<el-radio-button label="5"
 										>自定义</el-radio-button
 									>
@@ -93,10 +93,8 @@
 									v-show="showzdy"
 									style="margin-left:10px;"
 									v-model="val2"
-									type="datetimerange"
-									range-separator="~"
-									start-placeholder="开始日期"
-									end-placeholder="结束日期"
+									type="date"
+									placeholder="选择日期"
 									align="left"
 									@change="gettimes(0)"
 								></el-date-picker>
@@ -178,8 +176,7 @@
 									<el-table
 										:data="tableZb"
 										border
-										max-height="560px"
-										style="width: 98%;margin:10px;"
+										style="width: 98%;margin:10px;overflow:hidden;"
 										:cell-style="rowClass"
 										:header-cell-style="headClass"
 									>
@@ -314,10 +311,8 @@
 								<el-date-picker
 									style="margin-left:10px;"
 									v-model="val3"
-									type="daterange"
-									range-separator="~"
-									start-placeholder="开始日期"
-									end-placeholder="结束日期"
+									type="date"
+									placeholder="选择日期"
 									align="left"
 									@change="gettimes(1)"
 								></el-date-picker>
@@ -550,9 +545,9 @@ import echarts from 'echarts';
 import common from '../../comm/js/util';
 import _ from 'lodash';
 
-import base from "../../components/base"
+import base from '../../components/base';
 export default {
-    mixins:[base],
+	mixins: [base],
 	data() {
 		return {
 			dataAry: [],
@@ -580,76 +575,9 @@ export default {
 			activeName: 'first',
 			activeName1: 'first',
 			useCache: true,
-			pickerOptions: {
-				shortcuts: [
-					{
-						text: '昨天',
-						onClick(picker) {
-							const end = new Date(
-								new Date(
-									new Date().toLocaleDateString()
-								).getTime()
-							);
-							const start =
-								new Date(
-									new Date(
-										new Date().toLocaleDateString()
-									).getTime()
-								) -
-								3600 * 1000 * 24 * 1;
-							picker.$emit('pick', [start, end]);
-						},
-					},
-					{
-						text: '今天',
-						onClick(picker) {
-							const end = new Date();
-							const start = new Date(
-								new Date(
-									new Date().toLocaleDateString()
-								).getTime()
-							);
-							picker.$emit('pick', [start, end]);
-						},
-					},
-					{
-						text: '最近一周',
-						onClick(picker) {
-							const end = new Date();
-							const start = new Date(
-								new Date(
-									new Date().toLocaleDateString()
-								).getTime()
-							);
-							start.setTime(
-								start.getTime() - 3600 * 1000 * 24 * 6
-							);
-							picker.$emit('pick', [start, end]);
-						},
-					},
-					{
-						text: '最近一个月',
-						onClick(picker) {
-							const end = new Date();
-							const start = new Date(
-								new Date(
-									new Date().toLocaleDateString()
-								).getTime()
-							);
-							start.setTime(
-								start.getTime() - 3600 * 1000 * 24 * 29
-							);
-							picker.$emit('pick', [start, end]);
-						},
-					},
-				],
-				disabledDate(time) {
-					return time.getTime() > Date.now();
-				},
-			},
-			val2: [],
-			val3: [],
-			timeUnit: 120,
+			val2: '',
+			val3: '',
+			timeUnit: 5,
 			starttime: '',
 			endtime: '',
 			dataFlowArray: [], //图1
@@ -830,7 +758,7 @@ export default {
 				this.thirtyday();
 			} else if (this.radio == 5) {
 				this.showzdy = true;
-				this.val2 = [];
+				this.val2 = '';
 			}
 		},
 		onChanges() {
@@ -869,8 +797,8 @@ export default {
 		//节点流量图
 		getNodeTrafficCurve() {
 			let params = new Object();
-            params.startTs = this.starttime;
-            params.useCache = this.useCache == true ? 1 : 0;
+			params.startTs = this.starttime;
+			params.useCache = this.useCache == true ? 1 : 0;
 			let nowtime = parseInt(new Date().getTime() / 1000);
 			params.endTs = this.endtime < nowtime ? this.endtime : nowtime;
 			if (this.valueContent) {
@@ -895,10 +823,7 @@ export default {
 				params.domain = '*';
 			}
 
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit =5;
 
 			node_traffic_curve(params)
 				.then((res) => {
@@ -1003,8 +928,8 @@ export default {
 
 		//节点流量表
 		node_traffic_table() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
 			params.pageNo = this.pageNo2 - 1;
@@ -1031,10 +956,7 @@ export default {
 				params.domain = '*';
 			}
 
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
 
 			node_traffic_table(params)
 				.then((res) => {
@@ -1051,8 +973,8 @@ export default {
 
 		//下载节点流量图表
 		exoprtNodeTraffic() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
 			// params.chanId = this.chanid + "";
@@ -1078,10 +1000,7 @@ export default {
 				params.domain = '*';
 			}
 
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
 			node_traffic_download(params)
 				.then((res) => {
 					if (res.status == 0) {
@@ -1095,8 +1014,8 @@ export default {
 
 		//TOP加速次数排行
 		topAccelcntRanking() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
 			params.pageNo = this.pageNo - 1;
@@ -1120,10 +1039,7 @@ export default {
 				params.domain = '*';
 			}
 
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
 
 			top_accelcnt_ranking(params)
 				.then((res) => {
@@ -1139,8 +1055,8 @@ export default {
 
 		//TOP加速流量排行
 		topDataflowRanking() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
 			params.pageNo = this.pageNo1 - 1;
@@ -1163,10 +1079,7 @@ export default {
 				params.domain = '*';
 			}
 
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
 
 			top_dataflow_ranking(params)
 				.then((res) => {
@@ -1189,8 +1102,8 @@ export default {
 		},
 
 		toExportAccelcntExcel() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
 			params.pageNo = this.pageNo1 - 1;
@@ -1213,10 +1126,7 @@ export default {
 				params.domain = '*';
 			}
 
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
 			export_accelcnt_ranking_table_file(params)
 				.then((res) => {
 					if (res.status == 0) {
@@ -1230,8 +1140,8 @@ export default {
 		},
 
 		toExportDataflowExcel() {
-            let params = new Object();
-            params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
 			params.pageNo = this.pageNo1 - 1;
@@ -1251,10 +1161,7 @@ export default {
 			} else {
 				params.domain = '*';
 			}
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
 			export_dataflow_ranking_table_file(params)
 				.then((res) => {
 					if (res.status == 0) {
@@ -1304,7 +1211,7 @@ export default {
 				new Date(new Date().toLocaleDateString()).getTime() / 1000;
 			this.starttime = times;
 			this.endtime = Date.parse(new Date()) / 1000;
-			this.timeUnit = 60;
+			this.timeUnit = 5;
 			this.pageNo2 = 1;
 			this.getNodeTrafficCurve();
 			this.node_traffic_table();
@@ -1315,14 +1222,14 @@ export default {
 				new Date(new Date().toLocaleDateString()).getTime() / 1000;
 			this.starttime = times - 24 * 60 * 60 * 1;
 			this.endtime = times - 1;
-			this.timeUnit = 60;
+			this.timeUnit = 5;
 			this.pageNo2 = 1;
 			this.getNodeTrafficCurve();
 			this.node_traffic_table();
 		},
 		//七天
 		sevendat(data) {
-            let times = parseInt(
+			let times = parseInt(
 				new Date(new Date().toLocaleDateString()).getTime() / 1000
 			);
 			this.endtime = parseInt(new Date(new Date()).getTime() / 1000);
@@ -1350,27 +1257,19 @@ export default {
 			// let times = parseInt(new Date(new Date()).getTime() / 1000);
 			if (cal == 0) {
 				this.starttime = this.val2
-					? dateToMs(this.val2[0])
+					? dateToMs(this.val2)
 					: new Date(new Date().toLocaleDateString()).getTime() /
 					  1000;
-				this.endtime = this.val2
-					? dateToMs(this.val2[1])
-					: Date.parse(new Date()) / 1000;
+				this.endtime = this.starttime + 86399;
 			} else {
 				this.starttime = this.val3
-					? dateToMs(this.val3[0])
+					? dateToMs(this.val3)
 					: new Date(new Date().toLocaleDateString()).getTime() /
 					  1000;
-				this.endtime = this.val3
-					? dateToMs(this.val3[1]) + (24 * 60 * 60 - 1)
-					: Date.parse(new Date()) / 1000;
+				this.endtime = this.val3 + 86399;
 			}
 
-			if (this.endtime - this.starttime <= 86400) {
-				this.timeUnit = 60 * 2;
-			} else if (this.endtime - this.starttime > 86400) {
-				this.timeUnit = 60 * 24;
-			}
+			this.timeUnit = 5;
 			if (this.activeName == 'first') {
 				this.pageNo2 = 1;
 				this.getNodeTrafficCurve();
@@ -1397,7 +1296,7 @@ export default {
 
 		//选项卡
 		handleClick(tab, event) {
-           this.useCache = true;
+			this.useCache = true;
 			if (tab.index == 0) {
 				this.val2 = [];
 				let times =
@@ -1646,7 +1545,7 @@ export default {
 		background: #ffffff;
 		padding: 15px 30px;
 		box-sizing: border-box;
-		 box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
+		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
 
 		.bottom {
@@ -1680,7 +1579,7 @@ export default {
 		margin-top: 15px;
 		background: #ffffff;
 		border-radius: 2px;
-		 box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
+		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
 		.el-table::before {
 			z-index: inherit;
@@ -1709,7 +1608,7 @@ export default {
 		width: auto;
 		height: 130px;
 		background: rgba(255, 255, 255, 1);
-		 box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
+		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
 		margin: 15px 0;
 		display: flex;

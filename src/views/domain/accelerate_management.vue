@@ -937,6 +937,7 @@ export default {
    box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
     border-radius: 2px;
     padding: 8px 37px 0;
+    overflow-y: scroll;
   }
 }
 .el-dialog {

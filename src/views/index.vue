@@ -39,8 +39,11 @@
 					</el-dropdown>
 				</el-col>
 			</el-col>
-			<el-col :span="24" class="main">
-				<aside :class="collapsed ? 'menu-collapsed' : 'menu-expanded'">
+			<el-col :span="24" class="main" :style="{ height: clientHeight - 60 + 'px' }">
+				<aside
+					:class="collapsed ? 'menu-collapsed' : 'menu-expanded'"
+					
+				>
 					<el-menu
 						:default-active="$route.path"
 						class="el-menu-vertical-demo"
@@ -155,7 +158,7 @@
 						<p class="last_boder"></p>
 					</el-menu>
 				</aside>
-				<section class="content-container">
+				<section class="content-container" :style="{ height: clientHeight - 60 + 'px' }">
 					<div
 						class="grid-content bg-purple-light"
 						style="width: 100%;margin: 0 auto;"
@@ -173,7 +176,9 @@
 </template>
 
 <script>
+import base from '../components/base';
 export default {
+	mixins: [base],
 	data() {
 		return {
 			menu_type: '管理中心',
@@ -204,7 +209,6 @@ export default {
 				return elem;
 			}
 		});
-		console.log(this.data_list);
 		this.change_tab();
 		var user = localStorage.getItem('adminuser');
 		if (user) {
@@ -276,6 +280,11 @@ export default {
 		//	background: $color-primary;
 		color: #000;
 		background: #297aff;
+		position: fixed;
+		top: 0;
+		left: 0;
+        z-index: 1100;
+        overflow: hidden;
 		.userinfo {
 			text-align: right;
 			padding-right: 35px;
@@ -332,8 +341,8 @@ export default {
 		position: absolute;
 		top: 60px;
 		bottom: 0px;
-        // overflow: hidden;
-        min-height: 1080px;
+		// overflow: hidden;
+		// min-height: 1180px;
 		aside {
 			flex: 0 0 230px;
 			width: 230px;
@@ -368,12 +377,17 @@ export default {
 		}
 		.menu-expanded {
 			flex: 0 0 230px;
-			width: 230px;
+            width: 230px;
+            height: 100%;
 			//margin-top: -60px;
-
+			// height: 1200px;
+			overflow-y: scroll;
 			.el-menu-vertical-demo::-webkit-scrollbar {
 				display: none;
 			}
+		}
+		.menu-expanded::-webkit-scrollbar {
+			display: none;
 		}
 		.content-container {
 			background: #ffffff;
@@ -410,8 +424,8 @@ export default {
 			width: 100%;
 			font-size: 14px;
 			font-weight: bold;
-			margin: 10px 0;
-			padding-top: 15px;
+			padding-top: 25px;
+			padding-bottom: 10px;
 			text-align: left;
 			box-sizing: border-box;
 			padding-left: 40px;

@@ -73,7 +73,7 @@
 					</el-row>
 				</el-form>
 			</div>
-			<div class="devide_table" :style="{ height: clientHeight - 260 + 'px' }">
+			<div class="devide_table" :style="{ height: clientHeight - 270 + 'px' }">
 				<div style="    display: flex;justify-content: flex-end;">
 					<el-button type="primary" @click="toexportExcel"
 						>导出</el-button
@@ -856,7 +856,8 @@ export default {
 		background: #fff;
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
-
+        overflow-y: scroll;
+        padding-bottom: 25px;
 		.el-table td,
 		.el-table th {
 			padding: 6px 0px;

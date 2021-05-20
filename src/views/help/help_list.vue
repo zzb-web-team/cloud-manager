@@ -163,7 +163,7 @@ export default {
 		};
 		if (that.$refs.box_rHeight) {
 			that.$refs.box_rHeight.style.height =
-				that.clientHeight - 270 + 'px';
+				that.clientHeight - 210 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
 	},
@@ -201,7 +201,7 @@ export default {
 		//查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data - 270 + 'px';
+				this.$refs.box_rHeight.style.height = data - 210 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 500 + 'px';
 			}
 		},

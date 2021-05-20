@@ -112,6 +112,7 @@
 <script>
 import PayDia from '../../components/payment_panel';
 import base from "../../components/base"
+import {create_order,notify_payment} from "../../servers/api"
 export default {
     mixins:[base],
 	data() {
@@ -167,8 +168,18 @@ export default {
 	},
 	methods: {
 		pay_money() {
-			this.$refs.PayDialog.show_dia();
-		},
+            this.$refs.PayDialog.show_dia();
+            let params={
+                user_id:this.data_list.user_id,
+                product_id:this.data_list.product_id,
+                num:this.data_list.num
+            };
+            create_order(params).then(res=>{if(res.status==200){}}).catch(error=>{})
+        },
+        //获取支付结果
+        get_notify_payment(){
+            notify_payment().then(res=>{if(res.status==200){}}).catch(error=>{})
+        },
 		// 表头样式设置
 		headClass() {
 			return 'text-align: center;background:#E8F3FF;';
@@ -190,13 +201,14 @@ export default {
 
 <style lang="scss" scoped>
 .order_detil_con {
-	width: 100%;
 	box-sizing: border-box;
 	text-align: left;
 	box-sizing: border-box;
 	padding: 40px;
 	box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
-	margin-top: 36px;
+    margin-top: 36px;
+    margin-left: 25px;
+    margin-right: 25px;
 	.top_title {
 		margin-bottom: 20px;
 	}

@@ -38,7 +38,7 @@
                   </div>
                 <el-row type="flex" class="row_active">
                     <el-col :span="24">
-                    <el-table :data="tableZb" border max-height="800" style="width: 98%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
+                    <el-table :data="tableZb" border style="width: 100%;margin:10px;" :cell-style="rowClass" :header-cell-style="headClass">
                         <el-table-column label="播放URL" width="250">
                         <template slot-scope="scope">
                             <div>{{ scope.row.playurl }}</div>

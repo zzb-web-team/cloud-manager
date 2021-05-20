@@ -122,7 +122,7 @@ export default new Router({
             icon: "iconfont icon-guanxiaobaotubiao09",
             children: [{
                     path: "/user",
-                    name: "后台账户",
+                    name: "后台账户y",
                     component: user,
                 },
                 {
@@ -133,7 +133,7 @@ export default new Router({
                 },
                 {
                     path: "/user_center",
-                    name: "用户列表",
+                    name: "用户中心",
                     component: user_center,
                     hidden: true,
                 },
@@ -151,7 +151,7 @@ export default new Router({
             },
             children: [{
                     path: "/operating_user",
-                    name: "注册用户",
+                    name: "注册用户y",
                     component: operating_user,
                 },
                 {
@@ -181,13 +181,13 @@ export default new Router({
             hidden: true,
             children: [{
                     path: "/accelerate_management",
-                    name: "域名管理",
+                    name: "域名管理y",
                     component: accelerate_management,
                     // hidden: true
                 },
                 {
                     path: "/domain_management",
-                    name: "点播加速管理",
+                    name: "点播加速管理y",
                     component: domain_management,
                     // hidden: true
                 },
@@ -225,7 +225,7 @@ export default new Router({
                 },
                 {
                     path: "/yure_management",
-                    name: "刷新预热管理",
+                    name: "刷新预热管理y",
                     component: yure_management,
                 },
                 {
@@ -262,7 +262,7 @@ export default new Router({
             hidden: true,
             children: [{
                 path: "/node_information",
-                name: "点播SDK发布",
+                name: "点播SDK发布y",
                 component: node_information,
             }, ],
         },
@@ -298,12 +298,12 @@ export default new Router({
                     hidden: true,
                     children: [{
                             path: "/usageindex",
-                            name: "节点流量用量",
+                            name: "节点流量用量y",
                             component: usageindex,
                         },
                         {
                             path: "/trafficMonitor",
-                            name: "节点流量监控",
+                            name: "节点流量监控y",
                             component: trafficMonitor,
                         },
                     ],
@@ -325,17 +325,17 @@ export default new Router({
                     hidden: true,
                     children: [{
                             path: "/playTraffic",
-                            name: "播放流量",
+                            name: "播放流量y",
                             component: playTraffic,
                         },
                         {
                             path: "/statistics",
-                            name: "访问统计",
+                            name: "访问统计y",
                             component: statistics,
                         },
                         {
                             path: "/playDetails",
-                            name: "播放详情统计",
+                            name: "播放详情统计y",
                             component: playDetails,
                             // hidden: true,
                         },
@@ -398,11 +398,11 @@ export default new Router({
             },
             children: [{
                 path: "/traffic_list",
-                name: "流量包管理",
+                name: "流量包管理y",
                 component: traffic_list,
             }, {
                 path: "/traffic_configuration",
-                name: "流量包配置",
+                name: "流量包配置y",
                 component: traffic_configuration,
                 // hidden: true,
             }],
@@ -422,7 +422,7 @@ export default new Router({
         },
         {
             path: "/j",
-            name: "订单管理",
+            name: "订单",
             component: index,
             icon: "iconfont icon-guanli",
             hidden: true,
@@ -431,7 +431,7 @@ export default new Router({
             },
             children: [{
                 path: "/order_list",
-                name: "订单管理",
+                name: "订单管理y",
                 component: order_list,
             }, {
                 path: "/order_detil",
@@ -450,7 +450,7 @@ export default new Router({
         },
         {
             path: "/l",
-            name: "营销管理",
+            name: "营销",
             component: index,
             icon: "iconfont icon-guanli",
             hidden: true,
@@ -459,7 +459,7 @@ export default new Router({
             },
             children: [{
                     path: "/marketing_list",
-                    name: "营销管理",
+                    name: "营销管理y",
                     component: marketing_list,
                 },
                 {
@@ -480,7 +480,7 @@ export default new Router({
         },
         {
             path: '/kfpew',
-            name: '财务管理',
+            name: '财务',
             component: index,
             icon: "iconfont icon-guanli",
             hidden: true,
@@ -489,11 +489,11 @@ export default new Router({
             },
             children: [{
                 path: '/financial_management',
-                name: "财务管理",
+                name: "财务管理y",
                 component: financial_management,
             }, {
                 path: '/arrears_management',
-                name: "欠款管理",
+                name: "欠款管理y",
                 component: arrears_management,
             }]
         },
@@ -514,7 +514,7 @@ export default new Router({
         },
         {
             path: "/m",
-            name: "帮助中心",
+            name: "帮助中心z",
             component: index,
             icon: "iconfont icon-guanli",
             hidden: true,
@@ -523,12 +523,12 @@ export default new Router({
             },
             children: [{
                     path: "/help_list",
-                    name: "帮助中心",
+                    name: "帮助中心y",
                     component: help_list,
                 },
                 {
                     path: "/help_edit",
-                    name: "添加文档",
+                    name: "添加文档y",
                     component: help_edit,
                     hidden: true,
                 }
@@ -550,7 +550,7 @@ export default new Router({
         },
         {
             path: "/f",
-            name: "后台管理",
+            name: "终端管理",
             component: index,
             icon: "iconfont icon-guanli",
             hidden: true,
@@ -559,12 +559,12 @@ export default new Router({
             },
             children: [{
                     path: "/user",
-                    name: "后台账户",
+                    name: "后台账户y",
                     component: user,
                 },
                 {
                     path: "/operation_management",
-                    name: "操作日志",
+                    name: "操作日志y",
                     component: operation_management,
                 },
             ],

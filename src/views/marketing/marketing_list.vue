@@ -14,9 +14,9 @@
 					placeholder="请选择状态"
 					style="width:20%;max-width:300px;margin-left:10px"
 				>
-					<el-option label="全部" value=""></el-option>
-					<el-option label="状态一" value="1"></el-option>
-					<el-option label="状态二" value="2"></el-option>
+					<el-option label="全部" value="0"></el-option>
+					<el-option label="启用" value="1"></el-option>
+					<el-option label="未启用" value="2"></el-option>
 				</el-select>
 				<el-date-picker
 					v-model="search_time"
@@ -25,12 +25,11 @@
 					range-separator="~"
 					start-placeholder="开始日期"
 					end-placeholder="结束日期"
+					value-format="timestamp"
 					style="width:16%;max-width:340px;margin:0 10px"
 				>
 				</el-date-picker>
-				<el-button type="primary" @click="onChanges"
-					>查询</el-button
-				>
+				<el-button type="primary" @click="onChanges">查询</el-button>
 				<el-button @click="reset">重置</el-button>
 			</div>
 		</div>
@@ -50,15 +49,18 @@
 			>
 				<el-table-column type="selection" width="50"></el-table-column>
 				<el-table-column prop="title" label="标题"> </el-table-column>
-				<el-table-column prop="url" label="跳转"></el-table-column>
-				<el-table-column prop="sort" label="排序" width="100">
+				<el-table-column
+					prop="redirect_url"
+					label="跳转"
+				></el-table-column>
+				<el-table-column prop="order" label="排序" width="100">
 				</el-table-column>
 				<el-table-column prop="state" label="状态" width="100">
 					<template slot-scope="scope">
 						<el-switch
 							active-color="#13ce66"
-							active-value="1"
-							inactive-value="0"
+							active-value="0"
+							inactive-value="1"
 							v-model="scope.row.state"
 						></el-switch>
 					</template>
@@ -106,15 +108,16 @@
 
 <script>
 import fenye from '@/components/fenye';
-import base from "../../components/base"
+import base from '../../components/base';
+import { add_adslot } from '../../servers/api';
 export default {
-    mixins:[base],
+	mixins: [base],
 	data() {
 		return {
 			clientHeight: '',
 			val_name: '',
 			search_time: [],
-			mark_state: '',
+			mark_state: '0',
 			pageNo: 1, //当前页码
 			pageSize: 10, //每页数量
 			total_cnt: 0, //数据总量
@@ -123,29 +126,29 @@ export default {
 			tableData: [
 				{
 					title: '王小虎',
-					url: 'http://www.yess.com',
-					sort: 1,
+					redirect_url: 'http://www.yess.com',
+					order: 1,
 					state: '0',
 					create_time: '2021-08-03 11:30:00',
 				},
 				{
 					title: '王小虎',
-					url: 'http://www.yess.com',
-					sort: 2,
+					redirect_url: 'http://www.yess.com',
+					order: 2,
 					state: '0',
 					create_time: '2021-08-03 11:30:00',
 				},
 				{
 					title: '王小虎',
-					url: 'http://www.yess.com',
-					sort: 3,
+					redirect_url: 'http://www.yess.com',
+					order: 3,
 					state: '1',
 					create_time: '2021-08-03 11:30:00',
 				},
 				{
 					title: '王小虎',
-					url: 'http://www.yess.com',
-					sort: 4,
+					redirect_url: 'http://www.yess.com',
+					order: 4,
 					state: '1',
 					create_time: '2021-08-03 11:30:00',
 				},
@@ -175,7 +178,7 @@ export default {
 		};
 		if (that.$refs.box_rHeight) {
 			that.$refs.box_rHeight.style.height =
-				that.clientHeight - 270 + 'px';
+				that.clientHeight - 210 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
 	},
@@ -183,7 +186,22 @@ export default {
 		go_list() {
 			this.$router.push({ path: '/traffic_configuration' });
 		},
-		onChanges() {},
+		onChanges() {
+			let params = {
+				title: this.val_name,
+				state: Number(this.mark_state), //0:全部 1:启用 2:未启用
+				start_time: parseInt(this.search_time[0] / 1000),
+				end_time: parseInt(this.search_time[1] / 1000),
+			};
+			query_adslot(params)
+				.then((res) => {
+					if (res.stasus == 200) {
+						this.tableData = res.data;
+						this.total_cnt = res.max_page;
+					}
+				})
+				.catch((error) => {});
+		},
 		reset() {},
 		handleClick(num, row) {
 			if (!row) {
@@ -201,6 +219,21 @@ export default {
 		//删除
 		deleteRow(rows) {
 			console.log(rows);
+			let params = {
+				data: [],
+			};
+			params.data.push(rows.ad_id);
+			del_adslot(params)
+				.then((res) => {
+					if (res.status == 200) {
+						this.onChanges();
+						this.$message({
+							type: 'success',
+							message: '删除成功!',
+						});
+					}
+				})
+				.catch((error) => {});
 		},
 		//获取页码
 		handleCurrentChange(pages) {
@@ -213,7 +246,7 @@ export default {
 		//查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data - 270 + 'px';
+				this.$refs.box_rHeight.style.height = data - 210 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 500 + 'px';
 			}
 		},
@@ -237,10 +270,10 @@ export default {
 	.con_top {
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		box-sizing: border-box;
-        padding: 20px 30px 0 30px;
-        .top_title{
-            margin-bottom: -10px;
-        }
+		padding: 20px 30px 0 30px;
+		.top_title {
+			margin-bottom: -10px;
+		}
 		.title_seach {
 			display: flex;
 			justify-content: start;

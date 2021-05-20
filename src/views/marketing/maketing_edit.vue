@@ -27,6 +27,7 @@
                                type="datetime"
                                 placeholder="选择日期时间"
                                 style="width:220px;"
+                                value-format="timestamp"
                                 :disabled="time_disabled">
                             </el-date-picker>
                         </el-radio>
@@ -48,6 +49,7 @@
 
 <script>
 import base from "../../components/base"
+import {add_adslot,modify_adslot} from "../../servers/api"
 export default {
     mixins:[base],
 	data() {
@@ -130,7 +132,25 @@ export default {
 		submitForm(formName) {
 			this.$refs[formName].validate((valid) => {
 				if (valid) {
-					alert('submit!');
+                    let params={};
+                    params.title=this.ruleForm.title;
+                    params.redirect_url=this.ruleForm.url;
+                    params.order=this.ruleForm.sort;
+                    params.state=this.ruleForm.state;
+                    params.pub_type=this.ruleForm.valid_period=='定时发布'?2:1;
+                    params.create_time=parseInt(Date.parse(new Date())/1000);
+                    if(this.ruleForm.valid_period=='定时发布'){
+                         params.pub_timeing=parseInt(this.ruleForm.create_time/1000);
+                    }else{
+                        params.pub_timeing=parseInt(Date.parse(new Date())/1000);
+                    }
+                    if(!this.$route.query.data){
+                        add_adslot(params).then(res=>{if(res.status==200){}}).catch(error=>{})
+                    }else{
+                        let data_list=JSON.parse(this.$route.query.data);
+                        params.ad_id=data_list.ad_id;
+                        modify_adslot(params).then(res=>{if(res.status==200){}}).catch(error=>{})
+                    }
 				} else {
 					console.log('error submit!!');
 					return false;
@@ -152,7 +172,7 @@ export default {
         //查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data - 140 + 'px';
+				this.$refs.box_rHeight.style.height = data - 110 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 850 + 'px';
 			}
 		},

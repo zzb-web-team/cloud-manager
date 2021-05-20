@@ -18,6 +18,7 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     // var serverUrl = 'http://www.forteatime.com';
     // var serverUrl = 'http://xyj.grapefruitcloud.com';
     var serverUrl = 'http://service.kclgames.com';
+    var myurl = "http://10.0.0.75:8090"
 }
 
 export const hostUrl = serverUrl;
@@ -471,9 +472,71 @@ export const export_topisp_accesscnt_curve_file = (params) => {
 
 //未处理播放请求
 export const ipfs_unhandle_req_list = (params) => {
-    return post(`${serverUrl}/resource_manage/ipfs_unhandle_req_list`, params)
+    return post(`${myurl}/resource_manage/ipfs_unhandle_req_list`, params)
 };
 //首页概览数据
 export const home_page = (params) => {
-    return post(`10.0.0.128:8090/resource_manage/home_page`, params)
+    return post(`${myurl}/resource_manage/home_page`, params)
+};
+
+
+//添加流量包产品
+export const add_pktproduct = (params) => {
+    return post(`${serverUrl}/pktproduct_mgmt/add_pktproduct`, params)
+};
+
+
+
+//配置流量包产品
+export const config_pktprodct = (params) => {
+    return post(`${serverUrl}/pktproduct_mgmt/config_pktprodct`, params)
+};
+//配置流量包产品(和上一个方法一样)
+export const query_pktorder_for_admin = (params) => {
+    return post(`${serverUrl}/pktorder_mgmt/query_pktorder_for_admin`, params)
+};
+
+
+
+
+//查询流量包产品
+export const query_pktproduct = (params) => {
+    return post(`${serverUrl}/pktproduct_mgmt/query_pktproduct`, params)
+};
+
+//删除流量包产品
+export const del_pktproduct = (params) => {
+    return post(`${serverUrl}/pktproduct_mgmt/del_pktproduct`, params)
+};
+//订单管理
+export const create_order = (params) => {
+    return post(`${serverUrl}/order_mgmt/create_order`, params)
+};
+//查询订单
+export const query_order = (params) => {
+    return post(`${serverUrl}/order_mgmt/query_order`, params)
+};
+//通知支付结果
+export const notify_payment = (params) => {
+    return post(`${serverUrl}/order_mgmt/notify_payment`, params)
+};
+//删除订单
+export const del_order = (params) => {
+    return post(`${serverUrl}/order_mgmt/del_order`, params)
+};
+//营销管理
+export const add_adslot = (params) => {
+    return post(`${serverUrl}/ad_mgmt/add_adslot`, params)
+};
+//营销查询
+export const query_adslot = (params) => {
+    return post(`${serverUrl}/ad_mgmt/query_adslot`, params)
+};
+//营销修改
+export const modify_adslot = (params) => {
+    return post(`${serverUrl}/ad_mgmt/modify_adslot`, params)
+};
+//删除营销
+export const del_adslot = (params) => {
+    return post(`${serverUrl}/ad_mgmt/del_adslot`, params)
 };

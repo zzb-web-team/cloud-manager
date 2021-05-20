@@ -110,7 +110,7 @@
 					width="320"
 				>
 					<template slot-scope="scope">
-						{{ scope.row.create_time }} ~ {{ scope.row.end_time }}
+						{{ scope.row.end_time }}
 					</template>
 				</el-table-column>
 				<el-table-column prop="product_type" label="按量计费使用量">
@@ -206,7 +206,7 @@ export default {
 					specification: 3,
 					pay_type: 200,
 					create_time: '2021-08-03 11:30:00',
-					end_time: '2021-09-03 15:53:12',
+					end_time: '2021-09-03',
 					serial_number: '1',
 				},
 				{
@@ -222,7 +222,7 @@ export default {
 					specification: 3,
 					pay_type: 12,
 					create_time: '2021-08-03 11:30:00',
-					end_time: '2021-09-03 15:53:12',
+					end_time: '2021-09-03',
 					serial_number: '2',
 				},
 				{
@@ -238,7 +238,7 @@ export default {
 					specification: 3,
 					pay_type: 9,
 					create_time: '2021-08-03 11:30:00',
-					end_time: '2021-09-03 15:53:12',
+					end_time: '2021-09-03',
 					serial_number: '2',
 				},
 				{
@@ -254,7 +254,7 @@ export default {
 					specification: 3,
 					pay_type: 4,
 					create_time: '2021-08-03 11:30:00',
-					end_time: '2021-09-03 15:53:12',
+					end_time: '2021-09',
 					serial_number: '2',
 				},
 			],
@@ -289,7 +289,7 @@ export default {
 		};
 		if (that.$refs.box_rHeight) {
 			that.$refs.box_rHeight.style.height =
-				that.clientHeight - 330 + 'px';
+				that.clientHeight - 270 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
 	},
@@ -353,7 +353,7 @@ export default {
 		//查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data - 330 + 'px';
+				this.$refs.box_rHeight.style.height = data - 270 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 500 + 'px';
 			}
 		},

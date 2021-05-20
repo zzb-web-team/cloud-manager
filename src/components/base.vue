@@ -15,10 +15,10 @@ export default {
 			// 为了避免频繁触发resize函数导致页面卡顿，使用定时器
 			if (!this.timer) {
 				// 一旦监听到的screenWidth值改变，就将其重新赋给data里的screenWidth
-				this.clientHeight = val >= 1140 ? val : 1140;
-				console.log(val);
+				this.clientHeight = val-60;
 				this.timer = true;
-				let that = this;
+                let that = this;
+                console.log(this.clientHeight);
 				setTimeout(function() {
 					// 打印screenWidth变化的值
 					that.timer = false;

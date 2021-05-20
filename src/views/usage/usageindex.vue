@@ -81,12 +81,12 @@
 								<el-radio-button label="2"
 									>昨天</el-radio-button
 								>
-								<el-radio-button label="3"
+								<!-- <el-radio-button label="3"
 									>近7天</el-radio-button
 								>
 								<el-radio-button label="4"
 									>近30天</el-radio-button
-								>
+								> -->
 								<el-radio-button label="5"
 									>自定义</el-radio-button
 								>
@@ -102,10 +102,8 @@
 								v-show="showzdy"
 								style="margin-left:10px;margin-top: 20px;"
 								v-model="val2"
-								type="daterange"
-								range-separator="~"
-								start-placeholder="开始日期"
-								end-placeholder="结束日期"
+								type="date"
+								placeholder="选择日期"
 								align="left"
 								@change="gettimes"
 							></el-date-picker>
@@ -349,77 +347,10 @@ export default {
 			tablecdn: [],
 			activeName: 'first',
 			useCache: true,
-			pickerOptions: {
-				shortcuts: [
-					{
-						text: '昨天',
-						onClick(picker) {
-							const end = new Date(
-								new Date(
-									new Date().toLocaleDateString()
-								).getTime()
-							);
-							const start =
-								new Date(
-									new Date(
-										new Date().toLocaleDateString()
-									).getTime()
-								) -
-								3600 * 1000 * 24 * 1;
-							picker.$emit('pick', [start, end]);
-						},
-					},
-					{
-						text: '今天',
-						onClick(picker) {
-							const end = new Date();
-							const start = new Date(
-								new Date(
-									new Date().toLocaleDateString()
-								).getTime()
-							);
-							picker.$emit('pick', [start, end]);
-						},
-					},
-					{
-						text: '最近一周',
-						onClick(picker) {
-							const end = new Date();
-							const start = new Date(
-								new Date(
-									new Date().toLocaleDateString()
-								).getTime()
-							);
-							start.setTime(
-								start.getTime() - 3600 * 1000 * 24 * 6
-							);
-							picker.$emit('pick', [start, end]);
-						},
-					},
-					{
-						text: '最近一个月',
-						onClick(picker) {
-							const end = new Date();
-							const start = new Date(
-								new Date(
-									new Date().toLocaleDateString()
-								).getTime()
-							);
-							start.setTime(
-								start.getTime() - 3600 * 1000 * 24 * 29
-							);
-							picker.$emit('pick', [start, end]);
-						},
-					},
-				],
-				disabledDate(time) {
-					return time.getTime() > Date.now();
-				},
-			},
 			// value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-			val2: [],
+			val2: '',
 
-			timeUnit: 120,
+			timeUnit: 5,
 			starttime: '',
 			endtime: '',
 			dataFlowArray: [], //图1
@@ -618,10 +549,7 @@ export default {
 			} else {
 				params.ipfsChannel = '*';
 			}
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
 			(params.pageNo = 0),
 				(params.pageSize = 10),
 				export_manage_dataflow_table_file(params)
@@ -800,14 +728,8 @@ export default {
 			} else {
 				params.ipfsChannel = '*';
 			}
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
-			this.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit =5;
+			this.timeUnit =5;
 			(params.pageNo = 0),
 				(params.pageSize = 10),
 				manage_dataflow_curve(params)
@@ -926,14 +848,8 @@ export default {
 			} else {
 				params.ipfsChannel = '*';
 			}
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
-			this.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
+			this.timeUnit = 5;
 			manage_dataflow_table(params)
 				.then((res) => {
 					if (res.status == 0) {
@@ -972,7 +888,7 @@ export default {
 				new Date(new Date().toLocaleDateString()).getTime() / 1000;
 			this.starttime = times;
 			this.endtime = Date.parse(new Date()) / 1000;
-			this.timeUnit = 60;
+			this.timeUnit = 5;
 			this.pageNo = 1;
 			this.gettable1();
 			this.gettable2();
@@ -985,7 +901,7 @@ export default {
 				new Date(new Date().toLocaleDateString()).getTime() / 1000;
 			this.starttime = times - 24 * 60 * 60 * 1;
 			this.endtime = times - 1;
-			this.timeUnit = 60;
+			this.timeUnit = 5;
 			this.pageNo = 1;
 			this.gettable1();
 			this.gettable2();
@@ -1021,19 +937,13 @@ export default {
 		},
 		//自定义时间
 		gettimes(cal) {
+			console.log(cal);
+			console.log(this.val2);
 			this.starttime = this.val2
-				? dateToMs(this.val2[0])
+				? dateToMs(this.val2)
 				: new Date(new Date().toLocaleDateString()).getTime() / 1000;
-			this.endtime = this.val2
-				? dateToMs(this.val2[1]) + (24 * 60 * 60 - 1)
-				: Date.parse(new Date()) / 1000;
-			// this.starttime = dateToMs(this.val2[0]);
-			// this.endtime = dateToMs(this.val2[1]);
-			if (this.endtime - this.starttime < 86400) {
-				this.timeUnit = 60;
-			} else if (this.endtime - this.starttime >= 86400) {
-				this.timeUnit = 60 * 24;
-			}
+			this.endtime = this.starttime + 86399;
+			this.timeUnit = 5;
 			this.$refs.multipleTable.clearSelection();
 			this.pageNo = 1;
 			this.gettable1();

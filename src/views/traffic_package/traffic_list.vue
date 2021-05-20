@@ -6,7 +6,7 @@
 				<div>
 					<el-input
 						v-model="val_name"
-						placeholder="请输入渠道ID"
+						placeholder="请输入渠道产品名称"
 						@change="onChanges"
 						style="width:100%;max-width:300px;margin-right:10px;"
 					></el-input>
@@ -19,23 +19,22 @@
 						start-placeholder="开始日期"
 						end-placeholder="截止日期"
 						suffix-icon="el-icon-date"
+						value-format="timestamp"
 						style="width:100%;max-width:340px;"
 					>
 					</el-date-picker>
 				</div>
 				<div>
-					<el-button type="primary"  @click="onChanges"
+					<el-button type="primary" @click="onChanges"
 						>查询</el-button
 					>
-					<el-button  @click="reset">重置</el-button>
+					<el-button @click="reset">重置</el-button>
 				</div>
 			</div>
 		</div>
 		<div class="table_con" ref="box_rHeight">
 			<div class="content_top">
-				<el-button
-					type="primary"
-					@click="go_traffic_configuration"
+				<el-button type="primary" @click="go_traffic_configuration"
 					>添加</el-button
 				>
 			</div>
@@ -51,21 +50,35 @@
 					width="50"
 					label="序号"
 				></el-table-column>
-				<el-table-column prop="name" label="产品名称" width="220">
+				<el-table-column
+					prop="product_name"
+					label="产品名称"
+					width="220"
+				>
 				</el-table-column>
-				<el-table-column prop="specification" label="规格" width="130">
+				<el-table-column prop="size_spec" label="规格" width="130">
 				</el-table-column>
-				<el-table-column prop="num" label="数量" width="100">
+				<el-table-column prop="stocks" label="数量" width="100">
 				</el-table-column>
-				<el-table-column prop="original_price" label="原价" width="100">
+				<el-table-column prop="price" label="原价" width="100">
 				</el-table-column>
 				<el-table-column prop="discount" label="限时特惠" width="100">
 				</el-table-column>
 				<el-table-column prop="current_price" label="现价" width="100">
 				</el-table-column>
-				<el-table-column prop="sotr" label="排序" width="100">
+				<el-table-column prop="product_order" label="排序" width="100">
 				</el-table-column>
-				<el-table-column prop="valid_period" label="有效期">
+				<el-table-column prop="valid_type" label="有效期">
+					<template slot-scope="scope">
+						<span v-if="scope.row.valid_type == 1"
+							>流量用完即止</span
+						>
+						<span v-else
+							>{{ common.getTimes(scope.row.start_timelimit*1000)}}-{{
+								common.getTimes(scope.row.end_timelimit*1000)
+							}}</span
+						>
+					</template>
 				</el-table-column>
 				<el-table-column prop="create_time" label="添加时间">
 				</el-table-column>
@@ -106,9 +119,10 @@
 
 <script>
 import fenye from '@/components/fenye';
-import base from "../../components/base"
+import base from '../../components/base';
+import { query_pktproduct, del_pktproduct } from '../../servers/api';
 export default {
-    mixins:[base],
+	mixins: [base],
 	data() {
 		return {
 			clientHeight: '',
@@ -122,50 +136,54 @@ export default {
 			tableData: [
 				{
 					f_date: '2016-05-02',
-					specification: '50GB',
-					name: '50GB流量包',
-					original_price: 12,
+					size_spec: '50GB',
+					product_name: '50GB流量包',
+					price: 12,
 					current_price: 10,
-					num: 5,
+					stocks: 5,
 					discount: 0.83,
-					sotr: 1,
-					valid_period: '2021-04-03 11:30:00',
+					product_order: 1,
+					valid_type: 1,
 					create_time: '2021-08-03 11:30:00',
 				},
 				{
 					f_date: '2016-05-04',
-					specification: '500GB',
-					name: '500GB流量包',
-					original_price: 100,
+					size_spec: '500GB',
+					product_name: '500GB流量包',
+					price: 100,
 					current_price: 90,
-					num: 3,
+					stocks: 3,
 					discount: 0.9,
-					sotr: 2,
-					valid_period: '流量用完即止',
+					product_order: 2,
+					valid_type: 1,
 					create_time: '2021-08-03 11:30:00',
 				},
 				{
 					f_date: '2016-05-01',
-					specification: '100TB',
-					name: '七日特惠包',
-					original_price: 80,
+					size_spec: '100TB',
+					product_name: '七日特惠包',
+					price: 80,
 					current_price: 40,
-					num: 1,
+					stocks: 1,
 					discount: 0.5,
-					sotr: 3,
-					valid_period: '流量用完即止',
+					product_order: 3,
+					valid_type: 2,
+					start_timelimit: 1620880200, //限时使用开始时间 单位:秒
+					end_timelimit: 1621053000, //限时使用截止时间
 					create_time: '2021-08-03 11:30:00',
 				},
 				{
 					f_date: '2016-05-03',
-					specification: '150GB',
-					name: '新手特惠',
-					original_price: 10,
+					size_spec: '150GB',
+					product_name: '新手特惠',
+					price: 10,
 					current_price: 8,
-					num: 1,
+					stocks: 1,
 					discount: 0.8,
-					sotr: 4,
-					valid_period: '流量用完即止',
+					product_order: 4,
+					valid_type: 2,
+					start_timelimit: 1620880200, //限时使用开始时间 单位:秒
+					end_timelimit: 1621053000, //限时使用截止时间
 					create_time: '2021-08-03 11:30:00',
 				},
 			],
@@ -194,15 +212,31 @@ export default {
 		};
 		if (that.$refs.box_rHeight) {
 			that.$refs.box_rHeight.style.height =
-				that.clientHeight - 270 + 'px';
+				that.clientHeight - 210 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
+		this.onChanges();
 	},
 	methods: {
 		// go_list() {
 		// 	this.$router.push({ path: '/traffic_configuration' });
 		// },
-		onChanges() {},
+		onChanges() {
+			let params = {
+				product_name: this.val_name,
+				start_time: this.search_time[0], //创建开始时间 单位:秒
+				end_time: this.search_time[1],
+				page: this.pageNo,
+			};
+			query_pktproduct(params)
+				.then((res) => {
+					if (res.status == 200) {
+						this.tableData = res.data;
+						this.total_cnt = res.max_page;
+					}
+				})
+				.catch((error) => {});
+		},
 		reset() {},
 		handleClick(row, num) {
 			this.$router.push({
@@ -227,17 +261,22 @@ export default {
 				confirmButtonClass: 'ok_btn',
 			})
 				.then(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消删除',
-					});
+					let params = {
+						product_id: rows.id,
+					};
+					del_pktproduct(params)
+						.then((res) => {
+							if (res.status == 200) {
+								this.onChanges();
+								this.$message({
+									type: 'success',
+									message: '删除成功!',
+								});
+							}
+						})
+						.catch((error) => {});
 				})
-				.catch(() => {
-					this.$message({
-						type: 'success',
-						message: '删除成功!',
-					});
-				});
+				.catch();
 		},
 		//获取页码
 		handleCurrentChange(pages) {
@@ -250,7 +289,7 @@ export default {
 		//查询屏幕高度自适应
 		changeFixed(data) {
 			if (this.$refs.box_rHeight) {
-				this.$refs.box_rHeight.style.height = data - 270 + 'px';
+				this.$refs.box_rHeight.style.height = data - 210 + 'px';
 				this.$refs.box_rHeight.style.minHeight = 500 + 'px';
 			}
 		},
@@ -276,8 +315,8 @@ export default {
 		box-sizing: border-box;
 		padding: 21px 40px 0 40px;
 		.top_title {
-            font-size: 16px;
-            margin-bottom: -10px;
+			font-size: 16px;
+			margin-bottom: -10px;
 		}
 		.title_seach {
 			display: flex;

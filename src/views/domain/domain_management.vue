@@ -1348,4 +1348,7 @@ export default {
     padding-left: 27px;
   }
 }
+.con_lable{
+    overflow-y: scroll;
+}
 </style>

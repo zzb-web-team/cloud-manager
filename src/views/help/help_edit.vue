@@ -215,10 +215,11 @@ export default {
 	box-sizing: border-box;
 	padding: 40px;
 	box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
+	overflow-y: scroll;
 	.top_title {
-        span{
-            font-size: 16px;
-        }
+		span {
+			font-size: 16px;
+		}
 	}
 	.con_ruleForm {
 		width: 1100px;
@@ -234,4 +235,7 @@ export default {
 		}
 	}
 }
+// .help_edit::-webkit-scrollbar {
+// 	display: none;
+// }
 </style>

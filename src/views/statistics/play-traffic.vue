@@ -99,12 +99,12 @@
 									<el-radio-button size="small" label="2"
 										>昨天</el-radio-button
 									>
-									<el-radio-button size="small" label="3"
+									<!-- <el-radio-button size="small" label="3"
 										>近7天</el-radio-button
 									>
 									<el-radio-button size="small" label="4"
 										>近30天</el-radio-button
-									>
+									> -->
 									<el-radio-button size="small" label="5"
 										>自定义</el-radio-button
 									>
@@ -120,10 +120,11 @@
 									v-show="showzdy"
 									style="margin-left:10px;"
 									v-model="val2"
-									type="daterange"
+									type="date"
 									range-separator="~"
 									start-placeholder="开始日期"
 									end-placeholder="结束日期"
+                                     value-format="timestamp"
 									align="left"
 									@change="gettimes(0)"
 								></el-date-picker>
@@ -284,12 +285,12 @@
 								<el-radio-button size="small" label="2"
 									>昨天</el-radio-button
 								>
-								<el-radio-button size="small" label="3"
+								<!-- <el-radio-button size="small" label="3"
 									>近7天</el-radio-button
 								>
 								<el-radio-button size="small" label="4"
 									>近30天</el-radio-button
-								>
+								> -->
 								<el-radio-button size="small" label="5"
 									>自定义</el-radio-button
 								>
@@ -306,9 +307,7 @@
 								style="margin-left:10px;"
 								v-model="val2"
 								type="daterange"
-								range-separator="~"
-								start-placeholder="开始日期"
-								end-placeholder="结束日期"
+								placeholder="选择日期"
 								align="left"
 								@change="gettimes(0)"
 							></el-date-picker>
@@ -542,12 +541,12 @@
 									<el-radio-button size="small" label="2"
 										>昨天</el-radio-button
 									>
-									<el-radio-button size="small" label="3"
+									<!-- <el-radio-button size="small" label="3"
 										>近7天</el-radio-button
 									>
 									<el-radio-button size="small" label="4"
 										>近30天</el-radio-button
-									>
+									> -->
 									<el-radio-button size="small" label="5"
 										>自定义</el-radio-button
 									>
@@ -563,10 +562,9 @@
 									v-show="showzdy"
 									style="margin-left:10px;"
 									v-model="val2"
-									type="datetimerange"
-									range-separator="~"
-									start-placeholder="开始日期"
-									end-placeholder="结束日期"
+									type="date"
+                                    value-format="timestamp"
+									placeholder="选择日期"
 									align="left"
 									@change="gettimes(1)"
 								></el-date-picker>
@@ -958,7 +956,7 @@ export default {
 					return time.getTime() > Date.now();
 				},
 			},
-			val2: [],
+			val2: "",
 			rowHeader: [
 				{
 					prop: 'time',
@@ -1004,7 +1002,7 @@ export default {
 					new_percent: '测试数据1',
 				},
 			],
-			timeUnit: 60,
+			timeUnit: 5,
 			starttime: '',
 			endtime: '',
 			dataFlowArray: [], //图1
@@ -1191,7 +1189,7 @@ export default {
 					: this.thirtyday(4);
 			} else if (this.radio == 5) {
 				this.showzdy = true;
-				this.val2 = [];
+				this.val2 = "";
 			}
 		},
 
@@ -1260,10 +1258,7 @@ export default {
 				params.domain = '*';
 			}
 
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
 
 			this.timeUnit = this.common.timeUnitActive(
 				this.starttime,
@@ -1501,10 +1496,7 @@ export default {
 			// params.pageNo= 0,
 			// params.pageSize= 10,
 			// params.domain="*"
-			params.timeUnit = this.common.timeUnitActive1(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
 
 			this.timeUnit = this.common.timeUnitActive1(
 				this.starttime,
@@ -1896,29 +1888,10 @@ export default {
 		gettimes(cal) {
 			let times =
 				new Date(new Date().toLocaleDateString()).getTime() / 1000;
-			if (cal == 0) {
-				this.starttime = this.val2 ? dateToMs(this.val2[0]) : times;
-				this.endtime = this.val2
-					? dateToMs(this.val2[1]) + (24 * 60 * 60 - 1)
-					: Date.parse(new Date()) / 1000;
-			} else {
-				this.starttime = this.val2 ? dateToMs(this.val2[0]) : times;
-				this.endtime = this.val2
-					? dateToMs(this.val2[1])
-					: Date.parse(new Date()) / 1000;
-			}
-
+			this.starttime = this.val2 ? parseInt(this.val2/1000) : times;
+				this.endtime = this.starttime+86399;
+            this.timeUnit = 5;
 			this.pageNo = 1;
-			if (this.endtime - this.starttime < 21600) {
-				this.timeUnit = 60;
-			} else if (
-				this.endtime - this.starttime >= 21600 &&
-				this.endtime - this.starttime < 86400
-			) {
-				this.timeUnit = 60;
-			} else if (this.endtime - this.starttime >= 86400) {
-				this.timeUnit = 60 * 24;
-			}
 			if (this.activeName == 'second') {
 				this.queryDataFlowLocation();
 			} else if (this.activeName == 'threed') {

@@ -11,13 +11,14 @@
 				class="con_ruleForm"
 			>
 				<el-form-item label="产品名称:" prop="name">
-					<el-input v-model="ruleForm.name" type="text" style="width:220px;" maxlength="30" show-word-limit></el-input>
+					<el-input v-model="ruleForm.name" :disabled=disable_input type="text" style="width:220px;" maxlength="30" show-word-limit></el-input>
 				</el-form-item>
-				<el-form-item label="规格:" prop="specification">
-                    <el-input v-model="ruleForm.specification" style="width:136px;"></el-input>
+				<el-form-item label="规格:"  prop="specification">
+                    <el-input v-model="ruleForm.specification" :disabled=disable_input style="width:136px;"></el-input>
 					<el-select
 						v-model="ruleForm.unit"
                         style="width:80px;"
+                        :disabled=disable_input
 					>
                         <el-option label="MB" value="MB"></el-option>
 						<el-option label="GB" value="GB"></el-option>
@@ -28,7 +29,7 @@
                         <el-option label="YB" value="YB"></el-option>
 					</el-select>
 				</el-form-item>
-                <el-form-item label="数量:" prop="num">
+                <el-form-item label="数量:" :disabled=disable_input prop="num">
                     <el-input v-model="ruleForm.num" style="width:220px;"></el-input>
 				</el-form-item>
                  <el-form-item label="原价:" prop="original_price">
@@ -44,7 +45,7 @@
 					<el-input v-model="ruleForm.sotr" style="width:220px;"></el-input><span style="font-size: 12px;margin-left: 10px;color: #8e8e8e;">数值越小，排序越靠前；数值越大，排序越靠后</span>
 				</el-form-item>
 				<el-form-item label="有效期:" prop="valid_period">
-					<el-radio-group v-model="ruleForm.valid_period" class="my_group">
+					<el-radio-group :disabled=disable_input v-model="ruleForm.valid_period" class="my_group">
 						<el-radio label="流量用完即止"></el-radio>
 						<el-radio label="限时使用"> 
                             <span>限时使用</span>
@@ -54,12 +55,13 @@
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期"
                                 style="width:220px;"
+                                value-format="timestamp"
                                 :default-time="['0:00:00']">
                             </el-date-picker>
                         </el-radio>
 					</el-radio-group>
 				</el-form-item>
-				<el-form-item label="设置为主图:" prop="delivery">
+				<el-form-item label="设置为主图:" :disabled=disable_input prop="delivery">
 					<el-switch v-model="ruleForm.delivery" active-color="#13ce66"></el-switch>
 				</el-form-item>
 				<el-form-item v-show="show_btn">
@@ -76,6 +78,7 @@
 
 <script>
 import base from "../../components/base"
+import{add_pktproduct,config_pktprodct} from "../../servers/api"
 export default {
     mixins:[base],
 	data() {
@@ -92,7 +95,6 @@ export default {
                 sotr:1,
                 valid_period:'流量用完即止',
 				delivery: false,
-                resource: '',
                 val_time:[]
 
 			},
@@ -157,7 +159,8 @@ export default {
                     trigger: 'change'
                 }]
             },
-            show_btn:true
+            show_btn:true,
+            disable_input:false
 		};
 	},
     filters: {},
@@ -192,14 +195,36 @@ export default {
                 this.show_btn=false;
             }else{
                 this.show_btn=true;
+                this.disable_input=true;
             }
-            console.log(this.$route.query.data);
-            let dat=this.$route.query.data;
-            this.ruleForm=JSON.parse(JSON.stringify(dat));
-            if(dat.specification!=0){
-                this.ruleForm.unit=dat.specification.slice(-2);
+            let dat=JSON.parse(JSON.stringify(this.$route.query.data));
+            {
+                create_time: "2021-08-03 11:30:00"
+                current_price: 10
+                discount: 0.83
+                f_date: "2016-05-02"
+                price: 12
+                product_name: "50GB流量包"
+                product_order: 1
+                size_spec: "50GB"
+                stocks: 5
+                valid_type: 1
+            };
+            console.log(dat);
+            this.ruleForm.name=dat.product_name;
+            this.ruleForm.specification=dat.size_spec.slice(0,-2);
+            this.ruleForm.num=dat.stocks;
+            this.ruleForm.discount=dat.discount;
+            this.ruleForm.original_price=dat.price;
+            this.ruleForm.current_price=dat.current_price;
+            this.ruleForm.sotr=dat.stocks;
+            this.ruleForm.valid_period=dat.valid_type==1?"流量用完即止":"限时使用";
+            this.ruleForm.delivery=false;
+            this.ruleForm.unit=dat.size_spec.slice(-2);
+            if(dat.valid_type==1){
+                this.ruleForm.val_time=[];
             }else{
-                this.ruleForm.unit="GB"
+                this.ruleForm.val_time=[dat.start_timelimit*1000,dat.end_timelimit*1000];
             }
         }
     },
@@ -210,15 +235,65 @@ export default {
 		submitForm(formName) {
 			this.$refs[formName].validate((valid) => {
 				if (valid) {
-					alert('submit!');
+					let params={};
+                    params.stocks=this.ruleForm.num;
+                    params.price=this.ruleForm.original_price;
+                    params.discount=this.ruleForm.discount;
+                    params.product_order=this.ruleForm.sotr;
+
+                    if(!this.$route.query.data){
+                        params.product_name=this.ruleForm.name;
+                        params.size_spec=this.update_unit(this.ruleForm.specification,this.ruleForm.unit);
+                        params.create_time=parseInt(Date.parse(new Date())/1000);
+                        params.valid_type=this.ruleForm.valid_period=='限时使用'?2:1;
+                        if(this.ruleForm.valid_period=='限时使用'){
+                            params.start_timelimit=parseInt(this.ruleForm.val_time[0]/1000);
+                            params.end_timelimit=parseInt(this.ruleForm.val_time[1]/1000);
+                        }
+                        //添加
+                        add_pktproduct(params).then(res=>{
+                            if(res.status==200){
+                                this.$message({
+                                    type: 'success',
+                                    message: '添加成功!',
+                                });
+                        }}).catch(error=>{})
+                    }else{
+                        //修改
+                         let dat=this.$route.query.data;
+                        params.product_id=JSON.parse(JSON.stringify(dat)).id;
+                        config_pktprodct(params).then(res=>{
+                            if(res.status==200){
+                                this.$message({
+                                    type: 'success',
+                                    message: '修改成功!',
+                                });
+                        }}).catch(error=>{})
+                    }
 				} else {
 					console.log('error submit!!');
 					return false;
 				}
 			});
-		},
+        },
+        update_unit(num,unit){
+            if(unit=='MB'){
+                return Number((num/1024).toFixed(2))
+            }else if(unit=='GB'){
+                return num;
+            }else if(unit=='TB'){
+                return num*1024
+            }else if(unit=='EB'){
+                return num*1024*1024
+            }else if(unit=='ZB'){
+                return num*1024*1024*1024
+            }else if(unit=='YB'){
+                return num*1024*1024*1024*1024
+            }
+        },
 		resetForm(formName) {
-			this.$refs[formName].resetFields();
+            this.$refs[formName].resetFields();
+            this.$router.push({path:'/traffic_list'})
         },
         	//查询屏幕高度自适应
 		changeFixed(data) {
