@@ -9,17 +9,13 @@
 					@change="onChanges"
 					style="width:15%;max-width:300px;margin-right:10px;"
 				></el-input>
-				<el-button type="primary"  @click="onChanges"
-					>查询</el-button
-				>
-				<el-button  @click="reset">重置</el-button>
+				<el-button type="primary" @click="onChanges">查询</el-button>
+				<el-button @click="reset">重置</el-button>
 			</div>
 		</div>
 		<div class="table_con" ref="box_rHeight">
 			<div class="content_top">
-				<el-button  type="primary" @click="go_edit"
-					>添加</el-button
-				>
+				<el-button type="primary" @click="go_edit">添加</el-button>
 			</div>
 			<el-table
 				:data="tableData"
@@ -31,17 +27,22 @@
 			>
 				<el-table-column type="selection" width="50"></el-table-column>
 				<el-table-column prop="title" label="标题"> </el-table-column>
-				<el-table-column prop="content" label="内容"> </el-table-column>
-				<el-table-column prop="url" label="跳转"></el-table-column>
-				<el-table-column prop="sort" label="排序" width="100">
+				<el-table-column prop="content" label="内容">
+					<template slot-scope="scope">
+						{{ scope.row.content | RemoveHtml }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="redirect_url" label="跳转"></el-table-column>
+				<el-table-column prop="order" label="排序" width="100">
 				</el-table-column>
 				<el-table-column prop="state" label="状态" width="100">
 					<template slot-scope="scope">
 						<el-switch
 							active-color="#13ce66"
-							active-value="0"
-							inactive-value="1"
+							:active-value="1"
+							:inactive-value="2"
 							v-model="scope.row.state"
+							@change="change_state(scope.row)"
 						></el-switch>
 					</template>
 				</el-table-column>
@@ -50,6 +51,17 @@
 					label="创建时间"
 					width="160"
 				>
+					<template slot-scope="scope">
+						<span v-if="scope.row.pub_type == 1"
+							>实时发布<br />{{
+								common.getTimes(scope.row.create_time * 1000)
+							}}</span
+						>
+						<span v-else style="color:blue;">
+							定时发布<br />
+							{{ common.getTimes(scope.row.pub_timeing * 1000) }}
+						</span>
+					</template>
 				</el-table-column>
 				<el-table-column fixed="right" label="操作" width="260">
 					<template slot-scope="scope">
@@ -88,55 +100,29 @@
 
 <script>
 import fenye from '@/components/fenye';
-import base from "../../components/base"
+import base from '../../components/base';
+import { query_help, del_help, modify_help } from '../../servers/api';
 export default {
-    mixins:[base],
+	mixins: [base],
 	data() {
 		return {
 			clientHeight: '',
 			val_name: '',
-			pageNo: 1, //当前页码
+			pageNo: 0, //当前页码
 			pageSize: 10, //每页数量
 			total_cnt: 0, //数据总量
 			starttime: '',
 			endtime: '',
 			tableData: [
-				{
-					title: '王小虎',
-					content:
-						'你都弄额父母闹南方欧尼发哦您发啊您发妈妈网地方三怄气南磨房，非农你去问，放弃no，抚摸其你',
-					url: 'http://www.yess.com',
-					sort: 1,
-					state: '0',
-					create_time: '2021-08-03 11:30:00',
-				},
-				{
-					title: '张三',
-					content:
-						'你都弄额父母闹南方欧尼发哦您发啊您发妈妈网地方三怄气南磨房，非农你去问，放弃no，抚摸其你',
-					url: 'http://www.yess.com',
-					sort: 2,
-					state: '0',
-					create_time: '2021-08-03 11:30:00',
-				},
-				{
-					title: '马小跳',
-					content:
-						'你都弄额父母闹南方欧尼发哦您发啊您发妈妈网地方三怄气南磨房，非农你去问，放弃no，抚摸其你',
-					url: 'http://www.yess.com',
-					sort: 3,
-					state: '1',
-					create_time: '2021-08-03 11:30:00',
-				},
-				{
-					title: '嘟嘟',
-					content:
-						'你都弄额父母闹南方欧尼发哦您发啊您发妈妈网地方三怄气南磨房，非农你去问，放弃no，抚摸其你',
-					url: 'http://www.yess.com',
-					sort: 4,
-					state: '1',
-					create_time: '2021-08-03 11:30:00',
-				},
+				// {
+				// 	title: '王小虎',
+				// 	content:
+				// 		'你都弄额父母闹南方欧尼发哦您发啊您发妈妈网地方三怄气南磨房，非农你去问，放弃no，抚摸其你',
+				// 	url: 'http://www.yess.com',
+				// 	sort: 1,
+				// 	state: '0',
+				// 	create_time: '2021-08-03 11:30:00',
+				// },
 			],
 		};
 	},
@@ -149,7 +135,18 @@ export default {
 			this.changeFixed(this.clientHeight);
 		},
 	},
-	filters: {},
+	filters: {
+		RemoveHtml(richText) {
+			/* 去除富文本中的html标签 */
+			/* *、+限定符都是贪婪的，因为它们会尽可能多的匹配文字，只有在它们的后面加上一个?就可以实现非贪婪或最小匹配。*/
+			let content = richText.replace(/<.+?>/g, '');
+			/* 去除&nbsp; */
+			content = content.replace(/&nbsp;/gi, '');
+			/* 去除空格 */
+			content = content.replace(/\s/gi, '');
+			return content;
+		},
+	},
 	mounted() {
 		this.starttime =
 			new Date(new Date().toLocaleDateString()).getTime() / 1000;
@@ -166,14 +163,59 @@ export default {
 				that.clientHeight - 210 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
+		this.onChanges();
 	},
 	methods: {
 		go_edit() {
 			this.$router.push({ path: '/help_edit' });
 		},
-		onChanges() {},
-		reset() {},
+		onChanges() {
+			let params = {
+				title: this.val_name,
+				page: this.pageNo,
+			};
+			query_help(params)
+				.then((res) => {
+					if (res.status == 0) {
+						this.tableData = res.data.data;
+						this.total_cnt = res.data.total;
+					}
+				})
+				.catch((error) => {});
+		},
+		change_state(data) {
+			console.log(data);
+			let params = {
+				title: data.title,
+				content: data.content,
+				redirect_url: data.url ? data.url : '',
+				order: data.order,
+				pub_type: data.pub_type, //1:实时发布 2:定时发布
+				state: data.state, //1:启用 2:未启用
+				pub_type: parseInt(Date.parse(new Date()) / 1000),
+				help_id: data.help_id,
+			};
+			modify_help(params)
+				.then((res) => {
+					if (res.status == 0) {
+						this.$message({
+							type: 'success',
+							message: '修改成功!',
+						});
+						this.onChanges();
+					} else {
+						this.$message.error(res.err_msg);
+					}
+				})
+				.catch((error) => {});
+		},
+		reset() {
+			this.val_name = '';
+			this.pageNo = 0;
+			this.onChanges();
+		},
 		handleClick(row, type) {
+            // console.log(row);
 			if (type) {
 				this.$router.push({
 					path: '/help_edit',
@@ -182,13 +224,27 @@ export default {
 			} else {
 				this.$router.push({
 					path: '/help_edit',
-					query: { data: JSON.stringify(row) },
+					query: { type: 'update', data: JSON.stringify(row) },
 				});
 			}
 		},
 		//删除
 		deleteRow(rows) {
-			console.log(rows);
+			let params = {
+				data: [rows.help_id],
+			};
+			params.count = params.data.length;
+			del_help(params)
+				.then((res) => {
+					if (res.status == 0) {
+						this.$message({
+							type: 'success',
+							message: '删除成功!',
+						});
+						this.onChanges();
+					}
+				})
+				.catch((error) => {});
 		},
 		//获取页码
 		handleCurrentChange(pages) {
@@ -225,10 +281,10 @@ export default {
 	.con_top {
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		box-sizing: border-box;
-        padding: 20px 30px 0 30px;
-        .top_title{
-            margin-bottom: -10px;
-        }
+		padding: 20px 30px 0 30px;
+		.top_title {
+			margin-bottom: -10px;
+		}
 		.title_seach {
 			display: flex;
 			justify-content: start;

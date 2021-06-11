@@ -13,7 +13,7 @@
 					<span>添加时间</span>
 					<el-date-picker
 						v-model="search_time"
-						type="daterange"
+						type="datetimerange"
 						placeholder="选择日期"
 						range-separator="-"
 						start-placeholder="开始日期"
@@ -57,6 +57,9 @@
 				>
 				</el-table-column>
 				<el-table-column prop="size_spec" label="规格" width="130">
+					<template slot-scope="scope"
+						>{{ scope.row.size_spec }}GB</template
+					>
 				</el-table-column>
 				<el-table-column prop="stocks" label="数量" width="100">
 				</el-table-column>
@@ -65,6 +68,9 @@
 				<el-table-column prop="discount" label="限时特惠" width="100">
 				</el-table-column>
 				<el-table-column prop="current_price" label="现价" width="100">
+					<template slot-scope="scope">{{
+						scope.row.price * scope.row.discount
+					}}</template>
 				</el-table-column>
 				<el-table-column prop="product_order" label="排序" width="100">
 				</el-table-column>
@@ -74,13 +80,20 @@
 							>流量用完即止</span
 						>
 						<span v-else
-							>{{ common.getTimes(scope.row.start_timelimit*1000)}}-{{
-								common.getTimes(scope.row.end_timelimit*1000)
+							>{{
+								common.getTimes(
+									scope.row.start_timelimit * 1000
+								)
+							}}-{{
+								common.getTimes(scope.row.end_timelimit * 1000)
 							}}</span
 						>
 					</template>
 				</el-table-column>
 				<el-table-column prop="create_time" label="添加时间">
+					<template slot-scope="scope">{{
+						common.getTimes(scope.row.create_time * 1000)
+					}}</template>
 				</el-table-column>
 				<el-table-column fixed="right" label="操作" width="260">
 					<template slot-scope="scope">
@@ -127,65 +140,30 @@ export default {
 		return {
 			clientHeight: '',
 			val_name: '',
-			search_time: [],
-			pageNo: 1, //当前页码
+			search_time: [
+				// new Date(new Date().toLocaleDateString()).getTime(),
+				// new Date().getTime(),
+			],
+			pageNo: 0, //当前页码
 			pageSize: 10, //每页数量
 			total_cnt: 0, //数据总量
 			starttime: '',
 			endtime: '',
 			tableData: [
-				{
-					f_date: '2016-05-02',
-					size_spec: '50GB',
-					product_name: '50GB流量包',
-					price: 12,
-					current_price: 10,
-					stocks: 5,
-					discount: 0.83,
-					product_order: 1,
-					valid_type: 1,
-					create_time: '2021-08-03 11:30:00',
-				},
-				{
-					f_date: '2016-05-04',
-					size_spec: '500GB',
-					product_name: '500GB流量包',
-					price: 100,
-					current_price: 90,
-					stocks: 3,
-					discount: 0.9,
-					product_order: 2,
-					valid_type: 1,
-					create_time: '2021-08-03 11:30:00',
-				},
-				{
-					f_date: '2016-05-01',
-					size_spec: '100TB',
-					product_name: '七日特惠包',
-					price: 80,
-					current_price: 40,
-					stocks: 1,
-					discount: 0.5,
-					product_order: 3,
-					valid_type: 2,
-					start_timelimit: 1620880200, //限时使用开始时间 单位:秒
-					end_timelimit: 1621053000, //限时使用截止时间
-					create_time: '2021-08-03 11:30:00',
-				},
-				{
-					f_date: '2016-05-03',
-					size_spec: '150GB',
-					product_name: '新手特惠',
-					price: 10,
-					current_price: 8,
-					stocks: 1,
-					discount: 0.8,
-					product_order: 4,
-					valid_type: 2,
-					start_timelimit: 1620880200, //限时使用开始时间 单位:秒
-					end_timelimit: 1621053000, //限时使用截止时间
-					create_time: '2021-08-03 11:30:00',
-				},
+				// {
+				// 	f_date: '2016-05-03',
+				// 	size_spec: '150GB',
+				// 	product_name: '新手特惠',
+				// 	price: 10,
+				// 	current_price: 8,
+				// 	stocks: 1,
+				// 	discount: 0.8,
+				// 	product_order: 4,
+				// 	valid_type: 2,
+				// 	start_timelimit: 1620880200, //限时使用开始时间 单位:秒
+				// 	end_timelimit: 1621053000, //限时使用截止时间
+				// 	create_time: '2021-08-03 11:30:00',
+				// },
 			],
 		};
 	},
@@ -200,9 +178,7 @@ export default {
 	},
 	filters: {},
 	mounted() {
-		this.starttime =
-			new Date(new Date().toLocaleDateString()).getTime() / 1000;
-		this.endtime = Date.parse(new Date()) / 1000;
+		console.log(this.search_time);
 		let that = this;
 		that.clientHeight = `${document.documentElement.clientHeight ||
 			document.documentElement.offsetHeight}`; //获取浏览器可视区域高度
@@ -224,24 +200,35 @@ export default {
 		onChanges() {
 			let params = {
 				product_name: this.val_name,
-				start_time: this.search_time[0], //创建开始时间 单位:秒
-				end_time: this.search_time[1],
+				start_time: parseInt(this.search_time[0] / 1000), //创建开始时间 单位:秒
+				end_time: parseInt(this.search_time[1] / 1000),
 				page: this.pageNo,
 			};
+			if (params.product_name != '') {
+				params.page = 0;
+			}
 			query_pktproduct(params)
 				.then((res) => {
-					if (res.status == 200) {
-						this.tableData = res.data;
-						this.total_cnt = res.max_page;
+					if (res.status == 0) {
+						this.tableData = res.data.data;
+						this.total_cnt = res.data.total;
 					}
 				})
 				.catch((error) => {});
 		},
-		reset() {},
+		reset() {
+			this.val_name = '';
+			this.search_time = [
+				// new Date(new Date().toLocaleDateString()).getTime(),
+				// new Date().getTime(),
+			];
+			this.onChanges();
+		},
 		handleClick(row, num) {
+			console.log(row);
 			this.$router.push({
 				path: '/traffic_configuration',
-				query: { type: num, data: row },
+				query: { type: num, data: JSON.stringify(row) },
 			});
 		},
 		go_traffic_configuration() {
@@ -252,21 +239,23 @@ export default {
 		//删除
 		deleteRow(rows) {
 			this.$confirm(`删除该商品后，用户将无法购买`, '提示', {
-				cancelButtonText: '确定',
 				confirmButtonText: '取消',
+				cancelButtonText: '确定',
 				type: 'warning',
 				dangerouslyUseHTMLString: true,
 				center: true,
-				cancelButtonClass: 'no_btn',
 				confirmButtonClass: 'ok_btn',
+				cancelButtonClass: 'no_btn',
 			})
-				.then(() => {
+				.then()
+				.catch(() => {
 					let params = {
-						product_id: rows.id,
+						data: [rows.product_id],
 					};
+					params.count = params.data.length;
 					del_pktproduct(params)
 						.then((res) => {
-							if (res.status == 200) {
+							if (res.status == status) {
 								this.onChanges();
 								this.$message({
 									type: 'success',
@@ -275,12 +264,11 @@ export default {
 							}
 						})
 						.catch((error) => {});
-				})
-				.catch();
+				});
 		},
 		//获取页码
 		handleCurrentChange(pages) {
-			this.pageNo = pages;
+			this.pageNo = pages-1;
 			this.onChanges();
 		},
 		handleSizeChange(pagesize) {

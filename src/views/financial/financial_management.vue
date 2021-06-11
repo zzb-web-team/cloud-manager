@@ -14,7 +14,7 @@
 								>&nbsp;&nbsp;&nbsp;&nbsp;用户信息</span
 							>
 							<el-input
-								v-model="order_id"
+								v-model="user_id"
 								placeholder="输入用户ID、账号、手机号"
 								@change="onChanges"
 								style="width:80%;max-width:260px;"
@@ -51,33 +51,22 @@
 								placeholder="请选择活动区域"
 								style="width:80%;max-width:260px;height:auto;"
 							>
-								<el-option label="全部" value="*"></el-option>
-								<el-option
-									label="区域一"
-									value="shanghai"
-								></el-option>
-								<el-option
-									label="区域二"
-									value="beijing"
-								></el-option>
+								<el-option label="全部" value="0"></el-option>
+								<el-option label="微信" value="1"></el-option>
+								<el-option label="支付宝" value="2"></el-option>
+								<el-option label="钱包" value="3"></el-option>
 							</el-select>
 						</el-col>
 						<el-col>
 							<span class="item_title">交易类型</span>
 							<el-select
-								v-model="pay_type"
+								v-model="order_type"
 								placeholder="请选择活动区域"
 								style="width:80%;max-width:260px;height:auto;"
 							>
-								<el-option label="全部" value="*"></el-option>
-								<el-option
-									label="区域一"
-									value="shanghai"
-								></el-option>
-								<el-option
-									label="区域二"
-									value="beijing"
-								></el-option>
+								<el-option label="全部" value="0"></el-option>
+								<el-option label="充值" value="1"></el-option>
+								<el-option label="扣费" value="2"></el-option>
 							</el-select>
 						</el-col>
 						<el-col>
@@ -85,10 +74,10 @@
 							<el-date-picker
 								v-model="search_time"
 								type="daterange"
-								placeholder="选择日期"
 								range-separator="~"
 								start-placeholder="开始日期"
 								end-placeholder="结束日期"
+								value-format="timestamp"
 								style="width:80%;max-width:260px;"
 							>
 							</el-date-picker>
@@ -154,76 +143,35 @@
 <script>
 import fenye from '@/components/fenye';
 import base from '../../components/base';
+import { query_user_sz_for_admin } from '../../servers/api';
 export default {
 	mixins: [base],
 	data() {
 		return {
 			clientHeight: '',
+			user_id: '',
 			order_id: '',
-			pay_type: '*',
+			pay_type: '0',
+			order_type: '0',
 			search_time: '',
-			starttime: '',
-			endtime: '',
-			pageNo: 1, //当前页码
+			pageNo: 0, //当前页码
 			pageSize: 10, //每页数量
 			total_cnt: 0, //数据总量
 			tableData: [
-				{
-					order_id: 15049156199,
-					visit_cnt: 150,
-					name: '新用户超值体验包',
-					user_information: '王小虎',
-					tel: 15913124680,
-					product_type: '充值',
-					num: 12,
-					money: 10,
-					specification: 3,
-					pay_type: '微信',
-					create_time: '2021-08-03 11:30:00',
-					serial_number: 465464684984641,
-				},
-				{
-					order_id: 15049156402,
-					visit_cnt: 366,
-					name: '流量包（冰点划算）',
-					user_information: '王小虎',
-					tel: 15913124680,
-					product_type: '扣费',
-					num: 12,
-					money: 10,
-					specification: 3,
-					pay_type: '支付宝',
-					create_time: '2021-08-03 11:30:00',
-					serial_number: 465464684984641,
-				},
-				{
-					order_id: 15049156946,
-					visit_cnt: 2,
-					name: '流量包（冰点划算）',
-					user_information: '王小虎',
-					tel: 15913124680,
-					product_type: '扣费',
-					num: 12,
-					money: 10,
-					specification: 3,
-					pay_type: '支付宝',
-					create_time: '2021-08-03 11:30:00',
-					serial_number: 465464684984643,
-				},
-				{
-					order_id: 15049156033,
-					visit_cnt: 32,
-					name: '国庆超值包',
-					user_information: '王小虎',
-					tel: 15913124680,
-					product_type: '充值',
-					num: 12,
-					money: 10,
-					specification: 3,
-					pay_type: '微信',
-					create_time: '2021-08-03 11:30:00',
-					serial_number: 465464684984642,
-				},
+				// {
+				// 	order_id: 15049156199,
+				// 	visit_cnt: 150,
+				// 	name: '新用户超值体验包',
+				// 	user_information: '王小虎',
+				// 	tel: 15913124680,
+				// 	product_type: '充值',
+				// 	num: 12,
+				// 	money: 10,
+				// 	specification: 3,
+				// 	pay_type: '微信',
+				// 	create_time: '2021-08-03 11:30:00',
+				// 	serial_number: 465464684984641,
+				// }
 			],
 		};
 	},
@@ -244,9 +192,9 @@ export default {
 		},
 	},
 	mounted() {
-		this.starttime =
-			new Date(new Date().toLocaleDateString()).getTime() / 1000;
-		this.endtime = Date.parse(new Date()) / 1000;
+		// this.starttime =
+		// 	new Date(new Date().toLocaleDateString()).getTime() / 1000;
+		// this.endtime = Date.parse(new Date()) / 1000;
 		let that = this;
 		that.clientHeight = `${document.documentElement.clientHeight ||
 			document.documentElement.offsetHeight}`; //获取浏览器可视区域高度
@@ -259,13 +207,30 @@ export default {
 				that.clientHeight - 270 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
+		this.onChanges();
 	},
 	methods: {
-		onChanges() {},
+		onChanges() {
+			let params = {
+				user_id: this.user_id, //用户ID
+				order_id: this.order_id, //交易单号
+				order_type: this.order_type, //1:充值 2:扣费
+				// amount: 50.0, //金额
+				// balance: 2000.0, //余额
+				pay_type: this.pay_type, //1:微信 2:支付宝 3:钱包
+				start_time: parseInt(this.search_time[0] / 1000),
+				end_time: parseInt(this.search_time[1] / 1000),
+				page: this.pageNo,
+				order: 0,
+			};
+			query_user_sz_for_admin(params)
+				.then((res) => {})
+				.catch((error) => {});
+		},
 		reset() {},
 		//获取页码
 		handleCurrentChange(pages) {
-			this.pageNo = pages;
+			this.pageNo = pages - 1;
 			this.onChanges();
 		},
 		handleSizeChange(pagesize) {

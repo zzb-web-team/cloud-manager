@@ -158,7 +158,8 @@ export default {
 			valueacce: '',
 			uvArray: [], //图一y1
 			pvArray: [], //图一y2
-			timeArray: [], //图一x
+            timeArray: [], //图一x
+            downbackarray:[],
 			tableData: [
 				// {
                 // 	f_date: '2016-05-02',
@@ -284,8 +285,7 @@ export default {
             let params = new Object();
 			home_page(params)
 				.then((res) => {
-                    console.log(res);
-                    if(res.data.status==0){
+                    if(res.status==0){
                         this.sump2p=res.data.sump2p;//p2p播放流量
                         this.sumcdn=res.data.sumcdn;//cdn播放流量
                         this.sumnode=res.data.sumnode;//下行节点扩散流量
@@ -299,12 +299,12 @@ export default {
                         this.todayUnhandleReq=res.data.todayUnhandleReq;//今日未处理访问总数
                         this.yesterdayUnhandleReq=res.data.yesterdayUnhandleReq;//昨日未处理访问总数
                         //pu/pv图表数据
-                        this.timeArray="";
+                        this.timeArray=res.data.timeArray;
                         this.uvArray =res.data.uvArray;
                         this.pvArray =res.data.pvArray;
                         this.drawLine();
                         //p2p图表数据
-                        this.timeArrayZb =res.data.timeArray;
+                        this.timeArrayZb =res.data.timearray;
                         this.p2parray=res.data.p2parray;//每个时刻p2p播放流量
                         this.downcdnarray=res.data.downcdnarray;//每个时刻cdn回源流量
                         this.downbackarray=res.data.downbackarray;//每个时刻下行节点扩散流量
@@ -327,7 +327,7 @@ export default {
 								max
 							);
                         }
-                        this.drawLine2(res.data.timeArray,res.data.p2parray,res.data.downcdnarray.data.downbackarray);
+                        this.drawLine2(res.data.timeArray,res.data.p2parray,res.data.downcdnarray,res.data.downbackarray);
                         //表格
                         this.tableData=res.data.unhandleReqLogs;
 
@@ -366,7 +366,9 @@ export default {
 					splitLine: {
 						show: false,
 					},
-					data: this.timeArray,
+					data: this.timeArray.map((item)=>{
+                        return this.common.getTimess(item*1000)
+                    }),
 				},
 				grid: {
 					left: '3%',
@@ -440,7 +442,7 @@ export default {
 			};
 			myChart.setOption(options);
         },
-        		drawLine2(x, y, z, a,) {
+        	drawLine2(x, y, z, a,) {
 			for (var i = 0; i < y.length; i++) {
 				y[i] = (y[i] * 100).toFixed(2);
 			}
@@ -450,7 +452,6 @@ export default {
 			for (var i = 0; i < a.length; i++) {
 				a[i] = (a[i] * 100).toFixed(2);
 			}
-			
 			let _this = this;
 			// 基于准备好的dom，初始化echarts实例
 			let myChart = this.$echarts.init(
@@ -467,13 +468,15 @@ export default {
 					'CDN播放无源流量',],
 				},
 				grid: {
-					left: '5%', // 默认10%，给24就挺合适的。
+					left: '12%', // 默认10%，给24就挺合适的。
 					top: 50, // 默认60
 					right: "5%", // 默认10%
-					bottom: "6%", // 默认60
+					bottom: "18%", // 默认60
 				},
 				xAxis: {
-					data: x,
+					data: x.map((item)=>{
+                        return this.common.getTimess(item*1000);
+                    }),
 					splitLine: {
 						show: false,
 					},
@@ -482,7 +485,15 @@ export default {
 					splitLine: {
 						show: false,
 					},
-				},
+                },
+                // dataZoom: [{
+                //     type: 'inside',
+                //     start: 0,
+                //     end: 8
+                // }, {
+                //     start: 0,
+                //     end: 10
+                // }],
 				series: [],
 			};
 				options.tooltip = {
@@ -492,7 +503,22 @@ export default {
 						label: {
 							backgroundColor: '#6a7985',
 						},
-					},
+                    },
+                    formatter: function(params) {
+                        let toolp="";
+                        params.forEach((item,index)=>{
+                            if(index==0){
+                                toolp+= params[index].axisValue +'</br>'+
+                                params[index].marker+params[index].seriesName+" " +
+                                _this.common.formatByteActive(params[index].value)+'</br>'
+                            }else{
+                                 toolp+= params[index].marker+params[index].seriesName+" "+
+                                _this.common.formatByteActive(params[index].value)+'</br>'
+                            }
+                           
+                        })
+                        return toolp;
+                    }
 				};
 				options.series = [
 					{
@@ -504,21 +530,21 @@ export default {
 						itemStyle: {
 							normal: { color: '#D2E9FF' },
 						},
-						label: {
-							normal: {
-								show: true,
-								position: 'inside',
-								color: '#333333',
-								fontSize: 10,
-								formatter: function(params) {
-									if (params.value > 0) {
-										return params.value;
-									} else {
-										return ' ';
-									}
-								},
-							},
-						},
+						// label: {
+						// 	normal: {
+						// 		show: true,
+						// 		position: 'inside',
+						// 		color: '#333333',
+						// 		fontSize: 10,
+						// 		formatter: function(params) {
+						// 			if (params.value > 0) {
+						// 				return params.value;
+						// 			} else {
+						// 				return ' ';
+						// 			}
+						// 		},
+						// 	},
+						// },
 					},
 					{
 						name: 'CDN播放有源流量',
@@ -532,21 +558,21 @@ export default {
 							},
 						},
 
-						label: {
-							normal: {
-								show: true,
-								position: 'inside',
-								color: '#333333',
-								fontSize: 10,
-								formatter: function(params) {
-									if (params.value > 0) {
-										return params.value;
-									} else {
-										return ' ';
-									}
-								},
-							},
-						},
+						// label: {
+						// 	normal: {
+						// 		show: true,
+						// 		position: 'inside',
+						// 		color: '#333333',
+						// 		fontSize: 10,
+						// 		formatter: function(params) {
+						// 			if (params.value > 0) {
+						// 				return params.value;
+						// 			} else {
+						// 				return ' ';
+						// 			}
+						// 		},
+						// 	},
+						// },
 					},
 					{
 						name: 'CDN播放无源流量',
@@ -559,21 +585,21 @@ export default {
 								color: '#2894FF',
 							},
 						},
-						label: {
-							normal: {
-								show: true,
-								position: 'inside',
-								color: '#333333',
-								fontSize: 10,
-								formatter: function(params) {
-									if (params.value > 0) {
-										return params.value;
-									} else {
-										return ' ';
-									}
-								},
-							},
-						},
+						// label: {
+						// 	normal: {
+						// 		show: true,
+						// 		position: 'inside',
+						// 		color: '#333333',
+						// 		fontSize: 10,
+						// 		formatter: function(params) {
+						// 			if (params.value > 0) {
+						// 				return params.value;
+						// 			} else {
+						// 				return ' ';
+						// 			}
+						// 		},
+						// 	},
+						// },
 					},
 				];
 			myChart.setOption(options);

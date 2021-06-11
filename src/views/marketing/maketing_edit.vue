@@ -11,11 +11,11 @@
 				<el-form-item label="标题:" prop="title">
 					<el-input v-model="ruleForm.title" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" style="width:560px;" maxlength="150" show-word-limit></el-input>
 				</el-form-item>
-                <el-form-item label="跳转链接:" prop="url">
-                    <el-input v-model="ruleForm.url" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" style="width:560px;"></el-input>
+                <el-form-item label="跳转链接:" prop="redirect_url">
+                    <el-input v-model="ruleForm.redirect_url" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" style="width:560px;"></el-input>
 				</el-form-item>
-                 <el-form-item label="排序:" prop="sort">
-					<el-input v-model="ruleForm.sort" style="width:300px;"></el-input><span style="font-size: 12px;margin-left: 10px;color: #8e8e8e;">数值越小，排序越靠前；数值越大，排序越靠后</span>
+                 <el-form-item label="排序:" prop="order">
+					<el-input v-model="ruleForm.order" style="width:300px;"></el-input><span style="font-size: 12px;margin-left: 10px;color: #8e8e8e;">数值越小，排序越靠前；数值越大，排序越靠后</span>
 				</el-form-item>
 				<el-form-item label="发布时间:" prop="valid_period">
 					<el-radio-group v-model="ruleForm.valid_period" fill='#13ce66' class="my_group" @change="change_radio">
@@ -58,8 +58,8 @@ export default {
 			ruleForm: {
                 title: '',
                 unit: 'GB',
-                url:'',
-                sort:1,
+                redirect_url:'',
+                order:1,
                 valid_period:'实时发布',
 				state: "0",
                 resource: '',
@@ -81,7 +81,7 @@ export default {
                         trigger: 'blur'
                     }
 				],
-                sort:[{
+                order:[{
                     required: true,
 					message: '请输入顺序',
                     trigger: 'blur'
@@ -121,8 +121,10 @@ export default {
         }
         if(this.$route.query.data){
             let data_list=JSON.parse(this.$route.query.data);
+            console.log(data_list);
             this.ruleForm=data_list;
-            this.ruleForm.valid_period="实时发布";
+            this.ruleForm.valid_period=data_list.pub_type==1?"实时发布":"定时发布";
+            this.ruleForm.create_time=data_list.pub_type==1?'':data_list.pub_timeing*1000;
         }
     },
 	methods: {
@@ -134,9 +136,9 @@ export default {
 				if (valid) {
                     let params={};
                     params.title=this.ruleForm.title;
-                    params.redirect_url=this.ruleForm.url;
-                    params.order=this.ruleForm.sort;
-                    params.state=this.ruleForm.state;
+                    params.redirect_url=this.ruleForm.redirect_url;
+                    params.order=Number(this.ruleForm.order);
+                    params.state=Number(this.ruleForm.state);
                     params.pub_type=this.ruleForm.valid_period=='定时发布'?2:1;
                     params.create_time=parseInt(Date.parse(new Date())/1000);
                     if(this.ruleForm.valid_period=='定时发布'){
@@ -145,11 +147,27 @@ export default {
                         params.pub_timeing=parseInt(Date.parse(new Date())/1000);
                     }
                     if(!this.$route.query.data){
-                        add_adslot(params).then(res=>{if(res.status==200){}}).catch(error=>{})
+                        add_adslot(params).then(res=>{if(res.status==0){
+                             this.$message({
+                                    type: 'success',
+                                    message: '添加成功!',
+                                });
+                                setTimeout(()=>{
+                                    this.go_back();
+                                },1500)
+                        }}).catch(error=>{})
                     }else{
                         let data_list=JSON.parse(this.$route.query.data);
                         params.ad_id=data_list.ad_id;
-                        modify_adslot(params).then(res=>{if(res.status==200){}}).catch(error=>{})
+                        modify_adslot(params).then(res=>{if(res.status==0){
+                             this.$message({
+                                    type: 'success',
+                                    message: '修改成功!',
+                                });
+                                setTimeout(()=>{
+                                    this.go_back();
+                                },1500)
+                        }}).catch(error=>{})
                     }
 				} else {
 					console.log('error submit!!');

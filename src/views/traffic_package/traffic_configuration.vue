@@ -78,7 +78,7 @@
 
 <script>
 import base from "../../components/base"
-import{add_pktproduct,config_pktprodct} from "../../servers/api"
+import{add_pktproduct,config_pktproduct} from "../../servers/api"
 export default {
     mixins:[base],
 	data() {
@@ -105,7 +105,7 @@ export default {
 						message: '请输入产品名称',
 						trigger: 'blur',
                     },
-                    { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' },
+                    { min: 2, max: 300, message: '长度在 2 到 30 个字符', trigger: 'blur' },
                     {
                         pattern: /^[\u4e00-\u9fa5a-zA-Z0-9]+$/,
                         message: '产品名称不支持特殊字符',
@@ -197,22 +197,11 @@ export default {
                 this.show_btn=true;
                 this.disable_input=true;
             }
-            let dat=JSON.parse(JSON.stringify(this.$route.query.data));
-            {
-                create_time: "2021-08-03 11:30:00"
-                current_price: 10
-                discount: 0.83
-                f_date: "2016-05-02"
-                price: 12
-                product_name: "50GB流量包"
-                product_order: 1
-                size_spec: "50GB"
-                stocks: 5
-                valid_type: 1
-            };
+            let dat=JSON.parse(this.$route.query.data);
             console.log(dat);
             this.ruleForm.name=dat.product_name;
-            this.ruleForm.specification=dat.size_spec.slice(0,-2);
+            // this.ruleForm.specification=dat.size_spec.slice(0,-2);
+            this.ruleForm.specification=dat.size_spec;
             this.ruleForm.num=dat.stocks;
             this.ruleForm.discount=dat.discount;
             this.ruleForm.original_price=dat.price;
@@ -220,7 +209,8 @@ export default {
             this.ruleForm.sotr=dat.stocks;
             this.ruleForm.valid_period=dat.valid_type==1?"流量用完即止":"限时使用";
             this.ruleForm.delivery=false;
-            this.ruleForm.unit=dat.size_spec.slice(-2);
+            // this.ruleForm.unit=dat.size_spec.slice(-2);
+            this.ruleForm.unit="GB";
             if(dat.valid_type==1){
                 this.ruleForm.val_time=[];
             }else{
@@ -236,14 +226,14 @@ export default {
 			this.$refs[formName].validate((valid) => {
 				if (valid) {
 					let params={};
-                    params.stocks=this.ruleForm.num;
-                    params.price=this.ruleForm.original_price;
-                    params.discount=this.ruleForm.discount;
-                    params.product_order=this.ruleForm.sotr;
+                    params.stocks=Number(this.ruleForm.num);
+                    params.price=Number(this.ruleForm.original_price);
+                    params.discount=Number(this.ruleForm.discount);
+                    params.product_order=Number(this.ruleForm.sotr);
 
                     if(!this.$route.query.data){
                         params.product_name=this.ruleForm.name;
-                        params.size_spec=this.update_unit(this.ruleForm.specification,this.ruleForm.unit);
+                        params.size_spec=Number(this.update_unit(this.ruleForm.specification,this.ruleForm.unit));
                         params.create_time=parseInt(Date.parse(new Date())/1000);
                         params.valid_type=this.ruleForm.valid_period=='限时使用'?2:1;
                         if(this.ruleForm.valid_period=='限时使用'){
@@ -252,7 +242,7 @@ export default {
                         }
                         //添加
                         add_pktproduct(params).then(res=>{
-                            if(res.status==200){
+                            if(res.status==0){
                                 this.$message({
                                     type: 'success',
                                     message: '添加成功!',
@@ -260,10 +250,10 @@ export default {
                         }}).catch(error=>{})
                     }else{
                         //修改
-                         let dat=this.$route.query.data;
-                        params.product_id=JSON.parse(JSON.stringify(dat)).id;
-                        config_pktprodct(params).then(res=>{
-                            if(res.status==200){
+                         let dat=JSON.parse(this.$route.query.data);
+                        params.product_id=dat.product_id;
+                        config_pktproduct(params).then(res=>{
+                            if(res.status==0){
                                 this.$message({
                                     type: 'success',
                                     message: '修改成功!',

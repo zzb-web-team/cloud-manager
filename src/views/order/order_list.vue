@@ -64,14 +64,8 @@
 								style="width:80%;max-width:300px;height:auto;"
 							>
 								<el-option label="全部" value="0"></el-option>
-								<el-option
-									label="流量包"
-									value="1"
-								></el-option>
-								<el-option
-									label="流量"
-									value="2"
-								></el-option>
+								<el-option label="流量包" value="1"></el-option>
+								<el-option label="流量" value="2"></el-option>
 							</el-select>
 						</el-col>
 						<el-col>
@@ -83,7 +77,7 @@
 								range-separator="~"
 								start-placeholder="开始日期"
 								end-placeholder="结束日期"
-                                value-format="timestamp"
+								value-format="timestamp"
 								style="width:80%;max-width:300px;"
 							>
 							</el-date-picker>
@@ -112,6 +106,7 @@
 				<el-table-column prop="product_name" label="产品名称">
 				</el-table-column>
 				<el-table-column prop="size_spec" label="规格" width="120">
+                    <template slot-scope="scope">{{scope.row.size_spec }}GB</template>
 				</el-table-column>
 				<el-table-column
 					prop="product_type"
@@ -119,7 +114,7 @@
 					width="80"
 				>
 					<template slot-scope="scope">
-						<p v-if="product_type == 1">流量包</p>
+						<p v-if="scope.row.product_type == 1">流量包</p>
 						<p v-else>流量计费</p>
 					</template>
 				</el-table-column>
@@ -129,18 +124,19 @@
 					>
 				</el-table-column>
 				<el-table-column
-					prop="order_amount"
+					prop="pay_amount"
 					label="订单金额"
 					width="100"
 				>
 				</el-table-column>
 				<el-table-column label="用户信息">
 					<template slot-scope="scope">
-						<p>{{ scope.row.user_information }}</p>
-						<p>{{ scope.row.tel | formatTel }}</p>
+						<p>{{ scope.row.user_id }}</p>
+						<!-- <p>{{ scope.row.tel | formatTel }}</p> -->
 					</template>
 				</el-table-column>
 				<el-table-column prop="create_time" label="创建订单时间">
+                    <template slot-scope="scope">{{common.getTimes(scope.row.create_time*1000)}}</template>
 				</el-table-column>
 				<el-table-column prop="pay_type" label="支付方式" width="80">
 					<template slot-scope="scope">
@@ -155,7 +151,8 @@
 							待支付
 						</p>
 						<p v-else-if="scope.row.state == 2">已过期</p>
-						<p v-else>完成</p>
+                        <p v-else-if="scope.row.state == 3">完成</p>
+						<p v-else>已删除</p>
 					</template>
 				</el-table-column>
 				<el-table-column fixed="right" label="操作" width="160">
@@ -190,80 +187,86 @@
 <script>
 import fenye from '@/components/fenye';
 import base from '../../components/base';
-import { query_order, del_order,query_pktorder_for_admin } from './../../servers/api';
+import {
+	query_pktorder,
+	del_pktorder,
+	query_pktorder_for_admin,
+} from './../../servers/api';
 export default {
 	mixins: [base],
 	data() {
 		return {
 			clientHeight: '',
-            order_id: '',
-            val_name:'',
-            pay_type: "0",
-            user_id:'',
-            product_type:'0',
-			search_time: '',
-			starttime: '',
-			endtime: '',
-			pageNo: 1, //当前页码
+			order_id: '',
+			val_name: '',
+			pay_type: '0',
+			user_id: '',
+			product_type: '0',
+			search_time: [
+				new Date(new Date().toLocaleDateString()).getTime() -
+					86400 * 1000,
+				new Date().getTime(),
+			],
+			pageNo:0, //当前页码
 			pageSize: 10, //每页数量
 			total_cnt: 0, //数据总量
 			tableData: [
-				{
-					order_id: 15049156199,
-					visit_cnt: 150,
-					product_name: '新用户超值体验包',
-					user_information: '王小虎',
-					tel: 15913124680,
-					product_type: '流量包',
-					num: 12,
-					order_amount: 10,
-					size_spec: 3,
-					pay_type: 1,
-					create_time: '2021-08-03 11:30:00',
-					state: 1,
-				},
-				{
-					order_id: 15049156402,
-					visit_cnt: 366,
-					product_name: '流量包（冰点划算）',
-					user_information: '王小虎',
-					tel: 15913124680,
-					product_type: '流量包',
-					num: 12,
-					order_amount: 10,
-					size_spec: 3,
-					pay_type: 2,
-					create_time: '2021-08-03 11:30:00',
-					state: 1,
-				},
-				{
-					order_id: 15049156946,
-					visit_cnt: 2,
-					product_name: '流量包（冰点划算）',
-					user_information: '王小虎',
-					tel: 15913124680,
-					product_type: '流量包',
-					num: 12,
-					order_amount: 10,
-					size_spec: 3,
-					pay_type: 2,
-					create_time: '2021-08-03 11:30:00',
-					state: 3,
-				},
-				{
-					order_id: 15049156033,
-					visit_cnt: 32,
-					product_name: '国庆超值包',
-					user_information: '王小虎',
-					tel: 15913124680,
-					product_type: '流量包',
-					num: 12,
-					order_amount: 10,
-					size_spec: 3,
-					pay_type: 1,
-					create_time: '2021-08-03 11:30:00',
-					state: 2,
-				},
+				// {
+				// 	order_id: 15049156199,
+				// 	visit_cnt: 150,
+				// 	product_name: '新用户超值体验包',
+				// 	user_information: '王小虎',
+				// 	tel: 15913124680,
+				// 	product_type: '流量包',
+				// 	num: 12,
+				// 	order_amount: 10,
+				// 	size_spec: 3,
+				// 	pay_type: 1,
+				// 	create_time: '2021-08-03 11:30:00',
+				// 	state: 1,
+				// },
+				// {
+				// 	order_id: 15049156402,
+				// 	visit_cnt: 366,
+				// 	product_name: '流量包（冰点划算）',
+				// 	user_information: '王小虎',
+				// 	tel: 15913124680,
+				// 	product_type: '流量包',
+				// 	num: 12,
+				// 	order_amount: 10,
+				// 	size_spec: 3,
+				// 	pay_type: 2,
+				// 	create_time: '2021-08-03 11:30:00',
+				// 	state: 1,
+				// },
+				// {
+				// 	order_id: 15049156946,
+				// 	visit_cnt: 2,
+				// 	product_name: '流量包（冰点划算）',
+				// 	user_information: '王小虎',
+				// 	tel: 15913124680,
+				// 	product_type: '流量包',
+				// 	num: 12,
+				// 	order_amount: 10,
+				// 	size_spec: 3,
+				// 	pay_type: 2,
+				// 	create_time: '2021-08-03 11:30:00',
+				// 	state: 3,
+				// },
+				// {
+				// 	order_id: 15049156033,
+				// 	visit_cnt: 32,
+				// 	product_name: '国庆超值包',
+				// 	user_information: '王小虎',
+				// 	tel: 15913124680,
+				// 	product_type: '流量包',
+				// 	num: 12,
+				// 	order_amount: 10,
+				// 	size_spec: 3,
+				// 	pay_type: 1,
+				// 	create_time: '2021-08-03 11:30:00',
+				// 	state: 2,
+				// },
 			],
 		};
 	},
@@ -284,9 +287,6 @@ export default {
 		},
 	},
 	mounted() {
-		this.starttime =
-			new Date(new Date().toLocaleDateString()).getTime() / 1000;
-		this.endtime = Date.parse(new Date()) / 1000;
 		let that = this;
 		that.clientHeight = `${document.documentElement.clientHeight ||
 			document.documentElement.offsetHeight}`; //获取浏览器可视区域高度
@@ -299,29 +299,43 @@ export default {
 				that.clientHeight - 280 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
+		this.onChanges();
 	},
 	methods: {
 		onChanges() {
 			let params = {
 				product_name: this.val_name,
-				start_time: parseInt(this.search_time[0]/1000), //创建开始时间 单位:秒
-				end_time: parseInt(this.search_time[1]/1000),
+				start_time: parseInt(this.search_time[0] / 1000), //创建开始时间 单位:秒
+				end_time: parseInt(this.search_time[1] / 1000),
 				page: this.pageNo,
 				order_id: this.order_id,
 				pay_type: Number(this.pay_type), //0:全部 1:微信 2:支付宝
 				user_id: this.user_id,
 				product_type: Number(this.product_type), //0:全部 1:流量包 2:流量
 			};
-			query_order(params)
+			query_pktorder_for_admin(params)
 				.then((res) => {
-					if (res.status == 200) {
-						this.total_cnt = res.max_page;
-						this.tableData = res.data;
+					if (res.status == 0) {
+						this.total_cnt = res.data.total;
+						this.tableData = res.data.data;
 					}
 				})
 				.catch((error) => {});
 		},
-		reset() {},
+		reset() {
+            this.order_id="";
+			this.val_name = '';
+			this.pay_type = '0';
+			this.user_id = '';
+			this.product_type = '0';
+			this.search_time = [
+				new Date(new Date().toLocaleDateString()).getTime() -
+					86400 * 1000,
+				new Date().getTime(),
+            ];
+            this.pageNo=0;
+            this.onChanges();
+		},
 		handleClick(row) {
 			console.log(row);
 			this.$router.push({
@@ -355,14 +369,15 @@ export default {
 					let params = {};
 					params.data = [];
 					params.data.push(rows.order_id);
-					del_order(params)
+					params.count = params.data.length;
+					del_pktorder(params)
 						.then((res) => {
-							if (res.status == 200) {
-								this.onChanges();
-								this.$message({
-									type: 'success',
+							if (res.status == 0) {
+                                this.$message({
+                                    type: 'success',
 									message: '删除成功!',
 								});
+								this.onChanges();
 							}
 						})
 						.catch((error) => {});
@@ -370,7 +385,7 @@ export default {
 		},
 		//获取页码
 		handleCurrentChange(pages) {
-			this.pageNo = pages;
+			this.pageNo = pages-1;
 			this.onChanges();
 		},
 		handleSizeChange(pagesize) {

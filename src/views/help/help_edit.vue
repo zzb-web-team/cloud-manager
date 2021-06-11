@@ -30,17 +30,17 @@
 			<el-form-item label="跳转链接:" prop="url">
 				<el-input v-model="ruleForm.url"></el-input>
 			</el-form-item>
-			<el-form-item label="排序:" prop="sort">
+			<el-form-item label="排序:" prop="order">
 				<el-input
-					v-model="ruleForm.sort"
+					v-model="ruleForm.order"
 					style="width:220px;"
 				></el-input
 				><span style="font-size: 12px;margin-left: 10px;color: #8e8e8e;"
 					>数值越小，排序越靠前；数值越大，排序越靠后</span
 				>
 			</el-form-item>
-			<el-form-item label="发布时间:" prop="create_time">
-				<el-radio-group v-model="ruleForm.create_time" class="my_group">
+			<el-form-item label="发布时间:" prop="pub_type">
+				<el-radio-group v-model="ruleForm.pub_type" class="my_group">
 					<el-radio label="实时发布"></el-radio>
 					<el-radio label="定时发布">
 						<span>定时发布</span>
@@ -49,6 +49,7 @@
 							type="datetime"
 							placeholder="选择日期时间"
 							style="width:220px;"
+                            :disabled="pub_disable"
 						>
 						</el-date-picker>
 					</el-radio>
@@ -57,12 +58,12 @@
 			<el-form-item label="状态:" prop="state">
 				<el-switch
 					v-model="ruleForm.state"
-					active-value="0"
-					inactive-value="1"
+					:active-value="1"
+					:inactive-value="2"
 					active-color="#13ce66"
 				></el-switch>
 			</el-form-item>
-			<el-form-item>
+			<el-form-item v-if="btn_show == true">
 				<el-button type="primary" @click="submitForm('ruleForm')"
 					>确定</el-button
 				>
@@ -79,6 +80,7 @@ import 'quill/dist/quill.bubble.css';
 
 import { quillEditor } from 'vue-quill-editor';
 import base from '../../components/base';
+import { add_help, modify_help } from '../../servers/api';
 export default {
 	mixins: [base],
 	data() {
@@ -91,11 +93,13 @@ export default {
 				title: '',
 				content: '',
 				url: '',
-				sort: 1,
-				create_time: '实时发布',
+				order: 1,
+				pub_type: '实时发布',
 				state: 0,
 				val_time: '',
 			},
+            btn_show: true,
+            pub_disable:false,
 			rules: {
 				title: [
 					{
@@ -122,7 +126,7 @@ export default {
 						trigger: 'blur',
 					},
 				],
-				sort: [
+				order: [
 					{
 						required: true,
 						message: '请输入顺序',
@@ -134,7 +138,7 @@ export default {
 						trigger: 'blur',
 					},
 				],
-				create_time: [
+				pub_type: [
 					{
 						required: true,
 						message: '请选择发布时间',
@@ -161,13 +165,19 @@ export default {
 			that.clientHeight = `${document.documentElement.clientHeight ||
 				document.documentElement.offsetHeight}`;
 		};
-
 		if (this.$route.query.data) {
-			let query_data = JSON.parse(this.$route.query.data);
+            let query_data = JSON.parse(this.$route.query.data);
 			this.ruleForm.content = this.escapeStringHTML(query_data.content);
 			this.ruleForm = query_data;
-			this.ruleForm.create_time = '实时发布';
-			this.ruleForm.val_time = query_data.create_time;
+			this.ruleForm.pub_type =
+                query_data.pub_type == 1 ? '实时发布' : '定时发布';
+            this.pub_disable=query_data.pub_type == 2 ? false : true;
+			this.ruleForm.val_time = query_data.pub_timeing;
+			this.btn_show = true;
+           
+		}
+		if (this.$route.query.type) {
+			this.btn_show = false;
 		}
 	},
 	methods: {
@@ -188,6 +198,56 @@ export default {
 				if (valid) {
 					// alert('submit!');
 					console.log(this.ruleForm.content);
+					let params = {
+						title: this.ruleForm.title,
+						content: this.ruleForm.content,
+						redirect_url: this.ruleForm.url,
+						order: Number(this.ruleForm.order),
+						pub_type: this.ruleForm.pub_type == '实时发布' ? 1 : 2, //1:实时发布 2:定时发布
+						state: Number(this.ruleForm.state), //1:启用 2:未启用
+						create_time: parseInt(Date.parse(new Date()) / 1000),
+					};
+					if (this.ruleForm.pub_type == '定时发布') {
+						params.pub_timeing = parseInt(
+							this.ruleForm.val_time / 1000
+						);
+					} else {
+						params.pub_timeing = parseInt(
+							Date.parse(new Date()) / 1000
+						);
+					}
+					if (!this.$route.query.data) {
+						add_help(params)
+							.then((res) => {
+								if (res.status == 0) {
+									this.$message({
+										type: 'success',
+										message: '添加成功!',
+									});
+									setTimeout(() => {
+										this.go_back();
+									}, 1500);
+								}
+							})
+							.catch((error) => {});
+					} else {
+						params.help_id = JSON.parse(
+							this.$route.query.data
+						).help_id;
+						modify_help(params)
+							.then((res) => {
+								if (res.status == 0) {
+									this.$message({
+										type: 'success',
+										message: '修改成功!',
+									});
+									setTimeout(() => {
+										this.go_back();
+									}, 1500);
+								}
+							})
+							.catch((error) => {});
+					}
 				} else {
 					console.log('error submit!!');
 					return false;

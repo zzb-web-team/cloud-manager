@@ -14,20 +14,20 @@
 								>&nbsp;&nbsp;&nbsp;&nbsp;用户信息</span
 							>
 							<el-input
-								v-model="order_id"
+								v-model="user_id"
 								placeholder="输入用户ID、账号、手机号"
 								@change="onChanges"
 								style="width:80%;max-width:260px;"
 							></el-input>
 						</el-col>
-						<el-col>
+						<!-- <el-col>
 							<span class="item_title">结算方式</span>
 							<el-select
 								v-model="pay_type"
 								placeholder="请选择活动区域"
 								style="width:80%;max-width:260px;height:auto;"
 							>
-								<el-option label="全部" value="*"></el-option>
+								<el-option label="全部" value="0"></el-option>
 								<el-option
 									label="按日结算"
 									value="shanghai"
@@ -37,7 +37,7 @@
 									value="beijing"
 								></el-option>
 							</el-select>
-						</el-col>
+						</el-col> -->
 						<el-col>
 							<span class="item_title">账单周期</span>
 							<el-date-picker
@@ -64,15 +64,9 @@
 								placeholder="请选择活动区域"
 								style="width:80%;max-width:260px;height:auto;"
 							>
-								<el-option label="全部" value="*"></el-option>
-								<el-option
-									label="启用"
-									value="shanghai"
-								></el-option>
-								<el-option
-									label="禁用"
-									value="beijing"
-								></el-option>
+								<el-option label="全部" value="0"></el-option>
+								<el-option label="启用" value="1"></el-option>
+								<el-option label="禁用" value="2"></el-option>
 							</el-select>
 						</el-col>
 					</el-row>
@@ -104,7 +98,7 @@
 				</el-table-column>
 				<el-table-column prop="order_id" label="交易单号">
 				</el-table-column>
-				<el-table-column
+				<!-- <el-table-column
 					prop="create_time"
 					label="账单周期"
 					width="320"
@@ -112,8 +106,8 @@
 					<template slot-scope="scope">
 						{{ scope.row.end_time }}
 					</template>
-				</el-table-column>
-				<el-table-column prop="product_type" label="按量计费使用量">
+				</el-table-column> -->
+				<el-table-column prop="product_type" label="总流量">
 				</el-table-column>
 				<el-table-column prop="num" label="总费用">
 					<template slot-scope="scope">
@@ -154,12 +148,12 @@
 							size="small"
 							>查看详情</el-button
 						>
-						<el-button
+						<!-- <el-button
 							@click="deleteRow(scope.row)"
 							type="text"
 							size="small"
 							>删除</el-button
-						>
+						> -->
 					</template>
 				</el-table-column>
 			</el-table>
@@ -178,18 +172,20 @@
 <script>
 import fenye from '@/components/fenye';
 import base from '../../components/base';
+import { query_unnormal_acount } from '../../servers/api';
 export default {
 	mixins: [base],
 	data() {
 		return {
 			clientHeight: '',
+			user_id: '',
 			order_id: '',
-			pay_type: '*',
-			user_type: '*',
+			pay_type: '0',
+			user_type: '0',
 			search_time: '',
 			starttime: '',
 			endtime: '',
-			pageNo: 1, //当前页码
+			pageNo: 0, //当前页码
 			pageSize: 10, //每页数量
 			total_cnt: 0, //数据总量
 			tableData: [
@@ -208,54 +204,6 @@ export default {
 					create_time: '2021-08-03 11:30:00',
 					end_time: '2021-09-03',
 					serial_number: '1',
-				},
-				{
-					order_id: 15049156402,
-					visit_cnt: 366,
-					model: '按量收费',
-					charging_model: '按日结算',
-					user_information: '王小虎',
-					tel: 15913124680,
-					product_type: '879.08MB',
-					num: 12,
-					money: 10,
-					specification: 3,
-					pay_type: 12,
-					create_time: '2021-08-03 11:30:00',
-					end_time: '2021-09-03',
-					serial_number: '2',
-				},
-				{
-					order_id: 15049156946,
-					visit_cnt: 2,
-					model: '按量收费',
-					charging_model: '按日结算',
-					user_information: '王小虎',
-					tel: 15913124680,
-					product_type: '879.08MB',
-					num: 1561,
-					money: 10,
-					specification: 3,
-					pay_type: 9,
-					create_time: '2021-08-03 11:30:00',
-					end_time: '2021-09-03',
-					serial_number: '2',
-				},
-				{
-					order_id: 15049156033,
-					visit_cnt: 32,
-					model: '按量收费',
-					charging_model: '按月结算',
-					user_information: '王小虎',
-					tel: 15913124680,
-					product_type: '750.19MB',
-					num: 12,
-					money: 10,
-					specification: 3,
-					pay_type: 4,
-					create_time: '2021-08-03 11:30:00',
-					end_time: '2021-09',
-					serial_number: '2',
 				},
 			],
 		};
@@ -292,9 +240,24 @@ export default {
 				that.clientHeight - 270 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
+		this.onChanges();
 	},
 	methods: {
-		onChanges() {},
+		onChanges() {
+			let params = {
+				user_id: this.user_id,
+				state: Number(this.user_type), //0:全部 1:未冻结 2:冻结
+				pages: this.pageNo,
+			};
+			query_unnormal_acount(params)
+				.then((res) => {
+					if (res.status == 0) {
+						this.tableData = res.data.data;
+						this.total_cnt = res.data.total;
+					}
+				})
+				.catch((error) => {});
+		},
 		reset() {
 			this.order_id = '';
 			this.pay_type = '*';
@@ -314,37 +277,37 @@ export default {
 		/**
 		 * 修改按钮样式，设计图左边是确定，右边是取消，
 		 */
-		deleteRow(rows) {
-			console.log(rows);
-			this.$confirm(
-				`<p>是否删除欠费记录</p><p>删除后无法查看该信息</p>`,
-				'提示',
-				{
-					cancelButtonText: '确定',
-					confirmButtonText: '取消',
-					type: 'warning',
-					dangerouslyUseHTMLString: true,
-					center: true,
-					cancelButtonClass: 'no_btn',
-					confirmButtonClass: 'ok_btn',
-				}
-			)
-				.then(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消删除',
-					});
-				})
-				.catch(() => {
-					this.$message({
-						type: 'success',
-						message: '删除成功!',
-					});
-				});
-		},
+		// deleteRow(rows) {
+		// 	console.log(rows);
+		// 	this.$confirm(
+		// 		`<p>是否删除欠费记录</p><p>删除后无法查看该信息</p>`,
+		// 		'提示',
+		// 		{
+		// 			cancelButtonText: '确定',
+		// 			confirmButtonText: '取消',
+		// 			type: 'warning',
+		// 			dangerouslyUseHTMLString: true,
+		// 			center: true,
+		// 			cancelButtonClass: 'no_btn',
+		// 			confirmButtonClass: 'ok_btn',
+		// 		}
+		// 	)
+		// 		.then(() => {
+		// 			this.$message({
+		// 				type: 'info',
+		// 				message: '已取消删除',
+		// 			});
+		// 		})
+		// 		.catch(() => {
+		// 			this.$message({
+		// 				type: 'success',
+		// 				message: '删除成功!',
+		// 			});
+		// 		});
+		// },
 		//获取页码
 		handleCurrentChange(pages) {
-			this.pageNo = pages;
+			this.pageNo = pages - 1;
 			this.onChanges();
 		},
 		handleSizeChange(pagesize) {

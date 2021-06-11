@@ -42,6 +42,7 @@
 						v-model="search_time"
 						type="date"
 						placeholder="选择日期"
+						value-format="timestamp"
 					>
 					</el-date-picker>
 					<el-button type="primary" @click="onChanges"
@@ -88,6 +89,7 @@
 					@handleCurrentChange="handleCurrentChange"
 					@handleSizeChange="handleSizeChange"
 					:pagesa="total_cnt"
+					v-show="total_cnt != 0"
 				></fenye>
 			</div>
 		</div>
@@ -112,7 +114,7 @@
 </template>
 
 <script>
-import { ipfs_unhandle_req_list } from '../../servers/api';
+import { ipfs_unhandle_req_list, ipfs_flow_summay } from '../../servers/api';
 import fenye from '@/components/fenye';
 import base from '../../components/base';
 export default {
@@ -133,34 +135,34 @@ export default {
 			pageSize: 10, //每页数量
 			total_cnt: 0, //数据总量
 			tableData: [
-				{
-					f_date: '2016-05-02',
-					visit_cnt: 150,
-					domain: '我的加速1',
-					channelId: '王小虎',
-					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
-				},
-				{
-					f_date: '2016-05-04',
-					visit_cnt: 366,
-					domain: '我的加速8',
-					channelId: '王小虎',
-					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
-				},
-				{
-					f_date: '2016-05-01',
-					visit_cnt: 2,
-					domain: '我的加速6',
-					channelId: '王小虎',
-					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
-				},
-				{
-					f_date: '2016-05-03',
-					visit_cnt: 32,
-					domain: '我的加速3',
-					channelId: '王小虎',
-					urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
-				},
+				// {
+				// 	f_date: '2016-05-02',
+				// 	visit_cnt: 150,
+				// 	domain: '我的加速1',
+				// 	channelId: '王小虎',
+				// 	urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
+				// },
+				// {
+				// 	f_date: '2016-05-04',
+				// 	visit_cnt: 366,
+				// 	domain: '我的加速8',
+				// 	channelId: '王小虎',
+				// 	urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
+				// },
+				// {
+				// 	f_date: '2016-05-01',
+				// 	visit_cnt: 2,
+				// 	domain: '我的加速6',
+				// 	channelId: '王小虎',
+				// 	urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
+				// },
+				// {
+				// 	f_date: '2016-05-03',
+				// 	visit_cnt: 32,
+				// 	domain: '我的加速3',
+				// 	channelId: '王小虎',
+				// 	urlName: 'http://www.123156.nihaoya.com/ro/cdv/index.html',
+				// },
 			],
 		};
 	},
@@ -196,20 +198,23 @@ export default {
 		//搜索--获取数据
 		onChanges() {
 			if (this.radio == '自定义') {
-				this.starttime = this.common.setbatime(this.search_time);
-				this.endtime = this.common.setbatime(this.search_time) + 86400;
+				this.starttime = parseInt(this.search_time / 1000);
+				this.endtime = this.starttime + 86400;
 			}
 			let params = new Object();
-			params.channeld = this.channeld;
-			params.domain = this.domain;
-			params.urlName = this.urlName;
+			params.channeld = this.channeld ? this.channeld : '*';
+			params.domain = this.domain ? this.domain : '*';
+			params.urlName = this.urlName ? this.urlName : '*';
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
 			params.page = this.pageNo;
 			params.pagesize = this.pageSize;
 			ipfs_unhandle_req_list(params)
+				// ipfs_flow_summay(params)
 				.then((res) => {
-					if (res.status == 200) {
+					if (res.status == 0) {
+						this.tableData = res.data.list;
+						this.total_cnt = res.data.totalCnt;
 					} else {
 					}
 				})
@@ -240,7 +245,7 @@ export default {
 			} else {
 				this.endtime =
 					new Date(new Date().toLocaleDateString()).getTime() / 1000;
-				this.endtime =
+				this.starttime =
 					new Date(new Date().toLocaleDateString()).getTime() / 1000 -
 					86400;
 				this.show_time = false;
@@ -294,13 +299,13 @@ export default {
 		box-sizing: border-box;
 		margin-left: 25px;
 		margin-right: 25px;
-		padding:21px 30px 0 30px;
+		padding: 21px 30px 0 30px;
 		display: flex;
 		flex-direction: column;
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		p {
-            font-size: 16px;
-            margin-bottom: -10px;
+			font-size: 16px;
+			margin-bottom: -10px;
 		}
 		.title_seach {
 			display: flex;
@@ -310,7 +315,7 @@ export default {
 			white-space: nowrap;
 			.title_seach_left {
 				display: flex;
-                align-items: center;
+				align-items: center;
 				.el-input {
 					width: 200px;
 					margin-right: 20px;
@@ -329,8 +334,9 @@ export default {
 		}
 	}
 	.tab_content {
-        flex: 1;
-        margin-left: 25px;margin-right: 25px;
+		flex: 1;
+		margin-left: 25px;
+		margin-right: 25px;
 		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		padding: 30px;
 		.content_top {

@@ -58,18 +58,30 @@
 				<el-table-column prop="state" label="状态" width="100">
 					<template slot-scope="scope">
 						<el-switch
-							active-color="#13ce66"
-							active-value="0"
-							inactive-value="1"
+							:active-value="1"
+							:inactive-value="2"
 							v-model="scope.row.state"
+							@change="change_state(scope.row)"
 						></el-switch>
 					</template>
 				</el-table-column>
 				<el-table-column
 					prop="create_time"
-					label="创建时间"
+					label="发布时间"
 					width="160"
 				>
+					<template slot-scope="scope">
+						<span v-if="scope.row.pub_type == 1"
+							>实时发布 <br />
+							{{ common.getTimes(scope.row.create_time * 1000) }}
+						</span>
+						<span v-else
+							>定时发布 <br />
+							<span style="color:#297aff">{{
+								common.getTimes(scope.row.pub_timeing * 1000)
+							}}</span></span
+						>
+					</template>
 				</el-table-column>
 				<el-table-column fixed="right" label="操作" width="260">
 					<template slot-scope="scope">
@@ -109,7 +121,7 @@
 <script>
 import fenye from '@/components/fenye';
 import base from '../../components/base';
-import { add_adslot } from '../../servers/api';
+import { query_adslot, del_adslot, modify_adslot } from '../../servers/api';
 export default {
 	mixins: [base],
 	data() {
@@ -124,35 +136,40 @@ export default {
 			starttime: '',
 			endtime: '',
 			tableData: [
-				{
-					title: '王小虎',
-					redirect_url: 'http://www.yess.com',
-					order: 1,
-					state: '0',
-					create_time: '2021-08-03 11:30:00',
-				},
-				{
-					title: '王小虎',
-					redirect_url: 'http://www.yess.com',
-					order: 2,
-					state: '0',
-					create_time: '2021-08-03 11:30:00',
-				},
-				{
-					title: '王小虎',
-					redirect_url: 'http://www.yess.com',
-					order: 3,
-					state: '1',
-					create_time: '2021-08-03 11:30:00',
-				},
-				{
-					title: '王小虎',
-					redirect_url: 'http://www.yess.com',
-					order: 4,
-					state: '1',
-					create_time: '2021-08-03 11:30:00',
-				},
+				// {
+				// 	title: '王小虎',
+				// 	redirect_url: 'http://www.yess.com',
+				// 	order: 1,
+				// 	state: '0',
+				// 	create_time: '2021-08-03 11:30:00',
+				// },
+				// {
+				// 	title: '王小虎',
+				// 	redirect_url: 'http://www.yess.com',
+				// 	order: 2,
+				// 	state: '0',
+				// 	create_time: '2021-08-03 11:30:00',
+				// },
+				// {
+				// 	title: '王小虎',
+				// 	redirect_url: 'http://www.yess.com',
+				// 	order: 3,
+				// 	state: '1',
+				// 	create_time: '2021-08-03 11:30:00',
+				// },
+				// {
+				// 	title: '王小虎',
+				// 	redirect_url: 'http://www.yess.com',
+				// 	order: 4,
+				// 	state: '1',
+				// 	create_time: '2021-08-03 11:30:00',
+				// },
 			],
+			pager: {
+				page: 0,
+				total: 0,
+				pageSize: 10,
+			},
 		};
 	},
 	components: {
@@ -166,9 +183,6 @@ export default {
 	},
 	filters: {},
 	mounted() {
-		this.starttime =
-			new Date(new Date().toLocaleDateString()).getTime() / 1000;
-		this.endtime = Date.parse(new Date()) / 1000;
 		let that = this;
 		that.clientHeight = `${document.documentElement.clientHeight ||
 			document.documentElement.offsetHeight}`; //获取浏览器可视区域高度
@@ -181,6 +195,7 @@ export default {
 				that.clientHeight - 210 + 'px';
 			that.$refs.box_rHeight.style.minHeight = 500 + 'px';
 		}
+		this.onChanges();
 	},
 	methods: {
 		go_list() {
@@ -192,17 +207,23 @@ export default {
 				state: Number(this.mark_state), //0:全部 1:启用 2:未启用
 				start_time: parseInt(this.search_time[0] / 1000),
 				end_time: parseInt(this.search_time[1] / 1000),
+				page: this.pager.page,
 			};
 			query_adslot(params)
 				.then((res) => {
-					if (res.stasus == 200) {
-						this.tableData = res.data;
-						this.total_cnt = res.max_page;
+					if (res.status == 0) {
+						this.tableData = res.data.data;
+						this.total_cnt = res.data.total;
 					}
 				})
 				.catch((error) => {});
 		},
-		reset() {},
+		reset() {
+			this.val_name = '';
+			this.search_time = [];
+			this.mark_state = '0';
+			this.onChanges();
+		},
 		handleClick(num, row) {
 			if (!row) {
 				this.$router.push({
@@ -223,25 +244,52 @@ export default {
 				data: [],
 			};
 			params.data.push(rows.ad_id);
+			params.count = params.data.length;
 			del_adslot(params)
 				.then((res) => {
-					if (res.status == 200) {
-						this.onChanges();
+					if (res.status == 0) {
 						this.$message({
 							type: 'success',
 							message: '删除成功!',
 						});
+						this.onChanges();
+					}
+				})
+				.catch((error) => {});
+		},
+		change_state(data) {
+			console.log(data);
+			let params = {
+				ad_id: data.ad_id,
+				title: data.title,
+				redirect_url: data.redirect_url,
+				order: data.order,
+				pub_type: data.pub_type,
+				pub_timeing: data.pub_timeing,
+				state: !data.state == true ? 1 : 2,
+				create_time: data.create_time,
+			};
+			modify_adslot(params)
+				.then((res) => {
+					if (res.status == 0) {
+						this.$message({
+							type: 'success',
+							message: '修改成功!',
+						});
+						this.onChanges();
+					} else {
+						this.$message.error(res.err_msg);
 					}
 				})
 				.catch((error) => {});
 		},
 		//获取页码
 		handleCurrentChange(pages) {
-			this.pageNo = pages;
+			this.pager.page = pages - 1;
 			this.onChanges();
 		},
 		handleSizeChange(pagesize) {
-			this.pageSize = pagesize;
+			this.pager.pageSize = pagesize;
 		},
 		//查询屏幕高度自适应
 		changeFixed(data) {
