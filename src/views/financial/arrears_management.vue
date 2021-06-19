@@ -88,16 +88,16 @@
 			>
 				<el-table-column label="用户信息">
 					<template slot-scope="scope">
-						<p>{{ scope.row.user_information }}</p>
-						<p>{{ scope.row.tel | formatTel }}</p>
+						<p>{{ scope.row.user_id }}</p>
+						<!-- <p>{{ scope.row.tel | formatTel }}</p> -->
 					</template>
 				</el-table-column>
-				<el-table-column prop="model" label="计费模式">
+				<!-- <el-table-column prop="model" label="计费模式">
 				</el-table-column>
 				<el-table-column prop="charging_model" label="账单结算方式">
 				</el-table-column>
 				<el-table-column prop="order_id" label="交易单号">
-				</el-table-column>
+				</el-table-column> -->
 				<!-- <el-table-column
 					prop="create_time"
 					label="账单周期"
@@ -111,31 +111,38 @@
 				</el-table-column>
 				<el-table-column prop="num" label="总费用">
 					<template slot-scope="scope">
-						<span>￥{{ scope.row.num }}</span></template
+						<span>￥{{ scope.row.num}}</span></template
 					>
 				</el-table-column>
-				<el-table-column prop="money" label="欠费">
-					<template slot-scope="scope"
-						>-{{ scope.row.money }}</template
-					>
-				</el-table-column>
-
-				<el-table-column prop="pay_type" label="费用逾期时间">
+				<el-table-column prop="balance" label="欠费">
 					<template slot-scope="scope">
-						<span v-if="scope.row.pay_type > 10" style="color:red;"
-							>{{ scope.row.pay_type }}天</span
+						<span
+							v-if="Math.abs(scope.row.balance) > 200"
+							style="color:red;"
 						>
-						<span v-else>{{ scope.row.pay_type }}天</span>
+							￥{{ scope.row.balance }}
+						</span>
+						<span v-else>￥{{ scope.row.balance }}</span>
 					</template>
 				</el-table-column>
-				<el-table-column prop="serial_number" label="账号状态">
+
+				<el-table-column prop="state_change_time" label="费用逾期时间">
+					<template slot-scope="scope">
+						<span
+							>{{
+								scope.row.state_change_time | secondsFormat
+							}}</span
+						>
+					</template>
+				</el-table-column>
+				<el-table-column prop="speed_state" label="账号状态">
 					<template slot-scope="scope">
 						<el-switch
-							v-model="scope.row.serial_number"
-							active-color="#13ce66"
-							inactive-color="#ff4949"
-							active-value="2"
-							inactive-value="1"
+							v-model="scope.row.speed_state"
+							active-color="#ff4949"
+							inactive-color="#13ce66"
+							:active-value="4"
+							:inactive-value="2"
 						>
 						</el-switch>
 					</template>
@@ -189,22 +196,22 @@ export default {
 			pageSize: 10, //每页数量
 			total_cnt: 0, //数据总量
 			tableData: [
-				{
-					order_id: 15049156199,
-					visit_cnt: 150,
-					model: '按量收费',
-					charging_model: '按日结算',
-					user_information: '王小虎',
-					tel: 15913124680,
-					product_type: '985.75MB',
-					num: 11652,
-					money: 10,
-					specification: 3,
-					pay_type: 200,
-					create_time: '2021-08-03 11:30:00',
-					end_time: '2021-09-03',
-					serial_number: '1',
-				},
+				// {
+				// 	order_id: 15049156199,
+				// 	visit_cnt: 150,
+				// 	model: '按量收费',
+				// 	charging_model: '按日结算',
+				// 	user_information: '王小虎',
+				// 	tel: 15913124680,
+				// 	product_type: '985.75MB',
+				// 	num: 11652,
+				// 	money: 10,
+				// 	specification: 3,
+				// 	pay_type: 200,
+				// 	create_time: '2021-08-03 11:30:00',
+				// 	end_time: '2021-09-03',
+				// 	serial_number: '2',
+				// },
 			],
 		};
 	},
@@ -216,6 +223,13 @@ export default {
 			let tel = String(iphone);
 			var reg = /^(\d{3})\d{4}(\d{4})$/;
 			return tel.replace(reg, '$1****$2');
+		},
+		secondsFormat(s) {
+			var day = Math.floor(s / (24 * 3600)); // Math.floor()向下取整
+			var hour = Math.floor((s - day * 24 * 3600) / 3600);
+			var minute = Math.floor((s - day * 24 * 3600 - hour * 3600) / 60);
+			var second = s - day * 24 * 3600 - hour * 3600 - minute * 60;
+			return day + '天' + hour + '时' + minute + '分' + second + '秒';
 		},
 	},
 	watch: {
@@ -259,15 +273,16 @@ export default {
 				.catch((error) => {});
 		},
 		reset() {
-			this.order_id = '';
-			this.pay_type = '*';
-			this.user_type = '*';
+			this.user_id = '';
+			this.pay_type = '0';
+			this.user_type = '0';
 			this.search_time = '';
+			this.onChanges();
 		},
 		handleClick(row) {
 			console.log(row);
 			this.$router.push({
-				path: '/order_detil',
+				path: '/traffic_detil',
 				query: {
 					data: JSON.stringify(row),
 				},

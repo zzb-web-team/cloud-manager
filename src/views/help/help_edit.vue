@@ -10,6 +10,17 @@
 			label-width="100px"
 			class="con_ruleForm"
 		>
+			<el-form-item label="类型:" prop="type_value">
+				<el-select v-model="ruleForm.type_value" placeholder="请选择">
+					<el-option
+						v-for="item in options"
+						:key="item.value"
+						:label="item.label"
+						:value="item.value"
+					>
+					</el-option>
+				</el-select>
+			</el-form-item>
 			<el-form-item label="标题:" prop="title">
 				<el-input
 					v-model="ruleForm.title"
@@ -49,7 +60,7 @@
 							type="datetime"
 							placeholder="选择日期时间"
 							style="width:220px;"
-                            :disabled="pub_disable"
+							:disabled="pub_disable"
 						>
 						</el-date-picker>
 					</el-radio>
@@ -89,6 +100,16 @@ export default {
 			editorOption: {
 				placeholder: '编辑文章内容',
 			},
+			options: [
+				{
+					value: '1',
+					label: '公告',
+				},
+				{
+					value: '2',
+					label: '通知',
+				},
+			],
 			ruleForm: {
 				title: '',
 				content: '',
@@ -97,9 +118,10 @@ export default {
 				pub_type: '实时发布',
 				state: 0,
 				val_time: '',
+				type_value: '2',
 			},
-            btn_show: true,
-            pub_disable:false,
+			btn_show: true,
+			pub_disable: false,
 			rules: {
 				title: [
 					{
@@ -145,6 +167,13 @@ export default {
 						trigger: 'change',
 					},
 				],
+				type_value: [
+					{
+						required: true,
+						message: '请选择类型',
+						trigger: 'change',
+					},
+				],
 			},
 		};
 	},
@@ -166,15 +195,14 @@ export default {
 				document.documentElement.offsetHeight}`;
 		};
 		if (this.$route.query.data) {
-            let query_data = JSON.parse(this.$route.query.data);
+			let query_data = JSON.parse(this.$route.query.data);
 			this.ruleForm.content = this.escapeStringHTML(query_data.content);
 			this.ruleForm = query_data;
 			this.ruleForm.pub_type =
-                query_data.pub_type == 1 ? '实时发布' : '定时发布';
-            this.pub_disable=query_data.pub_type == 2 ? false : true;
+				query_data.pub_type == 1 ? '实时发布' : '定时发布';
+			this.pub_disable = query_data.pub_type == 2 ? false : true;
 			this.ruleForm.val_time = query_data.pub_timeing;
 			this.btn_show = true;
-           
 		}
 		if (this.$route.query.type) {
 			this.btn_show = false;
@@ -206,6 +234,7 @@ export default {
 						pub_type: this.ruleForm.pub_type == '实时发布' ? 1 : 2, //1:实时发布 2:定时发布
 						state: Number(this.ruleForm.state), //1:启用 2:未启用
 						create_time: parseInt(Date.parse(new Date()) / 1000),
+						type_value: this.ruleForm.type_value,
 					};
 					if (this.ruleForm.pub_type == '定时发布') {
 						params.pub_timeing = parseInt(

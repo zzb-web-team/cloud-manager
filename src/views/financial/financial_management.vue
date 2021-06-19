@@ -32,7 +32,7 @@
 						<el-col>
 							<span class="item_title">渠道流水号</span>
 							<el-input
-								v-model="order_id"
+								v-model="ls_id"
 								placeholder="请输入用户信息"
 								@change="onChanges"
 								style="width:80%;max-width:260px;"
@@ -101,28 +101,34 @@
 			>
 				<el-table-column label="用户信息">
 					<template slot-scope="scope">
-						<p>{{ scope.row.user_information }}</p>
-						<p>{{ scope.row.tel | formatTel }}</p>
+						<p>{{ scope.row.user_id }}</p>
 					</template>
 				</el-table-column>
-				<el-table-column prop="order_id" label="交易单号">
+				<el-table-column prop="order_idr" label="交易单号">
 				</el-table-column>
-				<el-table-column prop="create_time" label="交易时间">
+				<el-table-column prop="charge_time" label="交易时间">
+                    <template slot-scope="scope">{{common.getTimes(scope.row.charge_time*1000)}}</template>
 				</el-table-column>
-				<el-table-column prop="product_type" label="交易类型">
-				</el-table-column>
-				<el-table-column prop="num" label="金额">
+				<el-table-column prop="order_type" label="交易类型">
 					<template slot-scope="scope">
-						<span v-if="scope.row.product_type == '充值'">+</span
-						><span v-else>-</span>
-						<span>￥{{ scope.row.num }}</span></template
+						<span>{{
+							scope.row.order_type == 1 ? '充值' : '扣费'
+						}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="amount" label="金额">
+					<template slot-scope="scope">
+						<span>{{ scope.row.order_type == 1 ? '+' : '-' }}</span>
+						<span>￥{{ scope.row.amount }}</span></template
 					>
 				</el-table-column>
-				<el-table-column prop="money" label="余额"> </el-table-column>
+				<el-table-column prop="balance" label="余额"> </el-table-column>
 
 				<el-table-column prop="pay_type" label="交易渠道">
 					<template slot-scope="scope">
-						<span>{{ scope.row.pay_type }}</span>
+						<span v-if="scope.row.pay_type == 1">微信</span>
+						<span v-else-if="scope.row.pay_type == 2">支付宝</span>
+						<span v-else>钱包</span>
 					</template>
 				</el-table-column>
 				<el-table-column prop="serial_number" label="渠道流水号">
@@ -151,9 +157,13 @@ export default {
 			clientHeight: '',
 			user_id: '',
 			order_id: '',
+			ls_id: '',
 			pay_type: '0',
 			order_type: '0',
-			search_time: '',
+			search_time: [
+				new Date(new Date(new Date().toLocaleDateString()).getTime())-7*24*60*60*1000,
+				new Date(),
+			],
 			pageNo: 0, //当前页码
 			pageSize: 10, //每页数量
 			total_cnt: 0, //数据总量
@@ -214,20 +224,37 @@ export default {
 			let params = {
 				user_id: this.user_id, //用户ID
 				order_id: this.order_id, //交易单号
-				order_type: this.order_type, //1:充值 2:扣费
+				order_type: Number(this.order_type), //1:充值 2:扣费
 				// amount: 50.0, //金额
 				// balance: 2000.0, //余额
-				pay_type: this.pay_type, //1:微信 2:支付宝 3:钱包
+				pay_type: Number(this.pay_type), //1:微信 2:支付宝 3:钱包
 				start_time: parseInt(this.search_time[0] / 1000),
 				end_time: parseInt(this.search_time[1] / 1000),
 				page: this.pageNo,
 				order: 0,
 			};
 			query_user_sz_for_admin(params)
-				.then((res) => {})
+				.then((res) => {
+					if (res.status == 0) {
+						this.tableData = res.data.data;
+						this.total_cnt = res.total;
+					}
+				})
 				.catch((error) => {});
 		},
-		reset() {},
+		reset() {
+			this.user_id = '';
+			this.order_id = '';
+			this.ls_id = '';
+			this.order_type = 0;
+			this.pay_type = 0;
+			this.pageNo = 0;
+			this.search_time = [
+				new Date(new Date(new Date().toLocaleDateString()).getTime())-7*24*60*60*1000,
+				new Date(),
+			];
+			this.onChanges();
+		},
 		//获取页码
 		handleCurrentChange(pages) {
 			this.pageNo = pages - 1;

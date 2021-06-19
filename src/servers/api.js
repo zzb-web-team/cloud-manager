@@ -573,3 +573,7 @@ export const query_chargeorder_for_admin = (params) => {
 export const query_unnormal_acount = (params) => {
     return post(`${testurl}/useraccount_mgmt/query_unnormal_acount`, params)
 };
+//通知支付结果
+export const mgmt_notify_payment = (params) => {
+    return post(`${testurl}/flowcharge_mgmt/notify_payment`, params)
+};

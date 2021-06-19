@@ -132,7 +132,11 @@
 <script>
 import PayDia from '../../components/payment_panel';
 import base from '../../components/base';
-import { create_pktorder, notify_payment } from '../../servers/api';
+import {
+	create_pktorder,
+	notify_payment,
+	mgmt_notify_payment,
+} from '../../servers/api';
 export default {
 	mixins: [base],
 	data() {
@@ -190,7 +194,7 @@ export default {
 	},
 	methods: {
 		pay_money() {
-			this.$refs.PayDialog.show_dia();
+			// this.$refs.PayDialog.show_dia();
 			let params = {
 				user_id: this.data_list.user_id,
 				product_id: this.data_list.product_id,
@@ -199,15 +203,34 @@ export default {
 			create_pktorder(params)
 				.then((res) => {
 					if (res.status == 200) {
+						let pay_data = {
+							order_id: res.data.order_id,
+							pay_type: 1,
+							pay_amount:
+								Number(this.original_price) *
+								Number(this.discount),
+						};
+						this.get_notify_payment(pay_data);
+					} else if (res.status == -7) {
+						if (res.err_code == 458) {
+							this.$message('库存不足');
+						}
 					}
 				})
 				.catch((error) => {});
 		},
 		//获取支付结果
-		get_notify_payment() {
-			notify_payment()
+		get_notify_paymen(data) {
+			let params = {
+				order_id: data.order_id,
+				pay_type: data.pay_type, //1:微信 2:支付宝
+				pay_state: 1, //1:成功 2:异常
+				pay_amount: data.pay_amount, //单位:元
+			};
+			mgmt_notify_payment(params)
 				.then((res) => {
-					if (res.status == 200) {
+					if (res.status == 0) {
+						this.$message.success('支付成功');
 					}
 				})
 				.catch((error) => {});

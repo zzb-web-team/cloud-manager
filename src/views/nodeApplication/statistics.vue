@@ -75,12 +75,12 @@
 									<el-radio-button label="2"
 										>昨天</el-radio-button
 									>
-									<el-radio-button label="3"
+									<!-- <el-radio-button label="3"
 										>近7天</el-radio-button
 									>
 									<el-radio-button label="4"
 										>近30天</el-radio-button
-									>
+									> -->
 									<el-radio-button label="5"
 										>自定义</el-radio-button
 									>
@@ -95,10 +95,8 @@
 									v-show="showzdy"
 									style="margin-left:10px;"
 									v-model="val2"
-									type="datetimerange"
-									range-separator="~"
-									start-placeholder="开始日期"
-									end-placeholder="结束日期"
+									type="date"
+									placeholder="选择日期"
 									align="left"
 									@change="gettimes"
 								></el-date-picker>
@@ -215,12 +213,12 @@
 									<el-radio-button label="2"
 										>昨天</el-radio-button
 									>
-									<el-radio-button label="3"
+									<!-- <el-radio-button label="3"
 										>近7天</el-radio-button
 									>
 									<el-radio-button label="4"
 										>近30天</el-radio-button
-									>
+									> -->
 									<el-radio-button label="5"
 										>自定义</el-radio-button
 									>
@@ -235,10 +233,8 @@
 									v-show="showzdy"
 									style="margin-left:10px;"
 									v-model="val2"
-									type="datetimerange"
-									range-separator="~"
-									start-placeholder="开始日期"
-									end-placeholder="结束日期"
+									type="date"
+									placeholder="选择日期"
 									align="left"
 									@change="gettimes"
 								></el-date-picker>
@@ -413,9 +409,9 @@ import {
 import echarts from 'echarts';
 import common from '../../comm/js/util';
 
-import base from "../../components/base"
+import base from '../../components/base';
 export default {
-    mixins:[base],
+	mixins: [base],
 	data() {
 		return {
 			hashidSets: [
@@ -499,81 +495,14 @@ export default {
 			totalUV: 0,
 			twob: false,
 			useCache: true,
-			pickerOptions: {
-				shortcuts: [
-					{
-						text: '昨天',
-						onClick(picker) {
-							const end = new Date(
-								new Date(
-									new Date().toLocaleDateString()
-								).getTime()
-							);
-							const start =
-								new Date(
-									new Date(
-										new Date().toLocaleDateString()
-									).getTime()
-								) -
-								3600 * 1000 * 24 * 1;
-							picker.$emit('pick', [start, end]);
-						},
-					},
-					{
-						text: '今天',
-						onClick(picker) {
-							const end = new Date();
-							const start = new Date(
-								new Date(
-									new Date().toLocaleDateString()
-								).getTime()
-							);
-							picker.$emit('pick', [start, end]);
-						},
-					},
-					{
-						text: '最近一周',
-						onClick(picker) {
-							const end = new Date();
-							const start = new Date(
-								new Date(
-									new Date().toLocaleDateString()
-								).getTime()
-							);
-							start.setTime(
-								start.getTime() - 3600 * 1000 * 24 * 6
-							);
-							picker.$emit('pick', [start, end]);
-						},
-					},
-					{
-						text: '最近一个月',
-						onClick(picker) {
-							const end = new Date();
-							const start = new Date(
-								new Date(
-									new Date().toLocaleDateString()
-								).getTime()
-							);
-							start.setTime(
-								start.getTime() - 3600 * 1000 * 24 * 29
-							);
-							picker.$emit('pick', [start, end]);
-						},
-					},
-				],
-				disabledDate(time) {
-					return time.getTime() > Date.now();
-				},
-			},
 			value1: [
 				new Date(2000, 10, 10, 10, 10),
 				new Date(2000, 10, 11, 10, 10),
 			],
-			val2: [],
+			val2: '',
 			starttime: '',
 			endtime: '',
-			timeUnit: 60,
+			timeUnit: 5,
 			chanid: '',
 			uvArray: [], //图一y1
 			pvArray: [], //图一y2
@@ -648,8 +577,8 @@ export default {
 	methods: {
 		//用户用户供应商导出
 		exoprtant_topisp() {
-            let params = new Object();
-             params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.chanId = this.chanid + '';
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
@@ -689,10 +618,7 @@ export default {
 			} else {
 				params.terminalName = -1;
 			}
-			params.timeUnit = this.common.timeUnitActive2(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
 			export_topisp_accesscnt_curve_file(params)
 				.then((res) => {
 					if (res.status == 0) {
@@ -704,8 +630,8 @@ export default {
 
 		//访问用户地区导出
 		exoprtant_topregion() {
-            let params = new Object();
-             params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.chanId = this.chanid + '';
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
@@ -745,10 +671,7 @@ export default {
 			} else {
 				params.terminalName = -1;
 			}
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
 			export_topregion_accesscnt_curve_file(params)
 				.then((res) => {
 					if (res.status == 0) {
@@ -759,8 +682,8 @@ export default {
 		},
 		//加速内容导出
 		exoprtant_content() {
-            let params = new Object();
-             params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.chanId = this.chanid + '';
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
@@ -795,10 +718,11 @@ export default {
 			} else {
 				params.acce = '-1';
 			}
-			params.timeUnit = this.common.timeUnitActive(
-				this.starttime,
-				this.endtime
-			);
+			// params.timeUnit = this.common.timeUnitActive(
+			// 	this.starttime,
+			// 	this.endtime
+			// );
+			params.timeUnit = 5;
 			export_playtimes_curve_file(params)
 				.then((res) => {
 					if (res.status == 0) {
@@ -809,8 +733,8 @@ export default {
 		},
 		//PV/UV导出
 		exoprtant_pupv() {
-            let params = new Object();
-             params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.chanId = this.chanid + '';
 			params.startTs = this.starttime;
 			params.endTs = this.endtime;
@@ -856,10 +780,7 @@ export default {
 			this.uvArray = [];
 			this.pvArray = [];
 			this.timeArray = [];
-			params.timeUnit = this.common.timeUnitActive2(
-				this.starttime,
-				this.endtime
-			);
+			params.timeUnit = 5;
 			export_pv_uv_curve_file(params)
 				.then((res) => {
 					if (res.status == 0) {
@@ -898,7 +819,7 @@ export default {
 					: this.thirtyday(1);
 			} else if (this.radio == 5) {
 				this.showzdy = true;
-				this.val2 = [];
+				this.val2 = '';
 			}
 		},
 		setZdy() {
@@ -927,7 +848,7 @@ export default {
 			this.value1fileName = '';
 			this.valueacce = '';
 			this.radio = 1;
-			this.val2 = [];
+			this.val2 = "";
 			this.select_time();
 		},
 		reset_map() {
@@ -936,7 +857,7 @@ export default {
 			this.value1fileName = '';
 			this.valueacce = '';
 			this.radio = 1;
-			this.val2 = [];
+			this.val2 = "";
 			this.select_time();
 		},
 		//获取页码
@@ -965,8 +886,8 @@ export default {
 		},
 		//请求数据--曲线图
 		getcure(data) {
-            let params = new Object();
-             params.useCache = this.useCache == true ? 1 : 0;
+			let params = new Object();
+			params.useCache = this.useCache == true ? 1 : 0;
 			params.chanId = this.chanid + '';
 			params.timeUnit = this.timeUnit;
 			if (data == 0) {
@@ -1007,10 +928,7 @@ export default {
 				this.pvArray = [];
 				this.timeArray = [];
 
-				params.timeUnit = this.common.timeUnitActive2(
-					this.starttime,
-					this.endtime
-				);
+				params.timeUnit = 5;
 				pv_uv_curve(params)
 					.then((res) => {
 						this.totalPV = res.data.totalPV;
@@ -1087,10 +1005,7 @@ export default {
 					params.terminalName = -1;
 				}
 				params.top = 10;
-				params.timeUnit = this.common.timeUnitActive(
-					this.starttime,
-					this.endtime
-				);
+				params.timeUnit = 5;
 
 				if (data == 1) {
 					this.playTimesArray1 = [];
@@ -1160,7 +1075,7 @@ export default {
 				new Date(new Date().toLocaleDateString()).getTime() / 1000;
 			this.starttime = times;
 			this.endtime = Date.parse(new Date()) / 1000;
-			this.timeUnit = 60;
+			this.timeUnit = 5;
 			if (data == 0) {
 				this.getcure(0);
 			} else if (data == 1) {
@@ -1175,7 +1090,7 @@ export default {
 				new Date(new Date().toLocaleDateString()).getTime() / 1000;
 			this.starttime = times - 24 * 60 * 60 * 1;
 			this.endtime = times - 1;
-			this.timeUnit = 60;
+			this.timeUnit = 5;
 			if (data == 0) {
 				this.getcure(0);
 			} else if (data == 1) {
@@ -1191,7 +1106,7 @@ export default {
 			);
 			this.endtime = parseInt(new Date(new Date()).getTime() / 1000);
 			this.starttime = times - 24 * 60 * 60 * 6;
-			this.timeUnit = 60 * 24;
+			this.timeUnit = 5;
 			if (data == 0) {
 				this.getcure(0);
 			} else if (data == 1) {
@@ -1202,12 +1117,12 @@ export default {
 		},
 		//三十天
 		thirtyday(data) {
-		let times = parseInt(
+			let times = parseInt(
 				new Date(new Date().toLocaleDateString()).getTime() / 1000
 			);
 			this.endtime = parseInt(new Date(new Date()).getTime() / 1000);
 			this.starttime = times - 24 * 60 * 60 * 29;
-			this.timeUnit = 60 * 24;
+			this.timeUnit = 5;
 			if (data == 0) {
 				this.getcure(0);
 			} else if (data == 1) {
@@ -1218,18 +1133,12 @@ export default {
 		},
 		//自定义时间-确定
 		gettimes(cal) {
-			this.starttime = dateToMs(this.val2[0]);
-			this.endtime = dateToMs(this.val2[1]);
-			if (this.endtime - this.starttime < 21600) {
-				this.timeUnit = 60;
-			} else if (
-				this.endtime - this.starttime >= 21600 &&
-				this.endtime - this.starttime < 86400
-			) {
-				this.timeUnit = 60;
-			} else if (this.endtime - this.starttime >= 86400) {
-				this.timeUnit = 60 * 24;
-			}
+			let times =
+				new Date(new Date().toLocaleDateString()).getTime() / 1000;
+			this.starttime = this.val2 ? parseInt(this.val2 / 1000) : times;
+			this.endtime = this.starttime + 86399;
+			this.timeUnit = 5;
+			this.pageNo = 1;
 			if (this.activeName == 'first') {
 				// this.getseach(0)
 				this.getcure(0);
@@ -1274,7 +1183,7 @@ export default {
 		},
 		//选项卡
 		handleClick(tab, event) {
-            this.useCache = true;
+			this.useCache = true;
 			this.shoudzy = false;
 			this.shoudzyx = false;
 
@@ -1287,7 +1196,7 @@ export default {
 			this.valueacce = '';
 			this.valueDomain = '';
 			//切换时重置时间为当前时间
-			this.val2 = [];
+			this.val2 = "";
 			this.starttime =
 				new Date(new Date().toLocaleDateString()).getTime() / 1000;
 			this.endtime = Date.parse(new Date()) / 1000;
@@ -1618,7 +1527,7 @@ export default {
 		background: #ffffff;
 		padding: 15px 30px;
 		box-sizing: border-box;
-		 box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
+		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
 
 		.bottom {
@@ -1660,7 +1569,7 @@ export default {
 		margin-top: 15px;
 		background: #ffffff;
 		padding: 37px;
-		 box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
+		box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 		border-radius: 2px;
 
 		.el-table td,
@@ -1700,7 +1609,7 @@ export default {
 	width: auto;
 	height: 130px;
 	background: rgba(255, 255, 255, 1);
-	 box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
+	box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.16);
 	border-radius: 2px;
 	margin-top: 15px;
 

@@ -83,6 +83,7 @@ import help_edit from "@/views/help/help_edit.vue";
 // 财务管理
 import financial_management from "@/views/financial/financial_management.vue";
 import arrears_management from "@/views/financial/arrears_management.vue";
+import traffic_detil from "@/views/financial/traffic_detil.vue"
 
 Vue.use(Router);
 
@@ -495,6 +496,11 @@ export default new Router({
                 path: '/arrears_management',
                 name: "欠款管理y",
                 component: arrears_management,
+            }, {
+                path: '/traffic_detil',
+                name: "欠款详情",
+                component: traffic_detil,
+                hidden: true,
             }]
         },
         {
