@@ -107,7 +107,9 @@
 				<el-table-column prop="order_idr" label="交易单号">
 				</el-table-column>
 				<el-table-column prop="charge_time" label="交易时间">
-                    <template slot-scope="scope">{{common.getTimes(scope.row.charge_time*1000)}}</template>
+					<template slot-scope="scope">{{
+						common.getTimes(scope.row.charge_time * 1000)
+					}}</template>
 				</el-table-column>
 				<el-table-column prop="order_type" label="交易类型">
 					<template slot-scope="scope">
@@ -119,10 +121,18 @@
 				<el-table-column prop="amount" label="金额">
 					<template slot-scope="scope">
 						<span>{{ scope.row.order_type == 1 ? '+' : '-' }}</span>
-						<span>￥{{ scope.row.amount }}</span></template
+						<span
+							>￥{{ scope.row.amount.toFixed(2) }}</span
+						></template
 					>
 				</el-table-column>
-				<el-table-column prop="balance" label="余额"> </el-table-column>
+				<el-table-column prop="balance" label="余额">
+					<template slot-scope="scope"
+						><span
+							>￥{{ scope.row.balance.toFixed(2) }}</span
+						></template
+					>
+				</el-table-column>
 
 				<el-table-column prop="pay_type" label="交易渠道">
 					<template slot-scope="scope">
@@ -161,7 +171,8 @@ export default {
 			pay_type: '0',
 			order_type: '0',
 			search_time: [
-				new Date(new Date(new Date().toLocaleDateString()).getTime())-7*24*60*60*1000,
+				new Date(new Date(new Date().toLocaleDateString()).getTime()) -
+					7 * 24 * 60 * 60 * 1000,
 				new Date(),
 			],
 			pageNo: 0, //当前页码
@@ -250,7 +261,8 @@ export default {
 			this.pay_type = 0;
 			this.pageNo = 0;
 			this.search_time = [
-				new Date(new Date(new Date().toLocaleDateString()).getTime())-7*24*60*60*1000,
+				new Date(new Date(new Date().toLocaleDateString()).getTime()) -
+					7 * 24 * 60 * 60 * 1000,
 				new Date(),
 			];
 			this.onChanges();

@@ -107,32 +107,37 @@
 						{{ scope.row.end_time }}
 					</template>
 				</el-table-column> -->
-				<el-table-column prop="product_type" label="总流量">
-				</el-table-column>
-				<el-table-column prop="num" label="总费用">
+				<el-table-column prop="flow" label="总流量">
 					<template slot-scope="scope">
-						<span>￥{{ scope.row.num}}</span></template
+						<span>{{
+							scope.row.flow | set_formatByteActive
+						}}</span></template
 					>
 				</el-table-column>
-				<el-table-column prop="balance" label="欠费">
+				<el-table-column prop="arrears" label="总费用">
 					<template slot-scope="scope">
 						<span
-							v-if="Math.abs(scope.row.balance) > 200"
+							>￥{{ scope.row.arrears.toFixed(2) }}</span
+						></template
+					>
+				</el-table-column>
+				<el-table-column prop="arrears" label="欠费">
+					<template slot-scope="scope">
+						<span
+							v-if="Math.abs(scope.row.arrears) > 200"
 							style="color:red;"
 						>
-							￥{{ scope.row.balance }}
+							￥{{ scope.row.arrears.toFixed(2) }}
 						</span>
-						<span v-else>￥{{ scope.row.balance }}</span>
+						<span v-else>￥{{ scope.row.arrears.toFixed(2) }}</span>
 					</template>
 				</el-table-column>
 
 				<el-table-column prop="state_change_time" label="费用逾期时间">
 					<template slot-scope="scope">
-						<span
-							>{{
-								scope.row.state_change_time | secondsFormat
-							}}</span
-						>
+						<span>{{
+							scope.row.state_change_time | secondsFormat
+						}}</span>
 					</template>
 				</el-table-column>
 				<el-table-column prop="speed_state" label="账号状态">
@@ -180,6 +185,7 @@
 import fenye from '@/components/fenye';
 import base from '../../components/base';
 import { query_unnormal_acount } from '../../servers/api';
+import common from '../../comm/js/util';
 export default {
 	mixins: [base],
 	data() {
@@ -231,6 +237,26 @@ export default {
 			var second = s - day * 24 * 3600 - hour * 3600 - minute * 60;
 			return day + '天' + hour + '时' + minute + '分' + second + '秒';
 		},
+		set_formatByteActive(bkb) {
+			var limit = parseInt(bkb);
+			var size = '';
+			if (limit < 1024) {
+				size = limit.toFixed(2) + 'KB';
+			} else if (limit < 1024 * 1024) {
+				size = (limit / 1024).toFixed(2) + 'MB';
+			} else if (limit < 1024 * 1024 * 1024) {
+				size = (limit / (1024 * 1024)).toFixed(2) + 'GB';
+			} else if (limit < 1024 * 1024 * 1024 * 1024) {
+				size = (limit / (1024 * 1024 * 1024)).toFixed(2) + 'TB';
+			} else {
+				size = (limit / (1024 * 1024 * 1024)).toFixed(2) + 'TB';
+			}
+
+			var sizeStr = size + ''; //转成字符串
+			var index = sizeStr.indexOf('.'); //获取小数点处的索引
+			var dou = sizeStr.substr(index + 1, 2); //获取小数点后两位的值
+			return size;
+		},
 	},
 	watch: {
 		clientHeight() {
@@ -261,7 +287,7 @@ export default {
 			let params = {
 				user_id: this.user_id,
 				state: Number(this.user_type), //0:全部 1:未冻结 2:冻结
-				pages: this.pageNo,
+				page: this.pageNo,
 			};
 			query_unnormal_acount(params)
 				.then((res) => {

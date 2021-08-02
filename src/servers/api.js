@@ -18,8 +18,9 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     // var serverUrl = 'http://www.forteatime.com';
     // var serverUrl = 'http://xyj.grapefruitcloud.com';
     var serverUrl = 'http://service.kclgames.com';
-    var myurl = "http://10.0.0.75:8090"
-    var testurl = "http://test.zzb.com"
+    // var myurl = "http://10.0.0.75:8090"
+    var test_serverUrl = "http://test.zzb.com"
+    var test_serverUrl = "http://service.kclgames.com"
 }
 
 export const hostUrl = serverUrl;
@@ -473,107 +474,111 @@ export const export_topisp_accesscnt_curve_file = (params) => {
 
 //未处理播放请求
 export const ipfs_unhandle_req_list = (params) => {
-    return post(`${myurl}/resource_manage/ipfs_unhandle_req_list`, params)
+    return post(`${serverUrl}/resource_manage/ipfs_unhandle_req_list`, params)
 };
 export const ipfs_flow_summay = (params) => {
-    return post(`${myurl}/resource_manage/ipfs_flow_summay`, params)
+    return post(`${serverUrl}/resource_manage/ipfs_flow_summay`, params)
 };
 //首页概览数据
 export const home_page = (params) => {
-    return post(`${myurl}/resource_manage/home_page`, params)
+    return post(`${serverUrl}/resource_manage/home_page`, params)
 };
 
 
 //添加流量包产品
 export const add_pktproduct = (params) => {
-    return post(`${testurl}/pktproduct_mgmt/add_pktproduct`, params)
+    return post(`${serverUrl}/pktproduct_mgmt/add_pktproduct`, params)
 };
 
 //配置流量包产品
 export const config_pktproduct = (params) => {
-    return post(`${testurl}/pktproduct_mgmt/config_pktproduct`, params)
+    return post(`${test_serverUrl}/pktproduct_mgmt/config_pktproduct`, params)
 };
 //查询流量包产品
 export const query_pktproduct = (params) => {
-    return post(`${testurl}/pktproduct_mgmt/query_pktproduct`, params)
+    return post(`${test_serverUrl}/pktproduct_mgmt/query_pktproduct`, params)
 };
 //删除流量包产品
 export const del_pktproduct = (params) => {
-    return post(`${testurl}/pktproduct_mgmt/del_pktproduct`, params)
+    return post(`${test_serverUrl}/pktproduct_mgmt/del_pktproduct`, params)
 };
 
 
 //创建订单
 export const create_pktorder = (params) => {
-    return post(`${testurl}/pktorder_mgmt/create_pktorder`, params)
+    return post(`${test_serverUrl}/pktorder_mgmt/create_pktorder`, params)
 };
 //查询订单
 export const query_pktorder = (params) => {
-    return post(`${testurl}/pktorder_mgmt/query_pktorder`, params)
+    return post(`${test_serverUrl}/pktorder_mgmt/query_pktorder`, params)
 };
 
 //查询订单（admin）
 export const query_pktorder_for_admin = (params) => {
-    return post(`${testurl}/pktorder_mgmt/query_pktorder_for_admin`, params)
+    return post(`${test_serverUrl}/pktorder_mgmt/query_pktorder_for_admin`, params)
 };
 //通知支付结果
 export const notify_payment = (params) => {
-    return post(`${testurl}/pktorder_mgmt/notify_payment`, params)
+    return post(`${test_serverUrl}/pktorder_mgmt/notify_payment`, params)
 };
 //删除订单
 export const del_pktorder = (params) => {
-    return post(`${testurl}/pktorder_mgmt/del_pktorder`, params)
+    return post(`${test_serverUrl}/pktorder_mgmt/del_pktorder`, params)
 };
 //添加营销位
 export const add_adslot = (params) => {
-    return post(`${testurl}/ad_mgmt/add_adslot`, params)
+    return post(`${test_serverUrl}/ad_mgmt/add_adslot`, params)
 };
 //营销查询
 export const query_adslot = (params) => {
-    return post(`${testurl}/ad_mgmt/query_adslot`, params)
+    return post(`${test_serverUrl}/ad_mgmt/query_adslot`, params)
 };
 //营销修改
 export const modify_adslot = (params) => {
-    return post(`${testurl}/ad_mgmt/modify_adslot`, params)
+    return post(`${test_serverUrl}/ad_mgmt/modify_adslot`, params)
 };
 //删除营销
 export const del_adslot = (params) => {
-    return post(`${testurl}/ad_mgmt/del_adslot`, params)
+    return post(`${test_serverUrl}/ad_mgmt/del_adslot`, params)
 };
 //查询当前待显示营销
 export const query_cur_adslot = (params) => {
-    return post(`${testurl}/ad_mgmt/query_cur_adslot`, params)
+    return post(`${test_serverUrl}/ad_mgmt/query_cur_adslot`, params)
 };
 
 //添加帮助信息
 export const add_help = (params) => {
-    return post(`${testurl}/help_mgmt/add_help`, params)
+    return post(`${test_serverUrl}/help_mgmt/add_help`, params)
 };
 //帮助信息查询
 export const query_help = (params) => {
-    return post(`${testurl}/help_mgmt/query_help`, params)
+    return post(`${test_serverUrl}/help_mgmt/query_help`, params)
 };
 //删除帮助信息
 export const del_help = (params) => {
-    return post(`${testurl}/help_mgmt/del_help`, params)
+    return post(`${test_serverUrl}/help_mgmt/del_help`, params)
 };
 //帮助修改
 export const modify_help = (params) => {
-    return post(`${testurl}/help_mgmt/modify_help`, params)
+    return post(`${test_serverUrl}/help_mgmt/modify_help`, params)
 };
 //查询账户流水
 export const query_user_sz_for_admin = (params) => {
-    return post(`${testurl}/flowcharge_mgmt/query_user_sz_for_admin`, params)
+    return post(`${test_serverUrl}/flowcharge_mgmt/query_user_sz_for_admin`, params)
 };
 //查询充值记录
 export const query_chargeorder_for_admin = (params) => {
-    return post(`${testurl}/flowcharge_mgmt/query_chargeorder_for_admin`, params)
+    return post(`${test_serverUrl}/flowcharge_mgmt/query_chargeorder_for_admin`, params)
 };
 //查询充值记录
 export const query_unnormal_acount = (params) => {
-    return post(`${testurl}/useraccount_mgmt/query_unnormal_acount`, params)
+    return post(`${test_serverUrl}/useraccount_mgmt/query_unnormal_acount`, params)
 };
 //通知支付结果
 export const mgmt_notify_payment = (params) => {
-    return post(`${testurl}/flowcharge_mgmt/notify_payment`, params)
+    return post(`${test_serverUrl}/flowcharge_mgmt/notify_payment`, params)
+};
+//查询欠费详情
+export const query_arrears_info = (params) => {
+    return post(`${test_serverUrl}/flowcharge_mgmt/query_arrears_info`, params)
 };

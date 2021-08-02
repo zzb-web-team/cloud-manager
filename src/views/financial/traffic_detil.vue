@@ -6,7 +6,8 @@
 				<span>用户</span><span>{{ title_data.user_id }}</span>
 			</div>
 			<div>
-				<span>累计欠款金额</span><span>￥{{ title_data.balance }}</span>
+				<span>累计欠款金额</span
+				><span>￥{{ title_data.balance.toFixed(2) }}</span>
 			</div>
 			<div>
 				<span>逾期时间</span
@@ -24,35 +25,37 @@
 				stripe
 				style="width: 100%"
 			>
-				<el-table-column prop="total_flow" label="流量使用">
-				</el-table-column>
-				<el-table-column prop="use_amount" label="欠费金额">
-				</el-table-column>
-                <el-table-column prop="long_time" label="加速时间">
-				</el-table-column>
-				<el-table-column prop="state_change_time" label="日期">
+				<el-table-column prop="start_time" label="加速时间">
 					<template slot-scope="scope">
-						{{
-							common.getTimes(scope.row.state_change_time * 1000)
-						}}
+						{{ common.getTimes(scope.row.start_time * 1000) }}-
+						{{ common.getTimes(scope.row.end_time * 1000) }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="flow" label="流量使用">
+					<template slot-scope="scope">
+						{{ scope.row.start_time | set_formatByteActive }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="amount" label="欠费金额">
+					<template slot-scope="scope">
+						{{ scope.row.amount.toFixed(2) }}
 					</template>
 				</el-table-column>
 			</el-table>
 			<div class="content_bottom">
-				<fenye
-					:currentPage="pageNo"
-					@handleCurrentChange="handleCurrentChange"
+				<pageNation
+					:pager="pager"
 					@handleSizeChange="handleSizeChange"
-					:pagesa="total_cnt"
-				></fenye>
+					@handleCurrentChange="handleCurrentChange"
+				></pageNation>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import fenye from '@/components/fenye';
-import { query_unnormal_acount } from '../../servers/api';
+import { query_arrears_info } from '../../servers/api';
+import pageNation from '@/components/pageNation';
 export default {
 	data() {
 		return {
@@ -79,6 +82,11 @@ export default {
 				// 	address: '上海市普陀区金沙江路 1516 弄',
 				// },
 			],
+			pager: {
+				count: 0,
+				page: 1,
+				rows: 100,
+			},
 			pageNo: 0,
 			pageSize: 10,
 			total_cnt: 0,
@@ -86,7 +94,7 @@ export default {
 		};
 	},
 	components: {
-		fenye,
+		pageNation,
 	},
 	watch: {
 		clientHeight() {
@@ -106,6 +114,26 @@ export default {
 			var minute = Math.floor((s - day * 24 * 3600 - hour * 3600) / 60);
 			var second = s - day * 24 * 3600 - hour * 3600 - minute * 60;
 			return day + '天' + hour + '时' + minute + '分' + second + '秒';
+		},
+		set_formatByteActive(bkb) {
+			var limit = parseInt(bkb);
+			var size = '';
+			if (limit < 1024) {
+				size = limit.toFixed(2) + 'KB';
+			} else if (limit < 1024 * 1024) {
+				size = (limit / 1024).toFixed(2) + 'MB';
+			} else if (limit < 1024 * 1024 * 1024) {
+				size = (limit / (1024 * 1024)).toFixed(2) + 'GB';
+			} else if (limit < 1024 * 1024 * 1024 * 1024) {
+				size = (limit / (1024 * 1024 * 1024)).toFixed(2) + 'TB';
+			} else {
+				size = (limit / (1024 * 1024 * 1024)).toFixed(2) + 'TB';
+			}
+
+			var sizeStr = size + ''; //转成字符串
+			var index = sizeStr.indexOf('.'); //获取小数点处的索引
+			var dou = sizeStr.substr(index + 1, 2); //获取小数点后两位的值
+			return size;
 		},
 	},
 	mounted() {
@@ -128,21 +156,22 @@ export default {
 		onChanges() {
 			let params = {
 				user_id: this.title_data.user_id,
-				state: 0, //0:全部 1:未冻结 2:冻结
-				pages: this.pageNo,
+				page: this.pager.page - 1,
 			};
-			query_unnormal_acount(params)
+			query_arrears_info(params)
 				.then((res) => {
 					if (res.status == 0) {
 						this.tableData = res.data.data;
 						this.total_cnt = res.data.total;
+						this.pager.count = res.data.total;
 					}
 				})
 				.catch((error) => {});
 		},
 		//获取页码
 		handleCurrentChange(pages) {
-			this.pageNo = pages;
+			this.pager.page = pages.val;
+			console.log(pages);
 			this.onChanges();
 		},
 		handleSizeChange(pagesize) {
