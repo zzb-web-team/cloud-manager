@@ -81,6 +81,16 @@
               >回源失败</span>
             </template>
           </el-table-column>
+          <el-table-column prop="origin_state" label="回源状态">
+            <template slot-scope="scope">
+              <span
+              style="color:#0ABF5B;"
+              v-if="scope.row.origin_state == 1"
+              >已回源</span>
+              <span style="color:#E54545;" v-else
+              >未回源</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="create_time" label="创建时间" sortable="custom"></el-table-column>
           <el-table-column label="操作" width="350">
             <template slot-scope="scope">

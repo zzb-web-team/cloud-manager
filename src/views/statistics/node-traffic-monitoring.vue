@@ -1,6 +1,6 @@
 <template>
 	<section class="myself-container content">
-		<div class="top_title">节点流量监控</div>
+		<div class="top_title">渠道流量监控</div>
 		<div class="user-title" style="display: flex;flex-flow: column;">
 			<div class="resources_con">
 				<el-tabs v-model="activeName" @tab-click="handleClick">
@@ -97,6 +97,7 @@
 									placeholder="选择日期"
 									align="left"
 									@change="gettimes(0)"
+                                    :picker-options="pickerOptions"
 								></el-date-picker>
 								<el-button
 									style="margin-left:10px;"
@@ -598,7 +599,23 @@ export default {
 			radioTop: 1,
 			sumcdn: 0,
 			sumnode: 0,
-			sump2p: 0,
+            sump2p: 0,
+            pickerOptions: {
+                onPick: ({ maxDate, minDate }) => {
+                this.selectDate = minDate.getTime()
+                if (maxDate) {
+                    this.selectDate = ''
+                }
+                },
+                disabledDate: (time) => {
+                //time.getTime()获取的是时间戳
+                // 当前时间往前30天可选
+                return (
+                    time.getTime() > Date.now() ||
+                    time.getTime() < Date.now() - 30 * 24 * 60 * 60 * 1000
+                )
+                },
+            },
 		};
 	},
 	filters: {

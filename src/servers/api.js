@@ -18,8 +18,7 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     // var serverUrl = 'http://www.forteatime.com';
     // var serverUrl = 'http://xyj.grapefruitcloud.com';
     var serverUrl = 'http://service.kclgames.com';
-    // var myurl = "http://10.0.0.75:8090"
-    var test_serverUrl = "http://test.zzb.com"
+    // var test_serverUrl = "http://test.zzb.com"
     var test_serverUrl = "http://service.kclgames.com"
 }
 
@@ -234,13 +233,21 @@ export const export_sdk_flow_table_file = params => {
 export const export_sdk_flow_control_file = params => {
     return post(`${serverUrl}/file_download/export_sdk_flow_control_file`, params)
 };
-/**用量查询图表 */
+/**渠道--用量查询图表 */
 export const manage_dataflow_curve = params => {
     return post(`${serverUrl}/resource_usage/manage_dataflow_curve`, params)
 };
-/**用量查询列表 */
+/**节点-用量查询图表 */
+export const node_manage_dataflow_curve = params => {
+    return post(`${serverUrl}/resource_manage/node_manage_dataflow_curve`, params)
+};
+/**渠道--用量查询列表 */
 export const manage_dataflow_table = params => {
     return post(`${serverUrl}/resource_usage/manage_dataflow_table`, params)
+};
+/**节点--用量查询列表 */
+export const node_manage_dataflow_table = params => {
+    return post(`${serverUrl}/resource_manage/node_manage_dataflow_table`, params)
 };
 /**用量图表导出 */
 /**用量查询列表 */
@@ -248,14 +255,23 @@ export const export_manage_dataflow_table_file = params => {
     return post(`${serverUrl}/file_download/export_manage_dataflow_table_file`, params)
 };
 
-//节点流量图
+//渠道--节点流量图
 export const node_traffic_curve = params => {
     return post(`${serverUrl}/resource_manage/ipfs_flow_curve`, params)
 };
+//节点--节点流量图
+export const node_ipfs_flow_curve = params => {
+    return post(`${serverUrl}/resource_manage/node_ipfs_flow_curve`, params)
+};
 
-//节点流量统计表
+//渠道流量统计表
 export const node_traffic_table = params => {
     return post(`${serverUrl}/resource_manage/ipfs_flow_table`, params)
+};
+
+//节点流量统计表
+export const node_ipfs_flow_table = params => {
+    return post(`${serverUrl}/resource_manage/node_ipfs_flow_table`, params)
 };
 
 //节点流量监控下载

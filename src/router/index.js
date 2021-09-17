@@ -45,6 +45,7 @@ import downloadLogs from "@/views/nodeApplication/downloadLogs";
 
 //用量查询
 import usageindex from "@/views/usage/usageindex";
+import nodeindex from "@/views/usage/nodeindex";
 
 //节点统计
 import trafficMonitor from "@/views/statistics/node-traffic-monitoring";
@@ -299,26 +300,37 @@ export default new Router({
                     hidden: true,
                     children: [{
                             path: "/usageindex",
-                            name: "节点流量用量y",
+                            name: "渠道流量用量y",
                             component: usageindex,
                         },
                         {
                             path: "/trafficMonitor",
-                            name: "节点流量监控y",
+                            name: "渠道流量监控y",
                             component: trafficMonitor,
+                        },
+                        {
+                            path: "/nodeindex",
+                            name: "节点用量y",
+                            component: nodeindex,
                         },
                     ],
                 },
                 {
                     path: "/usageindex",
-                    name: "节点流量用量",
+                    name: "渠道节点用量",
                     component: usageindex,
                 },
                 {
                     path: "/trafficMonitor",
-                    name: "节点流量监控",
+                    name: "渠道节点监控",
                     component: trafficMonitor,
                 },
+                {
+                    path: "/nodeindex",
+                    name: "节点用量",
+                    component: nodeindex,
+                },
+
                 {
                     path: "/gewsrg3",
                     name: "播放统计",
