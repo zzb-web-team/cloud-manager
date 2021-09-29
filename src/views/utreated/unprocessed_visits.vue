@@ -343,6 +343,7 @@ export default {
                 ...res.data.downcdnarray,
                 ...res.data.downbackarray,
               ])
+              console.log(max)
               this.flowunit = this.common.formatByteActiveunit(max)
             }
             this.drawLine2(
@@ -387,13 +388,13 @@ export default {
             show: false,
           },
           data: this.timeArray.map((item) => {
-            return this.common.getTimess(item * 1000)
+            return getymdtime1(item)
           }),
         },
         grid: {
           left: '3%',
           right: '6%',
-          bottom: '3%',
+          bottom: '0',
           containLabel: true,
         },
         yAxis: {
@@ -489,7 +490,7 @@ export default {
         },
         xAxis: {
           data: x.map((item) => {
-            return this.common.getTimess(item * 1000)
+            return getymdtime1(item)
           }),
           splitLine: {
             show: false,
@@ -528,14 +529,18 @@ export default {
                 params[index].marker +
                 params[index].seriesName +
                 ' ' +
-                _this.common.formatByteActive(params[index].value) +
+                params[index].value +
+                '' +
+                _this.flowunit +
                 '</br>'
             } else {
               toolp +=
                 params[index].marker +
                 params[index].seriesName +
                 ' ' +
-                _this.common.formatByteActive(params[index].value) +
+                params[index].value +
+                '' +
+                _this.flowunit +
                 '</br>'
             }
           })
@@ -547,7 +552,9 @@ export default {
           name: 'P2P播放流量',
           type: 'bar',
           stack: '使用情况',
-          data: a,
+          data: a.map((item) => {
+            return _this.common.formatByteNum(item * 1, _this.flowunit)
+          }),
           barMaxWidth: 30, //柱图宽度
           itemStyle: {
             normal: { color: '#D2E9FF' },
@@ -572,7 +579,9 @@ export default {
           name: 'CDN播放有源流量',
           type: 'bar',
           stack: '使用情况',
-          data: y,
+          data: y.map((item) => {
+            return _this.common.formatByteNum(item * 1, _this.flowunit)
+          }),
           barMaxWidth: 30, //柱图宽度
           itemStyle: {
             normal: {
@@ -600,7 +609,9 @@ export default {
           name: 'CDN播放无源流量',
           type: 'bar',
           stack: '使用情况',
-          data: z,
+          data: z.map((item) => {
+            return _this.common.formatByteNum(item * 1, _this.flowunit)
+          }),
           barMaxWidth: 30, //柱图宽度
           itemStyle: {
             normal: {

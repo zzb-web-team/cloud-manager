@@ -220,7 +220,7 @@ export default {
 				.catch((error) => {});
 		},
 		//获取支付结果
-		get_notify_paymen(data) {
+		get_notify_payment(data) {
 			let params = {
 				order_id: data.order_id,
 				pay_type: data.pay_type, //1:微信 2:支付宝

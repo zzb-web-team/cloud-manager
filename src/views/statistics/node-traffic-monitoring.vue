@@ -915,7 +915,7 @@ export default {
 							} else {
 								res.data.timearray.forEach((item, index) => {
 									this.timeArrayZb.push(
-										getymdtime1(item, 11)
+										getymdtime1(item)
 									);
 								});
 							}

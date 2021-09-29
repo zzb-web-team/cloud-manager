@@ -113,7 +113,7 @@ export default {
   data() {
     return {
       plain: '',
-      valuedomian: 1,
+      valuedomian: 2,
       value1acce1: '',
       chanIds: [],
       value1Activechanid: '',
@@ -535,6 +535,14 @@ export default {
         },
       }
       let options = {
+          title: {
+					text: _this.valuedomian==1?"内部节点":"外部节点",
+					left: '12px',
+					textStyle: {
+						color: '#333333',
+						fontSize: 16,
+					},
+				},
         color: [
           '#42a6f5',
           '#ffa726',

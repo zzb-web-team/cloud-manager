@@ -1320,7 +1320,7 @@ export default {
 								});
 							} else {
 								arr.forEach((item, index) => {
-									this.timeArrayZb.push(getymdtime1(item, 1));
+									this.timeArrayZb.push(getymdtime1(item));
 								});
 							}
 							this.dataZb1 = _.fill(Array(arr.length), 0);
@@ -1343,7 +1343,7 @@ export default {
 							} else {
 								res.data.timearray.forEach((item, index) => {
 									this.timeArrayZb.push(
-										getymdtime1(item, 11)
+										getymdtime1(item)
 									);
 								});
 							}
@@ -1550,7 +1550,7 @@ export default {
 								});
 							} else {
 								arr.forEach((item, index) => {
-									this.timeArrayJk.push(getymdtime1(item, 1));
+									this.timeArrayJk.push(getymdtime1(item));
 								});
 							}
 							this.dataJk1 = _.fill(Array(arr.length), 0);
@@ -2212,21 +2212,21 @@ export default {
 								borderWidth: 1,
 							},
 						},
-						label: {
-							normal: {
-								show: true,
-								position: 'inside',
-								color: '#333333',
-								fontSize: 10,
-								formatter: function(params) {
-									if (params.value > 0) {
-										return params.value;
-									} else {
-										return ' ';
-									}
-								},
-							},
-						},
+						// label: {
+						// 	normal: {
+						// 		show: true,
+						// 		position: 'inside',
+						// 		color: '#333333',
+						// 		fontSize: 10,
+						// 		formatter: function(params) {
+						// 			if (params.value > 0) {
+						// 				return params.value;
+						// 			} else {
+						// 				return ' ';
+						// 			}
+						// 		},
+						// 	},
+						// },
 					},
 					{
 						name: 'CDN播放有源流量',
@@ -2242,21 +2242,21 @@ export default {
 							},
 						},
 
-						label: {
-							normal: {
-								show: true,
-								position: 'inside',
-								color: '#333333',
-								fontSize: 10,
-								formatter: function(params) {
-									if (params.value > 0) {
-										return params.value;
-									} else {
-										return ' ';
-									}
-								},
-							},
-						},
+						// label: {
+						// 	normal: {
+						// 		show: true,
+						// 		position: 'inside',
+						// 		color: '#333333',
+						// 		fontSize: 10,
+						// 		formatter: function(params) {
+						// 			if (params.value > 0) {
+						// 				return params.value;
+						// 			} else {
+						// 				return ' ';
+						// 			}
+						// 		},
+						// 	},
+						// },
 					},
 					{
 						name: 'CDN播放无源流量(没有可用节点、打洞超时、其他)',
@@ -2271,21 +2271,21 @@ export default {
 								borderWidth: 1,
 							},
 						},
-						label: {
-							normal: {
-								show: true,
-								position: 'inside',
-								color: '#333333',
-								fontSize: 10,
-								formatter: function(params) {
-									if (params.value > 0) {
-										return params.value;
-									} else {
-										return ' ';
-									}
-								},
-							},
-						},
+						// label: {
+						// 	normal: {
+						// 		show: true,
+						// 		position: 'inside',
+						// 		color: '#333333',
+						// 		fontSize: 10,
+						// 		formatter: function(params) {
+						// 			if (params.value > 0) {
+						// 				return params.value;
+						// 			} else {
+						// 				return ' ';
+						// 			}
+						// 		},
+						// 	},
+						// },
 					},
 					{
 						name: 'CDN播放无源流量(没有可用节点、打洞超时、其他)',
@@ -2300,21 +2300,21 @@ export default {
 								borderWidth: 1,
 							},
 						},
-						label: {
-							normal: {
-								show: true,
-								position: 'inside',
-								color: '#333333',
-								fontSize: 10,
-								formatter: function(params) {
-									if (params.value > 0) {
-										return params.value;
-									} else {
-										return ' ';
-									}
-								},
-							},
-						},
+						// label: {
+						// 	normal: {
+						// 		show: true,
+						// 		position: 'inside',
+						// 		color: '#333333',
+						// 		fontSize: 10,
+						// 		formatter: function(params) {
+						// 			if (params.value > 0) {
+						// 				return params.value;
+						// 			} else {
+						// 				return ' ';
+						// 			}
+						// 		},
+						// 	},
+						// },
 					},
 					{
 						name: 'CDN播放无源流量(没有可用节点、打洞超时、其他)',
@@ -2329,21 +2329,21 @@ export default {
 								borderWidth: 1,
 							},
 						},
-						label: {
-							normal: {
-								show: true,
-								position: 'inside',
-								color: '#333333',
-								fontSize: 10,
-								formatter: function(params) {
-									if (params.value > 0) {
-										return params.value;
-									} else {
-										return ' ';
-									}
-								},
-							},
-						},
+						// label: {
+						// 	normal: {
+						// 		show: true,
+						// 		position: 'inside',
+						// 		color: '#333333',
+						// 		fontSize: 10,
+						// 		formatter: function(params) {
+						// 			if (params.value > 0) {
+						// 				return params.value;
+						// 			} else {
+						// 				return ' ';
+						// 			}
+						// 		},
+						// 	},
+						// },
 					},
 				];
 			} else {
@@ -2402,21 +2402,21 @@ export default {
 						itemStyle: {
 							normal: { color: '#D2E9FF' },
 						},
-						label: {
-							normal: {
-								show: true,
-								position: 'inside',
-								color: '#333333',
-								fontSize: 10,
-								formatter: function(params) {
-									if (params.value > 0) {
-										return params.value;
-									} else {
-										return ' ';
-									}
-								},
-							},
-						},
+						// label: {
+						// 	normal: {
+						// 		show: true,
+						// 		position: 'inside',
+						// 		color: '#333333',
+						// 		fontSize: 10,
+						// 		formatter: function(params) {
+						// 			if (params.value > 0) {
+						// 				return params.value;
+						// 			} else {
+						// 				return ' ';
+						// 			}
+						// 		},
+						// 	},
+						// },
 					},
 					{
 						name: 'CDN播放有源流量',
@@ -2430,21 +2430,21 @@ export default {
 							},
 						},
 
-						label: {
-							normal: {
-								show: true,
-								position: 'inside',
-								color: '#333333',
-								fontSize: 10,
-								formatter: function(params) {
-									if (params.value > 0) {
-										return params.value;
-									} else {
-										return ' ';
-									}
-								},
-							},
-						},
+						// label: {
+						// 	normal: {
+						// 		show: true,
+						// 		position: 'inside',
+						// 		color: '#333333',
+						// 		fontSize: 10,
+						// 		formatter: function(params) {
+						// 			if (params.value > 0) {
+						// 				return params.value;
+						// 			} else {
+						// 				return ' ';
+						// 			}
+						// 		},
+						// 	},
+						// },
 					},
 					{
 						name: 'CDN播放无源流量',
@@ -2457,21 +2457,21 @@ export default {
 								color: '#2894FF',
 							},
 						},
-						label: {
-							normal: {
-								show: true,
-								position: 'inside',
-								color: '#333333',
-								fontSize: 10,
-								formatter: function(params) {
-									if (params.value > 0) {
-										return params.value;
-									} else {
-										return ' ';
-									}
-								},
-							},
-						},
+						// label: {
+						// 	normal: {
+						// 		show: true,
+						// 		position: 'inside',
+						// 		color: '#333333',
+						// 		fontSize: 10,
+						// 		formatter: function(params) {
+						// 			if (params.value > 0) {
+						// 				return params.value;
+						// 			} else {
+						// 				return ' ';
+						// 			}
+						// 		},
+						// 	},
+						// },
 					},
 				];
 			}

@@ -18,6 +18,7 @@ if (href.indexOf('xyj.grapefruitcloud.com') >= 0) {
     // var serverUrl = 'http://www.forteatime.com';
     // var serverUrl = 'http://xyj.grapefruitcloud.com';
     var serverUrl = 'http://service.kclgames.com';
+    // var serverUrl = 'http://test.zzb.com';
     // var test_serverUrl = "http://test.zzb.com"
     var test_serverUrl = "http://service.kclgames.com"
 }
