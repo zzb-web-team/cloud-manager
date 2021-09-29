@@ -25,7 +25,7 @@
         "vue-quill-editor": "^3.0.6",
         "vue-router": "^3.0.1",
         "vue-simple-uploader": "^0.7.4",
-        "xlsx": "^0.15.2"
+        "xlsx": "^0.17.0"
     },
     "devDependencies": {
         "autoprefixer": "^7.1.2",
